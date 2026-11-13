@@ -424,6 +424,22 @@ export const socials: SocialItem[] = [
     url: 'https://steamcommunity.com/id/novoumy/',
     icon: 'steam',
   },
-  // Example of a custom image instead of a built-in icon:
-  // { platform: 'Blog', handle: 'novomee.dev', url: 'https://example.com', image: 'https://.../logo.png' },
+  {
+    platform: 'GitHub',
+    handle: 'novoumy',
+    url: 'https://github.com/novoumy/',
+    icon: 'github',
+  },
+  {
+    platform: 'Instagram',
+    handle: 'novoumy',
+    url: 'https://www.instagram.com/novoumy/',
+    icon: 'instagram',
+  },
+  {
+    platform: 'Email',
+    handle: 'contact@novoumy.com',
+    url: 'mailto:contact@novoumy.com',
+    icon: 'mail',
+  },
 ];
