@@ -94,7 +94,7 @@ export interface SocialItem {
 
 export const site = {
   // Shown in the browser tab.
-  title: "Novomee's Pixel Portfolio",
+  title: "novoumy",
 };
 
 // ----------------------------------------------------------------------------
@@ -134,7 +134,6 @@ export const hero = {
   // Each entry is one paragraph of the bio.
   bio: [
     'Hi. I\'m a student and I like minecarft and many other things!',
-    '>w<',
   ],
   // Exactly three status boxes, shown left, middle, right along the bottom.
   badges: [
