@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cool-white: #ECEFF1;
+  --lavender: #847FA4;
+  --wine: #6B2D39;
+  --rose: #CD9EBA;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-lavender font-body text-wine antialiased;
+    font-size: 22px;
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-pixel;
+    line-height: 1.2;
+  }
+}
+
+@layer components {
+  /* Large stepped frame: wine outline, rose inner line, pixel drop shadow. */
+  .pixel-frame {
+    box-shadow:
+      0 -4px 0 0 var(--wine),
+      0 4px 0 0 var(--wine),
+      -4px 0 0 0 var(--wine),
+      4px 0 0 0 var(--wine),
+      8px 8px 0 0 var(--wine),
+      inset 0 0 0 4px var(--rose);
+  }
+
+  /* Small stepped outline used for cards, rows and tiles. */
+  .pixel-tile {
+    box-shadow:
+      0 -4px 0 0 var(--wine),
+      0 4px 0 0 var(--wine),
+      -4px 0 0 0 var(--wine),
+      4px 0 0 0 var(--wine);
+    transition:
+      transform 150ms steps(2),
+      box-shadow 150ms steps(2),
+      background-color 150ms;
+  }
+
+  .pixel-tile-interactive:hover {
+    transform: translate(-4px, -4px);
+    box-shadow:
+      0 -4px 0 0 var(--wine),
+      0 4px 0 0 var(--wine),
+      -4px 0 0 0 var(--wine),
+      4px 0 0 0 var(--wine),
+      8px 8px 0 0 var(--rose);
+  }
+
+  .pixel-tile-interactive:active {
+    transform: translate(0, 0);
+  }
+
+  /* Wine button with notched corners. */
+  .pixel-btn {
+    @apply inline-flex items-center justify-center gap-2 bg-wine font-pixel text-[10px] uppercase text-cool-white;
+    clip-path: polygon(
+      4px 0,
+      calc(100% - 4px) 0,
+      100% 4px,
+      100% calc(100% - 4px),
+      calc(100% - 4px) 100%,
+      4px 100%,
+      0 calc(100% - 4px),
+      0 4px
+    );
+    padding: 10px 14px;
+    transition: background-color 150ms, color 150ms, transform 100ms steps(2);
+  }
+
+  .pixel-btn:hover {
+    @apply bg-rose text-wine;
+  }
+
+  .pixel-btn:active {
+    transform: translateY(2px);
+  }
+
+  /* Thin pixel scrollbar that matches the palette. */
+  .pixel-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--wine) var(--rose);
+  }
+
+  .pixel-scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .pixel-scroll::-webkit-scrollbar-track {
+    background: var(--rose);
+  }
+
+  .pixel-scroll::-webkit-scrollbar-thumb {
+    background: var(--wine);
+    border: 2px solid var(--rose);
+  }
+
+  /* Equalizer bars: animate only while the parent row is hovered. */
+  .eq-bars i {
+    display: block;
+    width: 4px;
+    height: 100%;
+    background: var(--wine);
+    transform-origin: bottom;
+    animation: eq-bounce 0.9s steps(4) infinite;
+    animation-play-state: paused;
+  }
+
+  .group:hover .eq-bars i {
+    animation-play-state: running;
+  }
+
+  .eq-bars i:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+
+  .eq-bars i:nth-child(3) {
+    animation-delay: -0.6s;
+  }
+
+  .eq-bars i:nth-child(4) {
+    animation-delay: -0.15s;
+  }
+
+  .blink-arrow {
+    animation: blink 1s steps(2) infinite;
+  }
+}
+
+@keyframes eq-bounce {
+  0% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.4);
+  }
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes tab-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float-particle {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-110vh);
+  }
+}
+
+.animate-tab-in {
+  animation: tab-in 320ms steps(4) both;
+}
+
+.animate-float-particle {
+  animation: float-particle linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-tab-in,
+  .animate-float-particle,
+  .eq-bars i,
+  .blink-arrow {
+    animation: none;
+  }
+}
