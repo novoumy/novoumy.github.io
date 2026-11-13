@@ -128,7 +128,7 @@ export const tabs: TabConfig[] = [
 
 export const hero = {
   avatar:
-    'https://files.catbox.moe/k184pc.png',
+    '/profile.png',
   avatarAlt: 'Profile photo',
   name: 'novoumy',
   // Each entry is one paragraph of the bio.
