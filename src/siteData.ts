@@ -113,13 +113,14 @@ export const audio = {
 // Tabs - order here is the order on screen
 // ----------------------------------------------------------------------------
 
+
 export const tabs: TabConfig[] = [
   { id: 'main', label: 'Main', icon: 'user', enabled: true },
+  { id: 'socials', label: 'Socials', icon: 'share', enabled: true },
   { id: 'media', label: 'Media', icon: 'film', enabled: true },
   { id: 'games', label: 'Games', icon: 'gamepad', enabled: true },
   { id: 'music', label: 'Music', icon: 'music', enabled: true },
   { id: 'quotes', label: 'Quotes', icon: 'quote', enabled: true },
-  { id: 'socials', label: 'Socials', icon: 'share', enabled: true },
 ];
 
 // ----------------------------------------------------------------------------
@@ -130,13 +131,9 @@ export const hero = {
   avatar: '/icon.png',
   avatarAlt: 'Profile photo',
   name: 'novoumy',
-  // Put your full intro paragraph here as the main bio text
   bio: [
     'I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^',
-  ],
-  // Move the terminal lines into a sidebar or subtitle array if your component supports it, 
-  // OR keep them together as a single block with line breaks so it fills the height:
-  terminalLines: [
+    '\u00A0',
     '> user_status: online // brain_activity: 12%',
     '> loading personality... [██████░░░░] 60%',
     '> error 404: bio not found.',
