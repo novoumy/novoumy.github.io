@@ -127,19 +127,20 @@ export const tabs: TabConfig[] = [
 // ----------------------------------------------------------------------------
 
 export const hero = {
-  avatar:
-    '/icon.png',
+  avatar: '/icon.png',
   avatarAlt: 'Profile photo',
   name: 'novoumy',
-  // Each entry is one paragraph of the bio.
+  // Put your full intro paragraph here as the main bio text
   bio: [
+    'I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^',
+  ],
+  // Move the terminal lines into a sidebar or subtitle array if your component supports it, 
+  // OR keep them together as a single block with line breaks so it fills the height:
+  terminalLines: [
     '> user_status: online // brain_activity: 12%',
     '> loading personality... [██████░░░░] 60%',
     '> error 404: bio not found.',
-    '\u00A0', // Creates the empty line without HTML collapsing it
-    'I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^',
   ],
-  // Exactly three status boxes, shown left, middle, right along the bottom.
   badges: [
     { label: 'Status', value: 'studying..' },
     { label: 'Current Vibe', value: 'relaxed' },
