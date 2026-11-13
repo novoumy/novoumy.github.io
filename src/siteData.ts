@@ -128,13 +128,13 @@ export const tabs: TabConfig[] = [
 
 export const hero = {
   avatar:
-    '/profile.png',
+    '/icon.png',
   avatarAlt: 'Profile photo',
   name: 'novoumy',
   // Each entry is one paragraph of the bio.
   bio: [
     'Hi. I\'m a student and I like minecarft and many other things!',
-    '>wk',
+    '>w<',
   ],
   // Exactly three status boxes, shown left, middle, right along the bottom.
   badges: [
