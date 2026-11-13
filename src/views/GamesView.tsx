@@ -2,39 +2,39 @@ import { ExternalLink } from 'lucide-react';
 import PixelBadge from '@/components/PixelBadge';
 import { games } from '@/siteData';
 
+// Same grid and portrait (2:3) cover shape as the Media tab.
 export default function GamesView() {
   return (
-    <ul className="flex flex-col gap-4">
+    <ul className="grid grid-cols-2 gap-5 pb-5 sm:grid-cols-3">
       {games.map((game) => (
-        <li
-          key={game.title}
-          className="pixel-tile flex items-center gap-4 bg-cool-white p-3 sm:gap-5 sm:p-4"
-        >
-          <img
-            src={game.cover}
-            alt={`${game.title} cover`}
-            loading="lazy"
-            className="aspect-square w-20 shrink-0 object-cover sm:w-24"
-          />
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <div className="flex flex-wrap items-center gap-3">
-              <h3 className="text-[11px] leading-[1.5] sm:text-xs">{game.title}</h3>
-              <PixelBadge>{game.status}</PixelBadge>
+        <li key={game.title}>
+          <div className="pixel-tile flex h-full flex-col gap-3 bg-cool-white p-3">
+            <div className="relative">
+              <img
+                src={game.cover}
+                alt={`${game.title} cover`}
+                loading="lazy"
+                className="aspect-[2/3] w-full object-cover"
+              />
+              <span className="absolute right-2 top-2">
+                <PixelBadge>{game.status}</PixelBadge>
+              </span>
             </div>
-            <p className="leading-[1.3]">{game.note}</p>
+            <h3 className="text-[10px] leading-[1.6]">{game.title}</h3>
+            <p className="leading-[1.2]">{game.note}</p>
+            {game.link && (
+              <a
+                href={game.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${game.title} store page`}
+                className="pixel-btn mt-auto px-3 py-2 text-[8px] sm:text-[9px]"
+              >
+                Store
+                <ExternalLink size={14} aria-hidden="true" />
+              </a>
+            )}
           </div>
-          {game.link && (
-            <a
-              href={game.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Open ${game.title} store page`}
-              className="pixel-btn shrink-0 px-3 py-2 text-[8px] sm:text-[9px]"
-            >
-              <ExternalLink size={14} aria-hidden="true" />
-              <span className="hidden sm:inline">Store</span>
-            </a>
-          )}
         </li>
       ))}
     </ul>

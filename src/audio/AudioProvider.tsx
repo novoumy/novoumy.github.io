@@ -29,14 +29,15 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     bgm.muted = mutedRef.current;
     bgmRef.current = bgm;
 
-    // Browsers block audio until the visitor interacts with the page.
-    const unlock = () => {
-      void bgm.play().catch(() => undefined);
-      window.removeEventListener('pointerdown', unlock);
-      window.removeEventListener('keydown', unlock);
-    };
-    window.addEventListener('pointerdown', unlock);
-    window.addEventListener('keydown', unlock);
+    // Browsers block audio until the visitor interacts with the page, so try
+    // right away and fall back to the first real gesture (click, tap or key).
+    const gestures = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'] as const;
+    const removeUnlock = () => gestures.forEach((name) => window.removeEventListener(name, unlock));
+    function unlock() {
+      bgm.play().then(removeUnlock, () => undefined);
+    }
+    gestures.forEach((name) => window.addEventListener(name, unlock));
+    unlock();
 
     const onClick = (event: MouseEvent) => {
       const target = event.target instanceof Element ? event.target : null;
@@ -47,8 +48,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     document.addEventListener('click', onClick, true);
 
     return () => {
-      window.removeEventListener('pointerdown', unlock);
-      window.removeEventListener('keydown', unlock);
+      removeUnlock();
       document.removeEventListener('click', onClick, true);
       bgm.pause();
       bgmRef.current = null;

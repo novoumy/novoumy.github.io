@@ -9,6 +9,7 @@ import MusicView from '@/views/MusicView';
 import QuotesView from '@/views/QuotesView';
 import SocialsView from '@/views/SocialsView';
 import { site, tabs, type TabId } from '@/siteData';
+import { useStageScale } from '@/lib/useStageScale';
 
 const VIEWS: Record<TabId, ComponentType> = {
   main: MainView,
@@ -29,18 +30,32 @@ export default function App() {
     document.title = site.title;
   }, []);
 
+  const scale = useStageScale();
+  const staged = scale !== null;
+
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-lavender">
+    <div className="relative h-dvh overflow-hidden bg-lavender">
       <PixelBackdrop />
-      <main className="relative z-10 flex min-h-dvh items-center justify-center p-4">
-        <div className="w-[min(800px,calc((100dvh_-_6rem)*4/3),calc(100vw_-_2rem))] pb-2 pr-2">
+      <main className={['relative z-10 flex h-full', staged ? 'items-center justify-center' : 'p-3'].join(' ')}>
+        {/* Big screens: fixed 800px window scaled up. Phones/small windows: window fills the screen. */}
+        <div
+          className={
+            staged
+              ? 'w-[800px] shrink-0 pb-2 pr-2'
+              : 'mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col pb-2 pr-2'
+          }
+          style={staged ? { zoom: scale } : undefined}
+        >
           <div className="flex items-end justify-between gap-2">
             <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={setActiveId} />
             <SoundToggle />
           </div>
           <section
             role="tabpanel"
-            className="pixel-frame relative mt-1 flex aspect-[4/3] flex-col bg-cool-white text-wine"
+            className={[
+              'pixel-frame relative mt-1 flex flex-col bg-cool-white text-wine',
+              staged ? 'aspect-[4/3]' : 'min-h-0 flex-1',
+            ].join(' ')}
           >
             <div key={activeId} className="pixel-scroll animate-tab-in min-h-0 flex-1 overflow-y-auto p-5 sm:p-8">
               <ActiveView />
