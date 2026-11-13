@@ -143,6 +143,33 @@
   .blink-arrow {
     animation: blink 1s steps(2) infinite;
   }
+
+  /* Always-bouncing equalizer (for the "now playing" card). */
+  .eq-live i {
+    animation-play-state: running;
+  }
+
+  /* Vinyl record: grooves plus two light glints so the spin is visible. */
+  .vinyl {
+    background:
+      conic-gradient(
+        from 0deg,
+        transparent 0 18%,
+        rgb(236 239 241 / 0.22) 22% 28%,
+        transparent 32% 68%,
+        rgb(236 239 241 / 0.22) 72% 78%,
+        transparent 82%
+      ),
+      repeating-radial-gradient(circle at center, #4d1f29 0 2px, var(--wine) 2px 4px);
+    box-shadow: 0 0 0 3px #3a1720;
+    animation: vinyl-spin 6s steps(24) infinite;
+  }
+
+  /* Decorative "track progress" fill that loops. */
+  .progress-fill {
+    width: 35%;
+    animation: progress-fill 40s steps(24) infinite;
+  }
 }
 
 @keyframes eq-bounce {
@@ -154,6 +181,21 @@
   }
   100% {
     transform: scaleY(0.4);
+  }
+}
+
+@keyframes vinyl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes progress-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
   }
 }
 
@@ -195,6 +237,8 @@
   .animate-tab-in,
   .animate-float-particle,
   .eq-bars i,
+  .vinyl,
+  .progress-fill,
   .blink-arrow {
     animation: none;
   }
