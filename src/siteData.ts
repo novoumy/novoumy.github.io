@@ -181,7 +181,7 @@ export const media: MediaItem[] = [
     category: 'Anime',
     rating: 9.9,
     poster:
-      'https://www.imdb.com/title/tt2098220/mediaviewer/rm3767801089/', // replace with a dedicated HxH poster if preferred
+      'https://m.media-amazon.com/images/M/MV5BYzYxOTlkYzctNGY2MC00MjNjLWIxOWMtY2QwYjcxZWIwMmEwXkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg', // replace with a dedicated HxH poster if preferred
     link: 'https://www.imdb.com/title/tt2098220/',
     linkLabel: 'IMDb',
     review: 'The story the arcs the villans the power system its all just devine, one of my favorites',
@@ -191,7 +191,7 @@ export const media: MediaItem[] = [
     category: 'Anime',
     rating: 8.6,
     poster:
-      'https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_FMjpg_UY3600_.jpg', // replace with a dedicated Demon Slayer poster if preferred
+      'https://m.media-amazon.com/images/M/MV5BMWU1OGEwNmQtNGM3MS00YTYyLThmYmMtN2FjYzQzNzNmNTE0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg', // replace with a dedicated Demon Slayer poster if preferred
     link: 'https://www.imdb.com/title/tt9335498/',
     linkLabel: 'IMDb',
     review: 'very nice visuals and great attention to detail IG',
@@ -201,7 +201,7 @@ export const media: MediaItem[] = [
     category: 'Anime',
     rating: 8.9,
     poster:
-      'https://m.media-amazon.com/images/M/MV5BZjliODY5MzQtMmViZC00MTZmLWFhMWMtMjMwM2I3OGY1MTRiXkEyXkFqcGc@._V1_FMjpg_UX850_.jpg', // replace with a dedicated Death Note poster if preferred
+      'https://m.media-amazon.com/images/M/MV5BYTgyZDhmMTEtZDFhNi00MTc4LTg3NjUtYWJlNGE5Mzk2NzMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg', // replace with a dedicated Death Note poster if preferred
     link: 'https://www.imdb.com/title/tt0877057/',
     linkLabel: 'IMDb',
     review: 'first anime I ever watched, I was so amazed by it That I got into anime.. A great anime overall',
