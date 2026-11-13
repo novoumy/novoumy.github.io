@@ -133,8 +133,8 @@ export const hero = {
   name: 'novoumy',
   // Each entry is one paragraph of the bio.
   bio: [
-    'Hi. I'm a student and I like minecarft and many other things!',
-    '>w<',
+    'Hi. I\'m a student and I like minecarft and many other things!',
+    '>wk',
   ],
   // Exactly three status boxes, shown left, middle, right along the bottom.
   badges: [
