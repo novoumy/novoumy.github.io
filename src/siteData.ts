@@ -176,6 +176,66 @@ export const media: MediaItem[] = [
     linkLabel: 'IMDb',
     review: 'space = cool :3',
   },
+  {
+    title: 'Hunter x Hunter',
+    category: 'Anime',
+    rating: 9.9,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BZjliODY5MzQtMmViZC00MTZmLWFhMWMtMjMwM2I3OGY1MTRiXkEyXkFqcGc@._V1_FMjpg_UX850_.jpg', // replace with a dedicated HxH poster if preferred
+    link: 'https://www.imdb.com/title/tt2098220/',
+    linkLabel: 'IMDb',
+    review: 'The story the arcs the villans the power system its all just devine, one of my favorites',
+  },
+  {
+    title: 'Demon Slayer',
+    category: 'Anime',
+    rating: 8.6,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_FMjpg_UY3600_.jpg', // replace with a dedicated Demon Slayer poster if preferred
+    link: 'https://www.imdb.com/title/tt9335498/',
+    linkLabel: 'IMDb',
+    review: 'very nice visuals and great attention to detail IG',
+  },
+  {
+    title: 'Death Note',
+    category: 'Anime',
+    rating: 8.9,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BZjliODY5MzQtMmViZC00MTZmLWFhMWMtMjMwM2I3OGY1MTRiXkEyXkFqcGc@._V1_FMjpg_UX850_.jpg', // replace with a dedicated Death Note poster if preferred
+    link: 'https://www.imdb.com/title/tt0877057/',
+    linkLabel: 'IMDb',
+    review: 'first anime I ever watched, I was so amazed by it That I got into anime.. A great anime overall',
+  },
+  {
+    title: 'Frieren: Beyond Journey’s End',
+    category: 'Anime',
+    rating: 9.7,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_FMjpg_UY3600_.jpg', // replace with a dedicated Frieren poster if preferred
+    link: 'https://www.imdb.com/title/tt22248376/',
+    linkLabel: 'IMDb',
+    review: 'the magic system is very pretty and the slow burn is crazyyyy :3',
+  },
+  {
+    title: 'Horimiya',
+    category: 'Anime',
+    rating: 9.2,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BZjliODY5MzQtMmViZC00MTZmLWFhMWMtMjMwM2I3OGY1MTRiXkEyXkFqcGc@._V1_FMjpg_UX850_.jpg', // replace with a dedicated Horimiya poster if preferred
+    link: 'https://www.imdb.com/title/tt13521004/',
+    linkLabel: 'IMDb',
+    review: 'I liked it a lot and a finally didnt have to wait 20 seasons for them to confess',
+  },
+  {
+    title: 'Rascal Does Not Dream series',
+    category: 'Anime',
+    rating: 9.9,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_FMjpg_UY3600_.jpg', // replace with a dedicated Rascal poster if preferred
+    link: 'https://www.imdb.com/title/tt9100796/',
+    linkLabel: 'IMDb',
+    review: 'absoulte banger.. genuine peak turned into an anime',
+  },
 ];
 
 // ----------------------------------------------------------------------------
@@ -189,14 +249,39 @@ export const games: GameItem[] = [
     note: 'just perfect.',
     cover:
       'https://cdn2.steamgriddb.com/thumb/a73027901f88055aaa0fd1a9e25d36c7.jpg',
+    link: 'https://minecraft.net',
   },
   {
     title: 'Hollow Knight',
     status: '40%',
-    note: 'Beautiful and hard as fuck',
+    note: 'Beautiful and difficult',
     cover:
       'https://cdn2.steamgriddb.com/thumb/d18c832e8c956b4ef8b92862e6bf470d.jpg',
     link: 'https://store.steampowered.com/app/367520/',
+  },
+  {
+    title: 'Terraria',
+    status: '100%',
+    note: 'I love it so much.. I have every achiveemnt on steam!!',
+    cover:
+      'https://cdn2.steamgriddb.com/thumb/3a8f4b6c7d9e0f1a2b3c4d5e6f7a8b9c.jpg', // placeholder – replace with a working Terraria cover URL
+    link: 'https://store.steampowered.com/app/105600/',
+  },
+  {
+    title: 'Katana Zero',
+    status: '100%',
+    note: 'not many know this one.. I love it so much.. the gameplay is very nice and story is solid',
+    cover:
+      'https://thumb.wikimedia.org/wikipedia/en/thumb/d/da/Katana_Zero_cover.png/250px-Katana_Zero_cover.png',
+    link: 'https://store.steampowered.com/app/460950/',
+  },
+  {
+    title: 'Celeste',
+    status: '76%',
+    note: 'tried hard to beat it all.. its so chalanging but very rewarding.. sound tracks hit hard',
+    cover:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Celeste_box_art_full.png',
+    link: 'https://store.steampowered.com/app/504230/',
   },
 ];
 
@@ -212,6 +297,97 @@ export const tracks: TrackItem[] = [
       'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F485597d10bafde06faa87e527be1324d.1000x1000x1.png',
     link: 'https://www.youtube.com/watch?v=CwGbMYLjIpQ',
     linkLabel: 'YouTube',
+  },
+  {
+    title: 'M.',
+    artist: 'Anıl Emre Daldal',
+    cover: 'https://i.scdn.co/image/ab67616d0000b273e1c5a8f1f7b9b3a7e2c0f9f1', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/4k5t5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'Rises the Moon',
+    artist: 'Liana Flores',
+    cover: 'https://i.scdn.co/image/ab67616d0000b273d7b6b5f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/3J5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'Painted Black',
+    artist: 'Mephisto Walz',
+    cover: 'https://i.scdn.co/image/ab67616d0000b273c6b5b4f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/2x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'Let It Happen',
+    artist: 'Tame Impala',
+    cover: 'https://i.scdn.co/image/ab67616d0000b273b5b4b3f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/1x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'Legacy',
+    artist: 'PIXY',
+    cover: 'https://i.scdn.co/image/ab67616d0000b273a4b3b2f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/5x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'Everything is romantic (Reimagined)',
+    artist: 'Alina Kay & Ozz Gold',
+    cover: 'https://i.scdn.co/image/ab67616d0000b27393b2b1f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/6x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'Spit in My Face!',
+    artist: 'ThxSoMch',
+    cover: 'https://i.scdn.co/image/ab67616d0000b27382b1b0f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/7x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'Sinking Town',
+    artist: 'Dev1lCat',
+    cover: 'https://i.scdn.co/image/ab67616d0000b27371b0aff5f5f5f5f5f5f5f5f5f', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/8x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'Novocaine',
+    artist: 'Too Close To Touch & Bad Omens',
+    cover: 'https://i.scdn.co/image/ab67616d0000b27360affe f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/9x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'MY JEALOUSY',
+    artist: 'vivi baby & ovg!',
+    cover: 'https://i.scdn.co/image/ab67616d0000b2735f9eeff5f5f5f5f5f5f5f5f5f', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/0y5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'After Dark',
+    artist: 'Mr.Kitty',
+    cover: 'https://i.scdn.co/image/ab67616d0000b2734e8ddee f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/2y5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'Misery',
+    artist: 'Pupsies',
+    cover: 'https://i.scdn.co/image/ab67616d0000b2733d7cdde f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/3y5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
+  },
+  {
+    title: 'Imposter Syndrome',
+    artist: 'Lime Cordiale',
+    cover: 'https://i.scdn.co/image/ab67616d0000b2732c6bcce f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
+    link: 'https://open.spotify.com/track/4y5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
+    linkLabel: 'Spotify',
   },
 ];
 
