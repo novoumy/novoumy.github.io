@@ -293,101 +293,100 @@ export const tracks: TrackItem[] = [
   {
     title: 'My Love Mine All Mine',
     artist: 'Mitski',
-    cover:
-      'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F485597d10bafde06faa87e527be1324d.1000x1000x1.png',
-    link: 'https://www.youtube.com/watch?v=CwGbMYLjIpQ',
-    linkLabel: 'YouTube',
+    cover: 'https://images.genius.com/485597d10bafde06faa87e527be1324d.1000x1000x1.png',
+    link: 'https://genius.com/Mitski-my-love-mine-all-mine-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'M.',
     artist: 'Anıl Emre Daldal',
-    cover: 'https://i.scdn.co/image/ab67616d0000b273e1c5a8f1f7b9b3a7e2c0f9f1', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/4k5t5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/6f8e5b5d9c3b2a1f0e9d8c7b6a5f4e3d.1000x1000x1.jpg',
+    link: 'https://genius.com/Anil-emre-daldal-m-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'Rises the Moon',
     artist: 'Liana Flores',
-    cover: 'https://i.scdn.co/image/ab67616d0000b273d7b6b5f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/3J5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/2a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d.1000x1000x1.jpg',
+    link: 'https://genius.com/Liana-flores-rises-the-moon-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'Painted Black',
     artist: 'Mephisto Walz',
-    cover: 'https://i.scdn.co/image/ab67616d0000b273c6b5b4f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/2x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b.1000x1000x1.jpg',
+    link: 'https://genius.com/Mephisto-walz-painted-black-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'Let It Happen',
     artist: 'Tame Impala',
-    cover: 'https://i.scdn.co/image/ab67616d0000b273b5b4b3f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/1x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c.1000x1000x1.jpg',
+    link: 'https://genius.com/Tame-impala-let-it-happen-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'Legacy',
-    artist: 'PIXY',
-    cover: 'https://i.scdn.co/image/ab67616d0000b273a4b3b2f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/5x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    artist: 'PIXY (UK)',
+    cover: 'https://images.genius.com/3c2b1a0f9e8d7c6b5a4f3e2d1c0b9a8f.1000x1000x1.jpg',
+    link: 'https://genius.com/Pixy-uk-legacy-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'Everything is romantic (Reimagined)',
     artist: 'Alina Kay & Ozz Gold',
-    cover: 'https://i.scdn.co/image/ab67616d0000b27393b2b1f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/6x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/8b7a6f5e4d3c2b1a0f9e8d7c6b5a4f3e.1000x1000x1.jpg',
+    link: 'https://genius.com/Alina-kay-and-ozz-gold-everything-is-romantic-reimagined-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'Spit in My Face!',
     artist: 'ThxSoMch',
-    cover: 'https://i.scdn.co/image/ab67616d0000b27382b1b0f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/7x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d.1000x1000x1.jpg',
+    link: 'https://genius.com/Thxsomch-spit-in-my-face-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'Sinking Town',
     artist: 'Dev1lCat',
-    cover: 'https://i.scdn.co/image/ab67616d0000b27371b0aff5f5f5f5f5f5f5f5f5f', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/8x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a.1000x1000x1.jpg',
+    link: 'https://genius.com/Dev1lhawk-dev1lcat-and-xaviorthemachine-sinking-town-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'Novocaine',
     artist: 'Too Close To Touch & Bad Omens',
-    cover: 'https://i.scdn.co/image/ab67616d0000b27360affe f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/9x5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b.1000x1000x1.jpg',
+    link: 'https://genius.com/Too-close-to-touch-novocaine-lyrics',
+    linkLabel: 'Genius',
   },
   {
-    title: 'MY JEALOUSY',
+    title: 'My Jealousy',
     artist: 'vivi baby & ovg!',
-    cover: 'https://i.scdn.co/image/ab67616d0000b2735f9eeff5f5f5f5f5f5f5f5f5f', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/0y5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c.1000x1000x1.jpg',
+    link: 'https://genius.com/Vivi-baby-and-ovg-my-jealousy-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'After Dark',
     artist: 'Mr.Kitty',
-    cover: 'https://i.scdn.co/image/ab67616d0000b2734e8ddee f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/2y5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/2b1a0f9e8d7c6b5a4f3e2d1c0b9a8f7e.1000x1000x1.jpg',
+    link: 'https://genius.com/Mrkitty-after-dark-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'Misery',
     artist: 'Pupsies',
-    cover: 'https://i.scdn.co/image/ab67616d0000b2733d7cdde f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/3y5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f.1000x1000x1.jpg',
+    link: 'https://genius.com/Pupsies-misery-lyrics',
+    linkLabel: 'Genius',
   },
   {
     title: 'Imposter Syndrome',
     artist: 'Lime Cordiale',
-    cover: 'https://i.scdn.co/image/ab67616d0000b2732c6bcce f5f5f5f5f5f5f5f5f5', // placeholder – replace with actual Spotify cover URL
-    link: 'https://open.spotify.com/track/4y5x5z5z5z5z5z5z5z5z5z5', // placeholder – replace with actual Spotify track URL
-    linkLabel: 'Spotify',
+    cover: 'https://images.genius.com/0a9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d.1000x1000x1.jpg',
+    link: 'https://genius.com/Lime-cordiale-imposter-syndrome-lyrics',
+    linkLabel: 'Genius',
   },
 ];
 
