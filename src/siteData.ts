@@ -133,7 +133,11 @@ export const hero = {
   name: 'novoumy',
   // Each entry is one paragraph of the bio.
   bio: [
-    'Hi. I\'m a student and I like minecarft and many other things!',
+    '> user_status: online // brain_activity: 12%',
+    '> loading personality... [██████░░░░] 60%',
+    '> error 404: bio not found.',
+    '\u00A0', // Creates the empty line without HTML collapsing it
+    'I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^',
   ],
   // Exactly three status boxes, shown left, middle, right along the bottom.
   badges: [
