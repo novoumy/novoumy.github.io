@@ -181,7 +181,7 @@ export const media: MediaItem[] = [
     category: 'Anime',
     rating: 9.9,
     poster:
-      'https://m.media-amazon.com/images/M/MV5BZjliODY5MzQtMmViZC00MTZmLWFhMWMtMjMwM2I3OGY1MTRiXkEyXkFqcGc@._V1_FMjpg_UX850_.jpg', // replace with a dedicated HxH poster if preferred
+      'https://www.imdb.com/title/tt2098220/mediaviewer/rm3767801089/', // replace with a dedicated HxH poster if preferred
     link: 'https://www.imdb.com/title/tt2098220/',
     linkLabel: 'IMDb',
     review: 'The story the arcs the villans the power system its all just devine, one of my favorites',
@@ -264,7 +264,7 @@ export const games: GameItem[] = [
     status: '100%',
     note: 'I love it so much.. I have every achiveemnt on steam!!',
     cover:
-      'https://cdn2.steamgriddb.com/thumb/3a8f4b6c7d9e0f1a2b3c4d5e6f7a8b9c.jpg', // placeholder – replace with a working Terraria cover URL
+      'https://cdn2.steamgriddb.com/thumb/020c38173caff02033564200e0288aa9.jpg',
     link: 'https://store.steampowered.com/app/105600/',
   },
   {
@@ -272,7 +272,7 @@ export const games: GameItem[] = [
     status: '100%',
     note: 'not many know this one.. I love it so much.. the gameplay is very nice and story is solid',
     cover:
-      'https://thumb.wikimedia.org/wikipedia/en/thumb/d/da/Katana_Zero_cover.png/250px-Katana_Zero_cover.png',
+      'https://cdn2.steamgriddb.com/thumb/057b1cfba313958551a8afa2c3e75429.jpg',
     link: 'https://store.steampowered.com/app/460950/',
   },
   {
