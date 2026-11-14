@@ -145,9 +145,9 @@ export const hero = {
   bio: [
     'I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^',
     '\u00A0',
-    '> user_status: online // brain_activity: 12%',
-    '> loading personality... [██████    ] 60%',
-    '> error 404: bio not found.',
+    '> error 503: motivation service temporarily unavailable',
+    '> activity: optimizing things that don\'t need optimization',
+    '> focus_mode: enabled [██████████] 100%',
   ],
   badges: [
     { label: 'Status', value: 'studying..' },
