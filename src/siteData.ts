@@ -37,7 +37,11 @@ export type SocialIconName =
   | 'instagram'
   | 'linkedin'
   | 'globe'
-  | 'mail';
+  | 'mail'
+  | 'namemc'
+  | 'pinterest'
+  | 'facebook'
+  | 'snapchat';
 
 export type MediaCategory = 'Movie' | 'Anime' | 'Show' | 'Cartoon';
 
@@ -85,11 +89,10 @@ export interface QuoteItem {
 
 export interface SocialItem {
   platform: string; // e.g. 'Discord'
-  handle: string; // e.g. '@novomee'
+  handle?: string; // e.g. 'novoumy'. Leave out when the profile has no readable handle.
   url: string;
   icon?: SocialIconName; // built-in pixel icon...
   image?: string; // ...or your own image URL (takes priority over icon)
-  featured?: boolean; // shown as the big "Primary Comms" banner (use on one item)
 }
 
 // ----------------------------------------------------------------------------
@@ -977,7 +980,6 @@ export const socials: SocialItem[] = [
     handle: 'novoumy',
     url: 'https://discord.com/users/722546564685365419',
     icon: 'discord',
-    featured: true,
   },
   {
     platform: 'Steam',
@@ -996,6 +998,46 @@ export const socials: SocialItem[] = [
     handle: 'novoumy',
     url: 'https://www.instagram.com/novoumy/',
     icon: 'instagram',
+  },
+  {
+    platform: 'X',
+    handle: 'novoumy',
+    url: 'https://x.com/novoumy',
+    icon: 'x',
+  },
+  {
+    platform: 'YouTube',
+    handle: 'novoumy',
+    url: 'https://www.youtube.com/channel/UCuMbrUTzj2-Rl3umhFhAOkA',
+    icon: 'youtube',
+  },
+  {
+    platform: 'NameMC',
+    handle: 'novoumy',
+    url: 'https://namemc.com/profile/novoumy.1',
+    icon: 'namemc',
+  },
+  {
+    platform: 'Pinterest',
+    handle: 'novoumy',
+    url: 'https://de.pinterest.com/novoumy/',
+    icon: 'pinterest',
+  },
+  {
+    platform: 'Facebook',
+    url: 'https://www.facebook.com/profile.php?id=61596482073922',
+    icon: 'facebook',
+  },
+  {
+    platform: 'Snapchat',
+    handle: 'novoumy',
+    url: 'https://www.snapchat.com/@novoumy',
+    icon: 'snapchat',
+  },
+  {
+    platform: 'LinkedIn',
+    url: 'https://www.linkedin.com/in/novoumy-rah-01085544b/',
+    icon: 'linkedin',
   },
   {
     platform: 'Email',

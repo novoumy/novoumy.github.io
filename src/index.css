@@ -31,6 +31,33 @@
 }
 
 @layer components {
+  /* Dark palette for the full-screen media library only. Re-points the outline
+     (--wine) and highlight (--rose) variables inside the overlay, so tiles,
+     scrollbars and hover shadows pick up dark-mode colors without touching
+     the rest of the site. */
+  .media-dark {
+    --m-bg: #15121d;
+    --m-surface: #1f1b2b;
+    --m-surface-hi: #2b2640;
+    --m-ink: #ECEFF1;
+    --wine: #847FA4;
+    --rose: #CD9EBA;
+    color-scheme: dark;
+  }
+
+  .media-dark .pixel-scroll {
+    scrollbar-color: #847FA4 #1f1b2b;
+  }
+
+  .media-dark .pixel-scroll::-webkit-scrollbar-track {
+    background: #1f1b2b;
+  }
+
+  .media-dark .pixel-scroll::-webkit-scrollbar-thumb {
+    background: #847FA4;
+    border: 2px solid #1f1b2b;
+  }
+
   /* Large stepped frame: wine outline, rose inner line, pixel drop shadow. */
   .pixel-frame {
     box-shadow:

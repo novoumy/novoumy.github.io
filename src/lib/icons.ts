@@ -40,4 +40,8 @@ export const SOCIAL_ICONS: Record<SocialIconName, LucideIcon> = {
   linkedin: Linkedin,
   globe: Globe,
   mail: Mail,
+  namemc: Globe,
+  pinterest: Globe,
+  facebook: Globe,
+  snapchat: Globe,
 };

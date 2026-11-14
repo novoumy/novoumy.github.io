@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Search, X } from 'lucide-react';
 import PixelBadge from '@/components/PixelBadge';
@@ -48,7 +48,6 @@ export default function MediaView({ onClose }: MediaViewerProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const gridScrollRef = useRef<HTMLDivElement>(null);
-  const titleId = useId();
 
   // Lock page scroll, focus the search box (desktop only, so phones don't pop
   // the keyboard), and hand focus back to whatever opened the viewer.
@@ -135,15 +134,25 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       ref={dialogRef}
       role="dialog"
       aria-modal="true"
-      aria-labelledby={titleId}
+      aria-label="Media library"
       tabIndex={-1}
-      className="animate-tab-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-cool-white text-wine outline-none"
+      className="media-dark animate-tab-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[var(--m-bg)] text-[var(--m-ink)] outline-none"
     >
       {/* Title bar */}
       <header className="flex shrink-0 items-center justify-between gap-3 bg-wine px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] text-cool-white sm:px-8">
-        <div className="flex min-w-0 items-baseline gap-3 sm:gap-4">
-          <h2 id={titleId} className="truncate text-[11px] uppercase sm:text-[14px]">
-            &gt; Media library
+        {/* Top-left area closes the library too (arrow + title). */}
+        <div
+          onClick={onClose}
+          className="flex min-w-0 cursor-pointer items-baseline gap-3 sm:gap-4"
+        >
+          <h2 className="min-w-0 truncate text-[11px] uppercase sm:text-[14px]">
+            <button
+              type="button"
+              aria-label="Close media library"
+              className="cursor-pointer truncate border-0 bg-transparent p-0 text-left uppercase text-inherit outline-none [font:inherit] focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4"
+            >
+              &gt; Media library
+            </button>
           </h2>
           <span className="hidden shrink-0 font-pixel text-[8px] uppercase text-rose sm:inline" aria-live="polite">
             {visible.length} / {media.length} titles
@@ -162,10 +171,10 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       <div className="h-1 shrink-0 bg-rose" aria-hidden="true" />
 
       {/* Search, filters and sorting */}
-      <div className="shrink-0 border-b-4 border-wine bg-cool-white px-4 py-4 sm:px-8">
-        <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-4">
+      <div className="shrink-0 border-b-4 border-[#847FA4] bg-[var(--m-bg)] px-4 py-4 sm:px-8 lg:px-12">
+        <div className="flex w-full flex-col gap-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
-            <label className="pixel-tile relative flex min-w-0 flex-1 items-center bg-white focus-within:bg-rose/30">
+            <label className="pixel-tile relative flex min-w-0 flex-1 items-center bg-[var(--m-surface)] focus-within:bg-[var(--m-surface-hi)]">
               <span className="sr-only">Search titles</span>
               <Search size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3" />
               <input
@@ -177,7 +186,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                 autoComplete="off"
                 spellCheck={false}
                 enterKeyHint="search"
-                className="h-12 w-full bg-transparent pl-10 pr-10 font-body text-[24px] leading-none text-wine outline-none placeholder:text-wine/50 [&::-webkit-search-cancel-button]:hidden"
+                className="h-12 w-full bg-transparent pl-10 pr-10 font-body text-[24px] leading-none text-[var(--m-ink)] outline-none placeholder:text-[var(--m-ink)]/50 [&::-webkit-search-cancel-button]:hidden"
               />
               {query && (
                 <button
@@ -187,19 +196,19 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                     searchRef.current?.focus();
                   }}
                   aria-label="Clear search"
-                  className="absolute right-2 flex h-8 w-8 items-center justify-center hover:bg-wine hover:text-cool-white"
+                  className="absolute right-2 flex h-8 w-8 items-center justify-center hover:bg-rose hover:text-[#6B2D39]"
                 >
                   <X size={16} strokeWidth={3} aria-hidden="true" />
                 </button>
               )}
             </label>
 
-            <label className="pixel-tile relative flex shrink-0 items-center bg-white lg:w-[300px]">
+            <label className="pixel-tile relative flex shrink-0 items-center bg-[var(--m-surface)] lg:w-[300px]">
               <span className="sr-only">Sort by</span>
               <select
                 value={sort}
                 onChange={(event) => setSort(event.target.value as SortKey)}
-                className="h-12 w-full cursor-pointer appearance-none bg-transparent pl-3 pr-10 font-body text-[22px] leading-none text-wine outline-none focus-visible:bg-rose/30"
+                className="h-12 w-full cursor-pointer appearance-none bg-transparent pl-3 pr-10 font-body text-[22px] leading-none text-[var(--m-ink)] outline-none focus-visible:bg-[var(--m-surface-hi)]"
               >
                 {SORT_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -227,11 +236,11 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                     onClick={() => setFilter(option.value)}
                     className={[
                       'pixel-tile flex shrink-0 items-center gap-2 px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
-                      active ? 'bg-wine text-cool-white' : 'bg-cool-white text-wine hover:bg-rose',
+                      active ? 'bg-rose text-[#6B2D39]' : 'bg-[var(--m-surface)] text-[var(--m-ink)] hover:bg-[var(--m-surface-hi)]',
                     ].join(' ')}
                   >
                     {option.label}
-                    <span className={active ? 'text-rose' : 'opacity-60'}>{counts[option.value] ?? 0}</span>
+                    <span className={active ? 'text-[#6B2D39]/70' : 'text-rose'}>{counts[option.value] ?? 0}</span>
                   </button>
                 );
               })}
@@ -246,9 +255,9 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       {/* Scrollable grid */}
       <div
         ref={gridScrollRef}
-        className="pixel-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain bg-cool-white px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-6 sm:px-10"
+        className="pixel-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[var(--m-bg)] px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-6 sm:px-10 lg:px-12"
       >
-        <div className="mx-auto w-full max-w-[1600px]">
+        <div className="w-full">
           {visible.length === 0 ? (
             <div className="flex flex-col items-center gap-5 py-16 text-center">
               <p className="font-pixel text-[11px] uppercase leading-[1.8]">No results</p>
@@ -262,7 +271,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
             </div>
           ) : (
             <ul
-              className="grid gap-x-5 gap-y-7 pb-4 [grid-template-columns:repeat(auto-fill,minmax(140px,1fr))] sm:gap-x-6 sm:gap-y-8 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]"
+              className="grid gap-x-5 gap-y-7 pb-4 [grid-template-columns:repeat(auto-fill,minmax(140px,1fr))] sm:gap-x-6 sm:gap-y-8 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] lg:gap-x-8 lg:gap-y-10 lg:[grid-template-columns:repeat(auto-fill,minmax(250px,1fr))] min-[1600px]:[grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]"
             >
               {visible.map((item) => (
                 <li key={`${item.category}-${item.title}-${item.year}`}>
@@ -286,7 +295,7 @@ function MediaCard({ item }: { item: MediaItem }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${item.title} (${item.year}), opens in a new tab`}
-      className="pixel-tile pixel-tile-interactive group flex h-full w-full flex-col gap-3 bg-cool-white p-2.5 text-left sm:p-3"
+      className="pixel-tile pixel-tile-interactive group flex h-full w-full flex-col gap-3 bg-[var(--m-surface)] p-2.5 text-left sm:p-3 lg:gap-4 lg:p-4"
     >
       <div className="relative">
         <img
@@ -294,7 +303,7 @@ function MediaCard({ item }: { item: MediaItem }) {
           alt={`${item.title} poster`}
           loading="lazy"
           decoding="async"
-          className="aspect-[2/3] w-full bg-rose/40 object-cover"
+          className="aspect-[2/3] w-full bg-white/10 object-cover"
         />
         <span className="absolute bottom-2 left-2">
           <PixelBadge>{item.category}</PixelBadge>
@@ -303,7 +312,7 @@ function MediaCard({ item }: { item: MediaItem }) {
           <PixelBadge>{item.year}</PixelBadge>
         </span>
       </div>
-      <h3 className="text-[9px] leading-[1.6] sm:text-[10px]">{item.title}</h3>
+      <h3 className="text-[9px] leading-[1.6] text-[var(--m-ink)] sm:text-[10px] lg:text-[13px]">{item.title}</h3>
     </a>
   );
 }
