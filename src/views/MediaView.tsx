@@ -139,7 +139,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       className="media-dark animate-tab-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[var(--m-bg)] text-[var(--m-ink)] outline-none"
     >
       {/* Title bar */}
-      <header className="flex shrink-0 items-center justify-between gap-3 bg-wine px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] text-cool-white sm:px-8">
+      <header className="flex shrink-0 items-center justify-between gap-3 bg-[var(--m-header)] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] text-[var(--m-ink)] sm:px-8">
         {/* Top-left area closes the library too (arrow + title). */}
         <div
           onClick={onClose}
@@ -154,7 +154,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
               &gt; Media library
             </button>
           </h2>
-          <span className="hidden shrink-0 font-pixel text-[8px] uppercase text-rose sm:inline" aria-live="polite">
+          <span className="hidden shrink-0 font-pixel text-[8px] uppercase text-[var(--m-crimson-hi)] sm:inline" aria-live="polite">
             {visible.length} / {media.length} titles
           </span>
         </div>
@@ -162,16 +162,16 @@ export default function MediaView({ onClose }: MediaViewerProps) {
           type="button"
           onClick={onClose}
           aria-label="Close media library"
-          className="pixel-btn !bg-rose !text-wine hover:!bg-cool-white"
+          className="pixel-btn !bg-[var(--m-crimson)] !text-white hover:!bg-[var(--m-crimson-hi)]"
         >
           <X size={14} strokeWidth={3} aria-hidden="true" />
           <span>Close</span>
         </button>
       </header>
-      <div className="h-1 shrink-0 bg-rose" aria-hidden="true" />
+      <div className="h-1 shrink-0 bg-[var(--m-crimson)]" aria-hidden="true" />
 
       {/* Search, filters and sorting */}
-      <div className="shrink-0 border-b-4 border-[#847FA4] bg-[var(--m-bg)] px-4 py-4 sm:px-8 lg:px-12">
+      <div className="shrink-0 border-b-4 border-[var(--m-line)] bg-[var(--m-bg)] px-4 py-4 sm:px-8 lg:px-12">
         <div className="flex w-full flex-col gap-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
             <label className="pixel-tile relative flex min-w-0 flex-1 items-center bg-[var(--m-surface)] focus-within:bg-[var(--m-surface-hi)]">
@@ -186,7 +186,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                 autoComplete="off"
                 spellCheck={false}
                 enterKeyHint="search"
-                className="h-12 w-full bg-transparent pl-10 pr-10 font-body text-[24px] leading-none text-[var(--m-ink)] outline-none placeholder:text-[var(--m-ink)]/50 [&::-webkit-search-cancel-button]:hidden"
+                className="h-12 w-full bg-transparent pl-10 pr-10 font-body text-[24px] leading-none text-[var(--m-ink)] outline-none placeholder:text-[var(--m-muted)] [&::-webkit-search-cancel-button]:hidden"
               />
               {query && (
                 <button
@@ -196,7 +196,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                     searchRef.current?.focus();
                   }}
                   aria-label="Clear search"
-                  className="absolute right-2 flex h-8 w-8 items-center justify-center hover:bg-rose hover:text-[#6B2D39]"
+                  className="absolute right-2 flex h-8 w-8 items-center justify-center hover:bg-[var(--m-crimson)] hover:text-white"
                 >
                   <X size={16} strokeWidth={3} aria-hidden="true" />
                 </button>
@@ -236,11 +236,11 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                     onClick={() => setFilter(option.value)}
                     className={[
                       'pixel-tile flex shrink-0 items-center gap-2 px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
-                      active ? 'bg-rose text-[#6B2D39]' : 'bg-[var(--m-surface)] text-[var(--m-ink)] hover:bg-[var(--m-surface-hi)]',
+                      active ? 'bg-[var(--m-crimson)] text-white' : 'bg-[var(--m-surface)] text-[var(--m-ink)] hover:bg-[var(--m-surface-hi)] hover:text-white',
                     ].join(' ')}
                   >
                     {option.label}
-                    <span className={active ? 'text-[#6B2D39]/70' : 'text-rose'}>{counts[option.value] ?? 0}</span>
+                    <span className={active ? 'text-white/80' : 'text-[var(--m-crimson-hi)]'}>{counts[option.value] ?? 0}</span>
                   </button>
                 );
               })}
@@ -265,7 +265,11 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                 {query.trim() ? `Nothing matches "${query.trim()}"` : 'Nothing here yet'}
                 {filter !== 'all' ? ' in this category.' : '.'}
               </p>
-              <button type="button" onClick={resetAll} className="pixel-btn">
+              <button
+                type="button"
+                onClick={resetAll}
+                className="pixel-btn !bg-[var(--m-crimson)] !text-white hover:!bg-[var(--m-crimson-hi)]"
+              >
                 Reset search &amp; filters
               </button>
             </div>
@@ -303,7 +307,7 @@ function MediaCard({ item }: { item: MediaItem }) {
           alt={`${item.title} poster`}
           loading="lazy"
           decoding="async"
-          className="aspect-[2/3] w-full bg-white/10 object-cover"
+          className="aspect-[2/3] w-full bg-[var(--m-surface-hi)] object-cover"
         />
         <span className="absolute bottom-2 left-2">
           <PixelBadge>{item.category}</PixelBadge>

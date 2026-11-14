@@ -31,31 +31,46 @@
 }
 
 @layer components {
-  /* Dark palette for the full-screen media library only. Re-points the outline
-     (--wine) and highlight (--rose) variables inside the overlay, so tiles,
-     scrollbars and hover shadows pick up dark-mode colors without touching
-     the rest of the site. */
+  /* Dark crimson theme for the full-screen media library only. Everything
+     inside the overlay reads from these variables; --wine (outlines) and
+     --rose (hover shadows) are re-pointed so tiles pick up crimson borders
+     without touching the rest of the site. */
   .media-dark {
-    --m-bg: #15121d;
-    --m-surface: #1f1b2b;
-    --m-surface-hi: #2b2640;
-    --m-ink: #ECEFF1;
-    --wine: #847FA4;
-    --rose: #CD9EBA;
+    --m-bg: #0c0a0b;
+    --m-surface: #151112;
+    --m-surface-hi: #211416;
+    --m-header: #120709;
+    --m-ink: #f5f0f0;
+    --m-muted: #b8a3a6;
+    --m-crimson: #c8102e;
+    --m-crimson-hi: #e8344d;
+    --m-line: #6e1624;
+    --wine: #8a1b2d;
+    --rose: #c8102e;
     color-scheme: dark;
   }
 
+  .media-dark ::selection {
+    background: #c8102e;
+    color: #fff;
+  }
+
   .media-dark .pixel-scroll {
-    scrollbar-color: #847FA4 #1f1b2b;
+    scrollbar-color: #c8102e #151112;
   }
 
   .media-dark .pixel-scroll::-webkit-scrollbar-track {
-    background: #1f1b2b;
+    background: #151112;
   }
 
   .media-dark .pixel-scroll::-webkit-scrollbar-thumb {
-    background: #847FA4;
-    border: 2px solid #1f1b2b;
+    background: #c8102e;
+    border: 2px solid #151112;
+  }
+
+  .media-dark .pixel-badge {
+    background: #c8102e;
+    color: #fff;
   }
 
   /* Large stepped frame: wine outline, rose inner line, pixel drop shadow. */
