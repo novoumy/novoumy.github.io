@@ -118,7 +118,6 @@ export const audio = {
 // Tabs - order here is the order on screen
 // ----------------------------------------------------------------------------
 
-
 export const tabs: TabConfig[] = [
   { id: 'main', label: 'Main', icon: 'user', enabled: true },
   { id: 'socials', label: 'Socials', icon: 'share', enabled: true },
@@ -156,10 +155,101 @@ export const hero = {
   ] as HeroBadge[],
 };
 
-  // ==========================================================================
-  // CARTOONS (continued)
-  // ==========================================================================
-  // TODO: replace `poster` with a real m.media-amazon.com/...jpg URL.
+// ----------------------------------------------------------------------------
+// 2. MEDIA - movies, anime and shows
+// ----------------------------------------------------------------------------
+
+export const mediaFilters: { label: string; value: 'all' | MediaCategory }[] = [
+  { label: 'All', value: 'all' },
+  { label: 'Movies', value: 'Movie' },
+  { label: 'Anime', value: 'Anime' },
+  { label: 'Shows', value: 'Show' },
+  { label: 'Cartoons', value: 'Cartoon' },
+];
+
+export const media: MediaItem[] = [
+  {
+    title: 'Attack on titan',
+    category: 'Anime',
+    rating: 2013,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BZjliODY5MzQtMmViZC00MTZmLWFhMWMtMjMwM2I3OGY1MTRiXkEyXkFqcGc@._V1_FMjpg_UX850_.jpg',
+    link: 'https://www.imdb.com/title/tt2560140/',
+    linkLabel: 'IMDb',
+    review: 'Ive watched it like 4 times.. Its just so good and perfect ahh.. my favs is hange zoe and sasha',
+  },
+  {
+    title: 'Interstellar',
+    category: 'Movie',
+    rating: 2014,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_FMjpg_UY3600_.jpg',
+    link: 'https://www.imdb.com/title/tt0816692/',
+    linkLabel: 'IMDb',
+    review: 'space = cool :3',
+  },
+  {
+    title: 'Hunter x Hunter',
+    category: 'Anime',
+    rating: 2011,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BYzYxOTlkYzctNGY2MC00MjNjLWIxOWMtY2QwYjcxZWIwMmEwXkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt2098220/',
+    linkLabel: 'IMDb',
+    review: 'The story the arcs the villans the power system its all just devine, one of my favorites',
+  },
+  {
+    title: 'Demon Slayer',
+    category: 'Anime',
+    rating: 2019,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BMWU1OGEwNmQtNGM3MS00YTYyLThmYmMtN2FjYzQzNzNmNTE0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt9335498/',
+    linkLabel: 'IMDb',
+    review: 'very nice visuals and great attention to detail IG',
+  },
+  {
+    title: 'Death Note',
+    category: 'Anime',
+    rating: 2006,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BYTgyZDhmMTEtZDFhNi00MTc4LTg3NjUtYWJlNGE5Mzk2NzMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0877057/',
+    linkLabel: 'IMDb',
+    review: 'first anime I ever watched, I was so amazed by it That I got into anime.. A great anime overall',
+  },
+  {
+    title: 'Frieren: Beyond Journey’s End',
+    category: 'Anime',
+    rating: 2023,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BZTI4ZGMxN2UtODlkYS00MTBjLWE1YzctYzc3NDViMGI0ZmJmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt22248376/',
+    linkLabel: 'IMDb',
+    review: 'the magic system is very pretty and the slow burn is crazyyyy :3',
+  },
+  {
+    title: 'Horimiya',
+    category: 'Anime',
+    rating: 2021,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BOGUzYmZkZjItNjI5Yi00NjllLThiMjUtYTY0MDI4M2Y0MmZlXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt13103134/',
+    linkLabel: 'IMDb',
+    review: 'I liked it a lot and a finally didnt have to wait 20 seasons for them to confess',
+  },
+  {
+    title: 'Rascal Does Not Dream series',
+    category: 'Anime',
+    rating: 2018,
+    poster:
+      'https://m.media-amazon.com/images/M/MV5BNTc4NWYwZDMtZDMyMi00ZTA4LWE3NDUtZTExOTNmMjNmMDA2XkEyXkFqcGc@._V1_QL75_UX388_.jpg',
+    link: 'https://www.imdb.com/title/tt8993398/',
+    linkLabel: 'IMDb',
+    review: 'absoulte banger.. genuine peak turned into an anime',
+  },
+
+  // CARTOONS
   {
     title: 'The Lion King',
     category: 'Cartoon',
@@ -656,10 +746,7 @@ export const hero = {
     review: '',
   },
 
-  // ==========================================================================
   // MOVIES
-  // ==========================================================================
-  // TODO: replace `poster` with a real m.media-amazon.com/...jpg URL.
   {
     title: 'The Maze Runner',
     category: 'Movie',
@@ -841,10 +928,7 @@ export const hero = {
     review: '',
   },
 
-  // ==========================================================================
   // SHOWS
-  // ==========================================================================
-  // TODO: replace `poster` with a real m.media-amazon.com/...jpg URL.
   {
     title: 'Wednesday',
     category: 'Show',
@@ -1217,26 +1301,8 @@ export const specGroups: SpecGroup[] = [
       },
       {
         label: 'Pad 1',
-        name: 'Lenovo S07 Controller',
-        link: amazon('Lenovo S07 Controller'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'Pad 2',
-        name: 'EasySMX D10 Controller',
-        link: amazon('EasySMX D10 Controller'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'Mouse',
-        name: 'Ajazz AJ159',
-        link: amazon('Ajazz AJ159 mouse'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'Keys',
-        name: 'EPOMAKER x Aula F75',
-        link: amazon('EPOMAKER x Aula F75 keyboard'),
+        name: 'Lenovo Pad',
+        link: amazon('Lenovo Pad'),
         linkLabel: 'AMAZON',
       },
     ],
