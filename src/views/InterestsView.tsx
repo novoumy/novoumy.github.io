@@ -6,8 +6,8 @@ import MediaView from '@/views/MediaView';
 import MusicView from '@/views/MusicView';
 import QuotesView from '@/views/QuotesView';
 
-const SECTIONS: Record<InterestId, ComponentType> = {
-  media: MediaView,
+// Media is not in this map: it opens as a full-screen overlay (see below).
+const SECTIONS: Record<Exclude<InterestId, 'media'>, ComponentType> = {
   games: GamesView,
   music: MusicView,
   quotes: QuotesView,
@@ -29,21 +29,7 @@ export default function InterestsView() {
     rootRef.current?.closest('.pixel-scroll')?.scrollTo({ top: 0 });
   }, [openId]);
 
-  if (openId) {
-    const Section = SECTIONS[openId];
-    return (
-      <div ref={rootRef} key={openId} className="animate-tab-in flex min-h-full flex-col gap-5">
-        <div>
-          <button type="button" onClick={() => setOpenId(null)} className="pixel-btn">
-            &lt; Back to interests
-          </button>
-        </div>
-        <Section />
-      </div>
-    );
-  }
-
-  return (
+  const hub = (
     <div ref={rootRef} key="hub" className="animate-tab-in flex min-h-full flex-col gap-6">
       <p className="leading-none">&gt; select a folder to open //</p>
       <ul className="grid grid-cols-2 content-start gap-x-4 gap-y-8 sm:grid-cols-4">
@@ -68,4 +54,30 @@ export default function InterestsView() {
       </ul>
     </div>
   );
+
+  // Media: the folder grid stays in place behind a full-screen overlay.
+  if (openId === 'media') {
+    return (
+      <>
+        {hub}
+        <MediaView onClose={() => setOpenId(null)} />
+      </>
+    );
+  }
+
+  if (openId) {
+    const Section = SECTIONS[openId];
+    return (
+      <div ref={rootRef} key={openId} className="animate-tab-in flex min-h-full flex-col gap-5">
+        <div>
+          <button type="button" onClick={() => setOpenId(null)} className="pixel-btn">
+            &lt; Back to interests
+          </button>
+        </div>
+        <Section />
+      </div>
+    );
+  }
+
+  return hub;
 }
