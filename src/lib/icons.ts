@@ -1,6 +1,7 @@
 import {
   Film,
   Gamepad2,
+  LayoutGrid,
   Github,
   Globe,
   Instagram,
@@ -24,6 +25,7 @@ export const TAB_ICONS: Record<TabIconName, LucideIcon> = {
   music: Music,
   quote: Quote,
   share: Share2,
+  grid: LayoutGrid,
 };
 
 export const SOCIAL_ICONS: Record<SocialIconName, LucideIcon> = {

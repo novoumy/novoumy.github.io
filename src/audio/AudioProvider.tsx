@@ -5,6 +5,8 @@ import { playMenuBlip } from '@/audio/sfx';
 interface AudioContextValue {
   muted: boolean;
   toggleMuted: () => void;
+  // True while the browser is refusing to autoplay and is waiting for a tap/click.
+  blocked: boolean;
 }
 
 const AudioStateContext = createContext<AudioContextValue | null>(null);
@@ -14,6 +16,7 @@ const SFX_OPT_OUT = '[data-no-sfx]';
 
 export function AudioProvider({ children }: { children: ReactNode }) {
   const [muted, setMuted] = useState(false);
+  const [blocked, setBlocked] = useState(false);
   const mutedRef = useRef(muted);
   const bgmRef = useRef<HTMLAudioElement | null>(null);
 
@@ -37,7 +40,9 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     const sync = () => {
       if (visible && focused) {
         // Rejected when the browser still blocks autoplay; a later gesture retries.
-        bgm.play().catch(() => undefined);
+        bgm.play().catch((error: unknown) => {
+          if (error instanceof DOMException && error.name === 'NotAllowedError') setBlocked(true);
+        });
       } else {
         bgm.pause();
       }
@@ -79,6 +84,8 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     window.addEventListener('pageshow', onPageShow);
     // If the first play() raced with loading, try again once data is ready.
     bgm.addEventListener('canplay', sync);
+    const onPlaying = () => setBlocked(false);
+    bgm.addEventListener('playing', onPlaying);
 
     sync();
 
@@ -98,6 +105,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       window.removeEventListener('pagehide', onPageHide);
       window.removeEventListener('pageshow', onPageShow);
       bgm.removeEventListener('canplay', sync);
+      bgm.removeEventListener('playing', onPlaying);
       document.removeEventListener('click', onClick, true);
       bgm.pause();
       bgmRef.current = null;
@@ -107,7 +115,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   const toggleMuted = () => setMuted((value) => !value);
 
   return (
-    <AudioStateContext.Provider value={{ muted, toggleMuted }}>{children}</AudioStateContext.Provider>
+    <AudioStateContext.Provider value={{ muted, toggleMuted, blocked }}>{children}</AudioStateContext.Provider>
   );
 }
 

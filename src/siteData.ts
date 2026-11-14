@@ -17,10 +17,14 @@
 // Types (the shapes each section expects - you normally don't need to touch these)
 // ----------------------------------------------------------------------------
 
-export type TabId = 'main' | 'media' | 'games' | 'music' | 'quotes' | 'socials';
+// Top-level tabs in the tab bar.
+export type TabId = 'main' | 'socials' | 'interests';
 
-// Built-in icons available for tabs. Options: 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share'
-export type TabIconName = 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share';
+// Sections inside the Interests hub (opened from its 2x2 grid).
+export type InterestId = 'media' | 'games' | 'music' | 'quotes';
+
+// Built-in icons available for tabs. Options: 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid'
+export type TabIconName = 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid';
 
 // Built-in icons available for social tiles (used when no "image" is given).
 // Options: 'github' | 'youtube' | 'x' | 'discord' | 'steam' | 'instagram' | 'linkedin' | 'globe' | 'mail'
@@ -117,10 +121,15 @@ export const audio = {
 export const tabs: TabConfig[] = [
   { id: 'main', label: 'Main', icon: 'user', enabled: true },
   { id: 'socials', label: 'Socials', icon: 'share', enabled: true },
-  { id: 'media', label: 'Media', icon: 'film', enabled: true },
-  { id: 'games', label: 'Games', icon: 'gamepad', enabled: true },
-  { id: 'music', label: 'Music', icon: 'music', enabled: true },
-  { id: 'quotes', label: 'Quotes', icon: 'quote', enabled: true },
+  { id: 'interests', label: 'Interests', icon: 'grid', enabled: true },
+];
+
+// The four cards in the Interests hub. Change the subtitles to whatever you like.
+export const interests: { id: InterestId; label: string; subtitle: string; icon: TabIconName }[] = [
+  { id: 'media', label: 'Media', subtitle: 'favorite anime & shows', icon: 'film' },
+  { id: 'games', label: 'Games', subtitle: "what I'm playing / played", icon: 'gamepad' },
+  { id: 'music', label: 'Music', subtitle: 'rotation & tracks', icon: 'music' },
+  { id: 'quotes', label: 'Quotes', subtitle: 'saved text snippets', icon: 'quote' },
 ];
 
 // ----------------------------------------------------------------------------

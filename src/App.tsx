@@ -2,29 +2,30 @@ import { useEffect, useState, type ComponentType } from 'react';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
 import SoundToggle from '@/components/SoundToggle';
-import GamesView from '@/views/GamesView';
 import MainView from '@/views/MainView';
-import MediaView from '@/views/MediaView';
-import MusicView from '@/views/MusicView';
-import QuotesView from '@/views/QuotesView';
+import InterestsView from '@/views/InterestsView';
 import SocialsView from '@/views/SocialsView';
 import { site, tabs, type TabId } from '@/siteData';
 import { useStageScale } from '@/lib/useStageScale';
 
 const VIEWS: Record<TabId, ComponentType> = {
   main: MainView,
-  media: MediaView,
-  games: GamesView,
-  music: MusicView,
-  quotes: QuotesView,
   socials: SocialsView,
+  interests: InterestsView,
 };
 
 const enabledTabs = tabs.filter((tab) => tab.enabled);
 
 export default function App() {
   const [activeId, setActiveId] = useState<TabId>(() => enabledTabs[0]?.id ?? 'main');
+  // Bumped when the active tab is clicked again, so Interests returns to its grid.
+  const [resetCount, setResetCount] = useState(0);
   const ActiveView = VIEWS[activeId];
+
+  const selectTab = (id: TabId) => {
+    if (id === activeId) setResetCount((n) => n + 1);
+    else setActiveId(id);
+  };
 
   useEffect(() => {
     document.title = site.title;
@@ -54,7 +55,7 @@ export default function App() {
             <SoundToggle className="flex" />
           </div>
           <div className="flex items-end justify-between gap-2">
-            <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={setActiveId} />
+            <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={selectTab} />
             <SoundToggle className="hidden min-[860px]:flex" />
           </div>
           <section
@@ -64,7 +65,7 @@ export default function App() {
               staged ? 'aspect-[4/3]' : 'min-h-0 flex-1',
             ].join(' ')}
           >
-            <div key={activeId} className="pixel-scroll animate-tab-in min-h-0 flex-1 overflow-y-auto p-5 sm:p-8">
+            <div key={`${activeId}-${resetCount}`} className="pixel-scroll animate-tab-in min-h-0 flex-1 overflow-y-auto p-5 sm:p-8">
               <ActiveView />
             </div>
           </section>
