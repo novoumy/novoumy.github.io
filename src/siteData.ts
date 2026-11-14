@@ -90,6 +90,7 @@ export interface SocialItem {
   url: string;
   icon?: SocialIconName; // built-in pixel icon...
   image?: string; // ...or your own image URL (takes priority over icon)
+  featured?: boolean; // shown as the big "Primary Comms" banner (use on one item)
 }
 
 // ----------------------------------------------------------------------------
@@ -427,6 +428,7 @@ export const socials: SocialItem[] = [
     handle: 'novoumy',
     url: 'https://discord.com/users/722546564685365419',
     icon: 'discord',
+    featured: true,
   },
   {
     platform: 'Steam',
@@ -573,6 +575,18 @@ export const specGroups: SpecGroup[] = [
         label: 'Pad 2',
         name: 'EasySMX D10 Controller',
         link: amazon('EasySMX D10 Controller'),
+        linkLabel: 'AMAZON',
+      },
+      {
+        label: 'Mouse',
+        name: 'Ajazz AJ159',
+        link: amazon('Ajazz AJ159 mouse'),
+        linkLabel: 'AMAZON',
+      },
+      {
+        label: 'Keys',
+        name: 'EPOMAKER x Aula F75',
+        link: amazon('EPOMAKER x Aula F75 keyboard'),
         linkLabel: 'AMAZON',
       },
     ],

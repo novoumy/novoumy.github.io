@@ -18,15 +18,29 @@ const VIEWS: Record<TabId, ComponentType> = {
 
 const enabledTabs = tabs.filter((tab) => tab.enabled);
 
+// "#specs" -> 'specs'. Unknown or empty hashes fall back to the first tab.
+function tabFromHash(): TabId {
+  const id = window.location.hash.replace(/^#\/?/, '').toLowerCase();
+  return enabledTabs.find((tab) => tab.id === id)?.id ?? enabledTabs[0]?.id ?? 'main';
+}
+
 export default function App() {
-  const [activeId, setActiveId] = useState<TabId>(() => enabledTabs[0]?.id ?? 'main');
+  const [activeId, setActiveId] = useState<TabId>(tabFromHash);
   // Bumped when the active tab is clicked again, so Interests returns to its grid.
   const [resetCount, setResetCount] = useState(0);
   const ActiveView = VIEWS[activeId];
 
+  // Keep the tab in sync with the URL hash (direct links, back/forward buttons).
+  useEffect(() => {
+    const onHashChange = () => setActiveId(tabFromHash());
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  // Clicking a tab only changes the hash; the listener above updates the view.
   const selectTab = (id: TabId) => {
     if (id === activeId) setResetCount((n) => n + 1);
-    else setActiveId(id);
+    else window.location.hash = id;
   };
 
   useEffect(() => {
