@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ComponentType } from 'react';
-import { TAB_ICONS } from '@/lib/icons';
+import PixelIcon from '@/components/PixelIcon';
 import { interests, type InterestId } from '@/siteData';
 import GamesView from '@/views/GamesView';
 import MediaView from '@/views/MediaView';
@@ -44,32 +44,27 @@ export default function InterestsView() {
   }
 
   return (
-    <div ref={rootRef} key="hub" className="animate-tab-in flex min-h-full flex-col gap-5">
+    <div ref={rootRef} key="hub" className="animate-tab-in flex min-h-full flex-col gap-6">
       <p className="leading-none">&gt; select a folder to open //</p>
-      <ul className="grid flex-1 grid-cols-2 auto-rows-fr gap-4 pb-2 sm:gap-6">
-        {interests.map((item) => {
-          const Icon = TAB_ICONS[item.icon];
-          return (
-            <li key={item.id} className="flex min-w-0">
-              <button
-                type="button"
-                onClick={() => setOpenId(item.id)}
-                aria-label={`Open ${item.label}`}
-                className="pixel-tile pixel-tile-interactive group flex min-h-[170px] w-full min-w-0 flex-col bg-cool-white text-left"
-              >
-                <span className="truncate bg-wine px-2 py-2 text-center font-pixel text-[8px] uppercase leading-none text-cool-white sm:text-[10px] sm:py-3">
-                  {item.label}
-                </span>
-                <span className="flex flex-1 flex-col items-center justify-center gap-3 px-2 py-4 text-center">
-                  <span className="pixel-tile flex h-14 w-14 items-center justify-center bg-rose text-wine transition-colors group-hover:bg-wine group-hover:text-cool-white sm:h-20 sm:w-20">
-                    <Icon className="h-7 w-7 sm:h-10 sm:w-10" strokeWidth={2.5} aria-hidden="true" />
-                  </span>
-                  <span className="text-[19px] leading-tight sm:text-[22px]">{item.subtitle}</span>
-                </span>
-              </button>
-            </li>
-          );
-        })}
+      <ul className="grid grid-cols-2 content-start gap-x-4 gap-y-8 sm:grid-cols-4">
+        {interests.map((item) => (
+          <li key={item.id} className="flex justify-center">
+            <button
+              type="button"
+              onClick={() => setOpenId(item.id)}
+              aria-label={`Open ${item.label}`}
+              className="group flex w-full max-w-[150px] flex-col items-center gap-3 outline-offset-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-wine"
+            >
+              <PixelIcon
+                name={item.id}
+                className="h-20 w-20 transition-transform duration-150 [transition-timing-function:steps(2)] group-hover:-translate-y-1 group-active:translate-y-0 sm:h-24 sm:w-24"
+              />
+              <span className="px-2 py-1 font-pixel text-[10px] uppercase leading-none transition-colors duration-150 group-hover:bg-wine group-hover:text-cool-white sm:text-[11px]">
+                {item.label}
+              </span>
+            </button>
+          </li>
+        ))}
       </ul>
     </div>
   );

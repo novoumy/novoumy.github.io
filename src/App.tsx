@@ -5,6 +5,7 @@ import SoundToggle from '@/components/SoundToggle';
 import MainView from '@/views/MainView';
 import InterestsView from '@/views/InterestsView';
 import SocialsView from '@/views/SocialsView';
+import SpecsView from '@/views/SpecsView';
 import { site, tabs, type TabId } from '@/siteData';
 import { useStageScale } from '@/lib/useStageScale';
 
@@ -12,6 +13,7 @@ const VIEWS: Record<TabId, ComponentType> = {
   main: MainView,
   socials: SocialsView,
   interests: InterestsView,
+  specs: SpecsView,
 };
 
 const enabledTabs = tabs.filter((tab) => tab.enabled);

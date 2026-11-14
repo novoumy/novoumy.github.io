@@ -1,4 +1,5 @@
 import {
+  Cpu,
   Film,
   Gamepad2,
   LayoutGrid,
@@ -26,6 +27,7 @@ export const TAB_ICONS: Record<TabIconName, LucideIcon> = {
   quote: Quote,
   share: Share2,
   grid: LayoutGrid,
+  cpu: Cpu,
 };
 
 export const SOCIAL_ICONS: Record<SocialIconName, LucideIcon> = {

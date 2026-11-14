@@ -18,13 +18,13 @@
 // ----------------------------------------------------------------------------
 
 // Top-level tabs in the tab bar.
-export type TabId = 'main' | 'socials' | 'interests';
+export type TabId = 'main' | 'socials' | 'interests' | 'specs';
 
 // Sections inside the Interests hub (opened from its 2x2 grid).
 export type InterestId = 'media' | 'games' | 'music' | 'quotes';
 
-// Built-in icons available for tabs. Options: 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid'
-export type TabIconName = 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid';
+// Built-in icons available for tabs. Options: 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid' | 'cpu'
+export type TabIconName = 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid' | 'cpu';
 
 // Built-in icons available for social tiles (used when no "image" is given).
 // Options: 'github' | 'youtube' | 'x' | 'discord' | 'steam' | 'instagram' | 'linkedin' | 'globe' | 'mail'
@@ -122,6 +122,7 @@ export const tabs: TabConfig[] = [
   { id: 'main', label: 'Main', icon: 'user', enabled: true },
   { id: 'socials', label: 'Socials', icon: 'share', enabled: true },
   { id: 'interests', label: 'Interests', icon: 'grid', enabled: true },
+  { id: 'specs', label: 'Specs', icon: 'cpu', enabled: true },
 ];
 
 // The four cards in the Interests hub. Change the subtitles to whatever you like.
@@ -450,5 +451,130 @@ export const socials: SocialItem[] = [
     handle: 'contact@novoumy.com',
     url: 'mailto:contact@novoumy.com',
     icon: 'mail',
+  },
+];
+
+// ----------------------------------------------------------------------------
+// SPECS - PC build. Each part has a label, the name/specs, and a store link.
+// Replace the search links with the exact product page when you have it.
+// ----------------------------------------------------------------------------
+
+export interface SpecPart {
+  label: string;
+  name: string;
+  detail?: string;
+  link: string;
+  linkLabel: string; // shown as [ LABEL ]
+}
+
+export interface SpecGroup {
+  title: string;
+  parts: SpecPart[];
+}
+
+const newegg = (query: string) => `https://www.newegg.com/p/pl?d=${encodeURIComponent(query)}`;
+const amazon = (query: string) => `https://www.amazon.com/s?k=${encodeURIComponent(query)}`;
+
+export const specsSummary = [
+  { label: 'RIG_ID', value: 'BLU_MACHINE' },
+  { label: 'OS', value: 'Windows 11 Pro' },
+  { label: 'STATUS', value: 'OPTIMIZED' },
+];
+
+export const specGroups: SpecGroup[] = [
+  {
+    title: 'Core',
+    parts: [
+      {
+        label: 'CPU',
+        name: 'Intel Core i7-14700KF',
+        detail: '33MB Cache, up to 5.60 GHz',
+        link: newegg('Intel Core i7-14700KF'),
+        linkLabel: 'NEW EGG',
+      },
+      {
+        label: 'Cooler',
+        name: 'Red Dragon CC-118 Dual-Tower Air Cooler',
+        detail: 'ARGB',
+        link: amazon('Red Dragon CC-118 Dual-Tower Air Cooler ARGB'),
+        linkLabel: 'AMAZON',
+      },
+      {
+        label: 'GPU',
+        name: 'ASUS GeForce RTX 5070 PRIME',
+        detail: '12GB GDDR6',
+        link: newegg('ASUS GeForce RTX 5070 PRIME 12GB'),
+        linkLabel: 'NEW EGG',
+      },
+      {
+        label: 'Mobo',
+        name: 'ASUS PRIME Z790-P WiFi',
+        link: newegg('ASUS PRIME Z790-P WiFi'),
+        linkLabel: 'NEW EGG',
+      },
+      {
+        label: 'RAM',
+        name: '32GB (2x16GB) Lexar THOR DDR5',
+        detail: '6000 MHz, OC',
+        link: amazon('Lexar THOR DDR5 32GB 2x16GB 6000MHz'),
+        linkLabel: 'AMAZON',
+      },
+    ],
+  },
+  {
+    title: 'Storage, Power & Case',
+    parts: [
+      {
+        label: 'SSD 1',
+        name: 'Western Digital Black SN770',
+        detail: '2TB NVMe M.2 SSD',
+        link: amazon('Western Digital Black SN770 2TB NVMe'),
+        linkLabel: 'AMAZON',
+      },
+      {
+        label: 'SSD 2',
+        name: 'Team Group MP33 Pro',
+        detail: '1TB NVMe SSD',
+        link: amazon('Team Group MP33 Pro 1TB NVMe'),
+        linkLabel: 'AMAZON',
+      },
+      {
+        label: 'PSU',
+        name: 'FSP Hydro Pro 800W',
+        detail: '80+ Bronze',
+        link: newegg('FSP Hydro Pro 800W'),
+        linkLabel: 'NEW EGG',
+      },
+      {
+        label: 'Case',
+        name: 'Cougar FV150 RGB Mid-Tower',
+        detail: 'Black',
+        link: newegg('Cougar FV150 RGB Mid-Tower'),
+        linkLabel: 'NEW EGG',
+      },
+    ],
+  },
+  {
+    title: 'Peripherals & Audio',
+    parts: [
+      {
+        label: 'Mic',
+        name: 'Fifine AM8 Dynamic Microphone',
+        link: amazon('Fifine AM8 Dynamic Microphone'),
+        linkLabel: 'AMAZON',
+      },
+      {
+        label: 'Pad 1',
+        name: 'Lenovo S07 Controller',
+        link: amazon('Lenovo S07 Controller'),
+        linkLabel: 'AMAZON',
+      },
+      {
+        label: 'Pad 2',
+        name: 'EasySMX D10 Controller',
+        link: amazon('EasySMX D10 Controller'),
+        linkLabel: 'AMAZON',
+      },
+    ],
   },
 ];
