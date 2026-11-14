@@ -46,9 +46,16 @@ export default function App() {
           }
           style={staged ? { zoom: scale } : undefined}
         >
+          {/* Phones: slim title bar with the sound toggle above the tabs. */}
+          <div className="mb-4 flex items-center justify-between pl-1 pr-1 min-[860px]:hidden">
+            <span className="font-pixel text-[10px] uppercase text-cool-white [text-shadow:2px_2px_0_var(--wine)]">
+              &gt; {site.title}
+            </span>
+            <SoundToggle className="flex" />
+          </div>
           <div className="flex items-end justify-between gap-2">
             <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={setActiveId} />
-            <SoundToggle />
+            <SoundToggle className="hidden min-[860px]:flex" />
           </div>
           <section
             role="tabpanel"
