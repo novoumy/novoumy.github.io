@@ -136,25 +136,22 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       aria-modal="true"
       aria-label="Media library"
       tabIndex={-1}
-      className="media-dark animate-tab-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[var(--m-bg)] text-[var(--m-ink)] outline-none"
+      className="media-dark animate-tab-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#313338] text-[#f2f3f5] outline-none"
     >
       {/* Title bar */}
-      <header className="flex shrink-0 items-center justify-between gap-3 bg-[var(--m-header)] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] text-[var(--m-ink)] sm:px-8">
+      <header className="flex shrink-0 items-center justify-between gap-3 border-b border-[#1e1f22] bg-[#2b2d31] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8 lg:px-12">
         {/* Top-left area closes the library too (arrow + title). */}
-        <div
-          onClick={onClose}
-          className="flex min-w-0 cursor-pointer items-baseline gap-3 sm:gap-4"
-        >
+        <div onClick={onClose} className="flex min-w-0 cursor-pointer items-baseline gap-3 sm:gap-4">
           <h2 className="min-w-0 truncate text-[11px] uppercase sm:text-[14px]">
             <button
               type="button"
               aria-label="Close media library"
-              className="cursor-pointer truncate border-0 bg-transparent p-0 text-left uppercase text-inherit outline-none [font:inherit] focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4"
+              className="cursor-pointer truncate border-0 bg-transparent p-0 text-left uppercase text-[#f2f3f5] outline-none [font:inherit] focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4"
             >
               &gt; Media library
             </button>
           </h2>
-          <span className="hidden shrink-0 font-pixel text-[8px] uppercase text-[var(--m-crimson-hi)] sm:inline" aria-live="polite">
+          <span className="hidden shrink-0 font-pixel text-[8px] uppercase text-[#949ba4] sm:inline" aria-live="polite">
             {visible.length} / {media.length} titles
           </span>
         </div>
@@ -162,21 +159,20 @@ export default function MediaView({ onClose }: MediaViewerProps) {
           type="button"
           onClick={onClose}
           aria-label="Close media library"
-          className="pixel-btn !bg-[var(--m-crimson)] !text-white hover:!bg-[var(--m-crimson-hi)]"
+          className="pixel-btn !bg-[#1e1f22] !text-[#f2f3f5] hover:!bg-[#404249]"
         >
           <X size={14} strokeWidth={3} aria-hidden="true" />
           <span>Close</span>
         </button>
       </header>
-      <div className="h-1 shrink-0 bg-[var(--m-crimson)]" aria-hidden="true" />
 
       {/* Search, filters and sorting */}
-      <div className="shrink-0 border-b-4 border-[var(--m-line)] bg-[var(--m-bg)] px-4 py-4 sm:px-8 lg:px-12">
+      <div className="shrink-0 border-b border-[#1e1f22] bg-[#2b2d31] px-4 py-4 sm:px-8 lg:px-12">
         <div className="flex w-full flex-col gap-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
-            <label className="pixel-tile relative flex min-w-0 flex-1 items-center bg-[var(--m-surface)] focus-within:bg-[var(--m-surface-hi)]">
+            <label className="relative flex min-w-0 flex-1 items-center rounded border border-transparent bg-[#1e1f22] focus-within:border-[#5865f2]">
               <span className="sr-only">Search titles</span>
-              <Search size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3" />
+              <Search size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3 text-[#949ba4]" />
               <input
                 ref={searchRef}
                 type="search"
@@ -186,7 +182,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                 autoComplete="off"
                 spellCheck={false}
                 enterKeyHint="search"
-                className="h-12 w-full bg-transparent pl-10 pr-10 font-body text-[24px] leading-none text-[var(--m-ink)] outline-none placeholder:text-[var(--m-muted)] [&::-webkit-search-cancel-button]:hidden"
+                className="h-12 w-full bg-transparent pl-10 pr-10 font-body text-[24px] leading-none text-[#f2f3f5] outline-none placeholder:text-[#949ba4] [&::-webkit-search-cancel-button]:hidden"
               />
               {query && (
                 <button
@@ -196,27 +192,27 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                     searchRef.current?.focus();
                   }}
                   aria-label="Clear search"
-                  className="absolute right-2 flex h-8 w-8 items-center justify-center hover:bg-[var(--m-crimson)] hover:text-white"
+                  className="absolute right-2 flex h-8 w-8 items-center justify-center rounded text-[#949ba4] hover:bg-[#404249] hover:text-[#f2f3f5]"
                 >
                   <X size={16} strokeWidth={3} aria-hidden="true" />
                 </button>
               )}
             </label>
 
-            <label className="pixel-tile relative flex shrink-0 items-center bg-[var(--m-surface)] lg:w-[300px]">
+            <label className="relative flex shrink-0 items-center rounded border border-transparent bg-[#1e1f22] hover:bg-[#404249] focus-within:border-[#5865f2] lg:w-[300px]">
               <span className="sr-only">Sort by</span>
               <select
                 value={sort}
                 onChange={(event) => setSort(event.target.value as SortKey)}
-                className="h-12 w-full cursor-pointer appearance-none bg-transparent pl-3 pr-10 font-body text-[22px] leading-none text-[var(--m-ink)] outline-none focus-visible:bg-[var(--m-surface-hi)]"
+                className="h-12 w-full cursor-pointer appearance-none bg-transparent pl-3 pr-10 font-body text-[22px] leading-none text-[#f2f3f5] outline-none"
               >
                 {SORT_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <option key={option.value} value={option.value} className="bg-[#1e1f22] text-[#f2f3f5]">
                     {option.label}
                   </option>
                 ))}
               </select>
-              <ChevronDown size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute right-3" />
+              <ChevronDown size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute right-3 text-[#949ba4]" />
             </label>
           </div>
 
@@ -224,7 +220,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
             <div
               role="group"
               aria-label="Filter by category"
-              className="-mx-1 flex flex-nowrap gap-3 overflow-x-auto px-1 py-1.5 sm:flex-wrap sm:overflow-visible"
+              className="-mx-1 flex flex-nowrap gap-2.5 overflow-x-auto px-1 py-1 sm:flex-wrap sm:overflow-visible"
             >
               {mediaFilters.map((option) => {
                 const active = option.value === filter;
@@ -235,48 +231,62 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                     aria-pressed={active}
                     onClick={() => setFilter(option.value)}
                     className={[
-                      'pixel-tile flex shrink-0 items-center gap-2 px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
-                      active ? 'bg-[var(--m-crimson)] text-white' : 'bg-[var(--m-surface)] text-[var(--m-ink)] hover:bg-[var(--m-surface-hi)] hover:text-white',
+                      'flex shrink-0 items-center gap-2 rounded px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
+                      active
+                        ? 'bg-[#5865f2] text-white'
+                        : 'bg-[#1e1f22] text-[#dbdee1] hover:bg-[#404249] hover:text-[#f2f3f5]',
                     ].join(' ')}
                   >
                     {option.label}
-                    <span className={active ? 'text-white/80' : 'text-[var(--m-crimson-hi)]'}>{counts[option.value] ?? 0}</span>
+                    <span className={active ? 'text-white/80' : 'text-[#949ba4]'}>{counts[option.value] ?? 0}</span>
                   </button>
                 );
               })}
             </div>
-            <span className="shrink-0 font-pixel text-[8px] uppercase sm:hidden" aria-live="polite">
+            <span className="shrink-0 font-pixel text-[8px] uppercase text-[#949ba4] sm:hidden" aria-live="polite">
               {visible.length}/{media.length}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Scrollable grid */}
+      {/* Scrollable area: info embed on top, then the grid */}
       <div
         ref={gridScrollRef}
-        className="pixel-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[var(--m-bg)] px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-6 sm:px-10 lg:px-12"
+        className="pixel-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[#313338] px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-5 sm:px-10 lg:px-12"
       >
         <div className="w-full">
+          {/* Discord-style info embed */}
+          <aside className="mb-6 flex overflow-hidden rounded-[4px] border border-[#1e1f22] bg-[#2b2d31] lg:mb-8">
+            <div className="w-1 shrink-0 bg-[#ed4245]" aria-hidden="true" />
+            <div className="flex min-w-0 flex-col gap-2 px-4 py-3 sm:px-5 sm:py-4">
+              <h3 className="text-[11px] font-bold uppercase leading-[1.4] text-[#f2f3f5] sm:text-[12px]">Media archive</h3>
+              <p className="text-[21px] leading-[1.3] text-[#dbdee1] sm:text-[22px]">
+                Everything I&apos;ve watched, read, and binged—all in one place.
+              </p>
+              <p className="text-[18px] leading-[1.3] text-[#949ba4] sm:text-[19px]">
+                Note: This is a personal catalog and retrospective log, not a streaming site.
+              </p>
+            </div>
+          </aside>
+
           {visible.length === 0 ? (
             <div className="flex flex-col items-center gap-5 py-16 text-center">
-              <p className="font-pixel text-[11px] uppercase leading-[1.8]">No results</p>
-              <p>
+              <p className="font-pixel text-[11px] uppercase leading-[1.8] text-[#f2f3f5]">No results</p>
+              <p className="text-[#949ba4]">
                 {query.trim() ? `Nothing matches "${query.trim()}"` : 'Nothing here yet'}
                 {filter !== 'all' ? ' in this category.' : '.'}
               </p>
               <button
                 type="button"
                 onClick={resetAll}
-                className="pixel-btn !bg-[var(--m-crimson)] !text-white hover:!bg-[var(--m-crimson-hi)]"
+                className="pixel-btn !bg-[#5865f2] !text-white hover:!bg-[#4752c4]"
               >
                 Reset search &amp; filters
               </button>
             </div>
           ) : (
-            <ul
-              className="grid gap-x-5 gap-y-7 pb-4 [grid-template-columns:repeat(auto-fill,minmax(140px,1fr))] sm:gap-x-6 sm:gap-y-8 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] lg:gap-x-8 lg:gap-y-10 lg:[grid-template-columns:repeat(auto-fill,minmax(250px,1fr))] min-[1600px]:[grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]"
-            >
+            <ul className="grid gap-x-5 gap-y-7 pb-4 [grid-template-columns:repeat(auto-fill,minmax(140px,1fr))] sm:gap-x-6 sm:gap-y-8 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] lg:gap-x-8 lg:gap-y-10 lg:[grid-template-columns:repeat(auto-fill,minmax(250px,1fr))] min-[1600px]:[grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]">
               {visible.map((item) => (
                 <li key={`${item.category}-${item.title}-${item.year}`}>
                   <MediaCard item={item} />
@@ -299,7 +309,7 @@ function MediaCard({ item }: { item: MediaItem }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${item.title} (${item.year}), opens in a new tab`}
-      className="pixel-tile pixel-tile-interactive group flex h-full w-full flex-col gap-3 bg-[var(--m-surface)] p-2.5 text-left sm:p-3 lg:gap-4 lg:p-4"
+      className="group flex h-full w-full flex-col gap-3 rounded-md border border-[#3f4147] bg-[#2b2d31] p-2.5 text-left outline-none transition-colors duration-150 hover:border-[#4e5058] focus-visible:border-[#5865f2] sm:p-3 lg:gap-4 lg:p-4"
     >
       <div className="relative">
         <img
@@ -307,16 +317,16 @@ function MediaCard({ item }: { item: MediaItem }) {
           alt={`${item.title} poster`}
           loading="lazy"
           decoding="async"
-          className="aspect-[2/3] w-full bg-[var(--m-surface-hi)] object-cover"
+          className="aspect-[2/3] w-full rounded-sm bg-[#1e1f22] object-cover"
         />
         <span className="absolute bottom-2 left-2">
           <PixelBadge>{item.category}</PixelBadge>
         </span>
-        <span className="absolute bottom-2 right-2">
-          <PixelBadge>{item.year}</PixelBadge>
+        <span className="absolute bottom-2 right-2 inline-block rounded-sm bg-[#1e1f22]/90 px-2 py-1 font-pixel text-[8px] uppercase leading-none text-[#949ba4]">
+          {item.year}
         </span>
       </div>
-      <h3 className="text-[9px] leading-[1.6] text-[var(--m-ink)] sm:text-[10px] lg:text-[13px]">{item.title}</h3>
+      <h3 className="text-[9px] leading-[1.6] text-[#f2f3f5] sm:text-[10px] lg:text-[13px]">{item.title}</h3>
     </a>
   );
 }
