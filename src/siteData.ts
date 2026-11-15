@@ -1686,7 +1686,7 @@ export const specGroups: SpecGroup[] = [
     ],
   },
   {
-    title: 'Peripherals & Displays',
+    title: 'Peripherals',
     parts: [
       {
         label: 'Monitor 1',
@@ -1716,20 +1716,17 @@ export const specGroups: SpecGroup[] = [
         link: amazon('Ajazz AJ159 Pro'),
         linkLabel: 'AMAZON',
       },
-    ],
-  },
-  {
-    title: 'Peripherals & Audio',
-    parts: [
       {
         label: 'Mic',
         name: 'Fifine AM8 Dynamic Microphone',
+        detail: 'USB/XLR Dual-Channel Gaming & Streaming Mic',
         link: amazon('Fifine AM8 Dynamic Microphone'),
         linkLabel: 'AMAZON',
       },
       {
         label: 'Pad 1',
         name: 'Lenovo Pad',
+        detail: 'Portable Tablet & Media Companion',
         link: amazon('Lenovo Pad'),
         linkLabel: 'AMAZON',
       },
