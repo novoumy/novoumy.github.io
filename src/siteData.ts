@@ -1329,9 +1329,6 @@ export const games: GameItem[] = [
 // "Allow embedding" turned on ("Artist - Topic" audio uploads usually do).
 const spotifySearch = (title: string, artist: string) =>
   `https://open.spotify.com/search/${encodeURIComponent(`${title} ${artist}`)}`;
-const youtubeSearch = (title: string, artist: string) =>
-  `https://www.youtube.com/results?search_query=${encodeURIComponent(`${title} ${artist}`)}`;
-const youtubeWatch = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 
 export const tracks: TrackItem[] = [
   {
@@ -1342,10 +1339,10 @@ export const tracks: TrackItem[] = [
     genre: 'INDIE / ALT',
     duration: '2:17',
     coverUrl: 'https://images.genius.com/485597d10bafde06faa87e527be1324d.1000x1000x1.png',
-    youtubeId: 'vx4kLgnFexo',
+    youtubeId: 'Qy9LTRu89FA',
     spotifyUrl: spotifySearch('My Love Mine All Mine', 'Mitski'),
     geniusUrl: 'https://genius.com/Mitski-my-love-mine-all-mine-lyrics',
-    youtubeUrl: youtubeWatch('vx4kLgnFexo'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=Qy9LTRu89FA',
   },
   {
     id: 2,
@@ -1353,10 +1350,10 @@ export const tracks: TrackItem[] = [
     artist: 'Anıl Emre Daldal',
     genre: 'AMBIENT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6041ae3ddd860d536e319c1ccba8e581.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: 'wsKhe5rTKw8',
     spotifyUrl: spotifySearch('M.', 'Anıl Emre Daldal'),
     geniusUrl: 'https://genius.com/Genius-english-translations-anl-emre-daldal-m-english-translation-lyrics',
-    youtubeUrl: youtubeSearch('M.', 'Anıl Emre Daldal'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=wsKhe5rTKw8',
   },
   {
     id: 3,
@@ -1364,10 +1361,10 @@ export const tracks: TrackItem[] = [
     artist: 'Liana Flores',
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fb6c30c08e6c23a4911a53df25c3f90f0.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: 'lLVOv1CvPpA',
     spotifyUrl: spotifySearch('Rises the Moon', 'Liana Flores'),
     geniusUrl: 'https://genius.com/Liana-flores-rises-the-moon-lyrics',
-    youtubeUrl: youtubeSearch('Rises the Moon', 'Liana Flores'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=lLVOv1CvPpA',
   },
   {
     id: 4,
@@ -1375,10 +1372,10 @@ export const tracks: TrackItem[] = [
     artist: 'Mephisto Walz',
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fdfee4fad0a9e020108d3d0899d6ba430.1000x1000x1.jpg',
-    youtubeId: '',
+    youtubeId: '5upRUNTgnx4',
     spotifyUrl: spotifySearch('Painted Black', 'Mephisto Walz'),
     geniusUrl: 'https://genius.com/Mephisto-walz-painted-black-lyrics',
-    youtubeUrl: youtubeSearch('Painted Black', 'Mephisto Walz'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=5upRUNTgnx4',
   },
   {
     id: 5,
@@ -1387,10 +1384,10 @@ export const tracks: TrackItem[] = [
     album: 'Currents',
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fc62e9901da159ce3cb8cca32078d87c6.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: '1nS8tpOwnoo',
     spotifyUrl: spotifySearch('Let It Happen', 'Tame Impala'),
     geniusUrl: 'https://genius.com/Tame-impala-let-it-happen-lyrics',
-    youtubeUrl: youtubeSearch('Let It Happen', 'Tame Impala'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=1nS8tpOwnoo',
   },
   {
     id: 6,
@@ -1398,10 +1395,10 @@ export const tracks: TrackItem[] = [
     artist: 'PIXY (UK)',
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fc8f8521aea8fbbb52a0ee290777224f0.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: 'Ps_6IcvAEm8',
     spotifyUrl: spotifySearch('Legacy', 'PIXY (UK)'),
     geniusUrl: 'https://genius.com/Pixy-uk-legacy-lyrics',
-    youtubeUrl: youtubeSearch('Legacy', 'PIXY (UK)'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=Ps_6IcvAEm8',
   },
   {
     id: 7,
@@ -1409,10 +1406,10 @@ export const tracks: TrackItem[] = [
     artist: 'Alina Kay & Ozz Gold',
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F9131f2b5152e5cd65b6a567203ca1068.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: 'vMaILjabyWc',
     spotifyUrl: spotifySearch('Everything is romantic (Reimagined)', 'Alina Kay & Ozz Gold'),
     geniusUrl: 'https://genius.com/Alina-kay-and-ozz-gold-everything-is-romantic-reimagined-lyrics',
-    youtubeUrl: youtubeSearch('Everything is romantic (Reimagined)', 'Alina Kay & Ozz Gold'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=vMaILjabyWc',
   },
   {
     id: 8,
@@ -1420,10 +1417,10 @@ export const tracks: TrackItem[] = [
     artist: 'ThxSoMch',
     genre: 'PHONK',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F2590d316b35bf3ff7c06a4de1f537244.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: 'o96Do5VDwEU',
     spotifyUrl: spotifySearch('Spit in My Face!', 'ThxSoMch'),
     geniusUrl: 'https://genius.com/Thxsomch-spit-in-my-face-lyrics',
-    youtubeUrl: youtubeSearch('Spit in My Face!', 'ThxSoMch'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=o96Do5VDwEU',
   },
   {
     id: 9,
@@ -1431,10 +1428,10 @@ export const tracks: TrackItem[] = [
     artist: 'Dev1lCat',
     genre: 'PHONK',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Ff5e83199e03614f510dcde0ace75e3a2.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: 'r24B1UJO2RY',
     spotifyUrl: spotifySearch('Sinking Town', 'Dev1lCat'),
     geniusUrl: 'https://genius.com/Genius-romanizations-yoeko-kurahashi-sinking-town-romanized-lyrics',
-    youtubeUrl: youtubeSearch('Sinking Town', 'Dev1lCat'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=r24B1UJO2RY',
   },
   {
     id: 10,
@@ -1442,10 +1439,10 @@ export const tracks: TrackItem[] = [
     artist: 'Too Close To Touch & Bad Omens',
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F68390fdbba573f6a10e6ace9eb77f5ff.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: 'uPCeqquFuIA',
     spotifyUrl: spotifySearch('Novocaine', 'Too Close To Touch & Bad Omens'),
     geniusUrl: 'https://genius.com/Too-close-to-touch-novocaine-lyrics',
-    youtubeUrl: youtubeSearch('Novocaine', 'Too Close To Touch & Bad Omens'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=uPCeqquFuIA',
   },
   {
     id: 11,
@@ -1453,10 +1450,10 @@ export const tracks: TrackItem[] = [
     artist: 'vivi baby & ovg!',
     genre: 'PHONK',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fb35fc6abb85d9813b3a17ae876563583.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: 'sfgPTRPM7qY',
     spotifyUrl: spotifySearch('My Jealousy', 'vivi baby & ovg!'),
     geniusUrl: 'https://genius.com/Vivi-baby-and-ovg-my-jealousy-lyrics',
-    youtubeUrl: youtubeSearch('My Jealousy', 'vivi baby & ovg!'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=sfgPTRPM7qY',
   },
   {
     id: 12,
@@ -1464,10 +1461,10 @@ export const tracks: TrackItem[] = [
     artist: 'Mr.Kitty',
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6d6ffffa21429f719636915b263b74b5.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: 'sVx1mJDeUjY',
     spotifyUrl: spotifySearch('After Dark', 'Mr.Kitty'),
     geniusUrl: 'https://genius.com/Mrkitty-after-dark-lyrics',
-    youtubeUrl: youtubeSearch('After Dark', 'Mr.Kitty'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=sVx1mJDeUjY',
   },
   {
     id: 13,
@@ -1475,10 +1472,10 @@ export const tracks: TrackItem[] = [
     artist: 'Pupsies',
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6041cd6fabc7d613927bc732ea03932e.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: 'kWLo1fsWCeY',
     spotifyUrl: spotifySearch('Misery', 'Pupsies'),
     geniusUrl: 'https://genius.com/Pupsies-misery-lyrics',
-    youtubeUrl: youtubeSearch('Misery', 'Pupsies'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=kWLo1fsWCeY',
   },
   {
     id: 14,
@@ -1486,10 +1483,10 @@ export const tracks: TrackItem[] = [
     artist: 'Lime Cordiale',
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fdba7b14007c5e2a113b1374e4fe87887.1000x1000x1.png',
-    youtubeId: '',
+    youtubeId: '-xwEYd6Aoko',
     spotifyUrl: spotifySearch('Imposter Syndrome', 'Lime Cordiale'),
     geniusUrl: 'https://genius.com/Lime-cordiale-imposter-syndrome-lyrics',
-    youtubeUrl: youtubeSearch('Imposter Syndrome', 'Lime Cordiale'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=-xwEYd6Aoko',
   },
 ];
 

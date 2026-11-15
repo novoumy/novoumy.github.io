@@ -467,28 +467,57 @@ export default function MusicView({ onClose }: MusicViewProps) {
         {/* Showcase */}
         <section
           aria-label="Now playing"
-          className="flex shrink-0 items-center gap-4 border-b border-[#1e1f22] bg-[#313338] px-4 py-3 sm:px-8 lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:gap-6 lg:border-b-0 lg:border-r lg:px-12 lg:py-6"
+          className="relative flex shrink-0 items-center gap-4 overflow-hidden border-b border-[#1e1f22] bg-[#313338] px-4 py-4 sm:gap-6 sm:px-8 lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:gap-8 lg:border-b-0 lg:border-r lg:px-10 lg:py-8"
         >
-          <img
-            key={featured.id}
-            src={featured.coverUrl}
-            alt={`${featured.title} cover art`}
-            decoding="async"
-            style={{ '--art': 'max(200px, min(480px, 100%, calc(100dvh - 31rem)))' } as CSSProperties}
-            className="animate-tab-in aspect-square w-24 shrink-0 bg-[#1e1f22] object-cover shadow-[0_0_0_3px_#1e1f22,6px_6px_0_3px_#5865f2] sm:w-32 lg:w-[var(--art)]"
-          />
-          <div className="flex min-w-0 flex-1 flex-col gap-2 lg:w-[var(--art)] lg:flex-none lg:gap-3">
+          {/* Ambient light: a heavily blurred copy of the cover, so the glow always matches its colours. */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+            <img
+              key={`glow-${featured.id}`}
+              src={featured.coverUrl}
+              alt=""
+              decoding="async"
+              className="glow-in absolute left-1/2 top-1/2 h-[150%] w-[150%] max-w-none -translate-x-1/2 -translate-y-1/2 object-cover opacity-50 blur-[80px] saturate-150"
+            />
+            <div className="absolute inset-0 bg-[#1e1f22]/35" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(30,31,34,0)_0%,#313338_85%)]" />
+          </div>
+
+          <div
+            style={{ '--art': 'max(240px, min(620px, 100%, calc(100dvh - 24rem)))' } as CSSProperties}
+            className="relative z-10 w-28 shrink-0 sm:w-36 lg:w-[var(--art)]"
+          >
+            {/* Tighter glow right behind the card */}
+            <img
+              key={`halo-${featured.id}`}
+              src={featured.coverUrl}
+              alt=""
+              aria-hidden="true"
+              decoding="async"
+              className="glow-in absolute inset-0 h-full w-full scale-105 object-cover opacity-70 blur-2xl saturate-150"
+            />
+            <img
+              key={featured.id}
+              src={featured.coverUrl}
+              alt={`${featured.title} cover art`}
+              decoding="async"
+              className="animate-tab-in relative aspect-square w-full bg-[#1e1f22] object-cover shadow-[0_0_0_4px_#1e1f22,10px_10px_0_4px_#5865f2]"
+            />
+          </div>
+
+          <div className="relative z-10 flex min-w-0 flex-1 flex-col gap-2 lg:w-[max(var(--art),24rem)] lg:max-w-full lg:flex-none lg:gap-4">
             <div className="flex items-center gap-3">
-              <span className="font-pixel text-[8px] uppercase text-[#949ba4]">
+              <span className="font-pixel text-[9px] uppercase text-[#b5bac1] lg:text-[11px]">
                 {!current ? 'Select a track' : playing ? 'Now playing' : 'Paused'}
               </span>
               {current && playing && <Equalizer live />}
             </div>
-            <h3 className="break-words text-[11px] leading-[1.6] sm:text-[13px] lg:text-[16px]">{featured.title}</h3>
-            <p className="truncate text-[24px] leading-none text-[#dbdee1] lg:text-[28px]">{featured.artist}</p>
-            {featured.album && <p className="truncate text-[20px] leading-none text-[#949ba4]">{featured.album}</p>}
+            <h3 className="break-words text-[13px] font-bold leading-[1.5] sm:text-[16px] lg:text-[26px]">{featured.title}</h3>
+            <p className="truncate text-[28px] leading-none text-[#f2f3f5] sm:text-[32px] lg:text-[44px]">{featured.artist}</p>
+            {featured.album && (
+              <p className="truncate text-[22px] leading-none text-[#b5bac1] sm:text-[24px] lg:text-[30px]">{featured.album}</p>
+            )}
             <div>
-              <span className="inline-block rounded-sm bg-[#1e1f22]/90 px-2 py-1 font-pixel text-[8px] uppercase leading-none text-[#949ba4]">
+              <span className="inline-block rounded-sm bg-[#5865f2] px-3 py-2 font-pixel text-[9px] uppercase leading-none text-white lg:text-[11px]">
                 {featured.genre}
               </span>
             </div>
@@ -496,7 +525,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
         </section>
 
         {/* Queue sidebar */}
-        <aside aria-label="Up next" className="flex min-h-0 flex-1 flex-col bg-[#2b2d31] lg:w-[440px] lg:flex-none xl:w-[500px]">
+        <aside aria-label="Up next" className="flex min-h-0 flex-1 flex-col bg-[#2b2d31] lg:w-[340px] lg:flex-none xl:w-[380px]">
           <div className="flex shrink-0 flex-col gap-3 border-b border-[#1e1f22] px-4 py-3 sm:px-6">
             <div className="flex items-center justify-between">
               <h3 className="font-pixel text-[9px] uppercase text-[#f2f3f5]">Up next</h3>

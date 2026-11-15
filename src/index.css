@@ -447,8 +447,20 @@
   animation: float-particle linear infinite;
 }
 
+@keyframes glow-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Cross-fades the ambient cover glow when the track changes. */
+.glow-in {
+  animation: glow-fade 700ms ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-tab-in,
+  .glow-in,
   .animate-float-particle,
   .eq-bars i,
   .vinyl,
