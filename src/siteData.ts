@@ -994,7 +994,7 @@ export const media: MediaItem[] = [
   title: 'Detective Conan: Private Eye in the Distant Sea',
   category: 'Anime',
   year: 2013,
-  poster: 'https://www.imdb.com/title/tt3303446/mediaviewer/rm2768910849/?ref_=tt_ov_i',
+  poster: 'https://m.media-amazon.com/images/M/MV5BY2MxM2U1OGYtY2U2YS00MjZjLWE5ZDMtNWM4M2E5YTRkM2Q3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt3303446/?ref_=fn_t_1',
 },
 {
