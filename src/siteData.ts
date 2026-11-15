@@ -942,10 +942,10 @@ export const media: MediaItem[] = [
   link: 'https://www.imdb.com/title/tt1133936/?ref_=fn_t_1',
 },
 {
-  title: 'Detective Conan: The Private Eyes\' Requiem',
+  title: 'Detective Conan: The Private Eyes Requiem',
   category: 'Anime',
   year: 2006,
-  poster: 'https://m.media-amazon.com/images/M/MV5BM2VhODIxYWUtYTc1ZS00M2U4LTkxZGEtYTg2NGU4OTM5NTc5XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+  poster: 'https://m.media-amazon.com/images/M/MV5BY2MxM2U1OGYtY2U2YS00MjZjLWE5ZDMtNWM4M2E5YTRkM2Q3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt0498536/?ref_=fn_t_1',
 },
 {
@@ -1092,7 +1092,7 @@ export const media: MediaItem[] = [
   title: 'Spy x Family',
   category: 'Anime',
   year: 2022,
-  poster: 'https://www.imdb.com/title/tt13706018/mediaviewer/rm218701057/?ref_=tt_ov_i',
+  poster: 'https://m.media-amazon.com/images/M/MV5BZDkwNjc0NWEtNzJlOC00N2YwLTk4MjktZGFlZDE2Y2QzOWI0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt13706018/?ref_=fn_t_1',
 },
 {
