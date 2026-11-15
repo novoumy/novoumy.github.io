@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, ExternalLink } from 'lucide-react';
+import RetroOverlay from '@/components/RetroOverlay';
 import { games, type GameItem } from '@/siteData';
 
 // Turns the free-form `status` in siteData into a badge label and a completion figure.
@@ -32,20 +33,13 @@ function describeStatus(status: string) {
 
 // Retro achievement showcase: big artwork cards with a status badge in the corner
 // and a `[ DETAILS v ]` drawer with personal stats.
-export default function GamesView() {
+export default function GamesView({ onClose }: { onClose: () => void }) {
   const [openTitle, setOpenTitle] = useState<string | null>(null);
   const done = games.filter((g) => describeStatus(g.status).pct === 100).length;
 
   return (
-    <div className="flex w-full flex-col gap-6">
-      <header className="flex flex-wrap items-end justify-between gap-3 border-b-2 border-[#7d5560] pb-4">
-        <h2 className="r-glow text-[12px] uppercase text-[#CC97A3] sm:text-[14px]">&gt; game_library.exe</h2>
-        <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">
-          // {games.length} games · {done} completed
-        </span>
-      </header>
-
-      <ul className="grid w-full gap-6 [grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))]">
+    <RetroOverlay label="Game library" meta={`${games.length} games · ${done} completed`} onClose={onClose}>
+      <ul className="grid w-full gap-6 pb-4 [grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))] lg:gap-8">
         {games.map((game) => (
           <li key={game.title} className="flex">
             <GameCard
@@ -56,7 +50,7 @@ export default function GamesView() {
           </li>
         ))}
       </ul>
-    </div>
+    </RetroOverlay>
   );
 }
 

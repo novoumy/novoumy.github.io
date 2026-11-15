@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ComponentType } from 'react';
+import { useEffect, useRef } from 'react';
 import PixelIcon from '@/components/PixelIcon';
 import { interests, type InterestId } from '@/siteData';
 import GamesView from '@/views/GamesView';
@@ -6,14 +6,8 @@ import MediaView from '@/views/MediaView';
 import MusicView from '@/views/MusicView';
 import QuotesView from '@/views/QuotesView';
 
-// Media and Music are not in this map: they open as full-screen overlays (see below).
-const SECTIONS: Record<Exclude<InterestId, 'media' | 'music'>, ComponentType> = {
-  games: GamesView,
-  quotes: QuotesView,
-};
-
-// Interests is a tiny "desktop": a 2x2 grid of folders. Opening one swaps the
-// content of this same window (no pop-ups); the back button returns to the grid.
+// Interests is a tiny "desktop": a 2x2 grid of folders. Each folder opens as a
+// full-screen overlay; its close button returns to the grid.
 // Which folder is open lives in the URL hash (see App.tsx), so it survives reloads and can be shared.
 interface InterestsViewProps {
   openId: InterestId | null;
@@ -79,22 +73,21 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
     );
   }
 
-  if (openId) {
-    const Section = SECTIONS[openId];
-    // Dark retro panel: bleeds out to the edges of the window so the whole route is #1e1e1e.
+  if (openId === 'games') {
     return (
-      <div
-        ref={rootRef}
-        key={openId}
-        className="retro-dark animate-tab-in relative -m-5 flex min-h-[calc(100%+2.5rem)] w-[calc(100%+2.5rem)] max-w-none flex-col gap-6 p-6 sm:-m-8 sm:min-h-[calc(100%+4rem)] sm:w-[calc(100%+4rem)] sm:p-8"
-      >
-        <div>
-          <button type="button" onClick={() => setOpenId(null)} className="r-btn">
-            &lt; Back to interests
-          </button>
-        </div>
-        <Section />
-      </div>
+      <>
+        {hub}
+        <GamesView onClose={() => setOpenId(null)} />
+      </>
+    );
+  }
+
+  if (openId === 'quotes') {
+    return (
+      <>
+        {hub}
+        <QuotesView onClose={() => setOpenId(null)} />
+      </>
     );
   }
 

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import RetroOverlay from '@/components/RetroOverlay';
 import { quotes } from '@/siteData';
 
 // Terminal-log quote cards with a "roll random quote" shuffle button.
-export default function QuotesView() {
+export default function QuotesView({ onClose }: { onClose: () => void }) {
   const [active, setActive] = useState<number | null>(null);
   const [flash, setFlash] = useState(0); // bumped on each roll to replay the fade
   const refs = useRef<(HTMLLIElement | null)[]>([]);
@@ -23,16 +24,13 @@ export default function QuotesView() {
   }, [active, flash]);
 
   return (
-    <div className="flex w-full flex-col gap-6">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#7d5560] pb-4">
-        <div className="flex flex-col gap-2">
-          <h2 className="r-glow text-[12px] uppercase text-[#CC97A3] sm:text-[14px]">&gt; quotes.log</h2>
-          <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// {quotes.length} entries</span>
-        </div>
+    <RetroOverlay label="Quotes log" meta={`${quotes.length} entries`} onClose={onClose}>
+      <div className="mb-6 flex items-center justify-between gap-3 border-b-2 border-[#7d5560] pb-4">
+        <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// quotes.log · {quotes.length} entries</span>
         <button type="button" onClick={roll} className="r-btn">
           &gt; Roll random quote
         </button>
-      </header>
+      </div>
 
       <ul className="flex w-full flex-col gap-6">
         {quotes.map((quote, index) => {
@@ -77,6 +75,6 @@ export default function QuotesView() {
           );
         })}
       </ul>
-    </div>
+    </RetroOverlay>
   );
 }
