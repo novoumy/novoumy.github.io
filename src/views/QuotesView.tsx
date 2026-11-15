@@ -1,38 +1,61 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import RetroOverlay from '@/components/RetroOverlay';
 import { quotes } from '@/siteData';
 
-// Terminal-log quote cards with a "roll random quote" shuffle button.
+// Pixel-art die (face showing five), drawn on a grid so it stays crisp at any size.
+const PIPS: [number, number][] = [
+  [2, 2],
+  [8, 2],
+  [5, 5],
+  [2, 8],
+  [8, 8],
+];
+
+function PixelDie({ className = '' }: { className?: string }) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 12 12" shapeRendering="crispEdges" className={className}>
+      <rect x="0" y="0" width="12" height="12" fill="#CC97A3" />
+      <rect x="1" y="1" width="10" height="10" fill="#1e1e1e" />
+      {PIPS.map(([x, y]) => (
+        <rect key={`${x}-${y}`} x={x} y={y} width="2" height="2" fill="#CC97A3" />
+      ))}
+    </svg>
+  );
+}
+
+// Quote log cards in a responsive grid, plus a big centered dice button that
+// scrolls to and pulse-highlights a random card.
 export default function QuotesView({ onClose }: { onClose: () => void }) {
   const [active, setActive] = useState<number | null>(null);
-  const [flash, setFlash] = useState(0); // bumped on each roll to replay the fade
+  const [rolls, setRolls] = useState(0); // bumped on every roll to replay the animations
   const refs = useRef<(HTMLLIElement | null)[]>([]);
 
   const roll = useCallback(() => {
     if (quotes.length === 0) return;
-    setActive((current) => {
-      if (quotes.length === 1) return 0;
-      let next = Math.floor(Math.random() * quotes.length);
-      while (next === current) next = Math.floor(Math.random() * quotes.length);
-      return next;
-    });
-    setFlash((n) => n + 1);
-  }, []);
-
-  useEffect(() => {
-    if (active !== null) refs.current[active]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  }, [active, flash]);
+    let next = Math.floor(Math.random() * quotes.length);
+    if (quotes.length > 1) while (next === active) next = Math.floor(Math.random() * quotes.length);
+    setActive(next);
+    setRolls((n) => n + 1);
+    refs.current[next]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }, [active]);
 
   return (
     <RetroOverlay label="Quotes log" meta={`${quotes.length} entries`} onClose={onClose}>
-      <div className="mb-6 flex items-center justify-between gap-3 border-b-2 border-[#7d5560] pb-4">
-        <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// quotes.log · {quotes.length} entries</span>
-        <button type="button" onClick={roll} className="r-btn">
-          &gt; Roll random quote
+      <div className="mb-8 flex justify-center pt-2 sm:mb-10">
+        <button
+          type="button"
+          onClick={roll}
+          disabled={quotes.length === 0}
+          className="r-btn group !gap-4 !px-6 !py-5 !text-[11px] shadow-[6px_6px_0_0_#7d5560] sm:!text-[13px]"
+        >
+          <span key={rolls} className={['block', rolls > 0 ? 'die-roll' : ''].join(' ')}>
+            <PixelDie className="h-10 w-10 sm:h-12 sm:w-12" />
+          </span>
+          <span>[ Roll random quote ]</span>
         </button>
       </div>
 
-      <ul className="flex w-full flex-col gap-6">
+      <ul className="grid w-full items-stretch gap-6 pb-4 [grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))] lg:gap-8">
         {quotes.map((quote, index) => {
           const isActive = index === active;
           return (
@@ -41,36 +64,29 @@ export default function QuotesView({ onClose }: { onClose: () => void }) {
               ref={(node) => {
                 refs.current[index] = node;
               }}
-              className={[
-                'r-box relative overflow-hidden transition-opacity duration-300',
-                isActive ? 'r-box-active shadow-[4px_4px_0_0_#7d5560]' : active !== null ? 'opacity-45' : '',
-              ].join(' ')}
+              className="flex"
             >
-              <div key={isActive ? `on-${flash}` : 'off'} className={isActive ? 'quote-flash' : ''}>
-                <div className="flex items-center justify-between gap-3 border-b-2 border-[#7d5560] bg-[#1e1e1e] px-4 py-2 font-pixel text-[8px] uppercase text-[#8a8a8a]">
-                  <span>log_{String(index + 1).padStart(3, '0')}.txt</span>
-                  <span aria-hidden="true" className="flex gap-1">
-                    <i className="block h-2 w-2 bg-[#3c3c3c]" />
-                    <i className="block h-2 w-2 bg-[#3c3c3c]" />
-                    <i className={['block h-2 w-2', isActive ? 'bg-[#CC97A3]' : 'bg-[#3c3c3c]'].join(' ')} />
-                  </span>
+              <figure
+                key={isActive ? `on-${rolls}` : 'off'}
+                className={[
+                  'flex w-full flex-col border-2 border-[#CC97A3] bg-[#252525] transition-opacity duration-300',
+                  isActive ? 'quote-pulse' : active !== null ? 'opacity-60' : '',
+                ].join(' ')}
+              >
+                <div className="flex items-center justify-between gap-3 bg-[#1e1e1e] px-4 py-2 font-pixel text-[8px] uppercase text-[#CC97A3]">
+                  <span>LOG_{String(index + 1).padStart(3, '0')}.TXT</span>
+                  <span aria-hidden="true" className="block h-2 w-2 bg-[#CC97A3]" />
                 </div>
-                <figure className="flex flex-col gap-5 px-5 py-5 sm:px-7 sm:py-6">
-                  <span aria-hidden="true" className="r-glow font-pixel text-[28px] leading-none text-[#CC97A3]">
+                <div className="flex flex-1 flex-col gap-4 px-5 pb-5 pt-4">
+                  <span aria-hidden="true" className="r-glow font-pixel text-[26px] leading-none text-[#CC97A3]">
                     &ldquo;
                   </span>
-                  <blockquote className="-mt-3 text-[28px] leading-[1.25] text-[#d4d4d4] sm:text-[32px]">
-                    {quote.text}
-                  </blockquote>
-                  <figcaption className="mt-1 flex items-center gap-3 border-t-2 border-dashed border-[#7d5560] pt-4">
-                    <span aria-hidden="true" className="font-pixel text-[9px] text-[#CC97A3]">
-                      --
-                    </span>
-                    <span className="font-pixel text-[9px] uppercase leading-[1.6] text-[#CC97A3]">{quote.author}</span>
-                    <span aria-hidden="true" className="r-caret ml-auto font-pixel text-[9px] text-[#8a8a8a]" />
+                  <blockquote className="-mt-2 flex-1 text-[27px] leading-[1.25] text-[#d4d4d4]">{quote.text}</blockquote>
+                  <figcaption className="mt-2 font-pixel text-[9px] uppercase leading-[1.6] text-[#CC97A3]">
+                    -- {quote.author}
                   </figcaption>
-                </figure>
-              </div>
+                </div>
+              </figure>
             </li>
           );
         })}

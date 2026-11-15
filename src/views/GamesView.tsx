@@ -13,34 +13,32 @@ function badgeFor(status: string) {
   const percent = /^(\d{1,3})\s*%$/.exec(text);
   if (percent) {
     const value = Math.min(100, Number(percent[1]));
+    if (value === 0) return "HAVEN'T PLAYED";
     return value === 100 ? '100% COMPLETED' : `${value}% PROGRESS`;
   }
   return text.toUpperCase();
 }
 
 type PlatformFilter = 'all' | GamePlatform;
-type StatusFilter = 'all' | 'completed' | 'progress' | 'playing';
-type SortKey = 'title-asc' | 'title-desc' | 'progress-desc' | 'progress-asc';
+type StatusFilter = 'all' | 'unplayed' | 'playing' | 'completed';
+type SortKey = 'title-asc' | 'title-desc';
 
 const PLATFORM_FILTERS: { label: string; value: PlatformFilter }[] = [
   { label: 'All', value: 'all' },
   { label: 'PC', value: 'PC' },
   { label: 'Mobile', value: 'MOBILE' },
-  { label: 'PC & Mobile', value: 'PC & MOBILE' },
 ];
 
 const STATUS_FILTERS: { label: string; value: StatusFilter }[] = [
   { label: 'Any status', value: 'all' },
-  { label: 'Completed', value: 'completed' },
-  { label: 'In progress', value: 'progress' },
+  { label: "Haven't played", value: 'unplayed' },
   { label: 'Playing', value: 'playing' },
+  { label: 'Completed', value: 'completed' },
 ];
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'title-asc', label: 'Alphabetical (A - Z)' },
   { value: 'title-desc', label: 'Alphabetical (Z - A)' },
-  { value: 'progress-desc', label: 'Progress (Highest first)' },
-  { value: 'progress-asc', label: 'Progress (Lowest first)' },
 ];
 
 // Percent complete, or null for open-ended statuses such as "forever playing".
@@ -50,31 +48,20 @@ function progressOf(status: string): number | null {
   return /master/i.test(status) ? 100 : null;
 }
 
+// completed = 100% / mastered; haven't played = 0% or "not played" style text; everything else is playing.
 function statusOf(status: string): Exclude<StatusFilter, 'all'> {
   const value = progressOf(status);
   if (value === 100) return 'completed';
-  if (value !== null) return 'progress';
+  if (value === 0 || /not\s*played|haven'?t|backlog|unplayed|wishlist/i.test(status)) return 'unplayed';
   return 'playing';
 }
 
 const byTitle = (a: GameItem, b: GameItem) =>
   a.title.localeCompare(b.title, undefined, { sensitivity: 'base', numeric: true });
 
-// Games without a percentage (e.g. "forever playing") always sort to the end.
-const byProgress = (dir: 1 | -1) => (a: GameItem, b: GameItem) => {
-  const pa = progressOf(a.status);
-  const pb = progressOf(b.status);
-  if (pa === null && pb === null) return byTitle(a, b);
-  if (pa === null) return 1;
-  if (pb === null) return -1;
-  return (pa - pb) * dir || byTitle(a, b);
-};
-
 const COMPARATORS: Record<SortKey, (a: GameItem, b: GameItem) => number> = {
   'title-asc': byTitle,
   'title-desc': (a, b) => byTitle(b, a),
-  'progress-desc': byProgress(-1),
-  'progress-asc': byProgress(1),
 };
 
 const normalize = (text: string) =>
@@ -117,12 +104,12 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
   const platformCounts = useMemo(() => {
     const pool = status === 'all' ? searched : searched.filter((g) => statusOf(g.status) === status);
     const result: Record<string, number> = { all: pool.length };
-    for (const g of pool) result[g.platform] = (result[g.platform] ?? 0) + 1;
+    for (const g of pool) for (const pl of g.platforms) result[pl] = (result[pl] ?? 0) + 1;
     return result;
   }, [searched, status]);
 
   const statusCounts = useMemo(() => {
-    const pool = platform === 'all' ? searched : searched.filter((g) => g.platform === platform);
+    const pool = platform === 'all' ? searched : searched.filter((g) => g.platforms.includes(platform));
     const result: Record<string, number> = { all: pool.length };
     for (const g of pool) {
       const key = statusOf(g.status);
@@ -133,7 +120,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
 
   const visible = useMemo(() => {
     const filtered = searched.filter(
-      (g) => (platform === 'all' || g.platform === platform) && (status === 'all' || statusOf(g.status) === status),
+      (g) => (platform === 'all' || g.platforms.includes(platform)) && (status === 'all' || statusOf(g.status) === status),
     );
     return [...filtered].sort(COMPARATORS[sort]);
   }, [searched, platform, status, sort]);
@@ -308,7 +295,11 @@ function GameDetail({ game, onDismiss }: { game: GameItem; onDismiss: () => void
         <h3 className="r-glow text-[14px] leading-[1.5] text-[#CC97A3]">{game.title}</h3>
         <div className="flex flex-wrap gap-2">
           <span className="r-tag">[ {badgeFor(game.status)} ]</span>
-          <span className="r-tag">{game.platform}</span>
+          {game.platforms.map((pl) => (
+            <span key={pl} className="r-tag">
+              {pl}
+            </span>
+          ))}
         </div>
       </div>
 

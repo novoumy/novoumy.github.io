@@ -328,6 +328,34 @@
     animation: quote-flash 450ms ease-out both;
   }
 
+  /* Dice button: the die tumbles in steps when rolled. */
+  @keyframes die-roll {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .die-roll {
+    animation: die-roll 600ms steps(8) both;
+  }
+
+  /* Rolled quote card: glow pulses a few times, then settles on a steady highlight. */
+  @keyframes quote-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(204 151 163 / 0);
+    }
+    50% {
+      box-shadow: 0 0 28px 6px rgb(204 151 163 / 0.6);
+    }
+  }
+
+  .quote-pulse {
+    background: #2b2b2b;
+    box-shadow: 4px 4px 0 0 #7d5560;
+    animation: quote-pulse 700ms ease-in-out 3;
+  }
+
   /* Large stepped frame: wine outline, rose inner line, pixel drop shadow. */
   .pixel-frame {
     box-shadow:
@@ -658,6 +686,8 @@
   .progress-fill,
   .blink-arrow,
   .quote-flash,
+  .die-roll,
+  .quote-pulse,
   .r-caret::after {
     animation: none;
   }
