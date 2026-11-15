@@ -1,145 +1,116 @@
-import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+import { ExternalLink, X } from 'lucide-react';
 import RetroOverlay from '@/components/RetroOverlay';
 import { games, type GameItem } from '@/siteData';
 
-// Turns the free-form `status` in siteData into a badge label and a completion figure.
+// Turns the free-form `status` in siteData into a badge label.
 //   '100%'            -> [ 100% COMPLETED ]
 //   '40%'             -> [ 40% PROGRESS ]
 //   'forever playing' -> [ FOREVER PLAYING ]
 //   'mastered'        -> [ MASTERED ]
-function describeStatus(status: string) {
+function badgeFor(status: string) {
   const text = status.trim();
   const percent = /^(\d{1,3})\s*%$/.exec(text);
   if (percent) {
     const value = Math.min(100, Number(percent[1]));
-    return {
-      badge: value === 100 ? '100% COMPLETED' : `${value}% PROGRESS`,
-      completion: `${value}%`,
-      pct: value,
-      gold: value === 100,
-    };
+    return value === 100 ? '100% COMPLETED' : `${value}% PROGRESS`;
   }
-  const upper = text.toUpperCase();
-  const ongoing = /playing/i.test(text);
-  const mastered = /master/i.test(text);
-  return {
-    badge: upper,
-    completion: ongoing ? 'ONGOING' : mastered ? '100%' : upper,
-    pct: ongoing ? null : mastered ? 100 : null,
-    gold: mastered,
-  };
+  return text.toUpperCase();
 }
 
-// Retro achievement showcase: big artwork cards with a status badge in the corner
-// and a `[ DETAILS v ]` drawer with personal stats.
+// Launcher-style library: a grid of game art; clicking one slides a detail panel
+// in from the left (poster, title, status badge and your review).
 export default function GamesView({ onClose }: { onClose: () => void }) {
-  const [openTitle, setOpenTitle] = useState<string | null>(null);
-  const done = games.filter((g) => describeStatus(g.status).pct === 100).length;
+  const [selected, setSelected] = useState<GameItem | null>(null);
+  // Keeps the last game mounted while the panel slides out.
+  const [shown, setShown] = useState<GameItem | null>(null);
+
+  const select = (game: GameItem) => {
+    if (selected === game) {
+      setSelected(null);
+      return;
+    }
+    setSelected(game);
+    setShown(game);
+  };
+
+  const done = games.filter((g) => /^100\s*%$/.test(g.status.trim()) || /master/i.test(g.status)).length;
 
   return (
-    <RetroOverlay label="Game library" meta={`${games.length} games · ${done} completed`} onClose={onClose}>
-      <ul className="grid w-full gap-6 pb-4 [grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))] lg:gap-8">
-        {games.map((game) => (
-          <li key={game.title} className="flex">
-            <GameCard
-              game={game}
-              open={openTitle === game.title}
-              onToggle={() => setOpenTitle((current) => (current === game.title ? null : game.title))}
-            />
-          </li>
-        ))}
+    <RetroOverlay
+      label="Game library"
+      meta={`${games.length} games · ${done} completed`}
+      onClose={onClose}
+      sideOpen={selected !== null}
+      side={shown && <GameDetail game={shown} onDismiss={() => setSelected(null)} />}
+    >
+      <ul className="grid w-full gap-6 pb-4 [grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))] lg:gap-8">
+        {games.map((game) => {
+          const active = game === selected;
+          return (
+            <li key={game.title} className="flex">
+              <button
+                type="button"
+                aria-pressed={active}
+                onClick={() => select(game)}
+                className={[
+                  'r-box r-box-hover group flex w-full flex-col gap-3 p-2 text-left',
+                  active ? 'r-box-active !border-[#CC97A3] shadow-[4px_4px_0_0_#7d5560]' : '',
+                ].join(' ')}
+              >
+                <div className="relative">
+                  <img
+                    src={game.cover}
+                    alt={`${game.title} cover`}
+                    loading="lazy"
+                    className="aspect-[3/4] w-full border-2 border-[#7d5560] bg-[#1e1e1e] object-cover"
+                  />
+                  <span className="r-tag absolute right-2 top-2 shadow-[3px_3px_0_0_#000]">[ {badgeFor(game.status)} ]</span>
+                </div>
+                <h3 className="px-1 pb-1 text-[11px] leading-[1.6] text-[#d4d4d4]">{game.title}</h3>
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </RetroOverlay>
   );
 }
 
-interface GameCardProps {
-  game: GameItem;
-  open: boolean;
-  onToggle: () => void;
-}
-
-function GameCard({ game, open, onToggle }: GameCardProps) {
-  const info = describeStatus(game.status);
-  const drawerRef = useRef<HTMLDivElement>(null);
-  // `inert` keeps the collapsed drawer out of the tab order (React 18 can't set it as a boolean prop).
-  useEffect(() => {
-    drawerRef.current?.toggleAttribute('inert', !open);
-  }, [open]);
-  const drawerId = `drawer-${game.title.replace(/\W+/g, '-').toLowerCase()}`;
-
+function GameDetail({ game, onDismiss }: { game: GameItem; onDismiss: () => void }) {
   return (
-    <article className={['r-box flex w-full flex-col', open ? 'r-box-active' : ''].join(' ')}>
-      <div className="relative p-2 pb-0">
-        <img
-          src={game.cover}
-          alt={`${game.title} cover`}
-          loading="lazy"
-          className="aspect-[3/4] w-full border-2 border-[#7d5560] bg-[#1e1e1e] object-cover"
-        />
-        <span
-          className={[
-            'r-tag absolute right-4 top-4 shadow-[3px_3px_0_0_#000]',
-            '',
-          ].join(' ')}
-        >
-          [ {info.badge} ]
-        </span>
+    <div className="flex min-h-full flex-col gap-5 p-6">
+      <div className="flex items-center justify-between gap-3">
+        <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// game_info</span>
+        <button type="button" onClick={onDismiss} aria-label="Close details" className="r-btn !p-2">
+          <X size={14} strokeWidth={3} aria-hidden="true" />
+        </button>
       </div>
 
-      <h3 className="px-3 pb-3 pt-3 text-[11px] leading-[1.6] text-[#d4d4d4]">{game.title}</h3>
+      <img
+        src={game.cover}
+        alt={`${game.title} poster`}
+        className="aspect-[3/4] w-full border-2 border-[#CC97A3] bg-[#252526] object-cover shadow-[6px_6px_0_0_#7d5560]"
+      />
 
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-controls={drawerId}
-        onClick={onToggle}
-        className="mt-auto flex w-full items-center justify-between gap-2 border-t-2 border-[#7d5560] bg-[#1e1e1e] px-3 py-3 font-pixel text-[9px] uppercase text-[#CC97A3] outline-none transition-colors hover:bg-[#CC97A3] hover:text-[#1e1e1e] focus-visible:bg-[#CC97A3] focus-visible:text-[#1e1e1e]"
-      >
-        <span>[ Details {open ? '^' : 'v'} ]</span>
-        <ChevronDown size={14} aria-hidden="true" className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
-      </button>
-
-      <div ref={drawerRef} id={drawerId} className="r-drawer" data-open={open}>
+      <div className="flex flex-col gap-3">
+        <h3 className="r-glow text-[14px] leading-[1.5] text-[#CC97A3]">{game.title}</h3>
         <div>
-          <dl className="grid grid-cols-2 gap-3 border-t-2 border-[#7d5560] bg-[#1e1e1e] p-3">
-            <Stat label="Hours played" value={game.hours !== undefined ? `${game.hours} H` : '-- H'} />
-            <Stat label="Completion" value={info.completion} />
-            {info.pct !== null && (
-              <div className="col-span-2">
-                <div className="h-3 border-2 border-[#7d5560] bg-[#252526]" role="presentation">
-                  <div className="h-full bg-[#CC97A3]" style={{ width: `${info.pct}%` }} />
-                </div>
-              </div>
-            )}
-            <div className="col-span-2 flex flex-col gap-1">
-              <dt className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// Review</dt>
-              <dd className="text-[21px] leading-[1.25] text-[#d4d4d4]">&gt; {game.note}</dd>
-            </div>
-            {game.link && (
-              <a
-                href={game.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="r-btn col-span-2 !text-[9px]"
-              >
-                {game.linkLabel ?? 'Store page'}
-                <ExternalLink size={13} aria-hidden="true" />
-              </a>
-            )}
-          </dl>
+          <span className="r-tag">[ {badgeFor(game.status)} ]</span>
         </div>
       </div>
-    </article>
-  );
-}
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <dt className="font-pixel text-[8px] uppercase text-[#8a8a8a]">{label}</dt>
-      <dd className="text-[26px] leading-none text-[#CC97A3]">{value}</dd>
+      <div className="flex flex-col gap-2 border-t-2 border-dashed border-[#7d5560] pt-4">
+        <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// review</span>
+        <p className="text-[24px] leading-[1.3] text-[#d4d4d4]">&gt; {game.note}</p>
+      </div>
+
+      {game.link && (
+        <a href={game.link} target="_blank" rel="noopener noreferrer" className="r-btn mt-auto !text-[9px]">
+          {game.linkLabel ?? 'Store page'}
+          <ExternalLink size={13} aria-hidden="true" />
+        </a>
+      )}
     </div>
   );
 }

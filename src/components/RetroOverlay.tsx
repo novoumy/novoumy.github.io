@@ -9,12 +9,21 @@ interface RetroOverlayProps {
   meta?: string; // e.g. '5 games'
   onClose: () => void;
   children: ReactNode;
+  // Optional launcher-style detail panel that slides in from the left.
+  side?: ReactNode;
+  sideOpen?: boolean;
 }
 
 // Full-viewport retro page shared by /games and /quotes. Same architecture as the
 // media and music libraries: portalled into <body>, header bar on top, scrolling body below.
-export default function RetroOverlay({ label, meta, onClose, children }: RetroOverlayProps) {
+export default function RetroOverlay({ label, meta, onClose, children, side, sideOpen = false }: RetroOverlayProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
+  const sideRef = useRef<HTMLElement>(null);
+
+  // A closed panel stays out of the tab order and away from screen readers.
+  useEffect(() => {
+    sideRef.current?.toggleAttribute('inert', !sideOpen);
+  }, [sideOpen]);
 
   useEffect(() => {
     const previouslyFocused = document.activeElement as HTMLElement | null;
@@ -79,12 +88,29 @@ export default function RetroOverlay({ label, meta, onClose, children }: RetroOv
         </div>
         <button type="button" onClick={onClose} aria-label={`Close ${label.toLowerCase()}`} className="r-btn">
           <X size={14} strokeWidth={3} aria-hidden="true" />
-          <span>[ X Close ]</span>
+          <span>Close</span>
         </button>
       </header>
 
-      <div className="pixel-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[#1e1e1e] px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-6 sm:px-8">
-        <div className="w-full">{children}</div>
+      <div className="relative flex min-h-0 flex-1">
+        {side && (
+          <aside
+            ref={sideRef}
+            aria-hidden={!sideOpen}
+            className={[
+              'pixel-scroll absolute inset-y-0 left-0 z-20 w-full overflow-y-auto overscroll-contain border-r-2 border-[#7d5560] bg-[#1e1e1e] transition-transform duration-300 ease-out sm:w-[420px]',
+              sideOpen ? 'translate-x-0' : '-translate-x-full',
+            ].join(' ')}
+          >
+            {side}
+          </aside>
+        )}
+        <div
+          data-side={sideOpen ? 'open' : 'closed'}
+          className="pixel-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[#1e1e1e] px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-6 transition-[padding] duration-300 ease-out sm:px-8 lg:data-[side=open]:pl-[452px]"
+        >
+          <div className="w-full">{children}</div>
+        </div>
       </div>
     </div>,
     document.body,
