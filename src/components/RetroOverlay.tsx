@@ -10,13 +10,14 @@ interface RetroOverlayProps {
   onClose: () => void;
   children: ReactNode;
   // Optional launcher-style detail panel that slides in from the left.
+  toolbar?: ReactNode; // search / filter / sort strip under the header
   side?: ReactNode;
   sideOpen?: boolean;
 }
 
 // Full-viewport retro page shared by /games and /quotes. Same architecture as the
 // media and music libraries: portalled into <body>, header bar on top, scrolling body below.
-export default function RetroOverlay({ label, meta, onClose, children, side, sideOpen = false }: RetroOverlayProps) {
+export default function RetroOverlay({ label, meta, onClose, children, toolbar, side, sideOpen = false }: RetroOverlayProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const sideRef = useRef<HTMLElement>(null);
 
@@ -91,6 +92,10 @@ export default function RetroOverlay({ label, meta, onClose, children, side, sid
           <span>Close</span>
         </button>
       </header>
+
+      {toolbar && (
+        <div className="shrink-0 border-b-2 border-[#7d5560] bg-[#1e1e1e] px-4 py-4 sm:px-8">{toolbar}</div>
+      )}
 
       <div className="relative flex min-h-0 flex-1">
         {side && (

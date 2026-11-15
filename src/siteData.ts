@@ -65,8 +65,11 @@ export interface MediaItem {
   link: string; // external page (IMDb, MyAnimeList...), opened in a new tab when the card is clicked
 }
 
+export type GamePlatform = 'PC' | 'MOBILE' | 'PC & MOBILE';
+
 export interface GameItem {
   title: string;
+  platform: GamePlatform; // used by the platform filter tabs
   status: string; // shown in the badge, e.g. 'Completed', 'Playing', '100%'
   note: string; // short custom note / review, shown in the side panel
   cover: string;
@@ -1280,6 +1283,7 @@ export const media: MediaItem[] = [
 export const games: GameItem[] = [
   {
     title: 'Minecraft',
+    platform: 'PC & MOBILE',
     status: 'forever playing',
     note: 'just perfect.',
     cover:
@@ -1288,6 +1292,7 @@ export const games: GameItem[] = [
   },
   {
     title: 'Hollow Knight',
+    platform: 'PC',
     status: '40%',
     note: 'Beautiful and difficult',
     cover:
@@ -1296,6 +1301,7 @@ export const games: GameItem[] = [
   },
   {
     title: 'Terraria',
+    platform: 'PC',
     status: '100%',
     note: 'I love it so much.. I have every achiveemnt on steam!!',
     cover:
@@ -1304,6 +1310,7 @@ export const games: GameItem[] = [
   },
   {
     title: 'Katana Zero',
+    platform: 'PC',
     status: '100%',
     note: 'not many know this one.. I love it so much.. the gameplay is very nice and story is solid',
     cover:
@@ -1312,6 +1319,7 @@ export const games: GameItem[] = [
   },
   {
     title: 'Celeste',
+    platform: 'PC',
     status: '76%',
     note: 'tried hard to beat it all.. its so chalanging but very rewarding.. sound tracks hit hard',
     cover:

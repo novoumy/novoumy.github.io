@@ -139,7 +139,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       className="retro-dark animate-tab-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none"
     >
       {/* Title bar */}
-      <header className="flex shrink-0 items-center justify-between gap-3 border-b border-[#3c3c3c] bg-[#1e1e1e] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8 lg:px-12">
+      <header className="flex shrink-0 items-center justify-between gap-3 border-b-2 border-[#7d5560] bg-[#1e1e1e] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8 lg:px-12">
         {/* Top-left area closes the library too (arrow + title). */}
         <div onClick={onClose} className="flex min-w-0 cursor-pointer items-baseline gap-3 sm:gap-4">
           <h2 className="min-w-0 truncate text-[11px] uppercase sm:text-[14px]">
@@ -167,7 +167,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       </header>
 
       {/* Search, filters and sorting */}
-      <div className="shrink-0 border-b border-[#3c3c3c] bg-[#1e1e1e] px-4 py-4 sm:px-8 lg:px-12">
+      <div className="shrink-0 border-b-2 border-[#7d5560] bg-[#1e1e1e] px-4 py-4 sm:px-8 lg:px-12">
         <div className="flex w-full flex-col gap-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
             <label className="relative flex min-w-0 flex-1 items-center  border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-[#CC97A3]">
@@ -319,12 +319,10 @@ function MediaCard({ item }: { item: MediaItem }) {
           decoding="async"
           className="aspect-[2/3] w-full  bg-[#1e1e1e] object-cover"
         />
-        <span className="absolute bottom-2 left-2">
-          <PixelBadge>{item.category}</PixelBadge>
-        </span>
-        <span className="absolute bottom-2 right-2 inline-block  bg-[#1e1e1e]/90 px-2 py-1 font-pixel text-[8px] uppercase leading-none text-[#8a8a8a]">
-          {item.year}
-        </span>
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="r-tag">{item.category}</span>
+        <span className="r-tag">{item.year}</span>
       </div>
       <h3 className="text-[9px] leading-[1.6] text-[#d4d4d4] sm:text-[10px] lg:text-[13px]">{item.title}</h3>
     </a>
