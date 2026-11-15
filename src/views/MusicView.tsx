@@ -36,9 +36,9 @@ const formatTime = (seconds: number) => {
 const playable = (track: TrackItem) => track.youtubeId.trim() !== '';
 
 const LINK_PILL =
-  'border-2 border-[#3c3c3c] bg-[#1e1e1e] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[#a8a8a8] outline-none transition-colors hover:border-[#7CFFB2] hover:text-[#7CFFB2] focus-visible:border-[#7CFFB2]';
+  'border-2 border-[#3c3c3c] bg-[#1e1e1e] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[#a8a8a8] outline-none transition-colors hover:border-[#CC97A3] hover:text-[#CC97A3] focus-visible:border-[#CC97A3]';
 const LINK_PILL_ON =
-  'border-2 border-[#1e1e1e] bg-[#1e1e1e] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[#7CFFB2] outline-none transition-colors hover:bg-[#252526] focus-visible:bg-[#252526]';
+  'border-2 border-[#1e1e1e] bg-[#1e1e1e] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[#CC97A3] outline-none transition-colors hover:bg-[#252526] focus-visible:bg-[#252526]';
 
 function loadVolume(): number {
   try {
@@ -348,7 +348,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
     track.duration ?? (durations[track.id] ? formatTime(durations[track.id]) : '--:--');
 
   const ctrl =
-    'flex h-9 w-9 shrink-0 items-center justify-center  text-[#a8a8a8] outline-none transition-colors hover:text-[#d4d4d4] focus-visible:ring-2 focus-visible:ring-[#7CFFB2] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-[#a8a8a8]';
+    'flex h-9 w-9 shrink-0 items-center justify-center  text-[#a8a8a8] outline-none transition-colors hover:text-[#d4d4d4] focus-visible:ring-2 focus-visible:ring-[#CC97A3] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-[#a8a8a8]';
 
   return createPortal(
     <div
@@ -432,7 +432,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
               src={featured.coverUrl}
               alt={`${featured.title} cover art`}
               decoding="async"
-              className="animate-tab-in relative aspect-square w-full bg-[#1e1e1e] object-cover shadow-[0_0_0_4px_#1e1e1e,10px_10px_0_4px_#7CFFB2]"
+              className="animate-tab-in relative aspect-square w-full bg-[#1e1e1e] object-cover shadow-[0_0_0_4px_#1e1e1e,10px_10px_0_4px_#CC97A3]"
             />
           </div>
 
@@ -454,7 +454,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
         {/* Queue sidebar */}
         <aside aria-label="Up next" className="flex min-h-0 flex-1 flex-col bg-[#1e1e1e] lg:w-[420px] lg:flex-none xl:w-[480px]">
           <div className="flex shrink-0 items-center justify-between border-b-2 border-[#3c3c3c] px-4 py-3 sm:px-6">
-            <h3 className="font-pixel text-[10px] uppercase text-[#7CFFB2]">&gt; Up next</h3>
+            <h3 className="font-pixel text-[10px] uppercase text-[#CC97A3]">&gt; Up next</h3>
             <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">{tracks.length} tracks</span>
           </div>
 
@@ -478,8 +478,8 @@ export default function MusicView({ onClose }: MusicViewProps) {
                     className={[
                       'group border-2 transition-colors duration-150',
                       isCurrent
-                        ? 'border-[#7CFFB2] bg-[#7CFFB2] text-[#1e1e1e]'
-                        : 'border-[#3c3c3c] bg-[#252526] hover:border-[#7CFFB2] hover:bg-[#2d2d30]',
+                        ? 'border-[#CC97A3] bg-[#CC97A3] text-[#1e1e1e]'
+                        : 'border-[#7d5560] bg-[#252526] hover:border-[#CC97A3] hover:bg-[#2d2d30]',
                     ].join(' ')}
                   >
                     <button
@@ -491,7 +491,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                         rowError ??
                         (playable(track) ? undefined : 'No youtubeId set for this track yet, so it cannot be played here.')
                       }
-                      className="flex min-h-[96px] w-full min-w-0 items-center gap-4 px-3 pb-1 pt-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#7CFFB2] enabled:cursor-pointer disabled:cursor-not-allowed"
+                      className="flex min-h-[96px] w-full min-w-0 items-center gap-4 px-3 pb-1 pt-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#CC97A3] enabled:cursor-pointer disabled:cursor-not-allowed"
                     >
                       <span className={['relative h-[72px] w-[72px] shrink-0', canPlay ? '' : 'opacity-50'].join(' ')}>
                         <img src={track.coverUrl} alt="" loading="lazy" decoding="async" className="h-full w-full border-2 border-[#1e1e1e] bg-[#1e1e1e] object-cover" />
@@ -562,7 +562,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
           {/* Center: transport + seek */}
           <div className="flex min-w-0 flex-col items-center gap-0.5">
             <div className="flex items-center justify-center gap-1 sm:gap-2">
-              <button type="button" onClick={() => setShuffle((value) => !value)} aria-pressed={shuffle} aria-label="Shuffle" className={`${ctrl} ${shuffle ? '!text-[#7CFFB2]' : ''}`}>
+              <button type="button" onClick={() => setShuffle((value) => !value)} aria-pressed={shuffle} aria-label="Shuffle" className={`${ctrl} ${shuffle ? '!text-[#CC97A3]' : ''}`}>
                 <Shuffle size={16} strokeWidth={2.5} aria-hidden="true" />
               </button>
               <button type="button" onClick={previous} disabled={!current} aria-label="Previous track" className={ctrl}>
@@ -573,7 +573,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                 onClick={togglePlay}
                 disabled={!!currentError || (!current && queue.length === 0)}
                 aria-label={playing ? 'Pause' : 'Play'}
-                className="flex h-10 w-10 shrink-0 items-center justify-center  bg-[#d4d4d4] text-[#1e1e1e] outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#7CFFB2] disabled:opacity-40 disabled:hover:scale-100"
+                className="flex h-10 w-10 shrink-0 items-center justify-center  bg-[#d4d4d4] text-[#1e1e1e] outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#CC97A3] disabled:opacity-40 disabled:hover:scale-100"
               >
                 {playing ? <Pause size={18} fill="currentColor" aria-hidden="true" /> : <Play size={18} fill="currentColor" aria-hidden="true" className="translate-x-px" />}
               </button>
@@ -585,7 +585,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                 onClick={() => setRepeat((mode) => (mode === 'off' ? 'all' : mode === 'all' ? 'one' : 'off'))}
                 aria-label={`Repeat: ${repeat}`}
                 aria-pressed={repeat !== 'off'}
-                className={`${ctrl} ${repeat !== 'off' ? '!text-[#7CFFB2]' : ''}`}
+                className={`${ctrl} ${repeat !== 'off' ? '!text-[#CC97A3]' : ''}`}
               >
                 <RepeatIcon size={16} strokeWidth={2.5} aria-hidden="true" />
               </button>

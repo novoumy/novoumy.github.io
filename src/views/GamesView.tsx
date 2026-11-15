@@ -37,15 +37,15 @@ export default function GamesView() {
   const done = games.filter((g) => describeStatus(g.status).pct === 100).length;
 
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex flex-wrap items-end justify-between gap-3 border-b-2 border-[#3c3c3c] pb-4">
-        <h2 className="r-glow text-[12px] uppercase text-[#7CFFB2] sm:text-[14px]">&gt; game_library.exe</h2>
+    <div className="flex w-full flex-col gap-6">
+      <header className="flex flex-wrap items-end justify-between gap-3 border-b-2 border-[#7d5560] pb-4">
+        <h2 className="r-glow text-[12px] uppercase text-[#CC97A3] sm:text-[14px]">&gt; game_library.exe</h2>
         <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">
           // {games.length} games · {done} completed
         </span>
       </header>
 
-      <ul className="grid grid-cols-1 gap-6 min-[520px]:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid w-full gap-6 [grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))]">
         {games.map((game) => (
           <li key={game.title} className="flex">
             <GameCard
@@ -82,12 +82,12 @@ function GameCard({ game, open, onToggle }: GameCardProps) {
           src={game.cover}
           alt={`${game.title} cover`}
           loading="lazy"
-          className="aspect-[3/4] w-full border-2 border-[#3c3c3c] bg-[#1e1e1e] object-cover"
+          className="aspect-[3/4] w-full border-2 border-[#7d5560] bg-[#1e1e1e] object-cover"
         />
         <span
           className={[
             'r-tag absolute right-4 top-4 shadow-[3px_3px_0_0_#000]',
-            info.gold ? '!border-[#f5c542] !text-[#f5c542]' : '',
+            '',
           ].join(' ')}
         >
           [ {info.badge} ]
@@ -101,7 +101,7 @@ function GameCard({ game, open, onToggle }: GameCardProps) {
         aria-expanded={open}
         aria-controls={drawerId}
         onClick={onToggle}
-        className="mt-auto flex w-full items-center justify-between gap-2 border-t-2 border-[#3c3c3c] bg-[#1e1e1e] px-3 py-3 font-pixel text-[9px] uppercase text-[#7CFFB2] outline-none transition-colors hover:bg-[#7CFFB2] hover:text-[#1e1e1e] focus-visible:bg-[#7CFFB2] focus-visible:text-[#1e1e1e]"
+        className="mt-auto flex w-full items-center justify-between gap-2 border-t-2 border-[#7d5560] bg-[#1e1e1e] px-3 py-3 font-pixel text-[9px] uppercase text-[#CC97A3] outline-none transition-colors hover:bg-[#CC97A3] hover:text-[#1e1e1e] focus-visible:bg-[#CC97A3] focus-visible:text-[#1e1e1e]"
       >
         <span>[ Details {open ? '^' : 'v'} ]</span>
         <ChevronDown size={14} aria-hidden="true" className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
@@ -109,13 +109,13 @@ function GameCard({ game, open, onToggle }: GameCardProps) {
 
       <div ref={drawerRef} id={drawerId} className="r-drawer" data-open={open}>
         <div>
-          <dl className="grid grid-cols-2 gap-3 border-t-2 border-[#3c3c3c] bg-[#1e1e1e] p-3">
+          <dl className="grid grid-cols-2 gap-3 border-t-2 border-[#7d5560] bg-[#1e1e1e] p-3">
             <Stat label="Hours played" value={game.hours !== undefined ? `${game.hours} H` : '-- H'} />
             <Stat label="Completion" value={info.completion} />
             {info.pct !== null && (
               <div className="col-span-2">
-                <div className="h-3 border-2 border-[#3c3c3c] bg-[#252526]" role="presentation">
-                  <div className="h-full bg-[#7CFFB2]" style={{ width: `${info.pct}%` }} />
+                <div className="h-3 border-2 border-[#7d5560] bg-[#252526]" role="presentation">
+                  <div className="h-full bg-[#CC97A3]" style={{ width: `${info.pct}%` }} />
                 </div>
               </div>
             )}
@@ -145,7 +145,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col gap-1">
       <dt className="font-pixel text-[8px] uppercase text-[#8a8a8a]">{label}</dt>
-      <dd className="text-[26px] leading-none text-[#7CFFB2]">{value}</dd>
+      <dd className="text-[26px] leading-none text-[#CC97A3]">{value}</dd>
     </div>
   );
 }

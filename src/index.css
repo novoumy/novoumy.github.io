@@ -151,8 +151,8 @@
     --r-line-hi: #6a6a6a;
     --r-text: #d4d4d4;
     --r-dim: #8a8a8a;
-    --r-accent: #7CFFB2;
-    --r-accent-dim: #3f8f64;
+    --r-accent: #CC97A3;
+    --r-accent-dim: #7d5560;
     color-scheme: dark;
     background: var(--r-bg);
     color: var(--r-text);
@@ -210,7 +210,7 @@
   /* Crisp 2px pixel border with a hard offset shadow. */
   .r-box {
     background: var(--r-panel);
-    border: 2px solid var(--r-line);
+    border: 2px solid var(--r-accent-dim);
     transition:
       border-color 150ms steps(2),
       background-color 150ms steps(2),
@@ -277,7 +277,7 @@
   }
 
   .r-glow {
-    text-shadow: 0 0 8px rgb(124 255 178 / 0.55);
+    text-shadow: 0 0 8px rgb(204 151 163 / 0.55);
   }
 
   .r-scanlines::after {

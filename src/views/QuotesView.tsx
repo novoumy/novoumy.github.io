@@ -23,10 +23,10 @@ export default function QuotesView() {
   }, [active, flash]);
 
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#3c3c3c] pb-4">
+    <div className="flex w-full flex-col gap-6">
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#7d5560] pb-4">
         <div className="flex flex-col gap-2">
-          <h2 className="r-glow text-[12px] uppercase text-[#7CFFB2] sm:text-[14px]">&gt; quotes.log</h2>
+          <h2 className="r-glow text-[12px] uppercase text-[#CC97A3] sm:text-[14px]">&gt; quotes.log</h2>
           <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// {quotes.length} entries</span>
         </div>
         <button type="button" onClick={roll} className="r-btn">
@@ -34,7 +34,7 @@ export default function QuotesView() {
         </button>
       </header>
 
-      <ul className="flex flex-col gap-6">
+      <ul className="flex w-full flex-col gap-6">
         {quotes.map((quote, index) => {
           const isActive = index === active;
           return (
@@ -45,30 +45,30 @@ export default function QuotesView() {
               }}
               className={[
                 'r-box relative overflow-hidden transition-opacity duration-300',
-                isActive ? 'r-box-active shadow-[4px_4px_0_0_#3f8f64]' : active !== null ? 'opacity-45' : '',
+                isActive ? 'r-box-active shadow-[4px_4px_0_0_#7d5560]' : active !== null ? 'opacity-45' : '',
               ].join(' ')}
             >
               <div key={isActive ? `on-${flash}` : 'off'} className={isActive ? 'quote-flash' : ''}>
-                <div className="flex items-center justify-between gap-3 border-b-2 border-[#3c3c3c] bg-[#1e1e1e] px-4 py-2 font-pixel text-[8px] uppercase text-[#8a8a8a]">
+                <div className="flex items-center justify-between gap-3 border-b-2 border-[#7d5560] bg-[#1e1e1e] px-4 py-2 font-pixel text-[8px] uppercase text-[#8a8a8a]">
                   <span>log_{String(index + 1).padStart(3, '0')}.txt</span>
                   <span aria-hidden="true" className="flex gap-1">
                     <i className="block h-2 w-2 bg-[#3c3c3c]" />
                     <i className="block h-2 w-2 bg-[#3c3c3c]" />
-                    <i className={['block h-2 w-2', isActive ? 'bg-[#7CFFB2]' : 'bg-[#3c3c3c]'].join(' ')} />
+                    <i className={['block h-2 w-2', isActive ? 'bg-[#CC97A3]' : 'bg-[#3c3c3c]'].join(' ')} />
                   </span>
                 </div>
                 <figure className="flex flex-col gap-5 px-5 py-5 sm:px-7 sm:py-6">
-                  <span aria-hidden="true" className="r-glow font-pixel text-[28px] leading-none text-[#7CFFB2]">
+                  <span aria-hidden="true" className="r-glow font-pixel text-[28px] leading-none text-[#CC97A3]">
                     &ldquo;
                   </span>
                   <blockquote className="-mt-3 text-[28px] leading-[1.25] text-[#d4d4d4] sm:text-[32px]">
                     {quote.text}
                   </blockquote>
-                  <figcaption className="mt-1 flex items-center gap-3 border-t-2 border-dashed border-[#3c3c3c] pt-4">
-                    <span aria-hidden="true" className="font-pixel text-[9px] text-[#7CFFB2]">
+                  <figcaption className="mt-1 flex items-center gap-3 border-t-2 border-dashed border-[#7d5560] pt-4">
+                    <span aria-hidden="true" className="font-pixel text-[9px] text-[#CC97A3]">
                       --
                     </span>
-                    <span className="font-pixel text-[9px] uppercase leading-[1.6] text-[#7CFFB2]">{quote.author}</span>
+                    <span className="font-pixel text-[9px] uppercase leading-[1.6] text-[#CC97A3]">{quote.author}</span>
                     <span aria-hidden="true" className="r-caret ml-auto font-pixel text-[9px] text-[#8a8a8a]" />
                   </figcaption>
                 </figure>

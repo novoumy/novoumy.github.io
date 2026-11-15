@@ -86,7 +86,7 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
       <div
         ref={rootRef}
         key={openId}
-        className="retro-dark animate-tab-in relative -m-5 flex min-h-[calc(100%+2.5rem)] flex-col gap-5 p-5 sm:-m-8 sm:min-h-[calc(100%+4rem)] sm:p-8"
+        className="retro-dark animate-tab-in relative -m-5 flex min-h-[calc(100%+2.5rem)] w-[calc(100%+2.5rem)] max-w-none flex-col gap-6 p-6 sm:-m-8 sm:min-h-[calc(100%+4rem)] sm:w-[calc(100%+4rem)] sm:p-8"
       >
         <div>
           <button type="button" onClick={() => setOpenId(null)} className="r-btn">

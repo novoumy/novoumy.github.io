@@ -170,7 +170,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       <div className="shrink-0 border-b border-[#3c3c3c] bg-[#1e1e1e] px-4 py-4 sm:px-8 lg:px-12">
         <div className="flex w-full flex-col gap-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
-            <label className="relative flex min-w-0 flex-1 items-center  border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-[#7CFFB2]">
+            <label className="relative flex min-w-0 flex-1 items-center  border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-[#CC97A3]">
               <span className="sr-only">Search titles</span>
               <Search size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3 text-[#8a8a8a]" />
               <input
@@ -199,7 +199,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
               )}
             </label>
 
-            <label className="relative flex shrink-0 items-center  border-2 border-[#3c3c3c] bg-[#1e1e1e] hover:bg-[#333333] focus-within:border-[#7CFFB2] lg:w-[300px]">
+            <label className="relative flex shrink-0 items-center  border-2 border-[#3c3c3c] bg-[#1e1e1e] hover:bg-[#333333] focus-within:border-[#CC97A3] lg:w-[300px]">
               <span className="sr-only">Sort by</span>
               <select
                 value={sort}
@@ -233,8 +233,8 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                     className={[
                       'flex shrink-0 items-center gap-2 border-2 border-transparent px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
                       active
-                        ? 'bg-[#7CFFB2] text-[#1e1e1e]'
-                        : 'border-2 border-[#3c3c3c] bg-[#1e1e1e] text-[#d4d4d4] hover:border-[#7CFFB2] hover:text-[#7CFFB2]',
+                        ? 'bg-[#CC97A3] text-[#1e1e1e]'
+                        : 'border-2 border-[#3c3c3c] bg-[#1e1e1e] text-[#d4d4d4] hover:border-[#CC97A3] hover:text-[#CC97A3]',
                     ].join(' ')}
                   >
                     {option.label}
@@ -258,7 +258,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
         <div className="w-full">
           {/* Discord-style info embed */}
           <aside className="mb-6 flex overflow-hidden border-2 border-[#3c3c3c] bg-[#252526] lg:mb-8">
-            <div className="w-1 shrink-0 bg-[#7CFFB2]" aria-hidden="true" />
+            <div className="w-1 shrink-0 bg-[#CC97A3]" aria-hidden="true" />
             <div className="flex min-w-0 flex-col gap-2 px-4 py-3 sm:px-5 sm:py-4">
               <h3 className="text-[11px] font-bold uppercase leading-[1.4] text-[#d4d4d4] sm:text-[12px]">Media archive</h3>
               <p className="text-[21px] leading-[1.3] text-[#d4d4d4] sm:text-[22px]">
