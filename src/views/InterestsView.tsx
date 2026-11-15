@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ComponentType } from 'react';
+import { useEffect, useRef, type ComponentType } from 'react';
 import PixelIcon from '@/components/PixelIcon';
 import { interests, type InterestId } from '@/siteData';
 import GamesView from '@/views/GamesView';
@@ -15,8 +15,14 @@ const SECTIONS: Record<Exclude<InterestId, 'media'>, ComponentType> = {
 
 // Interests is a tiny "desktop": a 2x2 grid of folders. Opening one swaps the
 // content of this same window (no pop-ups); the back button returns to the grid.
-export default function InterestsView() {
-  const [openId, setOpenId] = useState<InterestId | null>(null);
+// Which folder is open lives in the URL hash (see App.tsx), so it survives reloads and can be shared.
+interface InterestsViewProps {
+  openId: InterestId | null;
+  onOpen: (id: InterestId | null) => void;
+}
+
+export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
+  const setOpenId = onOpen;
   const rootRef = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
 

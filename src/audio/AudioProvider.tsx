@@ -1,10 +1,34 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { audio } from '@/siteData';
-import { playMenuBlip } from '@/audio/sfx';
+import { playMenuBlip, setSfxLevel } from '@/audio/sfx';
+
+// Slider scale: 100 is the new baseline, which is HALF of the old physical output.
+// 200 equals the old (pre-slider) output. 0 is silent.
+export const VOLUME_MIN = 0;
+export const VOLUME_MAX = 200;
+export const VOLUME_DEFAULT = 100;
+const VOLUME_KEY = 'novoumy:volume';
+
+// UI percent -> multiplier on the original output (100% -> 0.5, 200% -> 1.0).
+const toGain = (percent: number) => Math.min(VOLUME_MAX, Math.max(VOLUME_MIN, percent)) / VOLUME_MAX;
+
+function loadVolume(): number {
+  try {
+    const raw = window.localStorage.getItem(VOLUME_KEY);
+    const value = raw === null ? NaN : Number(raw);
+    if (Number.isFinite(value)) return Math.min(VOLUME_MAX, Math.max(VOLUME_MIN, Math.round(value)));
+  } catch {
+    // Storage can be unavailable (private mode); fall back to the default.
+  }
+  return VOLUME_DEFAULT;
+}
 
 interface AudioContextValue {
   muted: boolean;
   toggleMuted: () => void;
+  // 0..200 (see above). Setting it above 0 also unmutes.
+  volume: number;
+  setVolume: (percent: number) => void;
   // True while the browser is refusing to autoplay and is waiting for a tap/click.
   blocked: boolean;
 }
@@ -17,7 +41,9 @@ const SFX_OPT_OUT = '[data-no-sfx]';
 export function AudioProvider({ children }: { children: ReactNode }) {
   const [muted, setMuted] = useState(false);
   const [blocked, setBlocked] = useState(false);
+  const [volume, setVolumeState] = useState(loadVolume);
   const mutedRef = useRef(muted);
+  const volumeRef = useRef(volume);
   const bgmRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -26,10 +52,21 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   }, [muted]);
 
   useEffect(() => {
+    volumeRef.current = volume;
+    setSfxLevel(toGain(volume));
+    if (bgmRef.current) bgmRef.current.volume = audio.bgmVolume * toGain(volume);
+    try {
+      window.localStorage.setItem(VOLUME_KEY, String(volume));
+    } catch {
+      // ignore
+    }
+  }, [volume]);
+
+  useEffect(() => {
     const bgm = new Audio(audio.bgmSrc);
     bgm.loop = true;
     bgm.preload = 'auto';
-    bgm.volume = audio.bgmVolume;
+    bgm.volume = audio.bgmVolume * toGain(volumeRef.current);
     bgm.muted = mutedRef.current;
     bgmRef.current = bgm;
 
@@ -92,7 +129,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     const onClick = (event: MouseEvent) => {
       const target = event.target instanceof Element ? event.target : null;
       const control = target?.closest(SFX_TARGETS);
-      if (!control || control.closest(SFX_OPT_OUT) || mutedRef.current) return;
+      if (!control || control.closest(SFX_OPT_OUT) || mutedRef.current || volumeRef.current <= 0) return;
       playMenuBlip();
     };
     document.addEventListener('click', onClick, true);
@@ -112,10 +149,21 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const toggleMuted = () => setMuted((value) => !value);
+  // Unmuting from a 0% slider would still be silent, so restore the baseline.
+  const toggleMuted = () => {
+    if (muted && volume === 0) setVolumeState(VOLUME_DEFAULT);
+    setMuted((value) => !value);
+  };
+
+  const setVolume = (percent: number) => {
+    setVolumeState(Math.min(VOLUME_MAX, Math.max(VOLUME_MIN, Math.round(percent))));
+    if (percent > 0) setMuted(false);
+  };
 
   return (
-    <AudioStateContext.Provider value={{ muted, toggleMuted, blocked }}>{children}</AudioStateContext.Provider>
+    <AudioStateContext.Provider value={{ muted, toggleMuted, volume, setVolume, blocked }}>
+      {children}
+    </AudioStateContext.Provider>
   );
 }
 

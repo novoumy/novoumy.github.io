@@ -6,33 +6,33 @@ import MainView from '@/views/MainView';
 import InterestsView from '@/views/InterestsView';
 import SocialsView from '@/views/SocialsView';
 import SpecsView from '@/views/SpecsView';
-import { site, tabs, type TabId } from '@/siteData';
+import { site, tabs, type InterestId, type TabId } from '@/siteData';
 import { useStageScale } from '@/lib/useStageScale';
+import { hashFor, parseHash, type Route } from '@/lib/route';
 
-const VIEWS: Record<TabId, ComponentType> = {
+const VIEWS: Record<Exclude<TabId, 'interests'>, ComponentType> = {
   main: MainView,
   socials: SocialsView,
-  interests: InterestsView,
   specs: SpecsView,
 };
 
 const enabledTabs = tabs.filter((tab) => tab.enabled);
 
-// "#specs" -> 'specs'. Unknown or empty hashes fall back to the first tab.
-function tabFromHash(): TabId {
-  const id = window.location.hash.replace(/^#\/?/, '').toLowerCase();
-  return enabledTabs.find((tab) => tab.id === id)?.id ?? enabledTabs[0]?.id ?? 'main';
+// The URL hash is the single source of truth for which tab / folder is open.
+function setHash(route: Route) {
+  const next = hashFor(route);
+  if (window.location.hash.replace(/^#\/?/, '').toLowerCase() !== next) window.location.hash = next;
 }
 
 export default function App() {
-  const [activeId, setActiveId] = useState<TabId>(tabFromHash);
-  // Bumped when the active tab is clicked again, so Interests returns to its grid.
+  const [route, setRoute] = useState<Route>(parseHash);
+  // Bumped when the active tab is clicked again, so the tab returns to its start state.
   const [resetCount, setResetCount] = useState(0);
-  const ActiveView = VIEWS[activeId];
+  const activeId = route.tab;
 
-  // Keep the tab in sync with the URL hash (direct links, back/forward buttons).
+  // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
   useEffect(() => {
-    const onHashChange = () => setActiveId(tabFromHash());
+    const onHashChange = () => setRoute(parseHash());
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
@@ -40,8 +40,10 @@ export default function App() {
   // Clicking a tab only changes the hash; the listener above updates the view.
   const selectTab = (id: TabId) => {
     if (id === activeId) setResetCount((n) => n + 1);
-    else window.location.hash = id;
+    setHash({ tab: id, interest: null });
   };
+
+  const openInterest = (id: InterestId | null) => setHash({ tab: 'interests', interest: id });
 
   useEffect(() => {
     document.title = site.title;
@@ -82,7 +84,14 @@ export default function App() {
             ].join(' ')}
           >
             <div key={`${activeId}-${resetCount}`} className="pixel-scroll animate-tab-in min-h-0 flex-1 overflow-y-auto p-5 sm:p-8">
-              <ActiveView />
+              {route.tab === 'interests' ? (
+                <InterestsView openId={route.interest} onOpen={openInterest} />
+              ) : (
+                (() => {
+                  const ActiveView = VIEWS[route.tab];
+                  return <ActiveView />;
+                })()
+              )}
             </div>
           </section>
         </div>
