@@ -662,6 +662,45 @@
   animation: tab-in 320ms steps(4) both;
 }
 
+/* Folder overlays: a quick hard pixel-wipe from the top instead of an opacity fade. */
+@keyframes overlay-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.animate-overlay-in {
+  animation: overlay-in 140ms steps(5) both;
+}
+
+/* Loader stays hidden for 150ms, then snaps in with no fade. */
+@keyframes loading-show {
+  to {
+    visibility: visible;
+  }
+}
+
+.retro-loading {
+  visibility: hidden;
+  animation: loading-show 0s 150ms forwards;
+}
+
+@keyframes loading-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.retro-loading-bar {
+  animation: loading-bar 1.2s steps(12) infinite;
+}
+
 .animate-float-particle {
   animation: float-particle linear infinite;
 }
@@ -679,6 +718,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .animate-tab-in,
+  .animate-overlay-in,
+  .retro-loading-bar,
   .glow-in,
   .animate-float-particle,
   .eq-bars i,

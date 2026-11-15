@@ -1,4 +1,4 @@
-import { useEffect, useState, type ComponentType } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
 import SoundToggle from '@/components/SoundToggle';
@@ -9,14 +9,30 @@ import SpecsView from '@/views/SpecsView';
 import { site, tabs, type InterestId, type TabId } from '@/siteData';
 import { useStageScale } from '@/lib/useStageScale';
 import { hashFor, parseHash, type Route } from '@/lib/route';
+import { preloadInterestViews } from '@/lib/preload';
 
-const VIEWS: Record<Exclude<TabId, 'interests'>, ComponentType> = {
-  main: MainView,
-  socials: SocialsView,
-  specs: SpecsView,
-};
+const sameRoute = (a: Route, b: Route) => a.tab === b.tab && a.interest === b.interest;
 
 const enabledTabs = tabs.filter((tab) => tab.enabled);
+
+type Panel = {
+  id: TabId;
+  render: (route: Route, openInterest: (id: InterestId | null) => void) => ReactNode;
+};
+
+const ALL_PANELS: Panel[] = [
+  { id: 'main', render: () => <MainView /> },
+  { id: 'socials', render: () => <SocialsView /> },
+  {
+    id: 'interests',
+    render: (route, openInterest) => (
+      <InterestsView openId={route.tab === 'interests' ? route.interest : null} onOpen={openInterest} />
+    ),
+  },
+  { id: 'specs', render: () => <SpecsView /> },
+];
+
+const PANELS = ALL_PANELS.filter((panel) => enabledTabs.some((tab) => tab.id === panel.id));
 
 // The URL hash is the single source of truth for which tab / folder is open.
 function setHash(route: Route) {
@@ -26,24 +42,35 @@ function setHash(route: Route) {
 
 export default function App() {
   const [route, setRoute] = useState<Route>(parseHash);
-  // Bumped when the active tab is clicked again, so the tab returns to its start state.
-  const [resetCount, setResetCount] = useState(0);
   const activeId = route.tab;
 
   // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
   useEffect(() => {
-    const onHashChange = () => setRoute(parseHash());
+    // Returning the previous object when nothing changed skips a pointless re-render.
+    const onHashChange = () => setRoute((prev) => {
+      const next = parseHash();
+      return sameRoute(prev, next) ? prev : next;
+    });
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  // Clicking a tab only changes the hash; the listener above updates the view.
-  const selectTab = (id: TabId) => {
-    if (id === activeId) setResetCount((n) => n + 1);
-    setHash({ tab: id, interest: null });
+  // Update the view immediately (no waiting on the async hashchange event), then mirror to the URL.
+  const navigate = (next: Route) => {
+    setRoute((prev) => (sameRoute(prev, next) ? prev : next));
+    setHash(next);
   };
 
-  const openInterest = (id: InterestId | null) => setHash({ tab: 'interests', interest: id });
+  // Already on this tab: do nothing (no state change, no hash write, no sound).
+  const selectTab = (id: TabId) => {
+    if (id === activeId) return;
+    navigate({ tab: id, interest: null });
+  };
+
+  const openInterest = (id: InterestId | null) => navigate({ tab: 'interests', interest: id });
+
+  // Warm the heavy folder views once the first paint is done, so opening them is instant.
+  useEffect(() => preloadInterestViews(), []);
 
   useEffect(() => {
     document.title = site.title;
@@ -77,22 +104,23 @@ export default function App() {
             <SoundToggle className="hidden min-[860px]:flex" />
           </div>
           <section
-            role="tabpanel"
             className={[
               'pixel-frame relative mt-1 flex flex-col bg-cool-white text-wine',
               staged ? 'aspect-[4/3]' : 'min-h-0 flex-1',
             ].join(' ')}
           >
-            <div key={`${activeId}-${resetCount}`} className="pixel-scroll animate-tab-in min-h-0 flex-1 overflow-y-auto p-5 sm:p-8">
-              {route.tab === 'interests' ? (
-                <InterestsView openId={route.interest} onOpen={openInterest} />
-              ) : (
-                (() => {
-                  const ActiveView = VIEWS[route.tab];
-                  return <ActiveView />;
-                })()
-              )}
-            </div>
+            {/* Every tab stays mounted and is only shown/hidden, so switching is instant:
+                no remount, no re-fetch, no fade. Animations live inside the pages. */}
+            {PANELS.map(({ id, render }) => (
+              <div
+                key={id}
+                role="tabpanel"
+                hidden={id !== activeId}
+                className="pixel-scroll min-h-0 flex-1 overflow-y-auto p-5 sm:p-8"
+              >
+                {render(route, openInterest)}
+              </div>
+            ))}
           </section>
         </div>
       </main>

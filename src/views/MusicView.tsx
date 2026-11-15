@@ -357,7 +357,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
       aria-modal="true"
       aria-label="Music library"
       tabIndex={-1}
-      className="retro-dark animate-tab-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none"
+      className="retro-dark animate-overlay-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none"
     >
       {/* Hidden YouTube player (official IFrame API) */}
       <div

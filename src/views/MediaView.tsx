@@ -136,7 +136,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       aria-modal="true"
       aria-label="Media library"
       tabIndex={-1}
-      className="retro-dark animate-tab-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none"
+      className="retro-dark animate-overlay-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none"
     >
       {/* Title bar */}
       <header className="flex shrink-0 items-center justify-between gap-3 border-b-2 border-[#7d5560] bg-[#1e1e1e] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8 lg:px-12">

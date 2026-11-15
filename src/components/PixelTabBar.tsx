@@ -24,6 +24,9 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
             type="button"
             role="tab"
             aria-selected={active}
+            aria-current={active ? 'page' : undefined}
+            // The active tab is a no-op, so it must not play the menu blip either.
+            data-no-sfx={active ? '' : undefined}
             aria-label={tab.label}
             onClick={() => onSelect(tab.id)}
             className={[
