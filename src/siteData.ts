@@ -907,7 +907,7 @@ export const media: MediaItem[] = [
   link: 'https://www.imdb.com/title/tt1068773/?ref_=fn_t_2',
 },
 {
-  title: 'Case Closed: Countdown to Heaven',
+  title: 'Detective Conan: Countdown to Heaven',
   category: 'Anime',
   year: 2001,
   poster: 'https://m.media-amazon.com/images/M/MV5BNjJhNjZjYjItYjIzYS00NDY0LTlhZDctYWZkY2MyOWU3ZWQxXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
