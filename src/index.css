@@ -54,6 +54,86 @@
     border: 2px solid #2b2d31;
   }
 
+  .media-dark .eq-bars i {
+    background: #5865f2;
+  }
+
+  .media-dark .player-range {
+    --track: #404249;
+    --fillc: #f2f3f5;
+  }
+
+  .media-dark .player-range:hover {
+    --fillc: #5865f2;
+  }
+
+  /* Seek / volume sliders in the music player bar. */
+  .player-range {
+    --fill: 0%;
+    --track: #404249;
+    --fillc: #f2f3f5;
+    width: 100%;
+    height: 20px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    touch-action: pan-y;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .player-range:focus-visible {
+    outline: 2px solid #5865f2;
+    outline-offset: 2px;
+  }
+
+  .player-range::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--fillc) var(--fill), var(--track) var(--fill));
+  }
+
+  .player-range::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--fillc) var(--fill), var(--track) var(--fill));
+  }
+
+  .player-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    margin-top: -4px;
+    border-radius: 50%;
+    border: 0;
+    background: #f2f3f5;
+  }
+
+  .player-range::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 0;
+    background: #f2f3f5;
+  }
+
+  @media (pointer: coarse) {
+    .player-range {
+      height: 28px;
+    }
+
+    .player-range::-webkit-slider-thumb {
+      width: 18px;
+      height: 18px;
+      margin-top: -7px;
+    }
+
+    .player-range::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
   .media-dark .pixel-badge {
     background: rgb(30 31 34 / 0.92);
     color: #f2f3f5;

@@ -29,6 +29,8 @@ interface AudioContextValue {
   // 0..200 (see above). Setting it above 0 also unmutes.
   volume: number;
   setVolume: (percent: number) => void;
+  // The music library pauses the looping background track while its own player is open.
+  setBgmSuppressed: (suppressed: boolean) => void;
   // True while the browser is refusing to autoplay and is waiting for a tap/click.
   blocked: boolean;
 }
@@ -44,6 +46,8 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   const [volume, setVolumeState] = useState(loadVolume);
   const mutedRef = useRef(muted);
   const volumeRef = useRef(volume);
+  const suppressedRef = useRef(false);
+  const syncRef = useRef<() => void>(() => {});
   const bgmRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -75,7 +79,9 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     let focused = true;
 
     const sync = () => {
-      if (visible && focused) {
+      if (suppressedRef.current) {
+        bgm.pause();
+      } else if (visible && focused) {
         // Rejected when the browser still blocks autoplay; a later gesture retries.
         bgm.play().catch((error: unknown) => {
           if (error instanceof DOMException && error.name === 'NotAllowedError') setBlocked(true);
@@ -84,6 +90,8 @@ export function AudioProvider({ children }: { children: ReactNode }) {
         bgm.pause();
       }
     };
+
+    syncRef.current = sync;
 
     // Autoplay is blocked until the visitor really interacts with the page. Only
     // some events count as that (pointerdown/touchstart on mobile do not), so we
@@ -155,13 +163,18 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     setMuted((value) => !value);
   };
 
+  const setBgmSuppressed = (suppressed: boolean) => {
+    suppressedRef.current = suppressed;
+    syncRef.current();
+  };
+
   const setVolume = (percent: number) => {
     setVolumeState(Math.min(VOLUME_MAX, Math.max(VOLUME_MIN, Math.round(percent))));
     if (percent > 0) setMuted(false);
   };
 
   return (
-    <AudioStateContext.Provider value={{ muted, toggleMuted, volume, setVolume, blocked }}>
+    <AudioStateContext.Provider value={{ muted, toggleMuted, volume, setVolume, setBgmSuppressed, blocked }}>
       {children}
     </AudioStateContext.Provider>
   );

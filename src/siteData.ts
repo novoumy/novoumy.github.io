@@ -75,11 +75,19 @@ export interface GameItem {
 }
 
 export interface TrackItem {
+  id: number;
   title: string;
   artist: string;
-  cover: string;
-  link: string;
-  linkLabel: string; // e.g. 'Spotify', 'YouTube', 'SoundCloud'
+  album?: string;
+  genre: string; // used for the filter pills, e.g. 'INDIE / ALT'
+  duration?: string; // 'm:ss'. Optional: it is filled in from the player once a track has loaded.
+  coverUrl: string;
+  // YouTube video ID that allows embedding (the part after ?v=). Leave '' when you
+  // don't have one yet: the row is still listed, but it can't be played on the site.
+  youtubeId: string;
+  spotifyUrl: string;
+  geniusUrl: string;
+  youtubeUrl: string;
 }
 
 export interface QuoteItem {
@@ -1316,104 +1324,172 @@ export const games: GameItem[] = [
 // 4. MUSIC - retro player list
 // ----------------------------------------------------------------------------
 
+// Search links are used where a direct link isn't filled in yet. Replace them with exact
+// track URLs whenever you like. For playback, each track needs a youtubeId whose video has
+// "Allow embedding" turned on ("Artist - Topic" audio uploads usually do).
+const spotifySearch = (title: string, artist: string) =>
+  `https://open.spotify.com/search/${encodeURIComponent(`${title} ${artist}`)}`;
+const youtubeSearch = (title: string, artist: string) =>
+  `https://www.youtube.com/results?search_query=${encodeURIComponent(`${title} ${artist}`)}`;
+const youtubeWatch = (id: string) => `https://www.youtube.com/watch?v=${id}`;
+
 export const tracks: TrackItem[] = [
   {
+    id: 1,
     title: 'My Love Mine All Mine',
     artist: 'Mitski',
-    cover: 'https://images.genius.com/485597d10bafde06faa87e527be1324d.1000x1000x1.png',
-    link: 'https://genius.com/Mitski-my-love-mine-all-mine-lyrics',
-    linkLabel: 'Genius',
+    album: 'The Land Is Inhospitable and So Are We',
+    genre: 'INDIE / ALT',
+    duration: '2:17',
+    coverUrl: 'https://images.genius.com/485597d10bafde06faa87e527be1324d.1000x1000x1.png',
+    youtubeId: 'vx4kLgnFexo',
+    spotifyUrl: spotifySearch('My Love Mine All Mine', 'Mitski'),
+    geniusUrl: 'https://genius.com/Mitski-my-love-mine-all-mine-lyrics',
+    youtubeUrl: youtubeWatch('vx4kLgnFexo'),
   },
   {
+    id: 2,
     title: 'M.',
     artist: 'Anıl Emre Daldal',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6041ae3ddd860d536e319c1ccba8e581.1000x1000x1.png',
-    link: 'https://genius.com/Genius-english-translations-anl-emre-daldal-m-english-translation-lyrics',
-    linkLabel: 'Genius',
+    genre: 'AMBIENT',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6041ae3ddd860d536e319c1ccba8e581.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('M.', 'Anıl Emre Daldal'),
+    geniusUrl: 'https://genius.com/Genius-english-translations-anl-emre-daldal-m-english-translation-lyrics',
+    youtubeUrl: youtubeSearch('M.', 'Anıl Emre Daldal'),
   },
   {
+    id: 3,
     title: 'Rises the Moon',
     artist: 'Liana Flores',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fb6c30c08e6c23a4911a53df25c3f90f0.1000x1000x1.png',
-    link: 'https://genius.com/Liana-flores-rises-the-moon-lyrics',
-    linkLabel: 'Genius',
+    genre: 'INDIE / ALT',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fb6c30c08e6c23a4911a53df25c3f90f0.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('Rises the Moon', 'Liana Flores'),
+    geniusUrl: 'https://genius.com/Liana-flores-rises-the-moon-lyrics',
+    youtubeUrl: youtubeSearch('Rises the Moon', 'Liana Flores'),
   },
   {
+    id: 4,
     title: 'Painted Black',
     artist: 'Mephisto Walz',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fdfee4fad0a9e020108d3d0899d6ba430.1000x1000x1.jpg',
-    link: 'https://genius.com/Mephisto-walz-painted-black-lyrics',
-    linkLabel: 'Genius',
+    genre: 'INDIE / ALT',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fdfee4fad0a9e020108d3d0899d6ba430.1000x1000x1.jpg',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('Painted Black', 'Mephisto Walz'),
+    geniusUrl: 'https://genius.com/Mephisto-walz-painted-black-lyrics',
+    youtubeUrl: youtubeSearch('Painted Black', 'Mephisto Walz'),
   },
   {
+    id: 5,
     title: 'Let It Happen',
     artist: 'Tame Impala',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fc62e9901da159ce3cb8cca32078d87c6.1000x1000x1.png',
-    link: 'https://genius.com/Tame-impala-let-it-happen-lyrics',
-    linkLabel: 'Genius',
+    album: 'Currents',
+    genre: 'INDIE / ALT',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fc62e9901da159ce3cb8cca32078d87c6.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('Let It Happen', 'Tame Impala'),
+    geniusUrl: 'https://genius.com/Tame-impala-let-it-happen-lyrics',
+    youtubeUrl: youtubeSearch('Let It Happen', 'Tame Impala'),
   },
   {
+    id: 6,
     title: 'Legacy',
     artist: 'PIXY (UK)',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fc8f8521aea8fbbb52a0ee290777224f0.1000x1000x1.png',
-    link: 'https://genius.com/Pixy-uk-legacy-lyrics',
-    linkLabel: 'Genius',
+    genre: 'INDIE / ALT',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fc8f8521aea8fbbb52a0ee290777224f0.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('Legacy', 'PIXY (UK)'),
+    geniusUrl: 'https://genius.com/Pixy-uk-legacy-lyrics',
+    youtubeUrl: youtubeSearch('Legacy', 'PIXY (UK)'),
   },
   {
+    id: 7,
     title: 'Everything is romantic (Reimagined)',
     artist: 'Alina Kay & Ozz Gold',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F9131f2b5152e5cd65b6a567203ca1068.1000x1000x1.png',
-    link: 'https://genius.com/Alina-kay-and-ozz-gold-everything-is-romantic-reimagined-lyrics',
-    linkLabel: 'Genius',
+    genre: 'INDIE / ALT',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F9131f2b5152e5cd65b6a567203ca1068.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('Everything is romantic (Reimagined)', 'Alina Kay & Ozz Gold'),
+    geniusUrl: 'https://genius.com/Alina-kay-and-ozz-gold-everything-is-romantic-reimagined-lyrics',
+    youtubeUrl: youtubeSearch('Everything is romantic (Reimagined)', 'Alina Kay & Ozz Gold'),
   },
   {
+    id: 8,
     title: 'Spit in My Face!',
     artist: 'ThxSoMch',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F2590d316b35bf3ff7c06a4de1f537244.1000x1000x1.png',
-    link: 'https://genius.com/Thxsomch-spit-in-my-face-lyrics',
-    linkLabel: 'Genius',
+    genre: 'PHONK',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F2590d316b35bf3ff7c06a4de1f537244.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('Spit in My Face!', 'ThxSoMch'),
+    geniusUrl: 'https://genius.com/Thxsomch-spit-in-my-face-lyrics',
+    youtubeUrl: youtubeSearch('Spit in My Face!', 'ThxSoMch'),
   },
   {
+    id: 9,
     title: 'Sinking Town',
     artist: 'Dev1lCat',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Ff5e83199e03614f510dcde0ace75e3a2.1000x1000x1.png',
-    link: 'https://genius.com/Genius-romanizations-yoeko-kurahashi-sinking-town-romanized-lyrics',
-    linkLabel: 'Genius',
+    genre: 'PHONK',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Ff5e83199e03614f510dcde0ace75e3a2.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('Sinking Town', 'Dev1lCat'),
+    geniusUrl: 'https://genius.com/Genius-romanizations-yoeko-kurahashi-sinking-town-romanized-lyrics',
+    youtubeUrl: youtubeSearch('Sinking Town', 'Dev1lCat'),
   },
   {
+    id: 10,
     title: 'Novocaine',
     artist: 'Too Close To Touch & Bad Omens',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F68390fdbba573f6a10e6ace9eb77f5ff.1000x1000x1.png',
-    link: 'https://genius.com/Too-close-to-touch-novocaine-lyrics',
-    linkLabel: 'Genius',
+    genre: 'INDIE / ALT',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F68390fdbba573f6a10e6ace9eb77f5ff.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('Novocaine', 'Too Close To Touch & Bad Omens'),
+    geniusUrl: 'https://genius.com/Too-close-to-touch-novocaine-lyrics',
+    youtubeUrl: youtubeSearch('Novocaine', 'Too Close To Touch & Bad Omens'),
   },
   {
+    id: 11,
     title: 'My Jealousy',
     artist: 'vivi baby & ovg!',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fb35fc6abb85d9813b3a17ae876563583.1000x1000x1.png',
-    link: 'https://genius.com/Vivi-baby-and-ovg-my-jealousy-lyrics',
-    linkLabel: 'Genius',
+    genre: 'PHONK',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fb35fc6abb85d9813b3a17ae876563583.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('My Jealousy', 'vivi baby & ovg!'),
+    geniusUrl: 'https://genius.com/Vivi-baby-and-ovg-my-jealousy-lyrics',
+    youtubeUrl: youtubeSearch('My Jealousy', 'vivi baby & ovg!'),
   },
   {
+    id: 12,
     title: 'After Dark',
     artist: 'Mr.Kitty',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6d6ffffa21429f719636915b263b74b5.1000x1000x1.png',
-    link: 'https://genius.com/Mrkitty-after-dark-lyrics',
-    linkLabel: 'Genius',
+    genre: 'INDIE / ALT',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6d6ffffa21429f719636915b263b74b5.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('After Dark', 'Mr.Kitty'),
+    geniusUrl: 'https://genius.com/Mrkitty-after-dark-lyrics',
+    youtubeUrl: youtubeSearch('After Dark', 'Mr.Kitty'),
   },
   {
+    id: 13,
     title: 'Misery',
     artist: 'Pupsies',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6041cd6fabc7d613927bc732ea03932e.1000x1000x1.png',
-    link: 'https://genius.com/Pupsies-misery-lyrics',
-    linkLabel: 'Genius',
+    genre: 'INDIE / ALT',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6041cd6fabc7d613927bc732ea03932e.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('Misery', 'Pupsies'),
+    geniusUrl: 'https://genius.com/Pupsies-misery-lyrics',
+    youtubeUrl: youtubeSearch('Misery', 'Pupsies'),
   },
   {
+    id: 14,
     title: 'Imposter Syndrome',
     artist: 'Lime Cordiale',
-    cover: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fdba7b14007c5e2a113b1374e4fe87887.1000x1000x1.png',
-    link: 'https://genius.com/Lime-cordiale-imposter-syndrome-lyrics',
-    linkLabel: 'Genius',
+    genre: 'INDIE / ALT',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fdba7b14007c5e2a113b1374e4fe87887.1000x1000x1.png',
+    youtubeId: '',
+    spotifyUrl: spotifySearch('Imposter Syndrome', 'Lime Cordiale'),
+    geniusUrl: 'https://genius.com/Lime-cordiale-imposter-syndrome-lyrics',
+    youtubeUrl: youtubeSearch('Imposter Syndrome', 'Lime Cordiale'),
   },
 ];
 
@@ -1606,6 +1682,39 @@ export const specGroups: SpecGroup[] = [
         detail: 'Black',
         link: newegg('Cougar FV150 RGB Mid-Tower'),
         linkLabel: 'NEW EGG',
+      },
+    ],
+  },
+  {
+    title: 'Peripherals & Displays',
+    parts: [
+      {
+        label: 'Monitor 1',
+        name: 'ASUS TUF Gaming VG27AQ3A',
+        detail: '27" 2560 x 1440 (QHD), 180Hz, VRR Supported',
+        link: amazon('ASUS TUF Gaming VG27AQ3A'),
+        linkLabel: 'AMAZON',
+      },
+      {
+        label: 'Monitor 2',
+        name: 'LG FHD Monitor (Vertical)',
+        detail: '1080 x 1920 (Portrait), 100Hz',
+        link: amazon('LG FHD Monitor 100Hz'),
+        linkLabel: 'AMAZON',
+      },
+      {
+        label: 'Keyboard',
+        name: 'EPOMAKER x AULA F75',
+        detail: '75% Gasket-Mounted Mechanical, Wireless',
+        link: amazon('EPOMAKER x AULA F75'),
+        linkLabel: 'AMAZON',
+      },
+      {
+        label: 'Mouse',
+        name: 'Ajazz AJ159 Pro',
+        detail: 'Lightweight Wireless Gaming Mouse',
+        link: amazon('Ajazz AJ159 Pro'),
+        linkLabel: 'AMAZON',
       },
     ],
   },

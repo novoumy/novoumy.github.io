@@ -6,10 +6,9 @@ import MediaView from '@/views/MediaView';
 import MusicView from '@/views/MusicView';
 import QuotesView from '@/views/QuotesView';
 
-// Media is not in this map: it opens as a full-screen overlay (see below).
-const SECTIONS: Record<Exclude<InterestId, 'media'>, ComponentType> = {
+// Media and Music are not in this map: they open as full-screen overlays (see below).
+const SECTIONS: Record<Exclude<InterestId, 'media' | 'music'>, ComponentType> = {
   games: GamesView,
-  music: MusicView,
   quotes: QuotesView,
 };
 
@@ -67,6 +66,15 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
       <>
         {hub}
         <MediaView onClose={() => setOpenId(null)} />
+      </>
+    );
+  }
+
+  if (openId === 'music') {
+    return (
+      <>
+        {hub}
+        <MusicView onClose={() => setOpenId(null)} />
       </>
     );
   }
