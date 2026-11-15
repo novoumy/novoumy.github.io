@@ -1120,7 +1120,7 @@ export const media: MediaItem[] = [
   title: 'One-Punch Man',
   category: 'Anime',
   year: 2015,
-  poster: 'https://www.imdb.com/title/tt4508902/mediaviewer/rm2887004929/?ref_=tt_ov_i',
+  poster: 'https://m.media-amazon.com/images/M/MV5BNzMwOGQ5MWItNzE3My00ZDYyLTk4NzAtZWIyYWI0NTZhYzY0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt4508902/?ref_=fn_t_1',
 },
 {
