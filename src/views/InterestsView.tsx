@@ -81,10 +81,15 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
 
   if (openId) {
     const Section = SECTIONS[openId];
+    // Dark retro panel: bleeds out to the edges of the window so the whole route is #1e1e1e.
     return (
-      <div ref={rootRef} key={openId} className="animate-tab-in flex min-h-full flex-col gap-5">
+      <div
+        ref={rootRef}
+        key={openId}
+        className="retro-dark animate-tab-in relative -m-5 flex min-h-[calc(100%+2.5rem)] flex-col gap-5 p-5 sm:-m-8 sm:min-h-[calc(100%+4rem)] sm:p-8"
+      >
         <div>
-          <button type="button" onClick={() => setOpenId(null)} className="pixel-btn">
+          <button type="button" onClick={() => setOpenId(null)} className="r-btn">
             &lt; Back to interests
           </button>
         </div>

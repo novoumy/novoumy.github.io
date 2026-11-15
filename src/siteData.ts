@@ -68,7 +68,8 @@ export interface MediaItem {
 export interface GameItem {
   title: string;
   status: string; // shown in the badge, e.g. 'Completed', 'Playing', '100%'
-  note: string; // shown in the pop-up
+  note: string; // short custom note / review, shown in the details drawer
+  hours?: number; // hours played, shown in the details drawer ('--' when left out)
   cover: string;
   link?: string; // optional Steam / store link, shown as a button in the pop-up
   linkLabel?: string; // button text, defaults to 'Store'

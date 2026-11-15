@@ -2,12 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties }
 import { createPortal } from 'react-dom';
 import {
   AlertTriangle,
-  ChevronDown,
   Pause,
   Play,
   Repeat,
   Repeat1,
-  Search,
   Shuffle,
   SkipBack,
   SkipForward,
@@ -24,30 +22,9 @@ import { loadYouTubeApi, YT_ERROR_TEXT, YT_STATE, type YTPlayer } from '@/lib/yo
 // The YouTube player lives in a tiny off-screen container: only its audio is used.
 const PLAYER_SIZE = 1;
 
-type SortKey = 'default' | 'title-asc' | 'artist-asc';
 type RepeatMode = 'off' | 'all' | 'one';
 
-const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: 'default', label: 'Default' },
-  { value: 'title-asc', label: 'Title (A-Z)' },
-  { value: 'artist-asc', label: 'Artist (A-Z)' },
-];
-
-const collator = (a: string, b: string) => a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true });
-
-const COMPARATORS: Record<SortKey, ((a: TrackItem, b: TrackItem) => number) | null> = {
-  default: null,
-  'title-asc': (a, b) => collator(a.title, b.title),
-  'artist-asc': (a, b) => collator(a.artist, b.artist) || collator(a.title, b.title),
-};
-
-const normalize = (text: string) =>
-  text
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase();
-
-const FOCUSABLE = 'a[href], button:not([disabled]), input, select, [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
 const VOLUME_KEY = 'novoumy:player-volume';
 
 const formatTime = (seconds: number) => {
@@ -59,7 +36,9 @@ const formatTime = (seconds: number) => {
 const playable = (track: TrackItem) => track.youtubeId.trim() !== '';
 
 const LINK_PILL =
-  'rounded bg-[#1e1f22] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[#dbdee1] outline-none transition-colors hover:bg-[#404249] hover:text-[#f2f3f5] focus-visible:ring-2 focus-visible:ring-[#5865f2]';
+  'border-2 border-[#3c3c3c] bg-[#1e1e1e] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[#a8a8a8] outline-none transition-colors hover:border-[#7CFFB2] hover:text-[#7CFFB2] focus-visible:border-[#7CFFB2]';
+const LINK_PILL_ON =
+  'border-2 border-[#1e1e1e] bg-[#1e1e1e] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[#7CFFB2] outline-none transition-colors hover:bg-[#252526] focus-visible:bg-[#252526]';
 
 function loadVolume(): number {
   try {
@@ -82,10 +61,6 @@ export default function MusicView({ onClose }: MusicViewProps) {
   const suppressRef = useRef(setBgmSuppressed);
   suppressRef.current = setBgmSuppressed;
 
-  const [query, setQuery] = useState('');
-  const [genre, setGenre] = useState('all');
-  const [sort, setSort] = useState<SortKey>('default');
-
   // --- player state -------------------------------------------------------
   const [currentId, setCurrentId] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
@@ -100,7 +75,6 @@ export default function MusicView({ onClose }: MusicViewProps) {
   const [apiError, setApiError] = useState(false);
 
   const dialogRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
   const listScrollRef = useRef<HTMLDivElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayer | null>(null);
@@ -110,31 +84,8 @@ export default function MusicView({ onClose }: MusicViewProps) {
   const chainRef = useRef(false); // true while auto-skipping through the queue
   const historyRef = useRef<number[]>([]);
 
-  const searched = useMemo(() => {
-    const needle = normalize(query.trim());
-    if (!needle) return tracks;
-    return tracks.filter((track) =>
-      normalize(`${track.title} ${track.artist} ${track.album ?? ''}`).includes(needle),
-    );
-  }, [query]);
-
-  const genreOptions = useMemo(() => {
-    const seen: string[] = [];
-    for (const track of tracks) if (!seen.includes(track.genre)) seen.push(track.genre);
-    return [{ label: 'All', value: 'all' }, ...seen.map((g) => ({ label: g, value: g }))];
-  }, []);
-
-  const counts = useMemo(() => {
-    const result: Record<string, number> = { all: searched.length };
-    for (const track of searched) result[track.genre] = (result[track.genre] ?? 0) + 1;
-    return result;
-  }, [searched]);
-
-  const visible = useMemo(() => {
-    const filtered = genre === 'all' ? searched : searched.filter((track) => track.genre === genre);
-    const compare = COMPARATORS[sort];
-    return compare ? [...filtered].sort(compare) : filtered;
-  }, [searched, genre, sort]);
+  // One continuous list: every track, in order.
+  const visible = tracks;
 
   // Next/previous move through what is currently listed (and can actually play).
   const queue = useMemo(() => visible.filter((track) => playable(track) && !failed[track.id]), [visible, failed]);
@@ -345,8 +296,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
     const previouslyFocused = document.activeElement as HTMLElement | null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) searchRef.current?.focus();
-    else dialogRef.current?.focus();
+    dialogRef.current?.focus();
     return () => {
       document.body.style.overflow = previousOverflow;
       previouslyFocused?.focus?.();
@@ -358,14 +308,6 @@ export default function MusicView({ onClose }: MusicViewProps) {
       if (event.key === 'Escape') {
         event.preventDefault();
         onClose();
-        return;
-      }
-      if (event.key === '/' && document.activeElement !== searchRef.current) {
-        const tag = (document.activeElement as HTMLElement | null)?.tagName;
-        if (tag !== 'INPUT' && tag !== 'SELECT') {
-          event.preventDefault();
-          searchRef.current?.focus();
-        }
         return;
       }
       if (event.key === 'Tab' && dialogRef.current) {
@@ -387,16 +329,6 @@ export default function MusicView({ onClose }: MusicViewProps) {
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
 
-  useEffect(() => {
-    listScrollRef.current?.scrollTo({ top: 0 });
-  }, [query, genre, sort]);
-
-  const resetAll = () => {
-    setQuery('');
-    setGenre('all');
-    searchRef.current?.focus();
-  };
-
   // --- seek bar -----------------------------------------------------------
   const commitSeek = (seconds: number) => {
     scrubbing.current = false;
@@ -416,7 +348,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
     track.duration ?? (durations[track.id] ? formatTime(durations[track.id]) : '--:--');
 
   const ctrl =
-    'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#b5bac1] outline-none transition-colors hover:text-[#f2f3f5] focus-visible:ring-2 focus-visible:ring-[#5865f2] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-[#b5bac1]';
+    'flex h-9 w-9 shrink-0 items-center justify-center  text-[#a8a8a8] outline-none transition-colors hover:text-[#d4d4d4] focus-visible:ring-2 focus-visible:ring-[#7CFFB2] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-[#a8a8a8]';
 
   return createPortal(
     <div
@@ -425,7 +357,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
       aria-modal="true"
       aria-label="Music library"
       tabIndex={-1}
-      className="media-dark animate-tab-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#313338] text-[#f2f3f5] outline-none"
+      className="retro-dark animate-tab-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none"
     >
       {/* Hidden YouTube player (official IFrame API) */}
       <div
@@ -436,26 +368,26 @@ export default function MusicView({ onClose }: MusicViewProps) {
       />
 
       {/* Title bar */}
-      <header className="flex shrink-0 items-center justify-between gap-3 border-b border-[#1e1f22] bg-[#2b2d31] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8 lg:px-12">
+      <header className="flex shrink-0 items-center justify-between gap-3 border-b border-[#3c3c3c] bg-[#1e1e1e] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8 lg:px-12">
         <div onClick={onClose} className="flex min-w-0 cursor-pointer items-baseline gap-3 sm:gap-4">
           <h2 className="min-w-0 truncate text-[11px] uppercase sm:text-[14px]">
             <button
               type="button"
               aria-label="Close music library"
-              className="cursor-pointer truncate border-0 bg-transparent p-0 text-left uppercase text-[#f2f3f5] outline-none [font:inherit] focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4"
+              className="cursor-pointer truncate border-0 bg-transparent p-0 text-left uppercase text-[#d4d4d4] outline-none [font:inherit] focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4"
             >
               &gt; Music library
             </button>
           </h2>
-          <span className="hidden shrink-0 font-pixel text-[8px] uppercase text-[#949ba4] sm:inline" aria-live="polite">
-            // {visible.length} / {tracks.length} tracks
+          <span className="hidden shrink-0 font-pixel text-[8px] uppercase text-[#8a8a8a] sm:inline" aria-live="polite">
+            // {tracks.length} tracks
           </span>
         </div>
         <button
           type="button"
           onClick={onClose}
           aria-label="Close music library"
-          className="pixel-btn !bg-[#1e1f22] !text-[#f2f3f5] hover:!bg-[#404249]"
+          className="r-btn"
         >
           <X size={14} strokeWidth={3} aria-hidden="true" />
           <span>Close</span>
@@ -467,7 +399,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
         {/* Showcase */}
         <section
           aria-label="Now playing"
-          className="relative flex shrink-0 items-center gap-4 overflow-hidden border-b border-[#1e1f22] bg-[#313338] px-4 py-4 sm:gap-6 sm:px-8 lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:gap-8 lg:border-b-0 lg:border-r lg:px-10 lg:py-8"
+          className="relative flex shrink-0 items-center gap-4 overflow-hidden border-b border-[#3c3c3c] bg-[#1e1e1e] px-4 py-4 sm:gap-6 sm:px-8 lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:gap-8 lg:border-b-0 lg:border-r lg:px-10 lg:py-8"
         >
           {/* Ambient light: a heavily blurred copy of the cover, so the glow always matches its colours. */}
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -478,8 +410,8 @@ export default function MusicView({ onClose }: MusicViewProps) {
               decoding="async"
               className="glow-in absolute left-1/2 top-1/2 h-[150%] w-[150%] max-w-none -translate-x-1/2 -translate-y-1/2 object-cover opacity-50 blur-[80px] saturate-150"
             />
-            <div className="absolute inset-0 bg-[#1e1f22]/35" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(30,31,34,0)_0%,#313338_85%)]" />
+            <div className="absolute inset-0 bg-[#1e1e1e]/35" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(30,31,34,0)_0%,#1e1e1e_85%)]" />
           </div>
 
           <div
@@ -500,207 +432,121 @@ export default function MusicView({ onClose }: MusicViewProps) {
               src={featured.coverUrl}
               alt={`${featured.title} cover art`}
               decoding="async"
-              className="animate-tab-in relative aspect-square w-full bg-[#1e1f22] object-cover shadow-[0_0_0_4px_#1e1f22,10px_10px_0_4px_#5865f2]"
+              className="animate-tab-in relative aspect-square w-full bg-[#1e1e1e] object-cover shadow-[0_0_0_4px_#1e1e1e,10px_10px_0_4px_#7CFFB2]"
             />
           </div>
 
           <div className="relative z-10 flex min-w-0 flex-1 flex-col gap-2 lg:w-[max(var(--art),24rem)] lg:max-w-full lg:flex-none lg:gap-4">
             <div className="flex items-center gap-3">
-              <span className="font-pixel text-[9px] uppercase text-[#b5bac1] lg:text-[11px]">
+              <span className="font-pixel text-[9px] uppercase text-[#a8a8a8] lg:text-[11px]">
                 {!current ? 'Select a track' : playing ? 'Now playing' : 'Paused'}
               </span>
               {current && playing && <Equalizer live />}
             </div>
             <h3 className="break-words text-[13px] font-bold leading-[1.5] sm:text-[16px] lg:text-[26px]">{featured.title}</h3>
-            <p className="truncate text-[28px] leading-none text-[#f2f3f5] sm:text-[32px] lg:text-[44px]">{featured.artist}</p>
+            <p className="truncate text-[28px] leading-none text-[#d4d4d4] sm:text-[32px] lg:text-[44px]">{featured.artist}</p>
             {featured.album && (
-              <p className="truncate text-[22px] leading-none text-[#b5bac1] sm:text-[24px] lg:text-[30px]">{featured.album}</p>
+              <p className="truncate text-[22px] leading-none text-[#a8a8a8] sm:text-[24px] lg:text-[30px]">{featured.album}</p>
             )}
-            <div>
-              <span className="inline-block rounded-sm bg-[#5865f2] px-3 py-2 font-pixel text-[9px] uppercase leading-none text-white lg:text-[11px]">
-                {featured.genre}
-              </span>
-            </div>
           </div>
         </section>
 
         {/* Queue sidebar */}
-        <aside aria-label="Up next" className="flex min-h-0 flex-1 flex-col bg-[#2b2d31] lg:w-[340px] lg:flex-none xl:w-[380px]">
-          <div className="flex shrink-0 flex-col gap-3 border-b border-[#1e1f22] px-4 py-3 sm:px-6">
-            <div className="flex items-center justify-between">
-              <h3 className="font-pixel text-[9px] uppercase text-[#f2f3f5]">Up next</h3>
-              <span className="font-pixel text-[8px] uppercase text-[#949ba4]" aria-live="polite">
-                {visible.length} / {tracks.length}
-              </span>
-            </div>
-
-            <div className="flex gap-2">
-              <label className="relative flex min-w-0 flex-1 items-center rounded border border-transparent bg-[#1e1f22] focus-within:border-[#5865f2]">
-                <span className="sr-only">Search tracks, artists, or albums</span>
-                <Search size={16} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3 text-[#949ba4]" />
-                <input
-                  ref={searchRef}
-                  type="search"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search tracks, artists, or albums..."
-                  autoComplete="off"
-                  spellCheck={false}
-                  enterKeyHint="search"
-                  className="h-10 w-full bg-transparent pl-9 pr-9 font-body text-[21px] leading-none text-[#f2f3f5] outline-none placeholder:text-[#949ba4] [&::-webkit-search-cancel-button]:hidden"
-                />
-                {query && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setQuery('');
-                      searchRef.current?.focus();
-                    }}
-                    aria-label="Clear search"
-                    className="absolute right-1.5 flex h-7 w-7 items-center justify-center rounded text-[#949ba4] hover:bg-[#404249] hover:text-[#f2f3f5]"
-                  >
-                    <X size={14} strokeWidth={3} aria-hidden="true" />
-                  </button>
-                )}
-              </label>
-
-              <label className="relative flex w-[8.5rem] shrink-0 items-center rounded border border-transparent bg-[#1e1f22] focus-within:border-[#5865f2] hover:bg-[#404249]">
-                <span className="sr-only">Sort by</span>
-                <select
-                  value={sort}
-                  onChange={(event) => setSort(event.target.value as SortKey)}
-                  className="h-10 w-full cursor-pointer appearance-none bg-transparent pl-3 pr-8 font-body text-[20px] leading-none text-[#f2f3f5] outline-none"
-                >
-                  {SORT_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value} className="bg-[#1e1f22] text-[#f2f3f5]">
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown size={16} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute right-2.5 text-[#949ba4]" />
-              </label>
-            </div>
-
-            <div role="group" aria-label="Filter by genre" className="-mx-1 flex flex-nowrap gap-2 overflow-x-auto px-1 py-0.5">
-              {genreOptions.map((option) => {
-                const active = option.value === genre;
-                return (
-                  <button
-                    key={option.value}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => setGenre(option.value)}
-                    className={[
-                      'flex shrink-0 items-center gap-2 rounded px-2.5 py-2 font-pixel text-[8px] uppercase transition-colors duration-150',
-                      active
-                        ? 'bg-[#5865f2] text-white'
-                        : 'bg-[#1e1f22] text-[#dbdee1] hover:bg-[#404249] hover:text-[#f2f3f5]',
-                    ].join(' ')}
-                  >
-                    {option.label}
-                    <span className={active ? 'text-white/80' : 'text-[#949ba4]'}>{counts[option.value] ?? 0}</span>
-                  </button>
-                );
-              })}
-            </div>
+        <aside aria-label="Up next" className="flex min-h-0 flex-1 flex-col bg-[#1e1e1e] lg:w-[420px] lg:flex-none xl:w-[480px]">
+          <div className="flex shrink-0 items-center justify-between border-b-2 border-[#3c3c3c] px-4 py-3 sm:px-6">
+            <h3 className="font-pixel text-[10px] uppercase text-[#7CFFB2]">&gt; Up next</h3>
+            <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">{tracks.length} tracks</span>
           </div>
 
           <div ref={listScrollRef} className="pixel-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-2 sm:px-3">
             {apiError && (
-              <p className="mb-2 rounded border border-[#ed4245] bg-[#313338] px-3 py-2 text-[18px] text-[#dbdee1]">
+              <p className="mb-2  border border-[#ed4245] bg-[#1e1e1e] px-3 py-2 text-[18px] text-[#d4d4d4]">
                 The YouTube player could not be loaded (blocked or offline). Tracks can&apos;t be played right now, but
                 the links still work.
               </p>
             )}
 
-            {visible.length === 0 ? (
-              <div className="flex flex-col items-center gap-4 py-10 text-center">
-                <p className="font-pixel text-[10px] uppercase leading-[1.8] text-[#f2f3f5]">No results</p>
-                <p className="text-[#949ba4]">
-                  {query.trim() ? `Nothing matches "${query.trim()}"` : 'Nothing here yet'}
-                  {genre !== 'all' ? ' in this genre.' : '.'}
-                </p>
-                <button type="button" onClick={resetAll} className="pixel-btn !bg-[#5865f2] !text-white hover:!bg-[#4752c4]">
-                  Reset search &amp; filters
-                </button>
-              </div>
-            ) : (
-              <ul className="flex flex-col gap-1">
-                {visible.map((track, index) => {
-                  const isCurrent = track.id === currentId;
-                  const canPlay = playable(track) && !failed[track.id];
-                  const rowError = failed[track.id];
-                  const muteText = isCurrent ? 'text-white/80' : 'text-[#949ba4]';
-                  return (
-                    <li
-                      key={track.id}
-                      className={[
-                        'group rounded-md transition-colors duration-150',
-                        isCurrent ? 'bg-[#5865f2] text-white' : 'hover:bg-[#3a3c42]',
-                      ].join(' ')}
+            <ul className="flex flex-col gap-2">
+              {visible.map((track, index) => {
+                const isCurrent = track.id === currentId;
+                const canPlay = playable(track) && !failed[track.id];
+                const rowError = failed[track.id];
+                const muteText = isCurrent ? 'text-[#1e1e1e]/75' : 'text-[#8a8a8a]';
+                return (
+                  <li
+                    key={track.id}
+                    className={[
+                      'group border-2 transition-colors duration-150',
+                      isCurrent
+                        ? 'border-[#7CFFB2] bg-[#7CFFB2] text-[#1e1e1e]'
+                        : 'border-[#3c3c3c] bg-[#252526] hover:border-[#7CFFB2] hover:bg-[#2d2d30]',
+                    ].join(' ')}
+                  >
+                    <button
+                      type="button"
+                      disabled={!canPlay}
+                      onClick={() => (isCurrent ? togglePlay() : startTrack(track))}
+                      aria-label={`${isCurrent && playing ? 'Pause' : 'Play'} ${track.title} by ${track.artist}`}
+                      title={
+                        rowError ??
+                        (playable(track) ? undefined : 'No youtubeId set for this track yet, so it cannot be played here.')
+                      }
+                      className="flex min-h-[96px] w-full min-w-0 items-center gap-4 px-3 pb-1 pt-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#7CFFB2] enabled:cursor-pointer disabled:cursor-not-allowed"
                     >
-                      <button
-                        type="button"
-                        disabled={!canPlay}
-                        onClick={() => (isCurrent ? togglePlay() : startTrack(track))}
-                        aria-label={`${isCurrent && playing ? 'Pause' : 'Play'} ${track.title} by ${track.artist}`}
-                        title={
-                          rowError ??
-                          (playable(track) ? undefined : 'No youtubeId set for this track yet, so it cannot be played here.')
-                        }
-                        className="flex w-full min-w-0 items-center gap-3 rounded-md px-2 pb-1 pt-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#5865f2] enabled:cursor-pointer disabled:cursor-not-allowed"
-                      >
-                        <span className={['relative h-11 w-11 shrink-0', canPlay ? '' : 'opacity-50'].join(' ')}>
-                          <img src={track.coverUrl} alt="" loading="lazy" decoding="async" className="h-full w-full rounded-sm bg-[#1e1f22] object-cover" />
-                          <span
-                            className={[
-                              'absolute inset-0 flex items-center justify-center rounded-sm bg-black/55 font-pixel text-[8px] text-white',
-                              isCurrent || rowError ? 'flex' : 'hidden group-hover:flex',
-                            ].join(' ')}
-                          >
-                            {rowError ? (
-                              <AlertTriangle size={16} aria-hidden="true" className="text-[#faa61a]" />
-                            ) : isCurrent && playing ? (
-                              <Equalizer live />
-                            ) : canPlay ? (
-                              <Play size={14} fill="currentColor" aria-hidden="true" />
-                            ) : (
-                              index + 1
-                            )}
-                          </span>
+                      <span className={['relative h-[72px] w-[72px] shrink-0', canPlay ? '' : 'opacity-50'].join(' ')}>
+                        <img src={track.coverUrl} alt="" loading="lazy" decoding="async" className="h-full w-full border-2 border-[#1e1e1e] bg-[#1e1e1e] object-cover" />
+                        <span
+                          className={[
+                            'absolute inset-0 items-center justify-center bg-black/60 font-pixel text-[9px] text-white',
+                            isCurrent || rowError ? 'flex' : 'hidden group-hover:flex',
+                          ].join(' ')}
+                        >
+                          {rowError ? (
+                            <AlertTriangle size={20} aria-hidden="true" className="text-[#faa61a]" />
+                          ) : isCurrent && playing ? (
+                            <Equalizer live />
+                          ) : canPlay ? (
+                            <Play size={18} fill="currentColor" aria-hidden="true" />
+                          ) : (
+                            index + 1
+                          )}
                         </span>
-                        <span className={['flex min-w-0 flex-1 flex-col gap-1', canPlay ? '' : 'opacity-60'].join(' ')}>
-                          <span className="truncate text-[9px] leading-[1.6] sm:text-[10px]">{track.title}</span>
-                          <span className={['truncate text-[19px] leading-none', muteText].join(' ')}>{track.artist}</span>
+                      </span>
+                      <span className={['flex min-w-0 flex-1 flex-col gap-2', canPlay ? '' : 'opacity-60'].join(' ')}>
+                        <span className="line-clamp-2 break-words font-pixel text-[13px] font-bold leading-[1.5] sm:text-[14px]">
+                          {track.title}
                         </span>
-                        <span className={['shrink-0 font-pixel text-[8px] tabular-nums', muteText].join(' ')}>{durationLabel(track)}</span>
-                      </button>
-                      <div className="flex items-center gap-1.5 px-2 pb-2 pl-[3.75rem]">
-                        <a href={track.spotifyUrl} target="_blank" rel="noopener noreferrer" aria-label={`${track.title} on Spotify`} className={LINK_PILL}>
-                          [&nbsp;Spotify&nbsp;]
-                        </a>
-                        <a href={track.geniusUrl} target="_blank" rel="noopener noreferrer" aria-label={`${track.title} lyrics on Genius`} className={LINK_PILL}>
-                          [&nbsp;Genius&nbsp;]
-                        </a>
-                        <a href={track.youtubeUrl} target="_blank" rel="noopener noreferrer" aria-label={`${track.title} on YouTube`} className={LINK_PILL}>
-                          [&nbsp;YT&nbsp;]
-                        </a>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+                        <span className={['truncate text-[17px] leading-none', muteText].join(' ')}>{track.artist}</span>
+                      </span>
+                      <span className={['shrink-0 self-start font-pixel text-[8px] tabular-nums', muteText].join(' ')}>
+                        {durationLabel(track)}
+                      </span>
+                    </button>
+                    <div className="flex items-center gap-2 px-3 pb-3 pl-[5.25rem]">
+                      <a href={track.spotifyUrl} target="_blank" rel="noopener noreferrer" aria-label={`${track.title} on Spotify`} className={isCurrent ? LINK_PILL_ON : LINK_PILL}>
+                        [&nbsp;Spotify&nbsp;]
+                      </a>
+                      <a href={track.geniusUrl} target="_blank" rel="noopener noreferrer" aria-label={`${track.title} lyrics on Genius`} className={isCurrent ? LINK_PILL_ON : LINK_PILL}>
+                        [&nbsp;Genius&nbsp;]
+                      </a>
+                      <a href={track.youtubeUrl} target="_blank" rel="noopener noreferrer" aria-label={`${track.title} on YouTube`} className={isCurrent ? LINK_PILL_ON : LINK_PILL}>
+                        [&nbsp;YT&nbsp;]
+                      </a>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </aside>
       </div>
 
       {/* Persistent player bar (always docked) */}
-      <footer className="shrink-0 border-t border-[#1e1f22] bg-[#2b2d31] px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 sm:px-8 lg:px-12">
+      <footer className="shrink-0 border-t border-[#3c3c3c] bg-[#1e1e1e] px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 sm:px-8 lg:px-12">
         <div className="grid items-center gap-x-6 gap-y-2 md:grid-cols-[minmax(0,1fr)_minmax(320px,1.6fr)_minmax(0,1fr)]">
           {/* Left: mini thumbnail, title, artist */}
           <div className="flex min-w-0 items-center gap-3">
-            <img src={featured.coverUrl} alt="" className="h-12 w-12 shrink-0 rounded-sm bg-[#1e1f22] object-cover sm:h-14 sm:w-14" />
+            <img src={featured.coverUrl} alt="" className="h-12 w-12 shrink-0  bg-[#1e1e1e] object-cover sm:h-14 sm:w-14" />
             <div className="flex min-w-0 flex-col gap-1">
               <span className="truncate text-[9px] leading-[1.6] sm:text-[10px]" aria-live="polite">
                 {featured.title}
@@ -708,7 +554,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
               {currentError ? (
                 <span className="truncate text-[18px] leading-none text-[#faa61a]">{currentError}</span>
               ) : (
-                <span className="truncate text-[20px] leading-none text-[#949ba4]">{featured.artist}</span>
+                <span className="truncate text-[20px] leading-none text-[#8a8a8a]">{featured.artist}</span>
               )}
             </div>
           </div>
@@ -716,7 +562,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
           {/* Center: transport + seek */}
           <div className="flex min-w-0 flex-col items-center gap-0.5">
             <div className="flex items-center justify-center gap-1 sm:gap-2">
-              <button type="button" onClick={() => setShuffle((value) => !value)} aria-pressed={shuffle} aria-label="Shuffle" className={`${ctrl} ${shuffle ? '!text-[#5865f2]' : ''}`}>
+              <button type="button" onClick={() => setShuffle((value) => !value)} aria-pressed={shuffle} aria-label="Shuffle" className={`${ctrl} ${shuffle ? '!text-[#7CFFB2]' : ''}`}>
                 <Shuffle size={16} strokeWidth={2.5} aria-hidden="true" />
               </button>
               <button type="button" onClick={previous} disabled={!current} aria-label="Previous track" className={ctrl}>
@@ -727,7 +573,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                 onClick={togglePlay}
                 disabled={!!currentError || (!current && queue.length === 0)}
                 aria-label={playing ? 'Pause' : 'Play'}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f2f3f5] text-[#1e1f22] outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#5865f2] disabled:opacity-40 disabled:hover:scale-100"
+                className="flex h-10 w-10 shrink-0 items-center justify-center  bg-[#d4d4d4] text-[#1e1e1e] outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#7CFFB2] disabled:opacity-40 disabled:hover:scale-100"
               >
                 {playing ? <Pause size={18} fill="currentColor" aria-hidden="true" /> : <Play size={18} fill="currentColor" aria-hidden="true" className="translate-x-px" />}
               </button>
@@ -739,7 +585,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                 onClick={() => setRepeat((mode) => (mode === 'off' ? 'all' : mode === 'all' ? 'one' : 'off'))}
                 aria-label={`Repeat: ${repeat}`}
                 aria-pressed={repeat !== 'off'}
-                className={`${ctrl} ${repeat !== 'off' ? '!text-[#5865f2]' : ''}`}
+                className={`${ctrl} ${repeat !== 'off' ? '!text-[#7CFFB2]' : ''}`}
               >
                 <RepeatIcon size={16} strokeWidth={2.5} aria-hidden="true" />
               </button>
@@ -770,7 +616,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                   scrubbing.current = false;
                 }}
               />
-              <span className="shrink-0 whitespace-nowrap text-right font-pixel text-[8px] tabular-nums text-[#949ba4]">
+              <span className="shrink-0 whitespace-nowrap text-right font-pixel text-[8px] tabular-nums text-[#8a8a8a]">
                 {formatTime(position)} / {formatTime(shownDuration)}
               </span>
             </div>

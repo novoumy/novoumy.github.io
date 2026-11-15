@@ -1,184 +1,151 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ChevronDown, ExternalLink, X } from 'lucide-react';
-import PixelBadge from '@/components/PixelBadge';
+import { useEffect, useRef, useState } from 'react';
+import { ChevronDown, ExternalLink } from 'lucide-react';
 import { games, type GameItem } from '@/siteData';
 
-const WIDE_QUERY = '(min-width: 640px)';
-
-function useColumnCount() {
-  const [columns, setColumns] = useState(() => (window.matchMedia(WIDE_QUERY).matches ? 3 : 2));
-
-  useEffect(() => {
-    const query = window.matchMedia(WIDE_QUERY);
-    const onChange = (event: MediaQueryListEvent) => setColumns(event.matches ? 3 : 2);
-    query.addEventListener('change', onChange);
-    return () => query.removeEventListener('change', onChange);
-  }, []);
-
-  return columns;
-}
-
-function chunk<T>(items: T[], size: number): T[][] {
-  const rows: T[][] = [];
-  for (let i = 0; i < items.length; i += size) {
-    rows.push(items.slice(i, i + size));
+// Turns the free-form `status` in siteData into a badge label and a completion figure.
+//   '100%'            -> [ 100% COMPLETED ]
+//   '40%'             -> [ 40% PROGRESS ]
+//   'forever playing' -> [ FOREVER PLAYING ]
+//   'mastered'        -> [ MASTERED ]
+function describeStatus(status: string) {
+  const text = status.trim();
+  const percent = /^(\d{1,3})\s*%$/.exec(text);
+  if (percent) {
+    const value = Math.min(100, Number(percent[1]));
+    return {
+      badge: value === 100 ? '100% COMPLETED' : `${value}% PROGRESS`,
+      completion: `${value}%`,
+      pct: value,
+      gold: value === 100,
+    };
   }
-  return rows;
-}
-
-// Same grid and portrait (2:3) cover shape as the Media tab. Clicking a card
-// opens a details panel under its row (only one open at a time).
-export default function GamesView() {
-  const [openItem, setOpenItem] = useState<GameItem | null>(null);
-  const columns = useColumnCount();
-  const rows = chunk(games, columns);
-
-  const toggleItem = (item: GameItem) => {
-    setOpenItem((current) => (current === item ? null : item));
+  const upper = text.toUpperCase();
+  const ongoing = /playing/i.test(text);
+  const mastered = /master/i.test(text);
+  return {
+    badge: upper,
+    completion: ongoing ? 'ONGOING' : mastered ? '100%' : upper,
+    pct: ongoing ? null : mastered ? 100 : null,
+    gold: mastered,
   };
-
-  return (
-    <div className="flex flex-col">
-      {rows.map((row) => (
-        <GameRow
-          key={row[0].title}
-          row={row}
-          columns={columns}
-          openItem={openItem}
-          onToggle={toggleItem}
-          onClose={() => setOpenItem(null)}
-        />
-      ))}
-    </div>
-  );
 }
 
-interface GameRowProps {
-  row: GameItem[];
-  columns: number;
-  openItem: GameItem | null;
-  onToggle: (item: GameItem) => void;
-  onClose: () => void;
-}
-
-function GameRow({ row, columns, openItem, onToggle, onClose }: GameRowProps) {
-  const openInRow = row.find((item) => item === openItem) ?? null;
-  // Keeps the last opened game mounted while the panel animates closed.
-  const [shown, setShown] = useState<GameItem | null>(openInRow);
-
-  useEffect(() => {
-    if (openInRow) setShown(openInRow);
-  }, [openInRow]);
+// Retro achievement showcase: big artwork cards with a status badge in the corner
+// and a `[ DETAILS v ]` drawer with personal stats.
+export default function GamesView() {
+  const [openTitle, setOpenTitle] = useState<string | null>(null);
+  const done = games.filter((g) => describeStatus(g.status).pct === 100).length;
 
   return (
-    <div>
-      <ul className="grid gap-5 pb-5" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
-        {row.map((item) => (
-          <li key={item.title}>
-            <GameCard item={item} isOpen={item === openItem} onToggle={() => onToggle(item)} />
+    <div className="flex flex-col gap-6">
+      <header className="flex flex-wrap items-end justify-between gap-3 border-b-2 border-[#3c3c3c] pb-4">
+        <h2 className="r-glow text-[12px] uppercase text-[#7CFFB2] sm:text-[14px]">&gt; game_library.exe</h2>
+        <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">
+          // {games.length} games · {done} completed
+        </span>
+      </header>
+
+      <ul className="grid grid-cols-1 gap-6 min-[520px]:grid-cols-2 lg:grid-cols-3">
+        {games.map((game) => (
+          <li key={game.title} className="flex">
+            <GameCard
+              game={game}
+              open={openTitle === game.title}
+              onToggle={() => setOpenTitle((current) => (current === game.title ? null : game.title))}
+            />
           </li>
         ))}
       </ul>
-      <ExpandPanel open={openInRow !== null}>
-        {shown && <GameDetail item={shown} onClose={onClose} />}
-      </ExpandPanel>
-    </div>
-  );
-}
-
-function ExpandPanel({ open, children }: { open: boolean; children: ReactNode }) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    wrapperRef.current?.toggleAttribute('inert', !open);
-  }, [open]);
-
-  const scrollOpenedIntoView = () => {
-    if (open) wrapperRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  };
-
-  return (
-    <div
-      ref={wrapperRef}
-      onTransitionEnd={scrollOpenedIntoView}
-      className="grid transition-[grid-template-rows] duration-300 ease-out"
-      style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
-    >
-      <div className="min-h-0 overflow-hidden">{children}</div>
     </div>
   );
 }
 
 interface GameCardProps {
-  item: GameItem;
-  isOpen: boolean;
+  game: GameItem;
+  open: boolean;
   onToggle: () => void;
 }
 
-function GameCard({ item, isOpen, onToggle }: GameCardProps) {
+function GameCard({ game, open, onToggle }: GameCardProps) {
+  const info = describeStatus(game.status);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  // `inert` keeps the collapsed drawer out of the tab order (React 18 can't set it as a boolean prop).
+  useEffect(() => {
+    drawerRef.current?.toggleAttribute('inert', !open);
+  }, [open]);
+  const drawerId = `drawer-${game.title.replace(/\W+/g, '-').toLowerCase()}`;
+
   return (
-    <button
-      type="button"
-      aria-expanded={isOpen}
-      onClick={onToggle}
-      className={[
-        'pixel-tile pixel-tile-interactive group flex h-full w-full flex-col gap-3 p-3 text-left',
-        isOpen ? 'bg-rose' : 'bg-cool-white',
-      ].join(' ')}
-    >
-      <div className="relative">
+    <article className={['r-box flex w-full flex-col', open ? 'r-box-active' : ''].join(' ')}>
+      <div className="relative p-2 pb-0">
         <img
-          src={item.cover}
-          alt={`${item.title} cover`}
+          src={game.cover}
+          alt={`${game.title} cover`}
           loading="lazy"
-          className="aspect-[2/3] w-full object-cover"
+          className="aspect-[3/4] w-full border-2 border-[#3c3c3c] bg-[#1e1e1e] object-cover"
         />
-        <span className="absolute right-2 top-2">
-          <PixelBadge>{item.status}</PixelBadge>
+        <span
+          className={[
+            'r-tag absolute right-4 top-4 shadow-[3px_3px_0_0_#000]',
+            info.gold ? '!border-[#f5c542] !text-[#f5c542]' : '',
+          ].join(' ')}
+        >
+          [ {info.badge} ]
         </span>
       </div>
-      <h3 className="text-[10px] leading-[1.6]">{item.title}</h3>
-      <span className="mt-auto flex items-center justify-end gap-1 font-pixel text-[8px] uppercase text-wine">
-        Details
-        <ChevronDown
-          size={14}
-          aria-hidden="true"
-          className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
-        />
-      </span>
-    </button>
+
+      <h3 className="px-3 pb-3 pt-3 text-[11px] leading-[1.6] text-[#d4d4d4]">{game.title}</h3>
+
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={drawerId}
+        onClick={onToggle}
+        className="mt-auto flex w-full items-center justify-between gap-2 border-t-2 border-[#3c3c3c] bg-[#1e1e1e] px-3 py-3 font-pixel text-[9px] uppercase text-[#7CFFB2] outline-none transition-colors hover:bg-[#7CFFB2] hover:text-[#1e1e1e] focus-visible:bg-[#7CFFB2] focus-visible:text-[#1e1e1e]"
+      >
+        <span>[ Details {open ? '^' : 'v'} ]</span>
+        <ChevronDown size={14} aria-hidden="true" className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      <div ref={drawerRef} id={drawerId} className="r-drawer" data-open={open}>
+        <div>
+          <dl className="grid grid-cols-2 gap-3 border-t-2 border-[#3c3c3c] bg-[#1e1e1e] p-3">
+            <Stat label="Hours played" value={game.hours !== undefined ? `${game.hours} H` : '-- H'} />
+            <Stat label="Completion" value={info.completion} />
+            {info.pct !== null && (
+              <div className="col-span-2">
+                <div className="h-3 border-2 border-[#3c3c3c] bg-[#252526]" role="presentation">
+                  <div className="h-full bg-[#7CFFB2]" style={{ width: `${info.pct}%` }} />
+                </div>
+              </div>
+            )}
+            <div className="col-span-2 flex flex-col gap-1">
+              <dt className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// Review</dt>
+              <dd className="text-[21px] leading-[1.25] text-[#d4d4d4]">&gt; {game.note}</dd>
+            </div>
+            {game.link && (
+              <a
+                href={game.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="r-btn col-span-2 !text-[9px]"
+              >
+                {game.linkLabel ?? 'Store page'}
+                <ExternalLink size={13} aria-hidden="true" />
+              </a>
+            )}
+          </dl>
+        </div>
+      </div>
+    </article>
   );
 }
 
-interface GameDetailProps {
-  item: GameItem;
-  onClose: () => void;
-}
-
-function GameDetail({ item, onClose }: GameDetailProps) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="pixel-tile mx-1 my-1 flex flex-col gap-4 bg-rose p-4 sm:p-5">
-      <div className="flex flex-wrap items-center gap-3">
-        <PixelBadge>{item.status}</PixelBadge>
-      </div>
-      <h3 className="text-[11px] leading-[1.6] sm:text-xs">{item.title}</h3>
-      {item.note && <p className="bg-cool-white p-4 leading-[1.5]">{item.note}</p>}
-      <div className="flex flex-wrap items-center gap-3">
-        {item.link && (
-          <a href={item.link} target="_blank" rel="noopener noreferrer" className="pixel-btn px-4 py-3 text-[9px]">
-            {item.linkLabel ?? 'Store'}
-            <ExternalLink size={14} aria-hidden="true" />
-          </a>
-        )}
-        <button
-          type="button"
-          onClick={onClose}
-          className="pixel-tile flex items-center gap-2 bg-cool-white px-3 py-3 font-pixel text-[9px] uppercase text-wine"
-        >
-          <X size={14} aria-hidden="true" />
-          Close
-        </button>
-      </div>
+    <div className="flex flex-col gap-1">
+      <dt className="font-pixel text-[8px] uppercase text-[#8a8a8a]">{label}</dt>
+      <dd className="text-[26px] leading-none text-[#7CFFB2]">{value}</dd>
     </div>
   );
 }
