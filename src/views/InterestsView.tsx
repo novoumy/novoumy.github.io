@@ -32,7 +32,7 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
     <>
       <div className="flex min-h-full flex-col gap-6">
         <p className="leading-none">&gt; select a folder to open //</p>
-        <ul className="grid grid-cols-2 content-start gap-x-4 gap-y-8 max-sm:my-auto sm:grid-cols-4">
+        <ul className="grid grid-cols-2 content-start gap-x-4 gap-y-8 sm:grid-cols-4">
           {interests.map((item) => (
             <li key={item.id} className="flex justify-center">
               <button

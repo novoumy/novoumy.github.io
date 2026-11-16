@@ -20,7 +20,7 @@ export default function SocialsView() {
   const address = useCopy();
 
   return (
-    <div className="flex min-h-full flex-col gap-5 max-sm:gap-4 sm:gap-6">
+    <div className="flex min-h-full flex-col gap-5 sm:gap-6">
       {/* Identity */}
       <section className="flex items-center gap-4 sm:gap-6">
         <img
@@ -54,7 +54,7 @@ export default function SocialsView() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${social.platform}${social.handle ? ` (${social.handle})` : ''}, opens in a new tab`}
-              className="pixel-tile pixel-tile-interactive group relative flex w-full min-w-0 flex-col items-center gap-3 bg-cool-white px-2 pb-3.5 pt-4 text-center hover:bg-rose/30 max-sm:gap-2 max-sm:pb-2.5 max-sm:pt-3"
+              className="pixel-tile pixel-tile-interactive group relative flex w-full min-w-0 flex-col items-center gap-3 bg-cool-white px-2 pb-3.5 pt-4 text-center hover:bg-rose/30"
             >
               <SocialGlyph social={social} className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
               <span className="flex w-full min-w-0 flex-col items-center gap-2">
