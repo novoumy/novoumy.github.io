@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, ExternalLink, Search, X } from 'lucide-react';
+import { ChevronDown, ExternalLink, Search, SlidersHorizontal, X } from 'lucide-react';
 import RetroOverlay from '@/components/RetroOverlay';
 import { games, type GameItem, type GamePlatform } from '@/siteData';
 
@@ -80,6 +80,8 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
   const [platform, setPlatform] = useState<PlatformFilter>('all');
   const [status, setStatus] = useState<StatusFilter>('all');
   const [sort, setSort] = useState<SortKey>('title-asc');
+  // Phones only: search + filters are tucked behind a toggle (desktop always shows them).
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
   // "/" jumps to the search box, like the media library.
@@ -149,8 +151,30 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
         : 'border-[#3c3c3c] bg-[#1e1e1e] text-[#d4d4d4] hover:border-[#CC97A3] hover:text-[#CC97A3]',
     ].join(' ');
 
+  const activeCount =
+    (query.trim() ? 1 : 0) + (platform !== 'all' ? 1 : 0) + (status !== 'all' ? 1 : 0) + (sort !== 'title-asc' ? 1 : 0);
+
   const toolbar = (
     <div className="flex w-full flex-col gap-4">
+      <button
+        type="button"
+        onClick={() => setFiltersOpen((open) => !open)}
+        aria-expanded={filtersOpen}
+        aria-controls="games-filters"
+        className="r-btn w-full !justify-between sm:hidden"
+      >
+        <span className="flex items-center gap-2">
+          <SlidersHorizontal size={14} strokeWidth={3} aria-hidden="true" />
+          Search &amp; filters
+          {activeCount > 0 && <span className="r-tag !px-1.5 !py-1">{activeCount}</span>}
+        </span>
+        <span className="flex items-center gap-2 text-[#8a8a8a]">
+          {visible.length}/{games.length}
+          <ChevronDown size={14} strokeWidth={3} aria-hidden="true" className={filtersOpen ? 'rotate-180' : ''} />
+        </span>
+      </button>
+
+      <div id="games-filters" className={['flex flex-col gap-4', filtersOpen ? '' : 'max-sm:hidden'].join(' ')}>
       <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
         <label className="relative flex min-w-0 flex-1 items-center border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-[#CC97A3]">
           <span className="sr-only">Search titles</span>
@@ -217,6 +241,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
           ))}
         </div>
       </div>
+      </div>
     </div>
   );
 
@@ -241,7 +266,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
           </button>
         </div>
       ) : (
-        <ul className="grid w-full gap-6 pb-4 [grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))] lg:gap-8">
+        <ul className="grid w-full grid-cols-[repeat(2,minmax(0,1fr))] gap-6 pb-4 max-sm:gap-x-5 max-sm:gap-y-7 sm:[grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))] lg:gap-8">
           {visible.map((game) => {
             const active = game === selected;
             return (
@@ -251,7 +276,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
                   aria-pressed={active}
                   onClick={() => select(game)}
                   className={[
-                    'r-box r-box-hover group flex w-full flex-col gap-3 p-2 text-left',
+                    'r-box r-box-hover group flex w-full flex-col gap-3 p-2 text-left max-sm:p-2.5',
                     active ? 'r-box-active !border-[#CC97A3] shadow-[4px_4px_0_0_#7d5560]' : '',
                   ].join(' ')}
                 >
@@ -259,11 +284,13 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
                     src={game.cover}
                     alt={`${game.title} cover`}
                     loading="lazy"
-                    className="aspect-[3/4] w-full bg-[#1e1e1e] object-cover"
+                    className="aspect-[3/4] w-full bg-[#1e1e1e] object-cover max-sm:aspect-[2/3]"
                   />
-                  <div className="flex flex-col items-start gap-2 px-1 pb-1">
-                    <span className="r-tag">[ {badgeFor(game.status)} ]</span>
-                    <h3 className="text-[11px] leading-[1.6] text-[#d4d4d4]">{game.title}</h3>
+                  <div className="flex flex-col items-start gap-2 px-1 pb-1 max-sm:w-full max-sm:min-w-0 max-sm:px-0 max-sm:pb-0">
+                    <span className="r-tag max-sm:max-w-full max-sm:whitespace-normal max-sm:break-words max-sm:leading-[1.4] max-sm:text-[7px]">
+                      [ {badgeFor(game.status)} ]
+                    </span>
+                    <h3 className="text-[11px] leading-[1.6] text-[#d4d4d4] max-sm:break-words max-sm:text-[9px]">{game.title}</h3>
                   </div>
                 </button>
               </li>

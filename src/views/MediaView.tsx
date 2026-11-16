@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown, Search, X } from 'lucide-react';
+import { ChevronDown, Search, SlidersHorizontal, X } from 'lucide-react';
 import PixelBadge from '@/components/PixelBadge';
 import { media, mediaFilters, type MediaItem } from '@/siteData';
 
@@ -44,6 +44,8 @@ export default function MediaView({ onClose }: MediaViewerProps) {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   const [sort, setSort] = useState<SortKey>('title-asc');
+  // Phones only: search + filters are tucked behind a toggle (desktop always shows them).
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -123,6 +125,8 @@ export default function MediaView({ onClose }: MediaViewerProps) {
     gridScrollRef.current?.scrollTo({ top: 0 });
   }, [query, filter, sort]);
 
+  const activeCount = (query.trim() ? 1 : 0) + (filter !== 'all' ? 1 : 0) + (sort !== 'title-asc' ? 1 : 0);
+
   const resetAll = () => {
     setQuery('');
     setFilter('all');
@@ -167,8 +171,32 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       </header>
 
       {/* Search, filters and sorting */}
-      <div className="shrink-0 border-b-2 border-[#7d5560] bg-[#1e1e1e] px-4 py-4 sm:px-8 lg:px-12">
+      <div className="shrink-0 border-b-2 border-[#7d5560] bg-[#1e1e1e] px-4 py-4 max-sm:py-3 sm:px-8 lg:px-12">
         <div className="flex w-full flex-col gap-4">
+          <button
+            type="button"
+            onClick={() => setFiltersOpen((open) => !open)}
+            aria-expanded={filtersOpen}
+            aria-controls="media-filters"
+            className="r-btn w-full !justify-between sm:hidden"
+          >
+            <span className="flex items-center gap-2">
+              <SlidersHorizontal size={14} strokeWidth={3} aria-hidden="true" />
+              Search &amp; filters
+              {activeCount > 0 && <span className="r-tag !px-1.5 !py-1">{activeCount}</span>}
+            </span>
+            <span className="flex items-center gap-2 text-[#8a8a8a]">
+              {visible.length}/{media.length}
+              <ChevronDown
+                size={14}
+                strokeWidth={3}
+                aria-hidden="true"
+                className={filtersOpen ? 'rotate-180' : ''}
+              />
+            </span>
+          </button>
+
+          <div id="media-filters" className={['flex flex-col gap-4', filtersOpen ? '' : 'max-sm:hidden'].join(' ')}>
           <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
             <label className="relative flex min-w-0 flex-1 items-center  border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-[#CC97A3]">
               <span className="sr-only">Search titles</span>
@@ -246,6 +274,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
             <span className="shrink-0 font-pixel text-[8px] uppercase text-[#8a8a8a] sm:hidden" aria-live="polite">
               {visible.length}/{media.length}
             </span>
+          </div>
           </div>
         </div>
       </div>
