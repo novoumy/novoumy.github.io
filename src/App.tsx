@@ -82,26 +82,24 @@ export default function App() {
   return (
     <div className="relative h-dvh overflow-hidden bg-lavender">
       <PixelBackdrop />
-      <main className={['relative z-10 flex h-full', staged ? 'items-center justify-center' : 'p-3'].join(' ')}>
+      <main
+        className={[
+          'relative z-10 flex h-full',
+          staged ? 'items-center justify-center' : 'p-3 max-[859px]:items-center max-[859px]:px-4 max-[859px]:py-6 max-[859px]:[@media(max-height:620px)]:py-3',
+        ].join(' ')}
+      >
         {/* Big screens: fixed 800px window scaled up. Phones/small windows: window fills the screen. */}
         <div
           className={
             staged
               ? 'w-[800px] shrink-0 pb-2 pr-2'
-              : 'mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col pb-2 pr-2'
+              : 'mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col pb-2 pr-2 max-[859px]:max-h-[46rem]'
           }
           style={staged ? { zoom: scale } : undefined}
         >
-          {/* Phones: slim title bar with the sound toggle above the tabs. */}
-          <div className="mb-4 flex items-center justify-between pl-1 pr-1 min-[860px]:hidden">
-            <span className="font-pixel text-[10px] uppercase text-cool-white [text-shadow:2px_2px_0_var(--wine)]">
-              &gt; {site.title}
-            </span>
-            <SoundToggle className="flex" />
-          </div>
           <div className="flex items-end justify-between gap-2">
             <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={selectTab} />
-            <SoundToggle className="hidden min-[860px]:flex" />
+            <SoundToggle className="flex" />
           </div>
           <section
             className={[
@@ -116,7 +114,7 @@ export default function App() {
                 key={id}
                 role="tabpanel"
                 hidden={id !== activeId}
-                className="pixel-scroll min-h-0 flex-1 overflow-y-auto p-5 sm:p-8"
+                className="pixel-scroll min-h-0 flex-1 overflow-y-auto p-5 max-sm:p-4 sm:p-8"
               >
                 {render(route, openInterest)}
               </div>
