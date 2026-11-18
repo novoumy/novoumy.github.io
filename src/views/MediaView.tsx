@@ -140,10 +140,10 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       aria-modal="true"
       aria-label="Media library"
       tabIndex={-1}
-      className="retro-dark animate-overlay-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none"
+      className="retro-dark accent-media animate-overlay-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none"
     >
       {/* Title bar */}
-      <header className="flex shrink-0 items-center justify-between gap-3 border-b-2 border-[#7d5560] bg-[#1e1e1e] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8 lg:px-12">
+      <header className="flex shrink-0 items-center justify-between gap-3 border-b-2 border-[color:var(--r-accent-dim)] bg-[#1e1e1e] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8 lg:px-12">
         {/* Top-left area closes the library too (arrow + title). */}
         <div onClick={onClose} className="flex min-w-0 cursor-pointer items-baseline gap-3 sm:gap-4">
           <h2 className="min-w-0 truncate text-[11px] uppercase sm:text-[14px]">
@@ -171,7 +171,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
       </header>
 
       {/* Search, filters and sorting */}
-      <div className="shrink-0 border-b-2 border-[#7d5560] bg-[#1e1e1e] px-4 py-4 max-sm:py-3 sm:px-8 lg:px-12">
+      <div className="shrink-0 border-b-2 border-[color:var(--r-accent-dim)] bg-[#1e1e1e] px-4 py-4 max-sm:py-3 sm:px-8 lg:px-12">
         <div className="flex w-full flex-col gap-4">
           <button
             type="button"
@@ -198,7 +198,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
 
           <div id="media-filters" className={['flex flex-col gap-4', filtersOpen ? '' : 'max-sm:hidden'].join(' ')}>
           <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
-            <label className="relative flex min-w-0 flex-1 items-center  border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-[#CC97A3]">
+            <label className="relative flex min-w-0 flex-1 items-center  border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-[color:var(--r-accent)]">
               <span className="sr-only">Search titles</span>
               <Search size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3 text-[#8a8a8a]" />
               <input
@@ -227,7 +227,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
               )}
             </label>
 
-            <label className="relative flex shrink-0 items-center  border-2 border-[#3c3c3c] bg-[#1e1e1e] hover:bg-[#333333] focus-within:border-[#CC97A3] lg:w-[300px]">
+            <label className="relative flex shrink-0 items-center  border-2 border-[#3c3c3c] bg-[#1e1e1e] hover:bg-[#333333] focus-within:border-[color:var(--r-accent)] lg:w-[300px]">
               <span className="sr-only">Sort by</span>
               <select
                 value={sort}
@@ -261,8 +261,8 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                     className={[
                       'flex shrink-0 items-center gap-2 border-2 border-transparent px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
                       active
-                        ? 'bg-[#CC97A3] text-[#1e1e1e]'
-                        : 'border-2 border-[#3c3c3c] bg-[#1e1e1e] text-[#d4d4d4] hover:border-[#CC97A3] hover:text-[#CC97A3]',
+                        ? 'bg-[color:var(--r-accent)] text-[#1e1e1e]'
+                        : 'border-2 border-[#3c3c3c] bg-[#1e1e1e] text-[#d4d4d4] hover:border-[color:var(--r-accent)] hover:text-[color:var(--r-accent)]',
                     ].join(' ')}
                   >
                     {option.label}
@@ -287,7 +287,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
         <div className="w-full">
           {/* Discord-style info embed */}
           <aside className="mb-6 flex overflow-hidden border-2 border-[#3c3c3c] bg-[#252526] lg:mb-8">
-            <div className="w-1 shrink-0 bg-[#CC97A3]" aria-hidden="true" />
+            <div className="w-1 shrink-0 bg-[color:var(--r-accent)]" aria-hidden="true" />
             <div className="flex min-w-0 flex-col gap-2 px-4 py-3 sm:px-5 sm:py-4">
               <h3 className="text-[11px] font-bold uppercase leading-[1.4] text-[#d4d4d4] sm:text-[12px]">Media archive</h3>
               <p className="text-[21px] leading-[1.3] text-[#d4d4d4] sm:text-[22px]">

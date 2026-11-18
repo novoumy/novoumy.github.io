@@ -37,9 +37,9 @@ const formatTime = (seconds: number) => {
 const playable = (track: TrackItem) => track.youtubeId.trim() !== '';
 
 const LINK_PILL =
-  'border-2 border-[#3c3c3c] bg-[#1e1e1e] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[#a8a8a8] outline-none transition-colors hover:border-[#CC97A3] hover:text-[#CC97A3] focus-visible:border-[#CC97A3]';
+  'border-2 border-[#3c3c3c] bg-[#1e1e1e] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[#a8a8a8] outline-none transition-colors hover:border-[color:var(--r-accent)] hover:text-[color:var(--r-accent)] focus-visible:border-[color:var(--r-accent)]';
 const LINK_PILL_ON =
-  'border-2 border-[#1e1e1e] bg-[#1e1e1e] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[#CC97A3] outline-none transition-colors hover:bg-[#252526] focus-visible:bg-[#252526]';
+  'border-2 border-[#1e1e1e] bg-[#1e1e1e] px-2 py-1.5 font-pixel text-[8px] uppercase leading-none text-[color:var(--r-accent)] outline-none transition-colors hover:bg-[#252526] focus-visible:bg-[#252526]';
 
 function loadVolume(): number {
   try {
@@ -365,7 +365,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
     track.duration ?? (durations[track.id] ? formatTime(durations[track.id]) : '--:--');
 
   const ctrl =
-    'flex h-9 w-9 shrink-0 items-center justify-center  text-[#a8a8a8] outline-none transition-colors hover:text-[#d4d4d4] focus-visible:ring-2 focus-visible:ring-[#CC97A3] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-[#a8a8a8]';
+    'flex h-9 w-9 shrink-0 items-center justify-center  text-[#a8a8a8] outline-none transition-colors hover:text-[#d4d4d4] focus-visible:ring-2 focus-visible:ring-[color:var(--r-accent)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-[#a8a8a8]';
 
   return createPortal(
     <div
@@ -374,7 +374,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
       aria-modal="true"
       aria-label="Music library"
       tabIndex={-1}
-      className="retro-dark animate-overlay-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none"
+      className="retro-dark accent-music animate-overlay-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none"
     >
       {/* Hidden YouTube player (official IFrame API) */}
       <div
@@ -459,7 +459,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
               src={featured.coverUrl}
               alt={`${featured.title} cover art`}
               decoding="async"
-              className="animate-tab-in relative aspect-square w-full bg-[#1e1e1e] object-cover shadow-[0_0_0_4px_#1e1e1e,10px_10px_0_4px_#CC97A3]"
+              className="animate-tab-in relative aspect-square w-full bg-[#1e1e1e] object-cover shadow-[0_0_0_4px_#1e1e1e,10px_10px_0_4px_var(--r-accent)]"
             />
           </div>
 
@@ -481,7 +481,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
         {/* Queue sidebar */}
         <aside aria-label="Up next" className="flex min-h-0 flex-1 flex-col bg-[#1e1e1e] lg:w-[420px] lg:flex-none xl:w-[480px]">
           <div className="flex shrink-0 items-center justify-between border-b-2 border-[#3c3c3c] px-4 py-3 sm:px-6">
-            <h3 className="font-pixel text-[10px] uppercase text-[#CC97A3]">&gt; Up next</h3>
+            <h3 className="font-pixel text-[10px] uppercase text-[color:var(--r-accent)]">&gt; Up next</h3>
             <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">{tracks.length} tracks</span>
           </div>
 
@@ -505,8 +505,8 @@ export default function MusicView({ onClose }: MusicViewProps) {
                     className={[
                       'group border-2 transition-colors duration-150',
                       isCurrent
-                        ? 'border-[#CC97A3] bg-[#CC97A3] text-[#1e1e1e]'
-                        : 'border-[#7d5560] bg-[#252526] hover:border-[#CC97A3] hover:bg-[#2d2d30]',
+                        ? 'border-[color:var(--r-accent)] bg-[color:var(--r-accent)] text-[#1e1e1e]'
+                        : 'border-[color:var(--r-accent-dim)] bg-[#252526] hover:border-[color:var(--r-accent)] hover:bg-[#2d2d30]',
                     ].join(' ')}
                   >
                     <button
@@ -518,7 +518,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                         rowError ??
                         (playable(track) ? undefined : 'No youtubeId set for this track yet, so it cannot be played here.')
                       }
-                      className="flex min-h-[96px] w-full min-w-0 items-center gap-4 px-3 pb-1 pt-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#CC97A3] enabled:cursor-pointer disabled:cursor-not-allowed"
+                      className="flex min-h-[96px] w-full min-w-0 items-center gap-4 px-3 pb-1 pt-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--r-accent)] enabled:cursor-pointer disabled:cursor-not-allowed"
                     >
                       <span className={['relative h-[72px] w-[72px] shrink-0', canPlay ? '' : 'opacity-50'].join(' ')}>
                         <img src={track.coverUrl} alt="" loading="lazy" decoding="async" className="h-full w-full border-2 border-[#1e1e1e] bg-[#1e1e1e] object-cover" />
@@ -589,7 +589,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
           {/* Center: transport + seek */}
           <div className="flex min-w-0 flex-col items-center gap-0.5">
             <div className="flex items-center justify-center gap-1 sm:gap-2">
-              <button type="button" onClick={() => setShuffle((value) => !value)} aria-pressed={shuffle} aria-label="Shuffle" className={`${ctrl} ${shuffle ? '!text-[#CC97A3]' : ''}`}>
+              <button type="button" onClick={() => setShuffle((value) => !value)} aria-pressed={shuffle} aria-label="Shuffle" className={`${ctrl} ${shuffle ? '!text-[color:var(--r-accent)]' : ''}`}>
                 <Shuffle size={16} strokeWidth={2.5} aria-hidden="true" />
               </button>
               <button type="button" onClick={previous} disabled={!current} aria-label="Previous track" className={ctrl}>
@@ -600,7 +600,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                 onClick={togglePlay}
                 disabled={!!currentError || (!current && queue.length === 0)}
                 aria-label={playing ? 'Pause' : 'Play'}
-                className="flex h-10 w-10 shrink-0 items-center justify-center  bg-[#d4d4d4] text-[#1e1e1e] outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#CC97A3] disabled:opacity-40 disabled:hover:scale-100"
+                className="flex h-10 w-10 shrink-0 items-center justify-center  bg-[#d4d4d4] text-[#1e1e1e] outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-[color:var(--r-accent)] disabled:opacity-40 disabled:hover:scale-100"
               >
                 {playing ? <Pause size={18} fill="currentColor" aria-hidden="true" /> : <Play size={18} fill="currentColor" aria-hidden="true" className="translate-x-px" />}
               </button>
@@ -612,7 +612,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                 onClick={() => setRepeat((mode) => (mode === 'off' ? 'all' : mode === 'all' ? 'one' : 'off'))}
                 aria-label={`Repeat: ${repeat}`}
                 aria-pressed={repeat !== 'off'}
-                className={`${ctrl} ${repeat !== 'off' ? '!text-[#CC97A3]' : ''}`}
+                className={`${ctrl} ${repeat !== 'off' ? '!text-[color:var(--r-accent)]' : ''}`}
               >
                 <RepeatIcon size={16} strokeWidth={2.5} aria-hidden="true" />
               </button>
@@ -719,7 +719,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
               src={featured.coverUrl}
               alt={`${featured.title} cover art`}
               decoding="async"
-              className="animate-tab-in aspect-square w-[min(70vw,40dvh)] bg-[#1e1e1e] object-cover shadow-[0_0_0_4px_#1e1e1e,8px_8px_0_4px_#CC97A3]"
+              className="animate-tab-in aspect-square w-[min(70vw,40dvh)] bg-[#1e1e1e] object-cover shadow-[0_0_0_4px_#1e1e1e,8px_8px_0_4px_var(--r-accent)]"
             />
           </div>
 
@@ -778,7 +778,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
 
           {/* Transport */}
           <div className="relative z-10 flex w-full items-center justify-between pt-3">
-            <button type="button" onClick={() => setShuffle((value) => !value)} aria-pressed={shuffle} aria-label="Shuffle" className={`${ctrl} !h-11 !w-11 ${shuffle ? '!text-[#CC97A3]' : ''}`}>
+            <button type="button" onClick={() => setShuffle((value) => !value)} aria-pressed={shuffle} aria-label="Shuffle" className={`${ctrl} !h-11 !w-11 ${shuffle ? '!text-[color:var(--r-accent)]' : ''}`}>
               <Shuffle size={20} strokeWidth={2.5} aria-hidden="true" />
             </button>
             <button type="button" onClick={previous} disabled={!current} aria-label="Previous track" className={`${ctrl} !h-11 !w-11`}>
@@ -789,7 +789,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
               onClick={togglePlay}
               disabled={!!currentError || (!current && queue.length === 0)}
               aria-label={playing ? 'Pause' : 'Play'}
-              className="flex h-16 w-16 shrink-0 items-center justify-center bg-[#CC97A3] text-[#1e1e1e] shadow-[4px_4px_0_0_#7d5560] outline-none transition-transform active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus-visible:ring-2 focus-visible:ring-[#d4d4d4] disabled:opacity-40"
+              className="flex h-16 w-16 shrink-0 items-center justify-center bg-[color:var(--r-accent)] text-[#1e1e1e] shadow-[4px_4px_0_0_var(--r-accent-dim)] outline-none transition-transform active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus-visible:ring-2 focus-visible:ring-[#d4d4d4] disabled:opacity-40"
             >
               {playing ? <Pause size={26} fill="currentColor" aria-hidden="true" /> : <Play size={26} fill="currentColor" aria-hidden="true" className="translate-x-px" />}
             </button>
@@ -801,7 +801,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
               onClick={() => setRepeat((mode) => (mode === 'off' ? 'all' : mode === 'all' ? 'one' : 'off'))}
               aria-label={`Repeat: ${repeat}`}
               aria-pressed={repeat !== 'off'}
-              className={`${ctrl} !h-11 !w-11 ${repeat !== 'off' ? '!text-[#CC97A3]' : ''}`}
+              className={`${ctrl} !h-11 !w-11 ${repeat !== 'off' ? '!text-[color:var(--r-accent)]' : ''}`}
             >
               <RepeatIcon size={20} strokeWidth={2.5} aria-hidden="true" />
             </button>
@@ -827,12 +827,12 @@ export default function MusicView({ onClose }: MusicViewProps) {
           aria-label="Track list"
           aria-hidden={!menuOpen}
           className={[
-            'absolute inset-y-0 left-0 z-30 flex w-[88%] max-w-[360px] flex-col border-r-2 border-[#7d5560] bg-[#1e1e1e] transition-transform duration-300 ease-out',
+            'absolute inset-y-0 left-0 z-30 flex w-[88%] max-w-[360px] flex-col border-r-2 border-[color:var(--r-accent-dim)] bg-[#1e1e1e] transition-transform duration-300 ease-out',
             menuOpen ? 'translate-x-0' : '-translate-x-full',
           ].join(' ')}
         >
           <div className="flex shrink-0 items-center justify-between border-b-2 border-[#3c3c3c] px-4 py-3">
-            <h3 className="font-pixel text-[10px] uppercase text-[#CC97A3]">&gt; Tracks</h3>
+            <h3 className="font-pixel text-[10px] uppercase text-[color:var(--r-accent)]">&gt; Tracks</h3>
             <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">{tracks.length} tracks</span>
           </div>
 
@@ -854,7 +854,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                     key={track.id}
                     className={[
                       'border-2 transition-colors duration-150',
-                      isCurrent ? 'border-[#CC97A3] bg-[#CC97A3] text-[#1e1e1e]' : 'border-[#7d5560] bg-[#252526]',
+                      isCurrent ? 'border-[color:var(--r-accent)] bg-[color:var(--r-accent)] text-[#1e1e1e]' : 'border-[color:var(--r-accent-dim)] bg-[#252526]',
                     ].join(' ')}
                   >
                     <button
@@ -867,7 +867,7 @@ export default function MusicView({ onClose }: MusicViewProps) {
                       }}
                       aria-label={`${isCurrent && playing ? 'Pause' : 'Play'} ${track.title} by ${track.artist}`}
                       title={rowError ?? (playable(track) ? undefined : 'No youtubeId set for this track yet, so it cannot be played here.')}
-                      className="flex w-full min-w-0 items-center gap-3 px-2.5 pb-1 pt-2.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#CC97A3] enabled:cursor-pointer disabled:cursor-not-allowed"
+                      className="flex w-full min-w-0 items-center gap-3 px-2.5 pb-1 pt-2.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--r-accent)] enabled:cursor-pointer disabled:cursor-not-allowed"
                     >
                       <span className={['relative h-14 w-14 shrink-0', canPlay ? '' : 'opacity-50'].join(' ')}>
                         <img src={track.coverUrl} alt="" loading="lazy" decoding="async" className="h-full w-full border-2 border-[#1e1e1e] bg-[#1e1e1e] object-cover" />

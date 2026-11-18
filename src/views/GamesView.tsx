@@ -147,8 +147,8 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
     [
       'flex shrink-0 items-center gap-2 border-2 px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
       active
-        ? 'border-transparent bg-[#CC97A3] text-[#1e1e1e]'
-        : 'border-[#3c3c3c] bg-[#1e1e1e] text-[#d4d4d4] hover:border-[#CC97A3] hover:text-[#CC97A3]',
+        ? 'border-transparent bg-[color:var(--r-accent)] text-[#1e1e1e]'
+        : 'border-[#3c3c3c] bg-[#1e1e1e] text-[#d4d4d4] hover:border-[color:var(--r-accent)] hover:text-[color:var(--r-accent)]',
     ].join(' ');
 
   const activeCount =
@@ -176,7 +176,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
 
       <div id="games-filters" className={['flex flex-col gap-4', filtersOpen ? '' : 'max-sm:hidden'].join(' ')}>
       <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
-        <label className="relative flex min-w-0 flex-1 items-center border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-[#CC97A3]">
+        <label className="relative flex min-w-0 flex-1 items-center border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-[color:var(--r-accent)]">
           <span className="sr-only">Search titles</span>
           <Search size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3 text-[#8a8a8a]" />
           <input
@@ -205,7 +205,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
           )}
         </label>
 
-        <label className="relative flex shrink-0 items-center border-2 border-[#3c3c3c] bg-[#1e1e1e] hover:bg-[#333333] focus-within:border-[#CC97A3] lg:w-[300px]">
+        <label className="relative flex shrink-0 items-center border-2 border-[#3c3c3c] bg-[#1e1e1e] hover:bg-[#333333] focus-within:border-[color:var(--r-accent)] lg:w-[300px]">
           <span className="sr-only">Sort by</span>
           <select
             value={sort}
@@ -231,7 +231,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
             </button>
           ))}
         </div>
-        <span aria-hidden="true" className="hidden h-8 w-0.5 bg-[#7d5560] sm:block" />
+        <span aria-hidden="true" className="hidden h-8 w-0.5 bg-[color:var(--r-accent-dim)] sm:block" />
         <div role="group" aria-label="Filter by status" className="-mx-1 flex flex-nowrap gap-2.5 overflow-x-auto px-1 py-1 sm:flex-wrap sm:overflow-visible">
           {STATUS_FILTERS.map((option) => (
             <button key={option.value} type="button" aria-pressed={option.value === status} onClick={() => setStatus(option.value)} className={pill(option.value === status)}>
@@ -247,6 +247,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
 
   return (
     <RetroOverlay
+      accent="games"
       label="Game library"
       meta={`${visible.length} / ${games.length} games`}
       onClose={onClose}
@@ -277,7 +278,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
                   onClick={() => select(game)}
                   className={[
                     'r-box r-box-hover group flex w-full flex-col gap-3 p-2 text-left max-sm:p-2.5',
-                    active ? 'r-box-active !border-[#CC97A3] shadow-[4px_4px_0_0_#7d5560]' : '',
+                    active ? 'r-box-active !border-[color:var(--r-accent)] shadow-[4px_4px_0_0_var(--r-accent-dim)]' : '',
                   ].join(' ')}
                 >
                   <img
@@ -315,11 +316,11 @@ function GameDetail({ game, onDismiss }: { game: GameItem; onDismiss: () => void
       <img
         src={game.cover}
         alt={`${game.title} poster`}
-        className="aspect-[3/4] w-full border-2 border-[#CC97A3] bg-[#252526] object-cover shadow-[6px_6px_0_0_#7d5560]"
+        className="aspect-[3/4] w-full border-2 border-[color:var(--r-accent)] bg-[#252526] object-cover shadow-[6px_6px_0_0_var(--r-accent-dim)]"
       />
 
       <div className="flex flex-col gap-3">
-        <h3 className="r-glow text-[14px] leading-[1.5] text-[#CC97A3]">{game.title}</h3>
+        <h3 className="r-glow text-[14px] leading-[1.5] text-[color:var(--r-accent)]">{game.title}</h3>
         <div className="flex flex-wrap gap-2">
           <span className="r-tag">[ {badgeFor(game.status)} ]</span>
           {game.platforms.map((pl) => (
@@ -330,7 +331,7 @@ function GameDetail({ game, onDismiss }: { game: GameItem; onDismiss: () => void
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 border-t-2 border-dashed border-[#7d5560] pt-4">
+      <div className="flex flex-col gap-2 border-t-2 border-dashed border-[color:var(--r-accent-dim)] pt-4">
         <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// review</span>
         <p className="text-[24px] leading-[1.3] text-[#d4d4d4]">&gt; {game.note}</p>
       </div>
