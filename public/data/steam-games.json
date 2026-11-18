@@ -1,0 +1,48 @@
+{
+  "last_updated": "2026-11-19T01:08:00Z",
+  "total_games": 1,
+  "steam_games": 0,
+  "manual_games": [
+    {
+      "appid": "minecraft",
+      "name": "Minecraft",
+      "platforms": ["PC", "MOBILE"],
+      "status": "forever playing",
+      "note": "just perfect.",
+      "cover": "https://cdn2.steamgriddb.com/thumb/a73027901f88055aaa0fd1a9e25d36c7.jpg",
+      "link": "https://minecraft.net",
+      "total_achievements": 0,
+      "unlocked_achievements": 0,
+      "achievement_percentage": 100,
+      "achievements": [],
+      "hours_played": "3000+ HRS",
+      "recent_playtime": 180000,
+      "is_manual": true,
+      "steam_appid": null
+    }
+  ],
+  "games": [
+    {
+      "appid": "minecraft",
+      "name": "Minecraft",
+      "platforms": ["PC", "MOBILE"],
+      "status": "forever playing",
+      "note": "just perfect.",
+      "cover": "https://cdn2.steamgriddb.com/thumb/a73027901f88055aaa0fd1a9e25d36c7.jpg",
+      "link": "https://minecraft.net",
+      "total_achievements": 0,
+      "unlocked_achievements": 0,
+      "achievement_percentage": 100,
+      "achievements": [],
+      "hours_played": "3000+ HRS",
+      "recent_playtime": 180000,
+      "is_manual": true,
+      "steam_appid": null
+    }
+  ],
+  "stats": {
+    "total_playtime": 180000,
+    "total_achievements_unlocked": 0,
+    "completion_rate": 100
+  }
+}

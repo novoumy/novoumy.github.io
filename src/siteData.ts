@@ -1290,42 +1290,6 @@ export const games: GameItem[] = [
       'https://cdn2.steamgriddb.com/thumb/a73027901f88055aaa0fd1a9e25d36c7.jpg',
     link: 'https://minecraft.net',
   },
-  {
-    title: 'Hollow Knight',
-    platforms: ['PC'],
-    status: '40%',
-    note: 'Beautiful and difficult',
-    cover:
-      'https://cdn2.steamgriddb.com/thumb/d18c832e8c956b4ef8b92862e6bf470d.jpg',
-    link: 'https://store.steampowered.com/app/367520/',
-  },
-  {
-    title: 'Terraria',
-    platforms: ['PC'],
-    status: '100%',
-    note: 'I love it so much.. I have every achiveemnt on steam!!',
-    cover:
-      'https://cdn2.steamgriddb.com/thumb/020c38173caff02033564200e0288aa9.jpg',
-    link: 'https://store.steampowered.com/app/105600/',
-  },
-  {
-    title: 'Katana Zero',
-    platforms: ['PC'],
-    status: '100%',
-    note: 'not many know this one.. I love it so much.. the gameplay is very nice and story is solid',
-    cover:
-      'https://cdn2.steamgriddb.com/thumb/057b1cfba313958551a8afa2c3e75429.jpg',
-    link: 'https://store.steampowered.com/app/460950/',
-  },
-  {
-    title: 'Celeste',
-    platforms: ['PC'],
-    status: '76%',
-    note: 'tried hard to beat it all.. its so chalanging but very rewarding.. sound tracks hit hard',
-    cover:
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Celeste_box_art_full.png',
-    link: 'https://store.steampowered.com/app/504230/',
-  },
 ];
 
 // ----------------------------------------------------------------------------
