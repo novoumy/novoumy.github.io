@@ -9,16 +9,16 @@ const prose = hero.bio.filter((line) => {
 });
 
 const AMBIENT = [
-  '> error 503: motivation service temporarily unavailable',
-  '> warning: caffeine levels critically low',
-  '> ping: 999ms to reality',
-  '> cache: overthinking assets warmed',
-  '> task: doomscroll daemon running in background',
-  '> sync: playlist feelings updated successfully',
-  '> notice: side quest accepted without consent',
-  '> debug: brain tabs open: 47',
-  '> info: hydration check failed, vibes nominal',
-  '> warning: sleep schedule not found',
+  'error 503: motivation service temporarily unavailable',
+  'warning: caffeine levels critically low',
+  'ping: 999ms to reality',
+  'cache: overthinking assets warmed',
+  'task: doomscroll daemon running in background',
+  'sync: playlist feelings updated successfully',
+  'notice: side quest accepted without consent',
+  'debug: brain tabs open: 47',
+  'info: hydration check failed, vibes nominal',
+  'warning: sleep schedule not found',
 ];
 
 const HELP = [
@@ -28,7 +28,6 @@ const HELP = [
   '/clear     - clear console output history',
   '/whoami    - show novoumy profile',
   '/matrix    - toggle matrix rain inside terminal (Esc or /clear to stop)',
-  '/crt       - toggle CRT overlay across interface',
   'alias: /novoumytime -> /novotime',
 ];
 
@@ -47,7 +46,7 @@ function novoTime() {
     second: '2-digit',
     hour12: false,
   }).format(new Date());
-  return `> novotime: ${time} (GMT+3)`;
+  return `novotime: ${time} (GMT+3)`;
 }
 
 function MatrixRain() {
@@ -105,7 +104,15 @@ function MatrixRain() {
   return <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-10 h-full w-full opacity-70" aria-hidden="true" />;
 }
 
-export default function MainView({ onToggleCrt }: { onToggleCrt?: () => void }) {
+const MAX_AUTO_LINES = 5;
+
+const KIND_STYLE: Record<NonNullable<TermLine['kind']>, { glyph: string; glyphClass: string; textClass: string }> = {
+  cmd: { glyph: '❯', glyphClass: 'text-lavender', textClass: 'text-wine font-bold' },
+  sys: { glyph: '·', glyphClass: 'text-rose', textClass: 'text-wine/75' },
+  out: { glyph: '', glyphClass: '', textClass: 'text-wine' },
+};
+
+export default function MainView() {
   const [lines, setLines] = useState<TermLine[]>(() => [
     { id: 1, text: 'novOS v1.0 boot sequence complete', kind: 'sys' },
     { id: 2, text: 'type /help for available commands.', kind: 'sys' },
@@ -113,6 +120,7 @@ export default function MainView({ onToggleCrt }: { onToggleCrt?: () => void }) 
   const [input, setInput] = useState('');
   const [matrix, setMatrix] = useState(false);
   const idRef = useRef(3);
+  const autoRef = useRef(0); // ambient messages sent so far
   const outRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -125,12 +133,28 @@ export default function MainView({ onToggleCrt }: { onToggleCrt?: () => void }) 
     });
   };
 
+  // Ambient messages: stop for good once the terminal holds 5 lines.
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      const msg = AMBIENT[Math.floor(Math.random() * AMBIENT.length)]!;
-      push(msg, 'sys');
-    }, 7000 + Math.floor(Math.random() * 5000));
-    return () => window.clearInterval(timer);
+    let timer = 0;
+    const schedule = () => {
+      timer = window.setTimeout(() => {
+        let reachedLimit = false;
+        setLines((prev) => {
+          if (prev.length >= MAX_AUTO_LINES) {
+            reachedLimit = true;
+            return prev;
+          }
+          const msg = AMBIENT[autoRef.current % AMBIENT.length]!;
+          autoRef.current += 1;
+          const next = [...prev, { id: idRef.current++, text: msg, kind: 'sys' as const }];
+          reachedLimit = next.length >= MAX_AUTO_LINES;
+          return next;
+        });
+        if (!reachedLimit) schedule();
+      }, 3500 + Math.floor(Math.random() * 2500));
+    };
+    schedule();
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -153,7 +177,7 @@ export default function MainView({ onToggleCrt }: { onToggleCrt?: () => void }) 
   const runCommand = (raw: string) => {
     const cmd = raw.trim();
     if (!cmd) return;
-    push(`> ${cmd}`, 'cmd');
+    push(cmd, 'cmd');
     const normalized = cmd.toLowerCase();
     if (normalized === '/help') {
       push(HELP);
@@ -173,16 +197,9 @@ export default function MainView({ onToggleCrt }: { onToggleCrt?: () => void }) 
       return;
     }
     if (normalized === '/matrix') {
-      setMatrix((v) => {
-        const next = !v;
-        push(next ? '> matrix rain: enabled (Esc or /clear to stop)' : '> matrix rain: disabled', 'sys');
-        return next;
-      });
-      return;
-    }
-    if (normalized === '/crt') {
-      onToggleCrt?.();
-      push('> crt filter toggled', 'sys');
+      const next = !matrix;
+      setMatrix(next);
+      push(next ? 'matrix rain: enabled (Esc or /clear to stop)' : 'matrix rain: disabled', 'sys');
       return;
     }
     push(`unknown command: ${cmd}. type /help`, 'sys');
@@ -219,32 +236,55 @@ export default function MainView({ onToggleCrt }: { onToggleCrt?: () => void }) 
       </div>
 
       <section className="pixel-tile relative flex min-h-0 flex-1 flex-col overflow-hidden bg-cool-white">
-        <h2 className="bg-wine px-3 py-2 font-pixel text-[9px] uppercase leading-none text-cool-white max-[768px]:px-2 max-[768px]:py-[0.8cqw] max-[768px]:text-[max(7px,1.2cqw)]">
-          &gt; novoumy_terminal
-        </h2>
+        {/* Title bar */}
+        <header className="flex items-center justify-between gap-3 bg-wine px-3 py-2 max-[768px]:px-2 max-[768px]:py-[0.8cqw]">
+          <div className="flex items-center gap-2">
+            <span className="flex gap-1" aria-hidden="true">
+              <span className="block h-2 w-2 bg-rose max-[768px]:h-[1.2cqw] max-[768px]:w-[1.2cqw]" />
+              <span className="block h-2 w-2 bg-lavender max-[768px]:h-[1.2cqw] max-[768px]:w-[1.2cqw]" />
+              <span className="block h-2 w-2 bg-cool-white max-[768px]:h-[1.2cqw] max-[768px]:w-[1.2cqw]" />
+            </span>
+            <h2 className="font-pixel text-[9px] uppercase leading-none text-cool-white max-[768px]:text-[max(7px,1.2cqw)]">
+              novoumy_terminal
+            </h2>
+          </div>
+          <span className="flex items-center gap-1.5 font-pixel text-[7px] uppercase leading-none text-rose max-[768px]:text-[max(6px,1cqw)]">
+            <span className="block h-1.5 w-1.5 bg-rose" aria-hidden="true" />
+            online
+          </span>
+        </header>
+
+        {/* Output */}
         <div
           ref={outRef}
           onClick={() => inputRef.current?.focus()}
-          className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 py-3 font-mono text-[18px] leading-[1.3] text-wine max-[768px]:px-2 max-[768px]:py-2 max-[768px]:text-[max(10px,2.3cqw)]"
+          className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-[color-mix(in_oklab,var(--rose)_10%,var(--cool-white))] px-4 py-3 font-mono text-[18px] leading-[1.35] text-wine [scrollbar-color:var(--rose)_transparent] [scrollbar-width:thin] max-[768px]:px-2 max-[768px]:py-2 max-[768px]:text-[max(10px,2.3cqw)]"
         >
           {matrix && <MatrixRain />}
-          <div className="relative z-0 flex min-h-full flex-col gap-1">
-            {lines.map((line) => (
-              <p
-                key={line.id}
-                className={[
-                  'whitespace-pre-wrap break-words [overflow-wrap:anywhere]',
-                  line.kind === 'cmd' ? 'text-lavender' : '',
-                  line.kind === 'sys' ? 'opacity-90' : '',
-                ].join(' ')}
-              >
-                {line.text}
-              </p>
-            ))}
+          <div className="relative z-0 flex min-h-full flex-col justify-end gap-0.5">
+            {lines.map((line) => {
+              const style = KIND_STYLE[line.kind ?? 'out'];
+              return (
+                <p
+                  key={line.id}
+                  className="grid grid-cols-[1.25ch_1fr] gap-x-2 whitespace-pre-wrap break-words [overflow-wrap:anywhere]"
+                >
+                  <span className={`select-none text-center ${style.glyphClass}`} aria-hidden="true">
+                    {style.glyph}
+                  </span>
+                  <span className={style.textClass}>{line.text}</span>
+                </p>
+              );
+            })}
           </div>
         </div>
-        <form onSubmit={onSubmit} className="flex items-center gap-2 border-t-4 border-rose/60 px-3 py-2 max-[768px]:px-2 max-[768px]:py-[0.8cqw]">
-          <span className="font-mono text-[18px] leading-none text-lavender max-[768px]:text-[max(10px,2.3cqw)]">&gt;</span>
+
+        {/* Prompt */}
+        <form
+          onSubmit={onSubmit}
+          className="flex items-center gap-2 border-t-4 border-wine bg-cool-white px-4 py-2 max-[768px]:px-2 max-[768px]:py-[0.8cqw]"
+        >
+          <span className="select-none font-mono text-[18px] leading-none text-lavender max-[768px]:text-[max(10px,2.3cqw)]">❯</span>
           <input
             ref={inputRef}
             value={input}
@@ -253,7 +293,7 @@ export default function MainView({ onToggleCrt }: { onToggleCrt?: () => void }) 
             autoCapitalize="off"
             autoCorrect="off"
             spellCheck={false}
-            className="min-w-0 flex-1 bg-transparent font-mono text-[18px] leading-none text-wine outline-none placeholder:text-lavender/70 max-[768px]:text-[max(10px,2.3cqw)]"
+            className="min-w-0 flex-1 bg-transparent font-mono text-[18px] leading-none text-wine caret-lavender outline-none placeholder:text-lavender/70 max-[768px]:text-[max(10px,2.3cqw)]"
             placeholder="type /help"
           />
         </form>
