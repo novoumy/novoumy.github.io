@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { hero } from '@/siteData';
 
 type TermLine = { id: number; text: string; kind?: 'cmd' | 'sys' | 'out' };

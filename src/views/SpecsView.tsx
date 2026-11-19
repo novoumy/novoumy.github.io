@@ -2,9 +2,9 @@ import { specGroups, specsSummary } from '@/siteData';
 
 export default function SpecsView() {
   return (
-    <div className="flex min-w-0 w-full max-w-full flex-col gap-6 overflow-x-hidden pb-2 max-sm:gap-5 sm:gap-7">
+    <div className="flex min-w-0 w-full max-w-full flex-col gap-6 pb-2 max-sm:gap-5 sm:gap-7">
       {/* System summary */}
-      <section className="pixel-tile box-border min-w-0 w-full max-w-full overflow-hidden bg-cool-white">
+      <section className="pixel-tile box-border min-w-0 w-full max-w-full shrink-0 bg-cool-white">
         <h2 className="bg-wine px-3 py-2.5 max-sm:py-2 text-[9px] uppercase leading-none text-cool-white sm:text-[10px]">
           &gt; system_status
         </h2>
@@ -20,7 +20,7 @@ export default function SpecsView() {
 
       {/* Component groups */}
       {specGroups.map((group) => (
-        <section key={group.title} className="pixel-tile box-border min-w-0 w-full max-w-full overflow-hidden bg-cool-white">
+        <section key={group.title} className="pixel-tile box-border min-w-0 w-full max-w-full shrink-0 bg-cool-white">
           <h2 className="bg-wine px-3 py-2.5 max-sm:py-2 text-[9px] uppercase leading-none text-cool-white sm:text-[10px]">
             {group.title}
           </h2>

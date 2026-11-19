@@ -21,8 +21,6 @@ type Panel = {
   render: (route: Route, openInterest: (id: InterestId | null) => void) => ReactNode;
 };
 
-  // panels defined inside App to pass CRT toggle
-
 // The URL hash is the single source of truth for which tab / folder is open.
 function setHash(route: Route) {
   const next = hashFor(route);
@@ -122,7 +120,17 @@ export default function App() {
                 hidden={id !== activeId}
                 className="pixel-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-5 max-sm:p-4 sm:p-8"
               >
-                <div className="flex h-full min-h-0 min-w-0 w-full max-w-full flex-col">{render(route, openInterest)}</div>
+                {/* Main needs a full-height flex box; other panels stay in normal flow so their
+                    content expands naturally and the panel itself scrolls. */}
+                <div
+                  className={
+                    id === 'main'
+                      ? 'flex h-full min-h-0 min-w-0 w-full max-w-full flex-col'
+                      : 'min-w-0 w-full max-w-full'
+                  }
+                >
+                  {render(route, openInterest)}
+                </div>
               </div>
             ))}
           </section>
