@@ -47,7 +47,7 @@ function VinylCard({ track, index }: { track: TrackItem; index: number }) {
 
       <div className="flex min-w-0 flex-col gap-2">
         <p className="flex flex-wrap items-center gap-2 font-pixel text-[7px] uppercase leading-none text-r-dim sm:text-[8px]">
-          <span className="bg-accent px-1.5 py-1 text-cool-white">
+          <span className="bg-wine px-1.5 py-1 text-cool-white">
             {side}
             {slot}
           </span>

@@ -31,47 +31,47 @@
 }
 
 @layer components {
-  /* Discord-style dark theme for the full-screen media library only. */
+  /* Pale retro theme for the full-screen media library. */
   .media-dark {
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   .media-dark ::selection {
-    background: #5865f2;
-    color: #fff;
+    background: var(--rose);
+    color: var(--wine);
   }
 
   .media-dark .pixel-scroll {
-    scrollbar-color: #1a1b1e #2b2d31;
+    scrollbar-color: var(--wine) var(--rose);
   }
 
   .media-dark .pixel-scroll::-webkit-scrollbar-track {
-    background: #2b2d31;
+    background: var(--rose);
   }
 
   .media-dark .pixel-scroll::-webkit-scrollbar-thumb {
-    background: #1a1b1e;
-    border: 2px solid #2b2d31;
+    background: var(--wine);
+    border: 2px solid var(--rose);
   }
 
   .media-dark .eq-bars i {
-    background: #5865f2;
+    background: var(--wine);
   }
 
   .media-dark .player-range {
-    --track: #404249;
-    --fillc: #f2f3f5;
+    --track: var(--rose);
+    --fillc: var(--wine);
   }
 
   .media-dark .player-range:hover {
-    --fillc: #5865f2;
+    --fillc: var(--wine);
   }
 
-  /* Seek / volume sliders in the music player bar. */
+  /* Seek / volume sliders. */
   .player-range {
     --fill: 0%;
-    --track: #404249;
-    --fillc: #f2f3f5;
+    --track: var(--rose);
+    --fillc: var(--wine);
     width: 100%;
     height: 20px;
     margin: 0;
@@ -83,19 +83,19 @@
   }
 
   .player-range:focus-visible {
-    outline: 2px solid #5865f2;
+    outline: 2px solid var(--wine);
     outline-offset: 2px;
   }
 
   .player-range::-webkit-slider-runnable-track {
     height: 4px;
-    border-radius: 2px;
+    border-radius: 0;
     background: linear-gradient(to right, var(--fillc) var(--fill), var(--track) var(--fill));
   }
 
   .player-range::-moz-range-track {
     height: 4px;
-    border-radius: 2px;
+    border-radius: 0;
     background: linear-gradient(to right, var(--fillc) var(--fill), var(--track) var(--fill));
   }
 
@@ -104,17 +104,17 @@
     width: 12px;
     height: 12px;
     margin-top: -4px;
-    border-radius: 50%;
-    border: 0;
-    background: #f2f3f5;
+    border-radius: 0;
+    border: 2px solid var(--wine);
+    background: var(--cool-white);
   }
 
   .player-range::-moz-range-thumb {
     width: 12px;
     height: 12px;
-    border-radius: 50%;
-    border: 0;
-    background: #f2f3f5;
+    border-radius: 0;
+    border: 2px solid var(--wine);
+    background: var(--cool-white);
   }
 
   @media (pointer: coarse) {
@@ -135,108 +135,168 @@
   }
 
   .media-dark .pixel-badge {
-    background: rgb(30 31 34 / 0.92);
-    color: #f2f3f5;
+    background: var(--wine);
+    color: var(--cool-white);
   }
 
   /* ------------------------------------------------------------------
-     Retro terminal theme: shared by /music, /games, /media and /quotes.
-     Everything is scoped under .retro-dark, so nothing else is affected.
+     Retro overlay theme: shared by /music, /games, /media and /quotes.
+     Pale pink style matching the main site.
      ------------------------------------------------------------------ */
+  .retro-theme,
   .retro-dark {
-    --r-bg: #1e1e1e;
-    --r-panel: #252526;
-    --r-raised: #2d2d30;
-    --r-line: #3c3c3c;
-    --r-line-hi: #6a6a6a;
-    --r-text: #d4d4d4;
-    --r-dim: #8a8a8a;
-    --r-accent: #CC97A3;
-    --r-accent-dim: #7d5560;
-    --r-accent-rgb: 204 151 163;
-    color-scheme: dark;
+    --r-bg: var(--cool-white);
+    --r-panel: #f6edf2;
+    --r-raised: #efdde8;
+    --r-line: var(--rose);
+    --r-line-hi: var(--wine);
+    --r-text: var(--wine);
+    --r-dim: var(--lavender);
+    --r-accent: var(--rose);
+    --r-accent-dim: #9b6b84;
+    --r-accent-rgb: 205 158 186;
+    color-scheme: light;
     background: var(--r-bg);
     color: var(--r-text);
     font-family: 'VT323', monospace;
   }
 
-  /* Per-library accent colours. Put one of these classes next to .retro-dark. */
-  .accent-music {
-    --r-accent: #CC97A3;
-    --r-accent-dim: #7d5560;
-    --r-accent-rgb: 204 151 163;
-  }
-
-  .accent-media {
-    --r-accent: #7dc4e4;
-    --r-accent-dim: #4b7689;
-    --r-accent-rgb: 125 196 228;
-  }
-
-  .accent-games {
-    --r-accent: #ed8796;
-    --r-accent-dim: #8e515a;
-    --r-accent-rgb: 237 135 150;
-  }
-
+  /* All interest folders share the same pale pink accent palette. */
+  .accent-music,
+  .accent-media,
+  .accent-games,
   .accent-quotes {
-    --r-accent: #eed49f;
-    --r-accent-dim: #8f7f5f;
-    --r-accent-rgb: 238 212 159;
+    --r-accent: var(--rose);
+    --r-accent-dim: #9b6b84;
+    --r-accent-rgb: 205 158 186;
   }
 
+  .retro-theme ::selection,
   .retro-dark ::selection {
-    background: var(--r-accent);
-    color: #1e1e1e;
+    background: var(--rose);
+    color: var(--wine);
   }
 
+  .retro-theme .pixel-scroll,
   .retro-dark .pixel-scroll {
-    scrollbar-color: var(--r-line-hi) var(--r-bg);
+    scrollbar-color: var(--wine) var(--rose);
   }
 
+  .retro-theme .pixel-scroll::-webkit-scrollbar-track,
   .retro-dark .pixel-scroll::-webkit-scrollbar-track {
-    background: var(--r-bg);
+    background: var(--rose);
   }
 
+  .retro-theme .pixel-scroll::-webkit-scrollbar-thumb,
   .retro-dark .pixel-scroll::-webkit-scrollbar-thumb {
-    background: var(--r-line-hi);
-    border: 2px solid var(--r-bg);
+    background: var(--wine);
+    border: 2px solid var(--rose);
   }
 
+  .retro-theme .eq-bars i,
   .retro-dark .eq-bars i {
-    background: var(--r-accent);
+    background: var(--wine);
   }
 
+  .retro-theme .player-range,
   .retro-dark .player-range {
-    --track: var(--r-line);
-    --fillc: var(--r-accent);
+    --track: var(--rose);
+    --fillc: var(--wine);
   }
 
+  .retro-theme .player-range::-webkit-slider-thumb,
   .retro-dark .player-range::-webkit-slider-thumb {
-    background: var(--r-accent);
+    background: var(--cool-white);
     border-radius: 0;
   }
 
+  .retro-theme .player-range::-moz-range-thumb,
   .retro-dark .player-range::-moz-range-thumb {
-    background: var(--r-accent);
+    background: var(--cool-white);
     border-radius: 0;
   }
 
+  .retro-theme .player-range::-webkit-slider-runnable-track,
+  .retro-theme .player-range::-moz-range-track,
   .retro-dark .player-range::-webkit-slider-runnable-track,
   .retro-dark .player-range::-moz-range-track {
     border-radius: 0;
   }
 
+  .retro-theme .pixel-badge,
   .retro-dark .pixel-badge {
-    background: #1e1e1e;
-    color: var(--r-accent);
-    border: 2px solid var(--r-accent-dim);
+    background: var(--wine);
+    color: var(--cool-white);
+    border: 2px solid var(--rose);
+  }
+
+  .r-desk {
+    background: rgb(132 127 164 / 0.45);
+  }
+
+  .r-window {
+    background: var(--cool-white);
+    color: var(--wine);
+  }
+
+  .r-titlebar {
+    background: var(--wine);
+    color: var(--cool-white);
+  }
+
+  .r-close {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--rose);
+    color: var(--wine);
+    border: 2px solid var(--cool-white);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 150ms steps(2), color 150ms steps(2);
+  }
+
+  .r-close:hover,
+  .r-close:focus-visible {
+    background: var(--cool-white);
+    color: var(--wine);
+    outline: none;
+  }
+
+  .r-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px 10px;
+    background: var(--cool-white);
+    color: var(--wine);
+    border: 2px solid var(--wine);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    text-align: center;
+    transition: background-color 150ms steps(2), color 150ms steps(2), box-shadow 150ms steps(2), transform 150ms steps(2);
+  }
+
+  .r-link:hover,
+  .r-link:focus-visible {
+    background: var(--rose);
+    box-shadow: 4px 4px 0 0 var(--wine);
+    transform: translate(-2px, -2px);
+    outline: none;
   }
 
   /* Crisp 2px pixel border with a hard offset shadow. */
   .r-box {
     background: var(--r-panel);
-    border: 2px solid var(--r-accent-dim);
+    border: 2px solid var(--wine);
     transition:
       border-color 150ms steps(2),
       background-color 150ms steps(2),
@@ -246,14 +306,14 @@
 
   .r-box-hover:hover,
   .r-box-hover:focus-visible {
-    border-color: var(--r-accent);
-    box-shadow: 4px 4px 0 0 var(--r-accent-dim);
+    border-color: var(--wine);
+    box-shadow: 4px 4px 0 0 var(--rose);
     transform: translate(-2px, -2px);
     outline: none;
   }
 
   .r-box-active {
-    border-color: var(--r-accent);
+    border-color: var(--wine);
     background: var(--r-raised);
   }
 
@@ -263,9 +323,9 @@
     justify-content: center;
     gap: 8px;
     padding: 10px 14px;
-    background: var(--r-bg);
-    color: var(--r-text);
-    border: 2px solid var(--r-line-hi);
+    background: var(--cool-white);
+    color: var(--wine);
+    border: 2px solid var(--wine);
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
     line-height: 1;
@@ -274,27 +334,30 @@
     transition:
       background-color 150ms steps(2),
       color 150ms steps(2),
-      border-color 150ms steps(2);
+      border-color 150ms steps(2),
+      box-shadow 150ms steps(2);
   }
 
   .r-btn:hover,
   .r-btn:focus-visible {
-    background: var(--r-accent);
-    color: #1e1e1e;
-    border-color: var(--r-accent);
+    background: var(--rose);
+    color: var(--wine);
+    border-color: var(--wine);
+    box-shadow: 4px 4px 0 0 var(--wine);
     outline: none;
   }
 
   .r-btn:active {
     transform: translateY(2px);
+    box-shadow: none;
   }
 
   .r-tag {
     display: inline-block;
     padding: 5px 7px;
-    background: var(--r-bg);
-    color: var(--r-accent);
-    border: 2px solid var(--r-accent-dim);
+    background: var(--cool-white);
+    color: var(--wine);
+    border: 2px solid var(--rose);
     font-family: 'Press Start 2P', monospace;
     font-size: 8px;
     line-height: 1;
@@ -303,7 +366,7 @@
   }
 
   .r-glow {
-    text-shadow: 0 0 8px rgb(var(--r-accent-rgb) / 0.55);
+    text-shadow: 2px 2px 0 rgb(205 158 186 / 0.55);
   }
 
   .r-scanlines::after {
@@ -377,8 +440,8 @@
   }
 
   .quote-pulse {
-    background: #2b2b2b;
-    box-shadow: 4px 4px 0 0 var(--r-accent-dim);
+    background: #fdf6fa;
+    box-shadow: 4px 4px 0 0 var(--rose);
     animation: quote-pulse 700ms ease-in-out 3;
   }
 
@@ -709,23 +772,24 @@
   }
 }
 
-.retro-loading {
-  visibility: hidden;
-  animation: loading-show 0s 150ms forwards;
-}
-
-@keyframes loading-bar {
-  from {
-    width: 0%;
+  .retro-loading {
+    visibility: hidden;
+    animation: loading-show 0s 150ms forwards;
   }
-  to {
-    width: 100%;
-  }
-}
 
-.retro-loading-bar {
-  animation: loading-bar 1.2s steps(12) infinite;
-}
+  @keyframes loading-bar {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  .retro-loading-bar {
+    background: var(--rose);
+    animation: loading-bar 1.2s steps(12) infinite;
+  }
 
 .animate-float-particle {
   animation: float-particle linear infinite;

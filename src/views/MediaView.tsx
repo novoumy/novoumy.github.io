@@ -128,7 +128,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
 
       <div id="media-filters" className={['flex flex-col gap-4', filtersOpen ? '' : 'max-sm:hidden'].join(' ')}>
       <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
-        <label className="relative flex min-w-0 flex-1 items-center border-2 border-wine bg-r-bg focus-within:border-accent">
+        <label className="relative flex min-w-0 flex-1 items-center border-2 border-wine bg-r-bg focus-within:shadow-[4px_4px_0_0_var(--rose)]">
           <span className="sr-only">Search titles</span>
           <Search size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3 text-r-dim" />
           <input
@@ -157,7 +157,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
           )}
         </label>
 
-        <label className="relative flex shrink-0 items-center border-2 border-wine bg-r-bg hover:bg-r-raised focus-within:border-accent lg:w-[300px]">
+        <label className="relative flex shrink-0 items-center border-2 border-wine bg-r-bg hover:bg-r-raised focus-within:shadow-[4px_4px_0_0_var(--rose)] lg:w-[300px]">
           <span className="sr-only">Sort by</span>
           <select
             value={sort}
@@ -191,12 +191,12 @@ export default function MediaView({ onClose }: MediaViewerProps) {
                 className={[
                   'flex shrink-0 items-center gap-2 border-2 px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
                   active
-                    ? 'border-accent bg-accent text-r-bg'
-                    : 'border-r-line bg-r-bg text-r-text hover:border-accent hover:text-accent',
+                    ? 'border-wine bg-wine text-cool-white'
+                    : 'border-rose bg-r-bg text-r-text hover:bg-rose hover:text-wine',
                 ].join(' ')}
               >
                 {option.label}
-                <span className={active ? 'text-r-bg/70' : 'text-r-dim'}>{counts[option.value] ?? 0}</span>
+                <span className={active ? 'text-cool-white/70' : 'text-r-dim'}>{counts[option.value] ?? 0}</span>
               </button>
             );
           })}

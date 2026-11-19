@@ -78,8 +78,7 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
         accent ? `accent-${accent}` : '',
       ].join(' ')}
     >
-      {/* Added explicit background color here so the window isn't transparent */}
-      <div className="r-window pixel-frame animate-overlay-in relative mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col bg-[var(--r-bg,#1e1e1e)]">
+      <div className="r-window pixel-frame animate-overlay-in relative mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col bg-[var(--r-bg,var(--cool-white))]">
         <header className="r-titlebar flex shrink-0 items-center justify-between gap-3 px-3 py-2.5 sm:px-5 sm:py-3">
           <div onClick={onClose} className="flex min-w-0 cursor-pointer items-center gap-3 sm:gap-4">
             {accent && (

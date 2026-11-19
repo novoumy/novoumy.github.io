@@ -31,7 +31,6 @@ const FILTERS: { value: FilterKey; label: string }[] = [
 ];
 
 const PAGE = 60; // cards / achievements rendered per "page" (keeps big libraries snappy)
-const GOLD = 'var(--r-gold)';
 
 const SEGMENTS = 'repeating-linear-gradient(90deg, transparent 0 6px, var(--r-bg) 6px 8px)';
 
@@ -88,11 +87,11 @@ function ProgressBar({ percent, complete }: { percent: number; complete: boolean
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={percent}
-      className="h-3 w-full border-2 border-accent-dim bg-r-bg p-[1px]"
+      className="h-3 w-full border-2 border-rose bg-r-bg p-[1px]"
     >
       <div
-        className={`h-full ${complete ? '' : 'bg-accent'}`}
-        style={{ width: `${percent}%`, backgroundColor: complete ? GOLD : undefined, backgroundImage: SEGMENTS }}
+        className={`h-full ${complete ? 'bg-wine' : 'bg-rose'}`}
+        style={{ width: `${percent}%`, backgroundImage: SEGMENTS }}
       />
     </div>
   );
@@ -100,12 +99,12 @@ function ProgressBar({ percent, complete }: { percent: number; complete: boolean
 
 function Stat({ short, label, value }: { short: string; label: string; value: ReactNode }) {
   return (
-    <div className="min-w-0 border-2 border-accent-dim bg-r-panel px-2.5 py-2 sm:px-4 sm:py-3">
+    <div className="min-w-0 border-2 border-wine bg-r-panel px-2.5 py-2 sm:px-4 sm:py-3">
       <p className="truncate font-pixel text-[7px] uppercase text-r-dim sm:text-[8px]">
         <span className="sm:hidden">{short}</span>
         <span className="hidden sm:inline">{label}</span>
       </p>
-      <p className="mt-1.5 truncate font-pixel text-[10px] text-accent sm:mt-2 sm:text-[16px]">{value}</p>
+      <p className="mt-1.5 truncate font-pixel text-[10px] text-wine sm:mt-2 sm:text-[16px]">{value}</p>
     </div>
   );
 }
@@ -138,14 +137,14 @@ function GameCard({ game, onOpen }: { game: LibraryGame; onOpen: (key: string) =
           />
           <span className="r-tag absolute bottom-1.5 left-1.5 !px-1.5 !py-1 !text-[7px] sm:!text-[8px]">{game.playtimeLabel}</span>
           {complete && (
-            <span className="r-tag absolute right-1.5 top-1.5 !border-accent !bg-accent !px-1.5 !py-1 !text-[7px] !text-r-bg sm:!text-[8px]">100%</span>
+            <span className="r-tag absolute right-1.5 top-1.5 !border-wine !bg-wine !px-1.5 !py-1 !text-[7px] !text-cool-white sm:!text-[8px]">100%</span>
           )}
         </span>
         <span className="flex min-w-0 flex-1 flex-col justify-between gap-2 px-0.5 pb-0.5">
           <h3 className="line-clamp-2 break-words text-[9px] leading-[1.6] text-r-text sm:text-[10px]">{game.title}</h3>
           <span className="flex flex-col gap-1.5">
-            {ach ? <ProgressBar percent={ach.percent} complete={complete} /> : <span className="h-3 w-full border-2 border-dashed border-r-line" aria-hidden="true" />}
-            <span className="font-pixel text-[7px] uppercase leading-[1.4] text-r-dim sm:text-[8px]" style={complete ? { color: GOLD } : undefined}>
+            {ach ? <ProgressBar percent={ach.percent} complete={complete} /> : <span className="h-3 w-full border-2 border-dashed border-rose" aria-hidden="true" />}
+            <span className={`font-pixel text-[7px] uppercase leading-[1.4] sm:text-[8px] ${complete ? 'text-wine' : 'text-r-dim'}`}>
               {progressLabel(game)}
             </span>
           </span>
@@ -164,21 +163,21 @@ function AchievementItem({ item }: { item: Achievement }) {
     <li
       className={[
         'flex gap-3 border-2 p-2.5',
-        item.unlocked ? 'border-accent-dim bg-r-panel' : 'border-r-line bg-r-bg',
+        item.unlocked ? 'border-wine bg-r-panel' : 'border-rose bg-r-bg',
       ].join(' ')}
     >
       <Art
         sources={[item.unlocked ? item.iconUrl : item.iconGrayUrl || item.iconUrl].filter(Boolean)}
         alt=""
         title="?"
-        className={`h-14 w-14 shrink-0 border-2 object-cover ${item.unlocked ? 'border-accent' : 'border-r-line opacity-50 grayscale'}`}
+        className={`h-14 w-14 shrink-0 border-2 object-cover ${item.unlocked ? 'border-wine' : 'border-rose opacity-50 grayscale'}`}
       />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <h4 className={`break-words font-pixel text-[9px] leading-[1.5] ${item.unlocked ? 'text-r-text' : 'text-r-dim'}`}>
           {item.hidden && !item.unlocked ? 'Hidden achievement' : item.name}
         </h4>
         {description && <p className={`break-words text-[19px] leading-[1.15] ${item.unlocked ? 'text-r-dim' : 'text-r-dim/70'}`}>{description}</p>}
-        <p className={`mt-auto pt-1 font-pixel text-[7px] uppercase ${item.unlocked ? 'text-accent' : 'text-r-dim/70'}`}>
+        <p className={`mt-auto pt-1 font-pixel text-[7px] uppercase ${item.unlocked ? 'text-wine' : 'text-r-dim/70'}`}>
           {item.unlocked ? `Unlocked${item.unlockTime ? ` ${formatDate(item.unlockTime)}` : ''}` : 'Locked'}
         </p>
       </div>
@@ -204,7 +203,7 @@ function Achievements({ game }: { game: LibraryGame }) {
       : isUnplayed(game)
         ? 'Not played yet. Once it has playtime, the next Steam sync will pull its achievements.'
         : 'No achievements to show: this game has none on Steam, or its stats are private.';
-    return <p className="border-2 border-dashed border-r-line px-4 py-6 text-[22px] leading-tight text-r-dim">&gt; {message}</p>;
+    return <p className="border-2 border-dashed border-rose px-4 py-6 text-[22px] leading-tight text-r-dim">&gt; {message}</p>;
   }
 
   const counts: Record<AchFilter, number> = { all: ach.total, unlocked: ach.unlocked, locked: ach.total - ach.unlocked };
@@ -230,7 +229,7 @@ function Achievements({ game }: { game: LibraryGame }) {
         ))}
       </div>
       {list.length === 0 ? (
-        <p className="border-2 border-dashed border-r-line px-4 py-6 text-[22px] text-r-dim">&gt; nothing here.</p>
+        <p className="border-2 border-dashed border-rose px-4 py-6 text-[22px] text-r-dim">&gt; nothing here.</p>
       ) : (
         <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
           {shown.map((item) => (
@@ -250,7 +249,7 @@ function Achievements({ game }: { game: LibraryGame }) {
 function pillClass(active: boolean) {
   return [
     'flex shrink-0 items-center gap-2 border-2 px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
-    active ? 'border-transparent bg-accent text-r-bg' : 'border-r-line bg-r-bg text-r-text hover:border-accent hover:text-accent',
+    active ? 'border-wine bg-wine text-cool-white' : 'border-rose bg-r-bg text-r-text hover:bg-rose hover:text-wine',
   ].join(' ');
 }
 
@@ -267,24 +266,24 @@ function GameDetails({ game, onBack }: { game: LibraryGame; onBack: () => void }
         <span>Library</span>
       </button>
 
-      <section aria-label={`${game.title} details`} className="relative overflow-hidden border-2 border-accent-dim bg-r-panel">
+      <section aria-label={`${game.title} details`} className="relative overflow-hidden border-2 border-wine bg-r-panel">
         <Art
           sources={game.heroes}
           alt=""
           title=""
-          className="absolute inset-0 h-full w-full object-cover opacity-45 data-[fallback=true]:scale-110 data-[fallback=true]:blur-sm"
+          className="absolute inset-0 h-full w-full object-cover opacity-30 data-[fallback=true]:scale-110 data-[fallback=true]:blur-sm"
         />
-        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-r-bg via-r-bg/70 to-r-bg/10" />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-r-bg via-r-bg/85 to-r-bg/30" />
 
         <div className="relative flex flex-col gap-5 p-4 pt-24 sm:p-8 sm:pt-40">
           <div className="flex items-end gap-4 sm:gap-7">
             <div className="w-[104px] shrink-0 sm:w-[190px]">
-              <div className="aspect-[2/3] w-full border-2 border-accent bg-r-bg shadow-[6px_6px_0_0_var(--r-accent-dim)]">
+              <div className="aspect-[2/3] w-full border-2 border-wine bg-r-bg shadow-[6px_6px_0_0_var(--rose)]">
                 <Art sources={game.covers} alt={`${game.title} cover art`} title={game.title} className="h-full w-full object-cover data-[fallback=true]:object-contain" />
               </div>
             </div>
             <div className="flex min-w-0 flex-1 flex-col gap-3">
-              <h2 className="r-glow break-words text-[13px] uppercase leading-[1.5] text-accent sm:text-[22px]">{game.title}</h2>
+              <h2 className="r-glow break-words text-[13px] uppercase leading-[1.5] text-wine sm:text-[22px]">{game.title}</h2>
               <div className="flex flex-wrap gap-2">
                 <span className="r-tag">{game.playtimeLabel}</span>
                 {game.platforms?.map((platform) => (
@@ -296,7 +295,7 @@ function GameDetails({ game, onBack }: { game: LibraryGame; onBack: () => void }
                   <span className="r-tag max-w-full !text-r-dim max-sm:!whitespace-normal max-sm:!leading-[1.5]">Last played {formatDate(game.lastPlayed)}</span>
                 )}
                 {complete && (
-                  <span className="r-tag" style={{ color: GOLD, borderColor: GOLD }}>
+                  <span className="r-tag !border-wine !bg-wine !text-cool-white">
                     100% completed
                   </span>
                 )}
@@ -311,15 +310,15 @@ function GameDetails({ game, onBack }: { game: LibraryGame; onBack: () => void }
             <div className="flex min-w-0 flex-1 flex-col gap-2">
               <div className="flex items-baseline justify-between gap-3 font-pixel text-[8px] uppercase text-r-dim">
                 <span>Completion</span>
-                <span style={complete ? { color: GOLD } : undefined}>{progressLabel(game)}</span>
+                <span className={complete ? 'text-wine' : undefined}>{progressLabel(game)}</span>
               </div>
-              {ach ? <ProgressBar percent={ach.percent} complete={complete} /> : <div className="h-3 w-full border-2 border-dashed border-r-line" aria-hidden="true" />}
+              {ach ? <ProgressBar percent={ach.percent} complete={complete} /> : <div className="h-3 w-full border-2 border-dashed border-rose" aria-hidden="true" />}
             </div>
             <a
               href={game.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="r-btn !border-accent !bg-accent !px-5 !py-4 !text-r-bg hover:!bg-r-bg hover:!text-accent"
+              className="r-btn !px-5 !py-4"
             >
               <span>[ {game.urlLabel} ]</span>
               <ExternalLink size={14} strokeWidth={3} aria-hidden="true" />
@@ -329,7 +328,7 @@ function GameDetails({ game, onBack }: { game: LibraryGame; onBack: () => void }
       </section>
 
       <section aria-label="Achievements" className="flex flex-col gap-4">
-        <h3 className="r-glow text-[11px] uppercase text-accent sm:text-[13px]">
+        <h3 className="r-glow text-[11px] uppercase text-wine sm:text-[13px]">
           &gt; achievements{ach ? ` // ${ach.unlocked}/${ach.total}` : ''}
         </h3>
         <Achievements key={game.key} game={game} />
@@ -468,7 +467,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
 
       <div id="games-filters" className={['flex flex-col gap-4', filtersOpen ? '' : 'max-sm:hidden'].join(' ')}>
         <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
-          <label className="relative flex min-w-0 flex-1 items-center border-2 border-wine bg-r-bg focus-within:border-accent">
+          <label className="relative flex min-w-0 flex-1 items-center border-2 border-wine bg-r-bg focus-within:shadow-[4px_4px_0_0_var(--rose)]">
             <span className="sr-only">Search games</span>
             <Search size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3 text-r-dim" />
             <input
@@ -497,7 +496,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
             )}
           </label>
 
-          <label className="relative flex shrink-0 items-center border-2 border-wine bg-r-bg focus-within:border-accent hover:bg-r-raised lg:w-[300px]">
+          <label className="relative flex shrink-0 items-center border-2 border-wine bg-r-bg focus-within:shadow-[4px_4px_0_0_var(--rose)] hover:bg-r-raised lg:w-[300px]">
             <span className="sr-only">Sort by</span>
             <select
               value={sort}
@@ -552,7 +551,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
             <div className="mb-6 sm:hidden">{statTiles}</div>
 
             {library.steamCount === 0 && (
-              <p className="mb-6 border-2 border-dashed border-accent-dim px-4 py-4 text-[21px] leading-tight text-r-dim">
+              <p className="mb-6 border-2 border-dashed border-rose px-4 py-4 text-[21px] leading-tight text-r-dim">
                 &gt; steam library not synced yet. Run the &quot;Sync Steam library&quot; action in GitHub (Actions tab) and it will fill in
                 automatically.
               </p>
