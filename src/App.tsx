@@ -107,7 +107,8 @@ export default function App() {
           <section
             data-compact={activeId === 'main'}
             className={[
-              'pixel-frame relative mt-1 flex min-h-0 flex-col bg-cool-white text-wine',
+              // Outer frame: stationary cream padding, content clipped inside it.
+              'pixel-frame relative mt-1 flex min-h-0 flex-col overflow-hidden bg-cool-white p-5 text-wine max-sm:p-4 sm:p-6',
               staged ? 'aspect-[4/3]' : 'win-section min-h-0 flex-1',
             ].join(' ')}
           >
@@ -118,7 +119,7 @@ export default function App() {
                 key={id}
                 role="tabpanel"
                 hidden={id !== activeId}
-                className="pixel-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-5 max-sm:p-4 sm:p-8"
+                className="pixel-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain"
               >
                 {/* Main needs a full-height flex box; other panels stay in normal flow so their
                     content expands naturally and the panel itself scrolls. */}
