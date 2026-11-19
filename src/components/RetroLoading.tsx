@@ -22,7 +22,7 @@ export default function RetroLoading({ label, onClose, accent }: { label: string
         <p className="r-titlebar px-4 py-3 font-pixel text-[10px] uppercase sm:text-[11px]">&gt; loading {label}</p>
         <div className="flex flex-col gap-3 px-5 py-6">
           <div className="h-5 w-full border-2 border-wine p-[2px]" aria-hidden="true">
-            <div className="retro-loading-bar h-full bg-accent" />
+            <div className="retro-loading-bar h-full bg-rose" />
           </div>
           <p className="r-caret text-[22px] leading-none text-r-dim">reading disk</p>
         </div>

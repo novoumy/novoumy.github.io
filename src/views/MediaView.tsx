@@ -225,22 +225,22 @@ export default function MediaView({ onClose }: MediaViewerProps) {
           </div>
         </aside>
 
-        {visible.length === 0 ? (
-          <div className="flex flex-col items-center gap-5 py-16 text-center">
-            <p className="font-pixel text-[11px] uppercase leading-[1.8] text-r-text">No results</p>
-            <p className="text-r-dim">
-              {query.trim() ? `Nothing matches "${query.trim()}"` : 'Nothing here yet'}
-              {filter !== 'all' ? ' in this category.' : '.'}
-            </p>
-            <button
-              type="button"
-              onClick={resetAll}
-              className="r-btn"
-            >
-              Reset search &amp; filters
-            </button>
-          </div>
-        ) : (
+            {visible.length === 0 ? (
+              <div className="flex flex-col items-center gap-5 border-2 border-dashed border-rose px-5 py-16 text-center">
+                <p className="font-pixel text-[11px] uppercase leading-[1.8] text-r-text">No results</p>
+                <p className="text-r-dim">
+                  {query.trim() ? `Nothing matches "${query.trim()}"` : 'Nothing here yet'}
+                  {filter !== 'all' ? ' in this category.' : '.'}
+                </p>
+                <button
+                  type="button"
+                  onClick={resetAll}
+                  className="r-btn"
+                >
+                  Reset search &amp; filters
+                </button>
+              </div>
+            ) : (
           <ul className="grid gap-x-5 gap-y-7 pb-4 [grid-template-columns:repeat(auto-fill,minmax(140px,1fr))] sm:gap-x-6 sm:gap-y-8 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] lg:gap-x-8 lg:gap-y-10 lg:[grid-template-columns:repeat(auto-fill,minmax(250px,1fr))] min-[1600px]:[grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]">
             {visible.map((item) => (
               <li key={`${item.category}-${item.title}-${item.year}`}>

@@ -74,16 +74,16 @@ export default function QuotesView({ onClose }: { onClose: () => void }) {
                   isActive ? 'quote-pulse' : active !== null ? 'opacity-60' : '',
                 ].join(' ')}
               >
-                <div className="flex items-center justify-between gap-3 bg-accent px-4 py-2 font-pixel text-[8px] uppercase text-cool-white">
+                <div className="flex items-center justify-between gap-3 bg-wine px-4 py-2 font-pixel text-[8px] uppercase text-cool-white">
                   <span>LOG_{String(index + 1).padStart(3, '0')}.TXT</span>
-                  <span aria-hidden="true" className="block h-2 w-2 bg-cool-white" />
+                  <span aria-hidden="true" className="block h-2 w-2 bg-rose" />
                 </div>
                 <div className="flex flex-1 flex-col gap-4 px-5 pb-5 pt-4">
-                  <span aria-hidden="true" className="r-glow font-pixel text-[26px] leading-none text-accent">
+                  <span aria-hidden="true" className="r-glow font-pixel text-[26px] leading-none text-rose">
                     &ldquo;
                   </span>
                   <blockquote className="-mt-2 flex-1 text-[27px] leading-[1.25] text-r-text">{quote.text}</blockquote>
-                  <figcaption className="mt-2 font-pixel text-[9px] uppercase leading-[1.6] text-accent">
+                  <figcaption className="mt-2 font-pixel text-[9px] uppercase leading-[1.6] text-wine">
                     -- {quote.author}
                   </figcaption>
                 </div>

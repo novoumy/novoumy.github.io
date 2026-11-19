@@ -59,7 +59,7 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
                   tint
                   className="h-20 w-20 transition-transform duration-150 [transition-timing-function:steps(2)] group-hover:-translate-y-1 group-active:translate-y-0 sm:h-24 sm:w-24"
                 />
-                <span className="px-2 py-1 font-pixel text-[10px] uppercase leading-none transition-colors duration-150 group-hover:bg-accent group-hover:text-wine sm:text-[11px]">
+                <span className="px-2 py-1 font-pixel text-[10px] uppercase leading-none transition-colors duration-150 group-hover:bg-rose group-hover:text-wine sm:text-[11px]">
                   {item.label}
                 </span>
               </button>
