@@ -7,26 +7,21 @@ import type { InterestId } from '@/siteData';
 const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
 
 interface RetroOverlayProps {
-  label: string; // e.g. 'Game library' (used for the title and aria labels)
-  meta?: string | undefined; // e.g. '5 games'
+  label: string;
+  meta?: string | undefined;
   onClose: () => void;
   children: ReactNode;
-  // Optional launcher-style detail panel that slides in from the left.
-  toolbar?: ReactNode | undefined; // search / filter / sort strip under the header
+  toolbar?: ReactNode | undefined;
   side?: ReactNode | undefined;
   sideOpen?: boolean | undefined;
-  accent?: InterestId | undefined; // per-library colour theme + title bar icon (see .accent-* in styles.css)
-  onBack?: (() => void) | undefined; // when set, Escape calls this instead of closing (e.g. leaving a detail screen)
+  accent?: InterestId | undefined;
+  onBack?: (() => void) | undefined;
 }
 
-// Folder window shared by every Interests folder: portalled into <body>, a lavender "desk"
-// with one big framed window on it (wine title bar on top, scrolling page below), styled
-// like the main site window.
 export default function RetroOverlay({ label, meta, onClose, children, toolbar, side, sideOpen = false, accent, onBack }: RetroOverlayProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const sideRef = useRef<HTMLElement>(null);
 
-  // A closed panel stays out of the tab order and away from screen readers.
   useEffect(() => {
     sideRef.current?.toggleAttribute('inert', !sideOpen);
   }, [sideOpen]);
@@ -83,7 +78,8 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
         accent ? `accent-${accent}` : '',
       ].join(' ')}
     >
-      <div className="r-window pixel-frame animate-overlay-in relative mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col">
+      {/* Added explicit background color here so the window isn't transparent */}
+      <div className="r-window pixel-frame animate-overlay-in relative mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col bg-[var(--r-bg,#1e1e1e)]">
         <header className="r-titlebar flex shrink-0 items-center justify-between gap-3 px-3 py-2.5 sm:px-5 sm:py-3">
           <div onClick={onClose} className="flex min-w-0 cursor-pointer items-center gap-3 sm:gap-4">
             {accent && (
