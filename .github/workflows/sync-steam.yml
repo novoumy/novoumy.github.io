@@ -1,68 +1,54 @@
-name: Sync Steam Games
+name: Sync Steam library
 
 on:
   schedule:
-    # Run every 12 hours at 30 minutes past the hour (UTC)
-    - cron: '30 */12 * * *'
-  workflow_dispatch:
-    # Allow manual triggering
+    - cron: '17 */12 * * *' # every 12 hours
+  workflow_dispatch: # Actions tab -> "Sync Steam library" -> Run workflow
 
 permissions:
-  contents: write
+  contents: write # commit public/data/steam-games.json
+  actions: write # start the Pages deploy after committing
+
+concurrency:
+  group: sync-steam
+  cancel-in-progress: false
 
 jobs:
-  sync-steam:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
-      - name: Install Python and dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pip
-          pip3 install requests
-
-      - name: Install npm dependencies
-        run: npm install
-
-      - name: Run Steam sync script
+      - name: Fetch Steam library
         env:
-          STEAM_ID: ${{ secrets.STEAM_ID }}
           STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
-        run: |
-          python3 scripts/sync-steam.py
+          STEAM_ID: ${{ secrets.STEAM_ID }}
+        run: node scripts/sync-steam.mjs
 
-      - name: Commit and push updated data
+      - name: Commit changes
+        id: commit
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          
-          # Check if data files were modified
-          if git status --porcelain | grep -q '.'; then
-            # Add data files
-            git add public/data/steam-games.json
-            
-            # Create commit message
-            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-            git commit -m "chore: sync steam games data [skip ci]"
-            
-            # Push to repository
-            git push
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/steam-games.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Nothing new to commit."
           else
-            echo "No changes to sync, skipping commit."
+            git commit -m "chore: sync Steam library"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Cleanup
-        if: always()
-        run: |
-          rm -rf node_modules/.cache
-          rm -rf ~/.cache/pip
+      # Commits made with the default token don't trigger the normal "on: push" deploy,
+      # so start it explicitly.
+      - name: Redeploy site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"

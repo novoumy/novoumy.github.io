@@ -14,10 +14,10 @@ const PIPS: [number, number][] = [
 function PixelDie({ className = '' }: { className?: string }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 12 12" shapeRendering="crispEdges" className={className}>
-      <rect x="0" y="0" width="12" height="12" style={{ fill: 'var(--r-accent)' }} />
+      <rect x="0" y="0" width="12" height="12" fill="var(--r-accent)" />
       <rect x="1" y="1" width="10" height="10" fill="#1e1e1e" />
       {PIPS.map(([x, y]) => (
-        <rect key={`${x}-${y}`} x={x} y={y} width="2" height="2" style={{ fill: 'var(--r-accent)' }} />
+        <rect key={`${x}-${y}`} x={x} y={y} width="2" height="2" fill="var(--r-accent)" />
       ))}
     </svg>
   );
@@ -40,7 +40,7 @@ export default function QuotesView({ onClose }: { onClose: () => void }) {
   }, [active]);
 
   return (
-    <RetroOverlay accent="quotes" label="Quotes log" meta={`${quotes.length} entries`} onClose={onClose}>
+    <RetroOverlay label="Quotes log" meta={`${quotes.length} entries`} onClose={onClose} accent="quotes">
       <div className="mb-8 flex justify-center pt-2 sm:mb-10">
         <button
           type="button"
@@ -69,20 +69,20 @@ export default function QuotesView({ onClose }: { onClose: () => void }) {
               <figure
                 key={isActive ? `on-${rolls}` : 'off'}
                 className={[
-                  'flex w-full flex-col border-2 border-[color:var(--r-accent)] bg-[#252525] transition-opacity duration-300',
+                  'flex w-full flex-col border-2 border-accent bg-[#252525] transition-opacity duration-300',
                   isActive ? 'quote-pulse' : active !== null ? 'opacity-60' : '',
                 ].join(' ')}
               >
-                <div className="flex items-center justify-between gap-3 bg-[#1e1e1e] px-4 py-2 font-pixel text-[8px] uppercase text-[color:var(--r-accent)]">
+                <div className="flex items-center justify-between gap-3 bg-[#1e1e1e] px-4 py-2 font-pixel text-[8px] uppercase text-accent">
                   <span>LOG_{String(index + 1).padStart(3, '0')}.TXT</span>
-                  <span aria-hidden="true" className="block h-2 w-2 bg-[color:var(--r-accent)]" />
+                  <span aria-hidden="true" className="block h-2 w-2 bg-accent" />
                 </div>
                 <div className="flex flex-1 flex-col gap-4 px-5 pb-5 pt-4">
-                  <span aria-hidden="true" className="r-glow font-pixel text-[26px] leading-none text-[color:var(--r-accent)]">
+                  <span aria-hidden="true" className="r-glow font-pixel text-[26px] leading-none text-accent">
                     &ldquo;
                   </span>
                   <blockquote className="-mt-2 flex-1 text-[27px] leading-[1.25] text-[#d4d4d4]">{quote.text}</blockquote>
-                  <figcaption className="mt-2 font-pixel text-[9px] uppercase leading-[1.6] text-[color:var(--r-accent)]">
+                  <figcaption className="mt-2 font-pixel text-[9px] uppercase leading-[1.6] text-accent">
                     -- {quote.author}
                   </figcaption>
                 </div>

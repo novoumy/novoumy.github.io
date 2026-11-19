@@ -1,164 +1,456 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, ExternalLink, Search, SlidersHorizontal, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { ArrowLeft, ChevronDown, ExternalLink, Search, SlidersHorizontal, X } from 'lucide-react';
 import RetroOverlay from '@/components/RetroOverlay';
-import { games, type GameItem, type GamePlatform } from '@/siteData';
+import {
+  formatDate,
+  isCompleted,
+  isUnplayed,
+  libraryStats,
+  loadLibrary,
+  matchesFilter,
+  type Achievement,
+  type FilterKey,
+  type Library,
+  type LibraryGame,
+} from '@/lib/steam';
 
-// Turns the free-form `status` in siteData into a badge label.
-//   '100%'            -> [ 100% COMPLETED ]
-//   '40%'             -> [ 40% PROGRESS ]
-//   'forever playing' -> [ FOREVER PLAYING ]
-//   'mastered'        -> [ MASTERED ]
-function badgeFor(status: string) {
-  const text = status.trim();
-  const percent = /^(\d{1,3})\s*%$/.exec(text);
-  if (percent) {
-    const value = Math.min(100, Number(percent[1]));
-    if (value === 0) return "HAVEN'T PLAYED";
-    return value === 100 ? '100% COMPLETED' : `${value}% PROGRESS`;
-  }
-  return text.toUpperCase();
-}
-
-type PlatformFilter = 'all' | GamePlatform;
-type StatusFilter = 'all' | 'unplayed' | 'playing' | 'completed';
-type SortKey = 'title-asc' | 'title-desc';
-
-const PLATFORM_FILTERS: { label: string; value: PlatformFilter }[] = [
-  { label: 'All', value: 'all' },
-  { label: 'PC', value: 'PC' },
-  { label: 'Mobile', value: 'MOBILE' },
-];
-
-const STATUS_FILTERS: { label: string; value: StatusFilter }[] = [
-  { label: 'Any status', value: 'all' },
-  { label: "Haven't played", value: 'unplayed' },
-  { label: 'Playing', value: 'playing' },
-  { label: 'Completed', value: 'completed' },
-];
+type SortKey = 'played' | 'recent' | 'completion' | 'az';
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: 'title-asc', label: 'Alphabetical (A - Z)' },
-  { value: 'title-desc', label: 'Alphabetical (Z - A)' },
+  { value: 'played', label: 'Most played' },
+  { value: 'recent', label: 'Recently played' },
+  { value: 'completion', label: 'Completion %' },
+  { value: 'az', label: 'A-Z' },
 ];
 
-// Percent complete, or null for open-ended statuses such as "forever playing".
-function progressOf(status: string): number | null {
-  const percent = /^(\d{1,3})\s*%$/.exec(status.trim());
-  if (percent) return Math.min(100, Number(percent[1]));
-  return /master/i.test(status) ? 100 : null;
+const FILTERS: { value: FilterKey; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'completed', label: '100% completed' },
+  { value: 'progress', label: 'In progress' },
+  { value: 'unplayed', label: 'Unplayed' },
+];
+
+const PAGE = 60; // cards / achievements rendered per "page" (keeps big libraries snappy)
+const GOLD = '#eed49f';
+
+const SEGMENTS = 'repeating-linear-gradient(90deg, transparent 0 6px, rgba(30,30,30,.7) 6px 8px)';
+
+const byTitle = (a: LibraryGame, b: LibraryGame) => a.title.localeCompare(b.title, 'en', { sensitivity: 'base' });
+
+function sortGames(games: LibraryGame[], sort: SortKey): LibraryGame[] {
+  const list = [...games];
+  switch (sort) {
+    case 'played':
+      return list.sort((a, b) => b.playtimeHours - a.playtimeHours || byTitle(a, b));
+    case 'recent':
+      return list.sort((a, b) => b.lastPlayed - a.lastPlayed || b.playtimeHours - a.playtimeHours || byTitle(a, b));
+    case 'completion':
+      return list.sort((a, b) => {
+        const pa = a.achievements ? a.achievements.percent : -1;
+        const pb = b.achievements ? b.achievements.percent : -1;
+        return pb - pa || b.playtimeHours - a.playtimeHours || byTitle(a, b);
+      });
+    default:
+      return list.sort(byTitle);
+  }
 }
 
-// completed = 100% / mastered; haven't played = 0% or "not played" style text; everything else is playing.
-function statusOf(status: string): Exclude<StatusFilter, 'all'> {
-  const value = progressOf(status);
-  if (value === 100) return 'completed';
-  if (value === 0 || /not\s*played|haven'?t|backlog|unplayed|wishlist/i.test(status)) return 'unplayed';
-  return 'playing';
+// ---- small building blocks ------------------------------------------------------------------
+
+// Tries each URL in turn (Steam doesn't have every art size for every game), then a text placeholder.
+function Art({ sources, alt, className = '', title }: { sources: string[]; alt: string; className?: string; title: string }) {
+  const [index, setIndex] = useState(0);
+  if (index >= sources.length) {
+    return (
+      <div className={`flex items-center justify-center bg-[#252526] p-2 text-center font-pixel text-[8px] uppercase leading-[1.6] text-[#8a8a8a] ${className}`}>
+        {title}
+      </div>
+    );
+  }
+  return (
+    <img
+      src={sources[index]}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+      data-fallback={index > 0}
+      onError={() => setIndex((value) => value + 1)}
+      className={className}
+    />
+  );
 }
 
-const byTitle = (a: GameItem, b: GameItem) =>
-  a.title.localeCompare(b.title, undefined, { sensitivity: 'base', numeric: true });
+function ProgressBar({ percent, complete }: { percent: number; complete: boolean }) {
+  return (
+    <div
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={percent}
+      className="h-3 w-full border-2 border-accent-dim bg-[#1e1e1e] p-[1px]"
+    >
+      <div
+        className={`h-full ${complete ? '' : 'bg-accent'}`}
+        style={{ width: `${percent}%`, backgroundColor: complete ? GOLD : undefined, backgroundImage: SEGMENTS }}
+      />
+    </div>
+  );
+}
 
-const COMPARATORS: Record<SortKey, (a: GameItem, b: GameItem) => number> = {
-  'title-asc': byTitle,
-  'title-desc': (a, b) => byTitle(b, a),
-};
+function Stat({ short, label, value }: { short: string; label: string; value: ReactNode }) {
+  return (
+    <div className="min-w-0 border-2 border-accent-dim bg-[#252526] px-2.5 py-2 sm:px-4 sm:py-3">
+      <p className="truncate font-pixel text-[7px] uppercase text-[#8a8a8a] sm:text-[8px]">
+        <span className="sm:hidden">{short}</span>
+        <span className="hidden sm:inline">{label}</span>
+      </p>
+      <p className="mt-1.5 truncate font-pixel text-[10px] text-accent sm:mt-2 sm:text-[16px]">{value}</p>
+    </div>
+  );
+}
 
-const normalize = (text: string) =>
-  text
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase();
+function progressLabel(game: LibraryGame): string {
+  if (game.achievements) return `${game.achievements.unlocked}/${game.achievements.total} • ${game.achievements.percent}%`;
+  if (game.manual) return 'Not tracked';
+  return isUnplayed(game) ? 'Not played' : 'No achievements';
+}
 
-// Launcher-style library: a grid of game art; clicking one slides a detail panel
-// in from the left (poster, title, status badge and your review).
+// ---- library grid card ----------------------------------------------------------------------
+function GameCard({ game, onOpen }: { game: LibraryGame; onOpen: (key: string) => void }) {
+  const ach = game.achievements;
+  const complete = isCompleted(game);
+  return (
+    <li className="flex">
+      <button
+        type="button"
+        data-key={game.key}
+        onClick={() => onOpen(game.key)}
+        aria-label={`Open ${game.title}`}
+        className="r-box r-box-hover group flex w-full flex-col gap-2.5 p-2 text-left max-sm:p-2.5"
+      >
+        <span className="relative block aspect-[2/3] w-full overflow-hidden border border-[#3c3c3c] bg-[#1e1e1e]">
+          <Art
+            sources={game.covers}
+            alt=""
+            title={game.title}
+            className={`h-full w-full object-cover data-[fallback=true]:object-contain ${isUnplayed(game) ? 'opacity-70' : ''}`}
+          />
+          <span className="r-tag absolute bottom-1.5 left-1.5 !px-1.5 !py-1 !text-[7px] sm:!text-[8px]">{game.playtimeLabel}</span>
+          {complete && (
+            <span className="r-tag absolute right-1.5 top-1.5 !border-accent !bg-accent !px-1.5 !py-1 !text-[7px] !text-[#1e1e1e] sm:!text-[8px]">100%</span>
+          )}
+        </span>
+        <span className="flex min-w-0 flex-1 flex-col justify-between gap-2 px-0.5 pb-0.5">
+          <h3 className="line-clamp-2 break-words text-[9px] leading-[1.6] text-[#d4d4d4] sm:text-[10px]">{game.title}</h3>
+          <span className="flex flex-col gap-1.5">
+            {ach ? <ProgressBar percent={ach.percent} complete={complete} /> : <span className="h-3 w-full border-2 border-dashed border-[#3c3c3c]" aria-hidden="true" />}
+            <span className="font-pixel text-[7px] uppercase leading-[1.4] text-[#8a8a8a] sm:text-[8px]" style={complete ? { color: GOLD } : undefined}>
+              {progressLabel(game)}
+            </span>
+          </span>
+        </span>
+      </button>
+    </li>
+  );
+}
+
+// ---- details screen -------------------------------------------------------------------------
+type AchFilter = 'all' | 'unlocked' | 'locked';
+
+function AchievementItem({ item }: { item: Achievement }) {
+  const description = item.description || (item.hidden && !item.unlocked ? 'Hidden achievement.' : '');
+  return (
+    <li
+      className={[
+        'flex gap-3 border-2 p-2.5',
+        item.unlocked ? 'border-accent-dim bg-[#252526]' : 'border-[#3c3c3c] bg-[#1e1e1e]',
+      ].join(' ')}
+    >
+      <Art
+        sources={[item.unlocked ? item.iconUrl : item.iconGrayUrl || item.iconUrl].filter(Boolean)}
+        alt=""
+        title="?"
+        className={`h-14 w-14 shrink-0 border-2 object-cover ${item.unlocked ? 'border-accent' : 'border-[#3c3c3c] opacity-50 grayscale'}`}
+      />
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <h4 className={`break-words font-pixel text-[9px] leading-[1.5] ${item.unlocked ? 'text-[#d4d4d4]' : 'text-[#8a8a8a]'}`}>
+          {item.hidden && !item.unlocked ? 'Hidden achievement' : item.name}
+        </h4>
+        {description && <p className={`break-words text-[19px] leading-[1.15] ${item.unlocked ? 'text-[#b4b4b4]' : 'text-[#6f6f6f]'}`}>{description}</p>}
+        <p className={`mt-auto pt-1 font-pixel text-[7px] uppercase ${item.unlocked ? 'text-accent' : 'text-[#6f6f6f]'}`}>
+          {item.unlocked ? `Unlocked${item.unlockTime ? ` ${formatDate(item.unlockTime)}` : ''}` : 'Locked'}
+        </p>
+      </div>
+    </li>
+  );
+}
+
+function Achievements({ game }: { game: LibraryGame }) {
+  const [filter, setFilter] = useState<AchFilter>('all');
+  const [limit, setLimit] = useState(PAGE);
+  const ach = game.achievements;
+
+  const list = useMemo(() => {
+    if (!ach) return [];
+    const unlocked = ach.list.filter((item) => item.unlocked).sort((a, b) => b.unlockTime - a.unlockTime);
+    const locked = ach.list.filter((item) => !item.unlocked);
+    return filter === 'unlocked' ? unlocked : filter === 'locked' ? locked : [...unlocked, ...locked];
+  }, [ach, filter]);
+
+  if (!ach) {
+    const message = game.manual
+      ? "Achievements aren't tracked for this entry."
+      : isUnplayed(game)
+        ? 'Not played yet. Once it has playtime, the next Steam sync will pull its achievements.'
+        : 'No achievements to show: this game has none on Steam, or its stats are private.';
+    return <p className="border-2 border-dashed border-[#3c3c3c] px-4 py-6 text-[22px] leading-tight text-[#8a8a8a]">&gt; {message}</p>;
+  }
+
+  const counts: Record<AchFilter, number> = { all: ach.total, unlocked: ach.unlocked, locked: ach.total - ach.unlocked };
+  const shown = list.slice(0, limit);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div role="group" aria-label="Filter achievements" className="flex flex-wrap gap-2.5">
+        {(['all', 'unlocked', 'locked'] as AchFilter[]).map((value) => (
+          <button
+            key={value}
+            type="button"
+            aria-pressed={filter === value}
+            onClick={() => {
+              setFilter(value);
+              setLimit(PAGE);
+            }}
+            className={pillClass(filter === value)}
+          >
+            {value}
+            <span className={filter === value ? 'text-[#1e1e1e]/70' : 'text-[#8a8a8a]'}>{counts[value]}</span>
+          </button>
+        ))}
+      </div>
+      {list.length === 0 ? (
+        <p className="border-2 border-dashed border-[#3c3c3c] px-4 py-6 text-[22px] text-[#8a8a8a]">&gt; nothing here.</p>
+      ) : (
+        <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
+          {shown.map((item) => (
+            <AchievementItem key={item.id} item={item} />
+          ))}
+        </ul>
+      )}
+      {shown.length < list.length && (
+        <button type="button" onClick={() => setLimit((value) => value + PAGE)} className="r-btn self-center">
+          Show more ({list.length - shown.length})
+        </button>
+      )}
+    </div>
+  );
+}
+
+function pillClass(active: boolean) {
+  return [
+    'flex shrink-0 items-center gap-2 border-2 px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
+    active ? 'border-transparent bg-accent text-[#1e1e1e]' : 'border-[#3c3c3c] bg-[#1e1e1e] text-[#d4d4d4] hover:border-accent hover:text-accent',
+  ].join(' ');
+}
+
+function GameDetails({ game, onBack }: { game: LibraryGame; onBack: () => void }) {
+  const ach = game.achievements;
+  const complete = isCompleted(game);
+  const backRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => backRef.current?.focus({ preventScroll: true }), []);
+
+  return (
+    <div className="flex flex-col gap-8">
+      <button ref={backRef} type="button" onClick={onBack} className="r-btn self-start">
+        <ArrowLeft size={14} strokeWidth={3} aria-hidden="true" />
+        <span>Library</span>
+      </button>
+
+      <section aria-label={`${game.title} details`} className="relative overflow-hidden border-2 border-accent-dim bg-[#252526]">
+        <Art
+          sources={game.heroes}
+          alt=""
+          title=""
+          className="absolute inset-0 h-full w-full object-cover opacity-45 data-[fallback=true]:scale-110 data-[fallback=true]:blur-sm"
+        />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#1e1e1e] via-[#1e1e1e]/70 to-[#1e1e1e]/10" />
+
+        <div className="relative flex flex-col gap-5 p-4 pt-24 sm:p-8 sm:pt-40">
+          <div className="flex items-end gap-4 sm:gap-7">
+            <div className="w-[104px] shrink-0 sm:w-[190px]">
+              <div className="aspect-[2/3] w-full border-2 border-accent bg-[#1e1e1e] shadow-[6px_6px_0_0_var(--r-accent-dim)]">
+                <Art sources={game.covers} alt={`${game.title} cover art`} title={game.title} className="h-full w-full object-cover data-[fallback=true]:object-contain" />
+              </div>
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-3">
+              <h2 className="r-glow break-words text-[13px] uppercase leading-[1.5] text-accent sm:text-[22px]">{game.title}</h2>
+              <div className="flex flex-wrap gap-2">
+                <span className="r-tag">{game.playtimeLabel}</span>
+                {game.platforms?.map((platform) => (
+                  <span key={platform} className="r-tag !text-[#8a8a8a]">
+                    {platform}
+                  </span>
+                ))}
+                {game.lastPlayed > 0 && (
+                  <span className="r-tag max-w-full !text-[#8a8a8a] max-sm:!whitespace-normal max-sm:!leading-[1.5]">Last played {formatDate(game.lastPlayed)}</span>
+                )}
+                {complete && (
+                  <span className="r-tag" style={{ color: GOLD, borderColor: GOLD }}>
+                    100% completed
+                  </span>
+                )}
+              </div>
+              {game.note && <p className="hidden text-[22px] leading-tight text-[#b4b4b4] sm:block">&quot;{game.note}&quot;</p>}
+            </div>
+          </div>
+
+          {game.note && <p className="text-[22px] leading-tight text-[#b4b4b4] sm:hidden">&quot;{game.note}&quot;</p>}
+
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-8">
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
+              <div className="flex items-baseline justify-between gap-3 font-pixel text-[8px] uppercase text-[#8a8a8a]">
+                <span>Completion</span>
+                <span style={complete ? { color: GOLD } : undefined}>{progressLabel(game)}</span>
+              </div>
+              {ach ? <ProgressBar percent={ach.percent} complete={complete} /> : <div className="h-3 w-full border-2 border-dashed border-[#3c3c3c]" aria-hidden="true" />}
+            </div>
+            <a
+              href={game.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="r-btn !border-accent !bg-accent !px-5 !py-4 !text-[#1e1e1e] hover:!bg-[#1e1e1e] hover:!text-accent"
+            >
+              <span>[ {game.urlLabel} ]</span>
+              <ExternalLink size={14} strokeWidth={3} aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Achievements" className="flex flex-col gap-4">
+        <h3 className="r-glow text-[11px] uppercase text-accent sm:text-[13px]">
+          &gt; achievements{ach ? ` // ${ach.unlocked}/${ach.total}` : ''}
+        </h3>
+        <Achievements key={game.key} game={game} />
+      </section>
+    </div>
+  );
+}
+
+// ---- the view ---------------------------------------------------------------------------------
 export default function GamesView({ onClose }: { onClose: () => void }) {
-  const [selected, setSelected] = useState<GameItem | null>(null);
-  // Keeps the last game mounted while the panel slides out.
-  const [shown, setShown] = useState<GameItem | null>(null);
+  const [library, setLibrary] = useState<Library | null>(null);
   const [query, setQuery] = useState('');
-  const [platform, setPlatform] = useState<PlatformFilter>('all');
-  const [status, setStatus] = useState<StatusFilter>('all');
-  const [sort, setSort] = useState<SortKey>('title-asc');
-  // Phones only: search + filters are tucked behind a toggle (desktop always shows them).
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const searchRef = useRef<HTMLInputElement>(null);
+  const [sort, setSort] = useState<SortKey>('played');
+  const [filter, setFilter] = useState<FilterKey>('all');
+  const [filtersOpen, setFiltersOpen] = useState(false); // phones only: filters collapse behind a toggle
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [limit, setLimit] = useState(PAGE);
 
-  // "/" jumps to the search box, like the media library.
+  const searchRef = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const savedScroll = useRef(0);
+
+  useEffect(() => {
+    let alive = true;
+    void loadLibrary().then((result) => alive && setLibrary(result));
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const all = useMemo(() => library?.games ?? [], [library]);
+  const stats = useMemo(() => libraryStats(all), [all]);
+  const counts = useMemo(() => {
+    const result: Record<FilterKey, number> = { all: all.length, completed: 0, progress: 0, unplayed: 0 };
+    for (const game of all) {
+      if (isCompleted(game)) result.completed += 1;
+      else if (isUnplayed(game)) result.unplayed += 1;
+      else result.progress += 1;
+    }
+    return result;
+  }, [all]);
+
+  const visible = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return sortGames(
+      all.filter((game) => matchesFilter(game, filter) && (!needle || game.title.toLowerCase().includes(needle))),
+      sort,
+    );
+  }, [all, query, filter, sort]);
+
+  useEffect(() => setLimit(PAGE), [query, filter, sort]);
+
+  // Reveal the next page of cards as the end of the grid scrolls into view.
+  const hasMore = limit < visible.length;
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node || !hasMore) return;
+    const observer = new IntersectionObserver((entries) => entries[0]?.isIntersecting && setLimit((value) => value + PAGE), { rootMargin: '600px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasMore, limit]);
+
+  const selected = selectedKey ? (all.find((game) => game.key === selectedKey) ?? null) : null;
+
+  // Keep the scroll position when going into a game and back out again.
+  const scroller = () => bodyRef.current?.closest<HTMLElement>('.pixel-scroll') ?? null;
+  const open = (key: string) => {
+    savedScroll.current = scroller()?.scrollTop ?? 0;
+    setSelectedKey(key);
+    requestAnimationFrame(() => scroller()?.scrollTo({ top: 0 }));
+  };
+  const back = () => {
+    const key = selectedKey;
+    setSelectedKey(null);
+    requestAnimationFrame(() => {
+      scroller()?.scrollTo({ top: savedScroll.current });
+      bodyRef.current?.querySelector<HTMLElement>(`[data-key="${key}"]`)?.focus({ preventScroll: true });
+    });
+  };
+
+  // "/" jumps to search (desktop habit shared with the media library).
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== '/' || document.activeElement === searchRef.current) return;
-      const tag = (document.activeElement as HTMLElement | null)?.tagName;
-      if (tag === 'INPUT' || tag === 'SELECT') return;
+      const target = event.target as HTMLElement | null;
+      if (event.key !== '/' || selected || target?.closest('input, select, textarea')) return;
       event.preventDefault();
-      searchRef.current?.focus();
+      setFiltersOpen(true);
+      requestAnimationFrame(() => searchRef.current?.focus());
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, []);
+  }, [selected]);
 
-  const searched = useMemo(() => {
-    const needle = normalize(query.trim());
-    return needle ? games.filter((g) => normalize(g.title).includes(needle)) : games;
-  }, [query]);
+  const activeCount = (query.trim() ? 1 : 0) + (filter !== 'all' ? 1 : 0) + (sort !== 'played' ? 1 : 0);
 
-  // Each filter group shows the counts it would give with the other group applied.
-  const platformCounts = useMemo(() => {
-    const pool = status === 'all' ? searched : searched.filter((g) => statusOf(g.status) === status);
-    const result: Record<string, number> = { all: pool.length };
-    for (const g of pool) for (const pl of g.platforms) result[pl] = (result[pl] ?? 0) + 1;
-    return result;
-  }, [searched, status]);
-
-  const statusCounts = useMemo(() => {
-    const pool = platform === 'all' ? searched : searched.filter((g) => g.platforms.includes(platform));
-    const result: Record<string, number> = { all: pool.length };
-    for (const g of pool) {
-      const key = statusOf(g.status);
-      result[key] = (result[key] ?? 0) + 1;
-    }
-    return result;
-  }, [searched, platform]);
-
-  const visible = useMemo(() => {
-    const filtered = searched.filter(
-      (g) => (platform === 'all' || g.platforms.includes(platform)) && (status === 'all' || statusOf(g.status) === status),
-    );
-    return [...filtered].sort(COMPARATORS[sort]);
-  }, [searched, platform, status, sort]);
-
-  const resetAll = () => {
-    setQuery('');
-    setPlatform('all');
-    setStatus('all');
-    searchRef.current?.focus();
-  };
-
-  const select = (game: GameItem) => {
-    if (selected === game) {
-      setSelected(null);
-      return;
-    }
-    setSelected(game);
-    setShown(game);
-  };
-
-  const pill = (active: boolean) =>
-    [
-      'flex shrink-0 items-center gap-2 border-2 px-3 py-2.5 font-pixel text-[9px] uppercase transition-colors duration-150',
-      active
-        ? 'border-transparent bg-[color:var(--r-accent)] text-[#1e1e1e]'
-        : 'border-[#3c3c3c] bg-[#1e1e1e] text-[#d4d4d4] hover:border-[color:var(--r-accent)] hover:text-[color:var(--r-accent)]',
-    ].join(' ');
-
-  const activeCount =
-    (query.trim() ? 1 : 0) + (platform !== 'all' ? 1 : 0) + (status !== 'all' ? 1 : 0) + (sort !== 'title-asc' ? 1 : 0);
+  const statTiles = (
+    <div className="grid grid-cols-3 gap-2.5 sm:gap-4 lg:max-w-3xl">
+      <Stat short="Games" label="Total games" value={stats.count.toLocaleString('en-US')} />
+      <Stat
+        short="Hours"
+        label="Total playtime"
+        value={
+          <>
+            {Math.round(stats.hours).toLocaleString('en-US')}
+            {stats.approximate ? '+' : ''}
+            <span className="hidden sm:inline"> HRS</span>
+          </>
+        }
+      />
+      <Stat short="Trophies" label="Achievements unlocked" value={stats.total > 0 ? `${stats.unlocked.toLocaleString('en-US')}` : '0'} />
+    </div>
+  );
 
   const toolbar = (
     <div className="flex w-full flex-col gap-4">
+      <div className="hidden sm:block">{statTiles}</div>
+
       <button
         type="button"
-        onClick={() => setFiltersOpen((open) => !open)}
+        onClick={() => setFiltersOpen((value) => !value)}
         aria-expanded={filtersOpen}
         aria-controls="games-filters"
         className="r-btn w-full !justify-between sm:hidden"
@@ -169,179 +461,135 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
           {activeCount > 0 && <span className="r-tag !px-1.5 !py-1">{activeCount}</span>}
         </span>
         <span className="flex items-center gap-2 text-[#8a8a8a]">
-          {visible.length}/{games.length}
+          {visible.length}/{all.length}
           <ChevronDown size={14} strokeWidth={3} aria-hidden="true" className={filtersOpen ? 'rotate-180' : ''} />
         </span>
       </button>
 
       <div id="games-filters" className={['flex flex-col gap-4', filtersOpen ? '' : 'max-sm:hidden'].join(' ')}>
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
-        <label className="relative flex min-w-0 flex-1 items-center border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-[color:var(--r-accent)]">
-          <span className="sr-only">Search titles</span>
-          <Search size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3 text-[#8a8a8a]" />
-          <input
-            ref={searchRef}
-            type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search titles..."
-            autoComplete="off"
-            spellCheck={false}
-            enterKeyHint="search"
-            className="h-12 w-full bg-transparent pl-10 pr-10 font-body text-[24px] leading-none text-[#d4d4d4] outline-none placeholder:text-[#8a8a8a] [&::-webkit-search-cancel-button]:hidden"
-          />
-          {query && (
-            <button
-              type="button"
-              onClick={() => {
-                setQuery('');
-                searchRef.current?.focus();
-              }}
-              aria-label="Clear search"
-              className="absolute right-2 flex h-8 w-8 items-center justify-center text-[#8a8a8a] hover:bg-[#333333] hover:text-[#d4d4d4]"
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
+          <label className="relative flex min-w-0 flex-1 items-center border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-accent">
+            <span className="sr-only">Search games</span>
+            <Search size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute left-3 text-[#8a8a8a]" />
+            <input
+              ref={searchRef}
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search games..."
+              autoComplete="off"
+              spellCheck={false}
+              enterKeyHint="search"
+              className="h-12 w-full bg-transparent pl-10 pr-10 font-body text-[24px] leading-none text-[#d4d4d4] outline-none placeholder:text-[#8a8a8a] [&::-webkit-search-cancel-button]:hidden"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery('');
+                  searchRef.current?.focus();
+                }}
+                aria-label="Clear search"
+                className="absolute right-2 flex h-8 w-8 items-center justify-center text-[#8a8a8a] hover:bg-[#333333] hover:text-[#d4d4d4]"
+              >
+                <X size={16} strokeWidth={3} aria-hidden="true" />
+              </button>
+            )}
+          </label>
+
+          <label className="relative flex shrink-0 items-center border-2 border-[#3c3c3c] bg-[#1e1e1e] focus-within:border-accent hover:bg-[#333333] lg:w-[300px]">
+            <span className="sr-only">Sort by</span>
+            <select
+              value={sort}
+              onChange={(event) => setSort(event.target.value as SortKey)}
+              className="h-12 w-full cursor-pointer appearance-none bg-transparent pl-3 pr-10 font-body text-[22px] leading-none text-[#d4d4d4] outline-none"
             >
-              <X size={16} strokeWidth={3} aria-hidden="true" />
-            </button>
-          )}
-        </label>
+              {SORT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value} className="bg-[#1e1e1e] text-[#d4d4d4]">
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute right-3 text-[#8a8a8a]" />
+          </label>
+        </div>
 
-        <label className="relative flex shrink-0 items-center border-2 border-[#3c3c3c] bg-[#1e1e1e] hover:bg-[#333333] focus-within:border-[color:var(--r-accent)] lg:w-[300px]">
-          <span className="sr-only">Sort by</span>
-          <select
-            value={sort}
-            onChange={(event) => setSort(event.target.value as SortKey)}
-            className="h-12 w-full cursor-pointer appearance-none bg-transparent pl-3 pr-10 font-body text-[22px] leading-none text-[#d4d4d4] outline-none"
-          >
-            {SORT_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value} className="bg-[#1e1e1e] text-[#d4d4d4]">
+        <div className="flex items-center gap-x-6">
+          <div role="group" aria-label="Filter games" className="-mx-1 flex flex-nowrap gap-2.5 overflow-x-auto px-1 py-1 sm:flex-wrap sm:overflow-visible">
+            {FILTERS.map((option) => (
+              <button key={option.value} type="button" aria-pressed={filter === option.value} onClick={() => setFilter(option.value)} className={pillClass(filter === option.value)}>
                 {option.label}
-              </option>
+                <span className={filter === option.value ? 'text-[#1e1e1e]/70' : 'text-[#8a8a8a]'}>{counts[option.value]}</span>
+              </button>
             ))}
-          </select>
-          <ChevronDown size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute right-3 text-[#8a8a8a]" />
-        </label>
-      </div>
-
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6">
-        <div role="group" aria-label="Filter by platform" className="-mx-1 flex flex-nowrap gap-2.5 overflow-x-auto px-1 py-1 sm:flex-wrap sm:overflow-visible">
-          {PLATFORM_FILTERS.map((option) => (
-            <button key={option.value} type="button" aria-pressed={option.value === platform} onClick={() => setPlatform(option.value)} className={pill(option.value === platform)}>
-              {option.label}
-              <span className={option.value === platform ? 'text-[#1e1e1e]/70' : 'text-[#8a8a8a]'}>{platformCounts[option.value] ?? 0}</span>
-            </button>
-          ))}
+          </div>
+          <span className="ml-auto hidden shrink-0 font-pixel text-[8px] uppercase text-[#8a8a8a] sm:inline" aria-live="polite">
+            {visible.length}/{all.length}
+          </span>
         </div>
-        <span aria-hidden="true" className="hidden h-8 w-0.5 bg-[color:var(--r-accent-dim)] sm:block" />
-        <div role="group" aria-label="Filter by status" className="-mx-1 flex flex-nowrap gap-2.5 overflow-x-auto px-1 py-1 sm:flex-wrap sm:overflow-visible">
-          {STATUS_FILTERS.map((option) => (
-            <button key={option.value} type="button" aria-pressed={option.value === status} onClick={() => setStatus(option.value)} className={pill(option.value === status)}>
-              {option.label}
-              <span className={option.value === status ? 'text-[#1e1e1e]/70' : 'text-[#8a8a8a]'}>{statusCounts[option.value] ?? 0}</span>
-            </button>
-          ))}
-        </div>
-      </div>
       </div>
     </div>
   );
 
+  const synced = library?.syncedAt ? ` • synced ${formatDate(Date.parse(library.syncedAt) / 1000)}` : '';
+
   return (
     <RetroOverlay
-      accent="games"
       label="Game library"
-      meta={`${visible.length} / ${games.length} games`}
+      meta={library ? `${all.length} games${synced}` : undefined}
       onClose={onClose}
-      toolbar={toolbar}
-      sideOpen={selected !== null}
-      side={shown && <GameDetail game={shown} onDismiss={() => setSelected(null)} />}
+      onBack={selected ? back : undefined}
+      toolbar={selected ? undefined : toolbar}
+      accent="games"
     >
-      {visible.length === 0 ? (
-        <div className="flex flex-col items-center gap-5 py-16 text-center">
-          <p className="font-pixel text-[11px] uppercase leading-[1.8] text-[#d4d4d4]">No results</p>
-          <p className="text-[#8a8a8a]">
-            {query.trim() ? `Nothing matches "${query.trim()}"` : 'Nothing here yet'}
-            {platform !== 'all' || status !== 'all' ? ' with these filters.' : '.'}
-          </p>
-          <button type="button" onClick={resetAll} className="r-btn">
-            Reset search &amp; filters
-          </button>
-        </div>
-      ) : (
-        <ul className="grid w-full grid-cols-[repeat(2,minmax(0,1fr))] gap-6 pb-4 max-sm:gap-x-5 max-sm:gap-y-7 sm:[grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))] lg:gap-8">
-          {visible.map((game) => {
-            const active = game === selected;
-            return (
-              <li key={game.title} className="flex">
+      <div ref={bodyRef}>
+        {!library ? (
+          <p className="r-caret text-[24px] leading-none text-[#8a8a8a]">&gt; reading library</p>
+        ) : selected ? (
+          <GameDetails key={selected.key} game={selected} onBack={back} />
+        ) : (
+          <>
+            <div className="mb-6 sm:hidden">{statTiles}</div>
+
+            {library.steamCount === 0 && (
+              <p className="mb-6 border-2 border-dashed border-accent-dim px-4 py-4 text-[21px] leading-tight text-[#b4b4b4]">
+                &gt; steam library not synced yet. Run the &quot;Sync Steam library&quot; action in GitHub (Actions tab) and it will fill in
+                automatically.
+              </p>
+            )}
+
+            {visible.length === 0 ? (
+              <div className="flex flex-col items-start gap-4 border-2 border-dashed border-[#3c3c3c] px-5 py-8">
+                <p className="text-[24px] leading-tight text-[#d4d4d4]">&gt; no games match that.</p>
                 <button
                   type="button"
-                  aria-pressed={active}
-                  onClick={() => select(game)}
-                  className={[
-                    'r-box r-box-hover group flex w-full flex-col gap-3 p-2 text-left max-sm:p-2.5',
-                    active ? 'r-box-active !border-[color:var(--r-accent)] shadow-[4px_4px_0_0_var(--r-accent-dim)]' : '',
-                  ].join(' ')}
+                  onClick={() => {
+                    setQuery('');
+                    setFilter('all');
+                  }}
+                  className="r-btn"
                 >
-                  <img
-                    src={game.cover}
-                    alt={`${game.title} cover`}
-                    loading="lazy"
-                    className="aspect-[3/4] w-full bg-[#1e1e1e] object-cover max-sm:aspect-[2/3]"
-                  />
-                  <div className="flex flex-col items-start gap-2 px-1 pb-1 max-sm:w-full max-sm:min-w-0 max-sm:px-0 max-sm:pb-0">
-                    <span className="r-tag max-sm:max-w-full max-sm:whitespace-normal max-sm:break-words max-sm:leading-[1.4] max-sm:text-[7px]">
-                      [ {badgeFor(game.status)} ]
-                    </span>
-                    <h3 className="text-[11px] leading-[1.6] text-[#d4d4d4] max-sm:break-words max-sm:text-[9px]">{game.title}</h3>
-                  </div>
+                  Reset filters
                 </button>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+              </div>
+            ) : (
+              <ul className="grid w-full grid-cols-[repeat(2,minmax(0,1fr))] gap-x-3 gap-y-5 pb-4 sm:gap-5 sm:[grid-template-columns:repeat(auto-fill,minmax(176px,1fr))] lg:gap-6">
+                {visible.slice(0, limit).map((game) => (
+                  <GameCard key={game.key} game={game} onOpen={open} />
+                ))}
+              </ul>
+            )}
+            {hasMore && (
+              <div ref={sentinelRef} className="flex justify-center pb-4 pt-2">
+                <button type="button" onClick={() => setLimit((value) => value + PAGE)} className="r-btn">
+                  Show more ({visible.length - limit})
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </RetroOverlay>
   );
 }
 
-function GameDetail({ game, onDismiss }: { game: GameItem; onDismiss: () => void }) {
-  return (
-    <div className="flex min-h-full flex-col gap-5 p-6">
-      <div className="flex items-center justify-between gap-3">
-        <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// game_info</span>
-        <button type="button" onClick={onDismiss} aria-label="Close details" className="r-btn !p-2">
-          <X size={14} strokeWidth={3} aria-hidden="true" />
-        </button>
-      </div>
-
-      <img
-        src={game.cover}
-        alt={`${game.title} poster`}
-        className="aspect-[3/4] w-full border-2 border-[color:var(--r-accent)] bg-[#252526] object-cover shadow-[6px_6px_0_0_var(--r-accent-dim)]"
-      />
-
-      <div className="flex flex-col gap-3">
-        <h3 className="r-glow text-[14px] leading-[1.5] text-[color:var(--r-accent)]">{game.title}</h3>
-        <div className="flex flex-wrap gap-2">
-          <span className="r-tag">[ {badgeFor(game.status)} ]</span>
-          {game.platforms.map((pl) => (
-            <span key={pl} className="r-tag">
-              {pl}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-2 border-t-2 border-dashed border-[color:var(--r-accent-dim)] pt-4">
-        <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// review</span>
-        <p className="text-[24px] leading-[1.3] text-[#d4d4d4]">&gt; {game.note}</p>
-      </div>
-
-      {game.link && (
-        <a href={game.link} target="_blank" rel="noopener noreferrer" className="r-btn mt-auto !text-[9px]">
-          {game.linkLabel ?? 'Store page'}
-          <ExternalLink size={13} aria-hidden="true" />
-        </a>
-      )}
-    </div>
-  );
-}

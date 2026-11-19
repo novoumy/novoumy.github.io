@@ -67,14 +67,19 @@ export interface MediaItem {
 
 export type GamePlatform = 'PC' | 'MOBILE';
 
-export interface GameItem {
+// Games come from Steam automatically (public/data/steam-games.json, synced by
+// .github/workflows/sync-steam.yml). Anything that is NOT on Steam goes here as a manual entry.
+export interface ManualGame {
   title: string;
-  platforms: GamePlatform[]; // used by the platform filter tabs, e.g. ['PC', 'MOBILE']
-  status: string; // badge + status filter: '100%' / 'mastered' = completed, '0%' / 'not played' = haven't played, anything else = playing
-  note: string; // short custom note / review, shown in the side panel
-  cover: string;
-  link?: string; // optional Steam / store link, shown as a button in the pop-up
-  linkLabel?: string; // button text, defaults to 'Store'
+  platforms: string[];
+  note: string;
+  cover: string; // vertical cover art
+  banner?: string; // optional wide art for the details screen (falls back to the cover)
+  link: string;
+  linkLabel: string; // text of the external button, e.g. 'View on minecraft.net'
+  playtimeHours: number; // used for sorting + totals
+  playtimeLabel: string; // shown as-is, e.g. '3000+ HRS'
+  lastPlayed?: number; // unix seconds, optional (only used by the "Recently played" sort)
 }
 
 export interface TrackItem {
@@ -1280,15 +1285,16 @@ export const media: MediaItem[] = [
 // 3. GAMES - library / inventory list
 // ----------------------------------------------------------------------------
 
-export const games: GameItem[] = [
+export const manualGames: ManualGame[] = [
   {
     title: 'Minecraft',
     platforms: ['PC', 'MOBILE'],
-    status: 'forever playing',
     note: 'just perfect.',
-    cover:
-      'https://cdn2.steamgriddb.com/thumb/a73027901f88055aaa0fd1a9e25d36c7.jpg',
+    cover: 'https://cdn2.steamgriddb.com/thumb/a73027901f88055aaa0fd1a9e25d36c7.jpg',
     link: 'https://minecraft.net',
+    linkLabel: 'View on minecraft.net',
+    playtimeHours: 3000,
+    playtimeLabel: '3000+ HRS',
   },
 ];
 

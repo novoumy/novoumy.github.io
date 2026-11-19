@@ -5,7 +5,6 @@ import { X } from 'lucide-react';
 const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
 
 interface RetroOverlayProps {
-  accent?: 'games' | 'quotes'; // per-folder accent colour (see .accent-* in index.css)
   label: string; // e.g. 'Game library' (used for the title and aria labels)
   meta?: string; // e.g. '5 games'
   onClose: () => void;
@@ -14,11 +13,13 @@ interface RetroOverlayProps {
   toolbar?: ReactNode; // search / filter / sort strip under the header
   side?: ReactNode;
   sideOpen?: boolean;
+  accent?: 'games' | 'quotes'; // per-library colour theme (see .accent-* in index.css)
+  onBack?: () => void; // when set, Escape calls this instead of closing (e.g. leaving a detail screen)
 }
 
 // Full-viewport retro page shared by /games and /quotes. Same architecture as the
 // media and music libraries: portalled into <body>, header bar on top, scrolling body below.
-export default function RetroOverlay({ accent, label, meta, onClose, children, toolbar, side, sideOpen = false }: RetroOverlayProps) {
+export default function RetroOverlay({ label, meta, onClose, children, toolbar, side, sideOpen = false, accent, onBack }: RetroOverlayProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const sideRef = useRef<HTMLElement>(null);
 
@@ -42,7 +43,7 @@ export default function RetroOverlay({ accent, label, meta, onClose, children, t
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        onClose();
+        (onBack ?? onClose)();
         return;
       }
       if (event.key === 'Tab' && dialogRef.current) {
@@ -64,7 +65,7 @@ export default function RetroOverlay({ accent, label, meta, onClose, children, t
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+  }, [onClose, onBack]);
 
   return createPortal(
     <div
@@ -75,13 +76,13 @@ export default function RetroOverlay({ accent, label, meta, onClose, children, t
       tabIndex={-1}
       className={['retro-dark animate-overlay-in fixed inset-0 z-[100] flex h-dvh w-screen flex-col bg-[#1e1e1e] text-[#d4d4d4] outline-none', accent ? `accent-${accent}` : ''].join(' ')}
     >
-      <header className="flex shrink-0 items-center justify-between gap-3 border-b-2 border-[color:var(--r-accent-dim)] bg-[#1e1e1e] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8">
+      <header className="flex shrink-0 items-center justify-between gap-3 border-b-2 border-accent-dim bg-[#1e1e1e] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8">
         <div onClick={onClose} className="flex min-w-0 cursor-pointer items-baseline gap-3 sm:gap-4">
           <h2 className="min-w-0 truncate text-[11px] uppercase sm:text-[14px]">
             <button
               type="button"
               aria-label={`Close ${label.toLowerCase()}`}
-              className="r-glow cursor-pointer truncate border-0 bg-transparent p-0 text-left uppercase text-[color:var(--r-accent)] outline-none [font:inherit] focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4"
+              className="r-glow cursor-pointer truncate border-0 bg-transparent p-0 text-left uppercase text-accent outline-none [font:inherit] focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4"
             >
               &gt; {label}
             </button>
@@ -95,7 +96,7 @@ export default function RetroOverlay({ accent, label, meta, onClose, children, t
       </header>
 
       {toolbar && (
-        <div className="shrink-0 border-b-2 border-[color:var(--r-accent-dim)] bg-[#1e1e1e] px-4 py-4 sm:px-8">{toolbar}</div>
+        <div className="shrink-0 border-b-2 border-accent-dim bg-[#1e1e1e] px-4 py-4 sm:px-8">{toolbar}</div>
       )}
 
       <div className="relative flex min-h-0 flex-1">
@@ -104,7 +105,7 @@ export default function RetroOverlay({ accent, label, meta, onClose, children, t
             ref={sideRef}
             aria-hidden={!sideOpen}
             className={[
-              'pixel-scroll absolute inset-y-0 left-0 z-20 w-full overflow-y-auto overscroll-contain border-r-2 border-[color:var(--r-accent-dim)] bg-[#1e1e1e] transition-transform duration-300 ease-out sm:w-[420px]',
+              'pixel-scroll absolute inset-y-0 left-0 z-20 w-full overflow-y-auto overscroll-contain border-r-2 border-accent-dim bg-[#1e1e1e] transition-transform duration-300 ease-out sm:w-[420px]',
               sideOpen ? 'translate-x-0' : '-translate-x-full',
             ].join(' ')}
           >

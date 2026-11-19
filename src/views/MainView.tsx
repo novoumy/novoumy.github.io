@@ -5,27 +5,34 @@ const isBlank = (line: string) => line.replace(/\u00A0/g, '').trim() === '';
 const prose = hero.bio.filter((line) => !isBlank(line) && !line.startsWith('>'));
 const terminal = hero.bio.filter((line) => line.startsWith('>'));
 
+// The base classes are the PC layout. On phones (max-[768px]) the window is a compact 4:3 card
+// (see .win-section in index.css), so the same layout is scaled down with `cqw` (1cqw = 1% of the
+// card's width) and font sizes are floored so they stay readable.
 export default function MainView() {
   return (
-    <div className="m-main flex min-h-full flex-col gap-6 sm:gap-8">
-      {/* Phones: avatar + name side by side, bio full width below.
-          sm and up: avatar on the left, name and bio stacked on the right. */}
-      <div className="m-main-top grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-5 sm:items-start sm:gap-x-7">
+    <div className="flex min-h-full flex-col gap-8 max-[768px]:gap-[1.5cqw]">
+      <div className="grid grid-cols-[auto_1fr] items-start gap-x-7 gap-y-5 max-[768px]:gap-x-[3.5cqw] max-[768px]:gap-y-[1cqw]">
         <img
           src={hero.avatar}
           alt={hero.avatarAlt}
-          className="m-main-avatar pixel-frame aspect-square w-24 shrink-0 object-cover sm:row-span-2 sm:w-40"
+          className="pixel-frame row-span-2 aspect-square w-40 shrink-0 object-cover max-[768px]:w-[20cqw]"
         />
-        <h1 className="m-main-name min-w-0 break-words text-xl tracking-wide sm:pt-1 sm:text-3xl">{hero.name}</h1>
+        <h1 className="min-w-0 break-words pt-1 text-3xl tracking-wide max-[768px]:pt-0 max-[768px]:text-[max(clamp(11px,3.3vw,12px),3.5cqw)]">
+          {hero.name}
+        </h1>
 
-        <div className="m-main-bio col-span-2 flex min-w-0 flex-col gap-3 sm:col-span-1 sm:col-start-2 sm:gap-4">
+        {/* On phones this wrapper disappears so the bio and the terminal become grid items of their own. */}
+        <div className="col-span-1 col-start-2 flex min-w-0 flex-col gap-4 max-[768px]:contents">
           {prose.map((paragraph) => (
-            <p key={paragraph} className="leading-[1.5]">
+            <p
+              key={paragraph}
+              className="leading-[1.5] max-[768px]:col-start-2 max-[768px]:min-w-0 max-[768px]:text-[max(clamp(10px,3.3vw,12px),2.75cqw)] max-[768px]:leading-[1.2]"
+            >
               {paragraph}
             </p>
           ))}
           {terminal.length > 0 && (
-            <div className="m-main-term flex flex-col gap-1 bg-wine px-3 py-2 text-[19px] leading-snug text-cool-white sm:bg-transparent sm:p-0 sm:text-[22px] sm:leading-[1.5] sm:text-wine sm:mt-6">
+            <div className="mt-6 flex flex-col gap-1 p-0 text-[22px] leading-[1.5] text-wine max-[768px]:col-span-2 max-[768px]:mt-[1cqw] max-[768px]:text-[max(clamp(9.5px,3vw,11px),2.75cqw)] max-[768px]:leading-[1.2]">
               {terminal.map((line) => (
                 <p key={line} className="break-words">
                   {line}
@@ -36,14 +43,13 @@ export default function MainView() {
         </div>
       </div>
 
-      {/* Phones: one stat per row. sm and up: three tiles side by side. */}
-      <ul className="m-main-badges mt-auto grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
+      <ul className="mt-auto grid grid-cols-3 gap-5 max-[768px]:gap-[2.2cqw]">
         {hero.badges.map((badge) => (
-          <li key={badge.label} className="m-main-badge pixel-tile flex min-w-0 flex-row bg-cool-white sm:flex-col">
-            <span className="m-main-badge-label flex w-32 shrink-0 items-center justify-center bg-wine px-2 py-2 text-center font-pixel text-[8px] uppercase leading-tight text-cool-white sm:w-auto sm:text-[9px]">
+          <li key={badge.label} className="pixel-tile flex min-w-0 flex-col bg-cool-white">
+            <span className="flex shrink-0 items-center justify-center bg-wine px-2 py-2 text-center font-pixel text-[9px] uppercase leading-tight text-cool-white max-[768px]:px-1 max-[768px]:py-[1cqw] max-[768px]:text-[max(7px,1.125cqw)]">
               {badge.label}
             </span>
-            <span className="m-main-badge-value flex-1 px-3 py-2 text-left text-[20px] leading-tight sm:py-3 sm:text-center">
+            <span className="flex-1 px-3 py-3 text-center text-[20px] leading-tight max-[768px]:px-1 max-[768px]:py-[1cqw] max-[768px]:text-[max(clamp(11px,3.3vw,12px),2.5cqw)]">
               {badge.value}
             </span>
           </li>

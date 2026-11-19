@@ -32,22 +32,23 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
     <>
       <div className="flex min-h-full flex-col gap-6">
         <p className="leading-none">&gt; select a folder to open //</p>
-        <ul className="grid grid-cols-2 content-start gap-x-4 gap-y-8 sm:grid-cols-4">
+        <ul className="grid grid-cols-2 content-start gap-x-4 gap-y-8 max-sm:my-auto sm:grid-cols-4">
           {interests.map((item) => (
-            <li key={item.id} className="flex justify-center">
+            <li key={item.id} className={`accent-${item.id} flex justify-center`}>
               <button
                 type="button"
                 onClick={() => setOpenId(item.id)}
                 onPointerEnter={() => void FOLDERS[item.id].load()}
                 onFocus={() => void FOLDERS[item.id].load()}
                 aria-label={`Open ${item.label}`}
-                className={`group folder-${item.id} flex w-full max-w-[150px] flex-col items-center gap-3 outline-offset-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-wine`}
+                className="group flex w-full max-w-[150px] flex-col items-center gap-3 outline-offset-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-wine"
               >
                 <PixelIcon
                   name={item.id}
-                  className="h-20 w-20 transition-transform duration-150 [transition-timing-function:steps(2)] group-hover:-translate-y-1 group-active:translate-y-0 group-hover:[filter:drop-shadow(0_0_6px_var(--folder-accent))] sm:h-24 sm:w-24"
+                  tint
+                  className="h-20 w-20 transition-transform duration-150 [transition-timing-function:steps(2)] group-hover:-translate-y-1 group-active:translate-y-0 sm:h-24 sm:w-24"
                 />
-                <span className="folder-label px-2 py-1 font-pixel text-[10px] uppercase leading-none transition-colors duration-150 group-hover:bg-wine group-hover:text-cool-white sm:text-[11px]">
+                <span className="px-2 py-1 font-pixel text-[10px] uppercase leading-none transition-colors duration-150 group-hover:bg-accent group-hover:text-wine sm:text-[11px]">
                   {item.label}
                 </span>
               </button>

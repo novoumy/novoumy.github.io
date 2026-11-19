@@ -160,6 +160,31 @@
     font-family: 'VT323', monospace;
   }
 
+  /* Per-library accent colours. Put one of these classes next to .retro-dark. */
+  .accent-music {
+    --r-accent: #CC97A3;
+    --r-accent-dim: #7d5560;
+    --r-accent-rgb: 204 151 163;
+  }
+
+  .accent-media {
+    --r-accent: #7dc4e4;
+    --r-accent-dim: #4b7689;
+    --r-accent-rgb: 125 196 228;
+  }
+
+  .accent-games {
+    --r-accent: #ed8796;
+    --r-accent-dim: #8e515a;
+    --r-accent-rgb: 237 135 150;
+  }
+
+  .accent-quotes {
+    --r-accent: #eed49f;
+    --r-accent-dim: #8f7f5f;
+    --r-accent-rgb: 238 212 159;
+  }
+
   .retro-dark ::selection {
     background: var(--r-accent);
     color: #1e1e1e;
@@ -206,61 +231,6 @@
     background: #1e1e1e;
     color: var(--r-accent);
     border: 2px solid var(--r-accent-dim);
-  }
-
-  /* Per-folder accent colours. Each interest library overrides the shared pink. */
-  .retro-dark.accent-media {
-    --r-accent: #7dc4e4;
-    --r-accent-dim: #44687a;
-    --r-accent-rgb: 125 196 228;
-  }
-
-  .retro-dark.accent-games {
-    --r-accent: #ed8796;
-    --r-accent-dim: #8a4a54;
-    --r-accent-rgb: 237 135 150;
-  }
-
-  .retro-dark.accent-music {
-    --r-accent: #CC97A3;
-    --r-accent-dim: #7d5560;
-    --r-accent-rgb: 204 151 163;
-  }
-
-  .retro-dark.accent-quotes {
-    --r-accent: #eed49f;
-    --r-accent-dim: #8a7a52;
-    --r-accent-rgb: 238 212 159;
-  }
-
-  /* Folder icons on the interests hub: tinted with their folder's accent. */
-  .folder-media {
-    --folder-accent: #7dc4e4;
-  }
-
-  .folder-games {
-    --folder-accent: #ed8796;
-  }
-
-  .folder-music {
-    --folder-accent: #CC97A3;
-  }
-
-  .folder-quotes {
-    --folder-accent: #eed49f;
-  }
-
-  .folder-label {
-    box-shadow: 0 0 0 0 var(--folder-accent);
-    transition:
-      background-color 150ms,
-      color 150ms,
-      box-shadow 150ms steps(2);
-  }
-
-  .group:hover .folder-label,
-  .group:focus-visible .folder-label {
-    box-shadow: 0 4px 0 0 var(--folder-accent);
   }
 
   /* Crisp 2px pixel border with a hard offset shadow. */
@@ -790,144 +760,29 @@
   }
 }
 
-/* ==========================================================================
-   MOBILE ONLY (max-width: 768px): fixed 4:3 window frame.
-   Everything below sits inside this media query, so the desktop layout is
-   untouched. `#root` is only there to out-rank Tailwind's sm: utilities.
 
-   --mw  = width of the window (4:3). It is 96vw (minus the 8px pixel shadow),
-           but is capped by the viewport height so the whole tab bar + window
-           stack never overflows (landscape phones).
-   --u   = 1% of the window width, so the main page scales in proportion.
-   ========================================================================== */
+/* ---------------------------------------------------------------------------------------------
+   Phones only (max-width: 768px): the main window is a compact 4:3 card on #main and grows
+   (from its centre, because the window is vertically centred) into the tall window on the other
+   tabs. Desktop / stage mode never matches this media query.
+   --------------------------------------------------------------------------------------------- */
 @media (max-width: 768px) {
-  #root .m-main-shell {
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-
-  #root .m-stage {
-    --mw: min(calc(96vw - 8px), calc((100dvh - 76px) * 4 / 3));
-    --u: calc(var(--mw) / 100);
-    width: calc(var(--mw) + 8px);
-    height: auto;
+  section.win-section {
     flex: none;
-    margin: 0;
-    max-width: none;
+    container-type: inline-size; /* lets the #main page size itself in cqw */
+    /* tall: viewport minus page padding (3rem) and the tab row + gaps (~3.1rem), capped */
+    height: min(calc(100dvh - 6.2rem), 42.8rem);
+    transition: height 420ms cubic-bezier(0.22, 0.8, 0.2, 1);
   }
 
-  /* No "> NOVOUMY" bar: the mute button lives on the tab row instead. */
-  #root .m-titlebar {
-    display: none;
+  /* compact: 4:3 of the window's width (viewport - page padding 1.5rem - shadow gutter 0.5rem) */
+  section.win-section[data-compact='true'] {
+    height: min(calc((100vw - 2rem) * 0.75), calc(100dvh - 6.2rem), 42.8rem);
   }
+}
 
-  #root .m-sound-row {
-    display: flex;
-  }
-
-  /* Keep the speaker a compact icon on the tab row (no 'Tap for sound' text). */
-  #root .m-sound-row .blink-arrow {
-    display: none;
-  }
-
-  #root .m-tabrow {
-    gap: 6px;
-  }
-
-  /* The window itself: exact 4:3, never stretched to the screen height. */
-  #root .m-window {
-    width: 100%;
-    height: auto;
-    flex: none;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-  }
-
-  #root .m-panel {
-    padding: calc(var(--u) * 3);
-  }
-
-  /* Main: the whole PC layout, scaled to fit with no scrolling. */
-  #root .m-panel[data-tab='main'] {
-    overflow: hidden;
-  }
-
-  /* Other tabs: scroll inside the frame, content scaled down slightly. */
-  #root .m-panel:not([data-tab='main']) {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-
-  #root .m-panel:not([data-tab='main']) > * {
-    zoom: 0.9;
-  }
-
-  #root .m-main {
-    gap: calc(var(--u) * 1.8);
-  }
-
-  #root .m-main-top {
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    column-gap: calc(var(--u) * 3.4);
-    row-gap: calc(var(--u) * 1.8);
-  }
-
-  #root .m-main-avatar {
-    width: clamp(46px, calc(var(--u) * 17), 150px);
-    grid-row: auto;
-  }
-
-  #root .m-main-name {
-    padding-top: 0;
-    font-size: clamp(14px, calc(var(--u) * 5.6), 30px);
-  }
-
-  #root .m-main-bio {
-    grid-column: 1 / -1;
-    gap: calc(var(--u) * 1.6);
-  }
-
-  #root .m-main-bio p {
-    font-size: clamp(10.5px, calc(var(--u) * 3.5), 22px);
-    line-height: 1.2;
-  }
-
-  /* Terminal lines: plain text, no maroon box. */
-  #root .m-main-term {
-    margin-top: calc(var(--u) * 0.6);
-    padding: 0;
-    gap: 2px;
-    background: transparent;
-    color: var(--wine);
-  }
-
-  #root .m-main-term p {
-    font-size: clamp(10px, calc(var(--u) * 3.2), 20px);
-    line-height: 1.2;
-  }
-
-  /* Three status boxes side by side, like the PC layout. */
-  #root .m-main-badges {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: calc(var(--u) * 2.4);
-  }
-
-  #root .m-main-badge {
-    flex-direction: column;
-  }
-
-  #root .m-main-badge-label {
-    width: auto;
-    padding: calc(var(--u) * 1.3) calc(var(--u) * 0.8);
-    font-size: clamp(6px, calc(var(--u) * 1.9), 9px);
-  }
-
-  #root .m-main-badge-value {
-    padding: calc(var(--u) * 1.4) calc(var(--u) * 1);
-    text-align: center;
-    font-size: clamp(11px, calc(var(--u) * 3.6), 20px);
-    line-height: 1.1;
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  section.win-section {
+    transition: none;
   }
 }
