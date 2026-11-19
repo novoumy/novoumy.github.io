@@ -41,23 +41,21 @@ export function animatePanelIn(panel: HTMLElement, direction: number) {
   });
 }
 
-// CRT "power off" on the open folder overlay, then resolves so it can unmount.
+// Smooth power-off on the open folder overlay, then resolves so it can unmount.
 export function closeOverlayAnimated(): Promise<void> {
   const overlay = document.querySelector<HTMLElement>('.animate-overlay-in');
   if (!overlay || reducedMotion()) return Promise.resolve();
-  // The lavender desk behind the window fades out as the window collapses.
-  overlay.closest<HTMLElement>('.r-desk')?.animate([{ opacity: 1 }, { opacity: 1, offset: 0.5 }, { opacity: 0 }], {
-    duration: 260,
-    easing: 'ease-in',
+  overlay.closest<HTMLElement>('.r-desk')?.animate([{ opacity: 1 }, { opacity: 0 }], {
+    duration: 420,
+    easing: 'cubic-bezier(0.4, 0, 1, 1)',
     fill: 'forwards',
   });
   const animation = overlay.animate(
     [
-      { clipPath: 'inset(0 0 0 0)', filter: 'brightness(1)', opacity: 1 },
-      { clipPath: 'inset(48% 0 48% 0)', filter: 'brightness(2.2)', opacity: 1, offset: 0.65 },
-      { clipPath: 'inset(50% 40% 50% 40%)', filter: 'brightness(3)', opacity: 0 },
+      { opacity: 1, transform: 'translateY(0) scale(1)', filter: 'blur(0px)' },
+      { opacity: 0, transform: 'translateY(14px) scale(0.985)', filter: 'blur(1px)' },
     ],
-    { duration: 260, easing: 'cubic-bezier(0.55, 0, 0.75, 0.2)', fill: 'forwards' },
+    { duration: 420, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' },
   );
   return animation.finished.then(
     () => undefined,

@@ -751,18 +751,20 @@
   animation: tab-in 320ms steps(4) both;
 }
 
-/* Folder overlays: a quick hard pixel-wipe from the top instead of an opacity fade. */
+/* Folder overlays: smooth fade + rise so openings feel soft and complete. */
 @keyframes overlay-in {
   from {
-    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
   }
   to {
-    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
 .animate-overlay-in {
-  animation: overlay-in 140ms steps(5) both;
+  animation: overlay-in 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* Loader stays hidden for 150ms, then snaps in with no fade. */
