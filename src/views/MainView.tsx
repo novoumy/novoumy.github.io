@@ -24,7 +24,7 @@ const AMBIENT = [
 const HELP = [
   'available commands:',
   '/help      - list all available commands',
-  '/novotime  - show current time in Southern Turkey (Europe/Istanbul, GMT+3)',
+  "/novotime  - Shows novoumy's local time (GMT+3)",
   '/clear     - clear console output history',
   '/whoami    - show novoumy profile',
   '/matrix    - toggle matrix rain inside terminal (Esc or /clear to stop)',
@@ -35,28 +35,19 @@ const HELP = [
 const WHOAMI = [
   'user:     novoumy',
   'os:       Windows 11',
-  'location: Southern Turkey',
   'hobbies:  gaming, music, over-optimizing websites',
   'status:   chronically online',
 ];
 
 function novoTime() {
-  const now = new Date();
   const time = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'Europe/Istanbul',
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
     hour12: false,
-  }).format(now);
-  const date = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Europe/Istanbul',
-    weekday: 'short',
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-  }).format(now);
-  return `> novotime: ${date} ${time} (Europe/Istanbul, GMT+3)`;
+  }).format(new Date());
+  return `> novotime: ${time} (GMT+3)`;
 }
 
 function MatrixRain() {
