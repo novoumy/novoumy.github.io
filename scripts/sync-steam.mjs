@@ -21,6 +21,18 @@ const API = (process.env.STEAM_API_BASE || 'https://api.steampowered.com').repla
 const OUT = process.env.STEAM_OUT || 'public/data/steam-games.json';
 const CDN = 'https://cdn.cloudflare.steamstatic.com/steam/apps';
 const CONCURRENCY = 6;
+const IMAGE_OVERRIDES = {
+  3527290: {
+    capsule: 'https://shared.steamstatic.com/store_item_assets/steam/apps/3527290/31bac6b2eccf09b368f5e95ce510bae2baf3cfcd/header.jpg',
+    header: 'https://shared.steamstatic.com/store_item_assets/steam/apps/3527290/31bac6b2eccf09b368f5e95ce510bae2baf3cfcd/header.jpg',
+    hero: 'https://shared.steamstatic.com/store_item_assets/steam/apps/3527290/library_hero.jpg',
+  },
+  1912410: {
+    capsule: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1912410/86cbba83c1aaffa0b0efa4197ce29c2264ea9dc2/header.jpg',
+    header: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1912410/86cbba83c1aaffa0b0efa4197ce29c2264ea9dc2/header.jpg',
+    hero: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1912410/dbbe1c377ecf00ed7c841bcdfa72c44853080d43/page_bg_raw.jpg',
+  },
+};
 
 if (!KEY || !STEAM_ID) {
   console.error('Missing STEAM_API_KEY or STEAM_ID (add them as repository secrets).');
@@ -126,7 +138,7 @@ async function main() {
     playtimeMinutes: game.playtime_forever || 0,
     playtime2WeeksMinutes: game.playtime_2weeks || 0,
     lastPlayed: game.rtime_last_played || 0,
-    images: {
+    images: IMAGE_OVERRIDES[game.appid] ?? {
       capsule: `${CDN}/${game.appid}/library_600x900.jpg`,
       header: `${CDN}/${game.appid}/header.jpg`,
       hero: `${CDN}/${game.appid}/library_hero.jpg`,

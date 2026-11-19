@@ -1,4 +1,4 @@
-import { manualGames } from '@/siteData';
+import { manualGames, type ManualGame } from '@/siteData';
 
 // ---- shape of public/data/steam-games.json (written by scripts/sync-steam.mjs) ----------
 export interface SteamAchievementRaw {
@@ -72,18 +72,17 @@ export function formatHours(hours: number): string {
 
 const EXTRA_COVERS: Record<number, string[]> = {
   3527290: [
-    'https://cdn.cloudflare.steamstatic.com/steam/apps/3527290/library_600x900_2x.jpg',
-    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900.jpg',
-    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900_2x.jpg',
-    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/capsule_616x353.jpg',
-    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/header.jpg',
+    'https://shared.steamstatic.com/store_item_assets/steam/apps/3527290/31bac6b2eccf09b368f5e95ce510bae2baf3cfcd/header.jpg',
+    'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3527290/31bac6b2eccf09b368f5e95ce510bae2baf3cfcd/header.jpg',
+    'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3527290/31bac6b2eccf09b368f5e95ce510bae2baf3cfcd/header.jpg',
+    'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3527290/library_hero.jpg',
+    'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3527290/1844964d7a353e50eb3cc979ea922729d8c1b0ad/capsule_231x87.jpg',
   ],
   1912410: [
-    'https://cdn.cloudflare.steamstatic.com/steam/apps/1912410/library_600x900_2x.jpg',
-    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1912410/library_600x900.jpg',
-    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1912410/library_600x900_2x.jpg',
-    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1912410/capsule_616x353.jpg',
-    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1912410/header.jpg',
+    'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1912410/86cbba83c1aaffa0b0efa4197ce29c2264ea9dc2/header.jpg',
+    'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1912410/86cbba83c1aaffa0b0efa4197ce29c2264ea9dc2/header.jpg',
+    'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1912410/dbbe1c377ecf00ed7c841bcdfa72c44853080d43/page_bg_raw.jpg',
+    'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1912410/dbbe1c377ecf00ed7c841bcdfa72c44853080d43/page_bg_raw.jpg',
   ],
 };
 
@@ -113,8 +112,8 @@ function fromSteam(game: SteamGameRaw): LibraryGame {
     title: game.name,
     appid: game.appid,
     manual: false,
-    covers: uniqueUrls([game.images.capsule, game.images.header, ...generated, ...extra]),
-    heroes: uniqueUrls([game.images.hero, game.images.header, ...generated, ...extra]),
+    covers: uniqueUrls([game.images.capsule, game.images.header, ...extra, ...generated]),
+    heroes: uniqueUrls([game.images.hero, game.images.header, ...extra, ...generated]),
     playtimeHours: hours,
     playtimeLabel: formatHours(hours),
     lastPlayed: game.lastPlayed,
