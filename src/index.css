@@ -445,15 +445,14 @@
     animation: quote-pulse 700ms ease-in-out 3;
   }
 
-  /* Large stepped frame: wine outline, rose inner line, pixel drop shadow. */
+  /* Large stepped frame: wine outline and pixel drop shadow. */
   .pixel-frame {
     box-shadow:
       0 -4px 0 0 var(--wine),
       0 4px 0 0 var(--wine),
       -4px 0 0 0 var(--wine),
       4px 0 0 0 var(--wine),
-      8px 8px 0 0 var(--wine),
-      inset 0 0 0 4px var(--rose);
+      8px 8px 0 0 var(--wine);
   }
 
   /* Small stepped outline used for cards, rows and tiles. */
