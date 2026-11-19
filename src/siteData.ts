@@ -1,3 +1,4 @@
+import bgmAsset from "@/assets/bgm.mp3.asset.json";
 /*
  * ============================================================================
  *  SITE CONTENT - edit everything on the website from this one file.
@@ -88,10 +89,10 @@ export interface TrackItem {
   artist: string;
   album?: string;
   genre: string; // used for the filter pills, e.g. 'INDIE / ALT'
-  duration?: string; // 'm:ss'. Optional: it is filled in from the player once a track has loaded.
+  duration?: string; // 'm:ss'. Optional: shown on the record when set.
   coverUrl: string;
-  // YouTube video ID that allows embedding (the part after ?v=). Leave '' when you
-  // don't have one yet: the row is still listed, but it can't be played on the site.
+  // YouTube video ID (the part after ?v=). Not used by the site any more (there is no
+  // built-in player); kept so the list stays easy to edit. Leave '' if you don't have one.
   youtubeId: string;
   spotifyUrl: string;
   geniusUrl: string;
@@ -127,7 +128,7 @@ export const site = {
 export const audio = {
   // Looping background music. Put your MP3 in the "public/audio" folder and
   // keep this path, or point it at any other MP3 URL.
-  bgmSrc: '/audio/bgm.mp3',
+  bgmSrc: bgmAsset.url,
   // 0 = silent, 1 = full volume.
   bgmVolume: 0.35,
 };
@@ -819,77 +820,77 @@ export const media: MediaItem[] = [
   },
   {
   title: 'John Wick: Chapter 1',
-  category: 'Movies',
+  category: 'Movie',
   year: 2014,
   poster: 'https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_QL75_UX380_CR0,4,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt2911666/',
 },
 {
   title: 'John Wick: Chapter 2',
-  category: 'Movies',
+  category: 'Movie',
   year: 2017,
   poster: 'https://m.media-amazon.com/images/M/MV5BMjE2NDkxNTY2M15BMl5BanBnXkFtZTgwMDc2NzE0MTI@._V1_QL75_UX380_CR0,12,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt4425200/',
 },
 {
   title: 'John Wick: Chapter 3 – Parabellum',
-  category: 'Movies',
+  category: 'Movie',
   year: 2019,
   poster: 'https://m.media-amazon.com/images/M/MV5BYjdlNWFlZjEtM2U0NS00ZWU5LTk1M2EtZmQxNWFiZjk0MGM5XkEyXkFqcGc@._V1_QL75_UX380_CR0,12,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt6146586/',
 },
 {
   title: 'John Wick: Chapter 4',
-  category: 'Movies',
+  category: 'Movie',
   year: 2023,
   poster: 'https://m.media-amazon.com/images/M/MV5BY2Q2ZmI5ZjUtNWVhMC00YzJkLTlmYjMtY2RmZDhkNzEzYjZhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt10366206/',
 },
 {
   title: 'Spider-Man (Tobey Maguire)',
-  category: 'Movies',
+  category: 'Movie',
   year: 2002,
   poster: 'https://m.media-amazon.com/images/M/MV5BZWM0OWVmNTEtNWVkOS00MzgyLTkyMzgtMmE2ZTZiNjY4MmFiXkEyXkFqcGc@._V1_QL75_UY562_CR0,0,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt0145487/',
 },
 {
   title: 'Spider-Man 2 (Tobey Maguire)',
-  category: 'Movies',
+  category: 'Movie',
   year: 2004,
   poster: 'https://m.media-amazon.com/images/M/MV5BNGQ0YTQyYTgtNWI2YS00NTE2LWJmNDItNTFlMTUwNmFlZTM0XkEyXkFqcGc@._V1_QL75_UY562_CR15,0,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt0316654/',
 },
 {
   title: 'Spider-Man 3 (Tobey Maguire)',
-  category: 'Movies',
+  category: 'Movie',
   year: 2007,
   poster: 'https://m.media-amazon.com/images/M/MV5BODE2NzNhMDctYjUzMC00Y2M5LWI2Y2EtODJkZTFjN2Y5ODlmXkEyXkFqcGc@._V1_QL75_UX380_CR0,1,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt0413300/',
 },
 {
   title: 'Red Notice',
-  category: 'Movies',
+  category: 'Movie',
   year: 2021,
   poster: 'https://m.media-amazon.com/images/M/MV5BOGNjNGQ3MmItYTM5NS00NjBiLWI0ZTItZDE5ZjQyNjg3ODBjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt7991608/',
 },
 {
   title: 'Avengers: Age of Ultron',
-  category: 'Movies',
+  category: 'Movie',
   year: 2015,
   poster: 'https://m.media-amazon.com/images/M/MV5BODBhYTg1NGQtNGVmNS00ZTdiLThjYTYtZDFkNzRiNTZmNDZjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt2395427/',
 },
 {
   title: 'Avengers: Infinity War',
-  category: 'Movies',
+  category: 'Movie',
   year: 2018,
   poster: 'https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_QL75_UX380_CR0,0,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt4154756/',
 },
 {
   title: 'Avengers: Endgame',
-  category: 'Movies',
+  category: 'Movie',
   year: 2019,
   poster: 'https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_QL75_UX380_CR0,0,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt4154796/',
@@ -1260,7 +1261,7 @@ export const media: MediaItem[] = [
 },
 {
   title: 'The Queen\'s Gambit',
-  category: 'Shows',
+  category: 'Show',
   year: 2020,
   poster: 'https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt10048342/',
@@ -1299,12 +1300,11 @@ export const manualGames: ManualGame[] = [
 ];
 
 // ----------------------------------------------------------------------------
-// 4. MUSIC - retro player list
+// 4. MUSIC - vinyl record crate (links out to Spotify / Genius / YouTube)
 // ----------------------------------------------------------------------------
 
 // Search links are used where a direct link isn't filled in yet. Replace them with exact
-// track URLs whenever you like. For playback, each track needs a youtubeId whose video has
-// "Allow embedding" turned on ("Artist - Topic" audio uploads usually do).
+// track URLs whenever you like.
 const spotifySearch = (title: string, artist: string) =>
   `https://open.spotify.com/search/${encodeURIComponent(`${title} ${artist}`)}`;
 

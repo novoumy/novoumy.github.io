@@ -33,7 +33,7 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
               'pixel-tile relative flex min-w-0 items-center justify-center gap-2 py-2.5 font-pixel text-[10px] uppercase',
               'min-[860px]:flex-none min-[860px]:px-3 min-[860px]:py-2 min-[860px]:text-[11px]',
               active
-                ? 'flex-none translate-y-1 bg-cool-white px-3 text-wine'
+                ? 'tab-pop flex-none translate-y-1 bg-cool-white px-3 text-wine'
                 : 'flex-1 bg-lavender px-0 text-cool-white hover:bg-rose hover:text-wine [text-shadow:2px_2px_0_var(--wine)] hover:[text-shadow:none]',
             ].join(' ')}
           >

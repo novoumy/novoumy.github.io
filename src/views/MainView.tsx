@@ -43,7 +43,7 @@ export default function MainView() {
         </div>
       </div>
 
-      <ul className="mt-auto grid grid-cols-3 gap-5 max-[768px]:gap-[2.2cqw]">
+      <ul data-stagger className="mt-auto grid grid-cols-3 gap-5 max-[768px]:gap-[2.2cqw]">
         {hero.badges.map((badge) => (
           <li key={badge.label} className="pixel-tile flex min-w-0 flex-col bg-cool-white">
             <span className="flex shrink-0 items-center justify-center bg-wine px-2 py-2 text-center font-pixel text-[9px] uppercase leading-tight text-cool-white max-[768px]:px-1 max-[768px]:py-[1cqw] max-[768px]:text-[max(7px,1.125cqw)]">
