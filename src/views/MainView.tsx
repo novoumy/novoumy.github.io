@@ -213,8 +213,9 @@ export default function MainView() {
   };
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-col gap-4 max-[768px]:gap-[1.2cqw]">
-      <div className="grid grid-cols-[auto_1fr] items-start gap-x-5 gap-y-2 max-[768px]:gap-x-[3cqw] max-[768px]:gap-y-[0.8cqw]">
+    <div className="flex h-full min-h-0 min-w-0 flex-col -mx-8 -mb-8 max-sm:-mx-4 max-sm:-mb-4">
+      <div className="px-8 pt-8 pb-7 max-sm:px-4 max-sm:pt-4 max-sm:pb-5">
+        <div className="grid grid-cols-[auto_1fr] items-start gap-x-5 gap-y-2 max-[768px]:gap-x-[3cqw] max-[768px]:gap-y-[0.8cqw]">
         <img
           src={hero.avatar}
           alt={hero.avatarAlt}
@@ -233,22 +234,16 @@ export default function MainView() {
             </p>
           ))}
         </div>
+        </div>
       </div>
 
-      <section className="pixel-tile relative flex min-h-0 flex-1 flex-col overflow-hidden bg-cool-white">
-        {/* Title bar */}
-        <header className="flex items-center justify-between gap-3 bg-wine px-3 py-2 max-[768px]:px-2 max-[768px]:py-[0.8cqw]">
-          <div className="flex items-center gap-2">
-            <span className="flex gap-1" aria-hidden="true">
-              <span className="block h-2 w-2 bg-rose max-[768px]:h-[1.2cqw] max-[768px]:w-[1.2cqw]" />
-              <span className="block h-2 w-2 bg-lavender max-[768px]:h-[1.2cqw] max-[768px]:w-[1.2cqw]" />
-              <span className="block h-2 w-2 bg-cool-white max-[768px]:h-[1.2cqw] max-[768px]:w-[1.2cqw]" />
-            </span>
-            <h2 className="font-pixel text-[9px] uppercase leading-none text-cool-white max-[768px]:text-[max(7px,1.2cqw)]">
-              novoumy_terminal
-            </h2>
-          </div>
-          <span className="flex items-center gap-1.5 font-pixel text-[7px] uppercase leading-none text-rose max-[768px]:text-[max(6px,1cqw)]">
+      <section className="relative flex min-h-0 flex-1 flex-col overflow-hidden border-t border-wine bg-cool-white">
+        {/* Inline terminal labels sit directly on the full-width divider. */}
+        <header className="absolute left-0 right-0 top-0 z-20 flex -translate-y-1/2 items-center justify-between gap-3 bg-cool-white px-0 font-pixel uppercase leading-none">
+          <h2 className="bg-cool-white pr-3 font-pixel text-[9px] text-wine max-[768px]:text-[max(7px,1.2cqw)]">
+            novoumy_terminal
+          </h2>
+          <span className="flex items-center gap-1.5 bg-cool-white pl-3 font-pixel text-[7px] text-rose max-[768px]:text-[max(6px,1cqw)]">
             <span className="block h-1.5 w-1.5 bg-rose" aria-hidden="true" />
             online
           </span>
@@ -258,7 +253,7 @@ export default function MainView() {
         <div
           ref={outRef}
           onClick={() => inputRef.current?.focus()}
-          className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-[color-mix(in_oklab,var(--rose)_10%,var(--cool-white))] px-4 py-3 font-mono text-[18px] leading-[1.35] text-wine [scrollbar-color:var(--rose)_transparent] [scrollbar-width:thin] max-[768px]:px-2 max-[768px]:py-2 max-[768px]:text-[max(10px,2.3cqw)]"
+          className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-cool-white px-8 pb-3 pt-6 font-mono text-[18px] leading-[1.35] text-wine [scrollbar-color:var(--rose)_transparent] [scrollbar-width:thin] max-[768px]:px-4 max-[768px]:pb-2 max-[768px]:pt-5 max-[768px]:text-[max(10px,2.3cqw)]"
         >
           {matrix && <MatrixRain />}
           <div className="relative z-0 flex min-h-full flex-col justify-end gap-0.5">
@@ -282,7 +277,7 @@ export default function MainView() {
         {/* Prompt */}
         <form
           onSubmit={onSubmit}
-          className="flex items-center gap-2 border-t-4 border-wine bg-cool-white px-4 py-2 max-[768px]:px-2 max-[768px]:py-[0.8cqw]"
+          className="flex items-center gap-2 border-t border-wine bg-cool-white px-8 py-3 max-[768px]:px-4 max-[768px]:py-[0.8cqw]"
         >
           <span className="select-none font-mono text-[18px] leading-none text-lavender max-[768px]:text-[max(10px,2.3cqw)]">❯</span>
           <input
