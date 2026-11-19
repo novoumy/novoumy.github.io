@@ -107,8 +107,8 @@ export default function App() {
           <section
             data-compact={activeId === 'main'}
             className={[
-              // Outer frame: stationary cream padding, content clipped inside it.
-              'pixel-frame relative mt-1 flex min-h-0 flex-col overflow-hidden bg-cool-white p-5 text-wine max-sm:p-4 sm:p-6',
+              // Borderless menu surface: stationary cream padding, content clipped inside it.
+              'relative mt-1 flex min-h-0 flex-col overflow-hidden bg-cool-white p-5 text-wine max-sm:p-4 sm:p-6',
               staged ? 'aspect-[4/3]' : 'win-section min-h-0 flex-1',
             ].join(' ')}
           >

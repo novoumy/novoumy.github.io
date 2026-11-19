@@ -118,7 +118,7 @@ export default function App() {
           <section
             data-compact={activeId === 'main'}
             className={[
-              'pixel-frame relative mt-1 flex flex-col bg-cool-white text-wine',
+              'relative mt-1 flex flex-col bg-cool-white text-wine',
               staged ? 'aspect-[4/3]' : 'win-section min-h-0 flex-1',
             ].join(' ')}
           >
