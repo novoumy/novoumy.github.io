@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Volume1, Volume2, VolumeX } from 'lucide-react';
 import { useAudio, VOLUME_MAX } from '@/audio/AudioProvider';
+import { playSfx } from '@/audio/sfx';
 
 const CLOSE_DELAY_MS = 450; // grace period after the mouse leaves
 const TOUCH_CLOSE_MS = 3500; // touch: auto-hide after the last interaction
@@ -12,6 +13,7 @@ export default function SoundToggle({ className = '' }: { className?: string }) 
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const timer = useRef<number | undefined>(undefined);
+  const lastVolumeSfxAt = useRef(0);
 
   const silent = muted || volume === 0;
   const Icon = silent ? VolumeX : volume < VOLUME_MAX / 2 ? Volume1 : Volume2;
@@ -54,6 +56,8 @@ export default function SoundToggle({ className = '' }: { className?: string }) 
       closeSoon(TOUCH_CLOSE_MS);
       return;
     }
+    const willUnmute = muted || volume === 0;
+    playSfx(willUnmute ? 'unmute' : 'mute', 0, true);
     toggleMuted();
     if (isTouchOnly()) closeSoon(TOUCH_CLOSE_MS);
   };
@@ -91,9 +95,17 @@ export default function SoundToggle({ className = '' }: { className?: string }) 
             aria-valuetext={`${shown}%`}
             style={{ '--fill': `${fill}%` } as CSSProperties}
             onChange={(e) => {
-              setVolume(Number(e.target.value));
+              const next = Number(e.target.value);
+              setVolume(next);
+              const now = performance.now();
+              if (now - lastVolumeSfxAt.current > 90 || next === 0 || next === VOLUME_MAX) {
+                playSfx('volume', next, true);
+                lastVolumeSfxAt.current = now;
+              }
               if (isTouchOnly()) closeSoon(TOUCH_CLOSE_MS);
             }}
+            onPointerUp={() => playSfx('volume', muted ? 0 : volume, true)}
+            onKeyUp={() => playSfx('volume', muted ? 0 : volume, true)}
           />
           <span className="volume-readout font-pixel text-[8px] leading-none">{shown}%</span>
         </div>

@@ -72,25 +72,49 @@ export function formatHours(hours: number): string {
 
 const EXTRA_COVERS: Record<number, string[]> = {
   3527290: [
+    'https://cdn.cloudflare.steamstatic.com/steam/apps/3527290/library_600x900_2x.jpg',
     'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900.jpg',
+    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900_2x.jpg',
+    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/capsule_616x353.jpg',
     'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/header.jpg',
   ],
   1912410: [
+    'https://cdn.cloudflare.steamstatic.com/steam/apps/1912410/library_600x900_2x.jpg',
     'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1912410/library_600x900.jpg',
+    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1912410/library_600x900_2x.jpg',
+    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1912410/capsule_616x353.jpg',
     'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1912410/header.jpg',
   ],
 };
 
+function uniqueUrls(urls: Array<string | undefined | null>) {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const url of urls) {
+    if (!url || seen.has(url)) continue;
+    seen.add(url);
+    out.push(url);
+  }
+  return out;
+}
+
 function fromSteam(game: SteamGameRaw): LibraryGame {
   const hours = game.playtimeMinutes / 60;
   const extra = EXTRA_COVERS[game.appid] ?? [];
+  const generated = [
+    `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/library_600x900_2x.jpg`,
+    `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.appid}/library_600x900.jpg`,
+    `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.appid}/library_600x900_2x.jpg`,
+    `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.appid}/capsule_616x353.jpg`,
+    `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`,
+  ];
   return {
     key: `steam-${game.appid}`,
     title: game.name,
     appid: game.appid,
     manual: false,
-    covers: [game.images.capsule, game.images.header, ...extra],
-    heroes: [game.images.hero, game.images.header, ...extra],
+    covers: uniqueUrls([game.images.capsule, game.images.header, ...generated, ...extra]),
+    heroes: uniqueUrls([game.images.hero, game.images.header, ...generated, ...extra]),
     playtimeHours: hours,
     playtimeLabel: formatHours(hours),
     lastPlayed: game.lastPlayed,

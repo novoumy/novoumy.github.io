@@ -16,7 +16,10 @@ export type SfxKind =
   | 'roll'
   | 'select'
   | 'copy'
-  | 'click';
+  | 'click'
+  | 'mute'
+  | 'unmute'
+  | 'volume';
 
 export function setSfxLevel(level: number) {
   sfxLevel = Math.max(0, level);
@@ -26,8 +29,8 @@ export function setSfxMuted(muted: boolean) {
   sfxMuted = muted;
 }
 
-function audio(): AudioContext | null {
-  if (sfxMuted || sfxLevel <= 0) return null;
+function audio(force = false): AudioContext | null {
+  if (!force && (sfxMuted || sfxLevel <= 0)) return null;
   context ??= new AudioContext();
   if (context.state === 'suspended') void context.resume();
   return context;
@@ -43,15 +46,20 @@ interface ToneOptions {
   to?: number; // slide to this frequency
 }
 
-function tone(ctx: AudioContext, freq: number, { at = 0, dur, type = 'square', vol = 0.12, to }: ToneOptions) {
+function tone(
+  ctx: AudioContext,
+  freq: number,
+  { at = 0, dur, type = 'square', vol = 0.12, to }: ToneOptions,
+  gainScale = sfxLevel,
+) {
   const start = ctx.currentTime + at;
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   osc.type = type;
   osc.frequency.setValueAtTime(freq, start);
-  if (to) osc.frequency.exponentialRampToValueAtTime(to, start + dur);
+  if (to) osc.frequency.exponentialRampToValueAtTime(Math.max(1, to), start + dur);
   gain.gain.setValueAtTime(0.0001, start);
-  gain.gain.exponentialRampToValueAtTime(vol * sfxLevel, start + 0.004);
+  gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, vol * gainScale), start + 0.004);
   gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
   osc.connect(gain).connect(ctx.destination);
   osc.start(start);
@@ -60,7 +68,11 @@ function tone(ctx: AudioContext, freq: number, { at = 0, dur, type = 'square', v
 
 let noiseBuffer: AudioBuffer | null = null;
 
-function noise(ctx: AudioContext, { at = 0, dur = 0.03, vol = 0.08, freq = 3000 }: { at?: number; dur?: number; vol?: number; freq?: number }) {
+function noise(
+  ctx: AudioContext,
+  { at = 0, dur = 0.03, vol = 0.08, freq = 3000 }: { at?: number; dur?: number; vol?: number; freq?: number },
+  gainScale = sfxLevel,
+) {
   if (!noiseBuffer) {
     noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * 0.25, ctx.sampleRate);
     const data = noiseBuffer.getChannelData(0);
@@ -74,7 +86,7 @@ function noise(ctx: AudioContext, { at = 0, dur = 0.03, vol = 0.08, freq = 3000 
   filter.type = 'bandpass';
   filter.frequency.value = freq;
   filter.Q.value = 1.2;
-  gain.gain.setValueAtTime(vol * sfxLevel, start);
+  gain.gain.setValueAtTime(Math.max(0.0001, vol * gainScale), start);
   gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
   source.connect(filter).connect(gain).connect(ctx.destination);
   source.start(start);
@@ -82,69 +94,84 @@ function noise(ctx: AudioContext, { at = 0, dur = 0.03, vol = 0.08, freq = 3000 
 }
 
 // `step` lets a row of controls (the tab bar) climb in pitch from left to right.
-export function playSfx(kind: SfxKind, step = 0) {
-  const ctx = audio();
+export function playSfx(kind: SfxKind, step = 0, force = false) {
+  const ctx = audio(force);
   if (!ctx) return;
   const j = jitter();
+  const gainScale = force ? Math.max(0.35, sfxLevel || 0.5) : sfxLevel;
 
   switch (kind) {
     case 'tab': {
       const base = 523 * 2 ** ((step * 3) / 12) * j;
-      noise(ctx, { dur: 0.02, vol: 0.05, freq: 4000 });
-      tone(ctx, base, { dur: 0.05, vol: 0.1 });
-      tone(ctx, base * 1.5, { at: 0.045, dur: 0.09, vol: 0.1 });
+      noise(ctx, { dur: 0.02, vol: 0.05, freq: 4000 }, gainScale);
+      tone(ctx, base, { dur: 0.05, vol: 0.1 }, gainScale);
+      tone(ctx, base * 1.5, { at: 0.045, dur: 0.09, vol: 0.1 }, gainScale);
       break;
     }
     case 'open': {
       // Rising arpeggio + sparkle: a folder "boots up".
-      [523, 659, 784, 1047].forEach((freq, i) => tone(ctx, freq * j, { at: i * 0.04, dur: 0.08, type: 'triangle', vol: 0.16 }));
-      tone(ctx, 2093 * j, { at: 0.16, dur: 0.12, vol: 0.05 });
-      noise(ctx, { dur: 0.05, vol: 0.04, freq: 6000 });
+      [523, 659, 784, 1047].forEach((freq, i) => tone(ctx, freq * j, { at: i * 0.04, dur: 0.08, type: 'triangle', vol: 0.16 }, gainScale));
+      tone(ctx, 2093 * j, { at: 0.16, dur: 0.12, vol: 0.05 }, gainScale);
+      noise(ctx, { dur: 0.05, vol: 0.04, freq: 6000 }, gainScale);
       break;
     }
     case 'close': {
       // Falling arpeggio with a soft "power down" slide.
-      [784, 622, 466].forEach((freq, i) => tone(ctx, freq * j, { at: i * 0.035, dur: 0.07, type: 'triangle', vol: 0.15 }));
-      tone(ctx, 400 * j, { at: 0.1, dur: 0.14, vol: 0.06, to: 120 });
+      [784, 622, 466].forEach((freq, i) => tone(ctx, freq * j, { at: i * 0.035, dur: 0.07, type: 'triangle', vol: 0.15 }, gainScale));
+      tone(ctx, 400 * j, { at: 0.1, dur: 0.14, vol: 0.06, to: 120 }, gainScale);
       break;
     }
     case 'link': {
       // Coin-style ping for links that open a new tab.
-      tone(ctx, 988 * j, { dur: 0.06, vol: 0.1 });
-      tone(ctx, 1319 * j, { at: 0.06, dur: 0.22, vol: 0.09 });
+      tone(ctx, 988 * j, { dur: 0.06, vol: 0.1 }, gainScale);
+      tone(ctx, 1319 * j, { at: 0.06, dur: 0.22, vol: 0.09 }, gainScale);
       break;
     }
     case 'toggle-on':
-      tone(ctx, 440 * j, { dur: 0.08, vol: 0.11, to: 880 });
-      noise(ctx, { dur: 0.015, vol: 0.05, freq: 5000 });
+      tone(ctx, 440 * j, { dur: 0.08, vol: 0.11, to: 880 }, gainScale);
+      noise(ctx, { dur: 0.015, vol: 0.05, freq: 5000 }, gainScale);
       break;
     case 'toggle-off':
-      tone(ctx, 880 * j, { dur: 0.08, vol: 0.11, to: 440 });
-      noise(ctx, { dur: 0.015, vol: 0.05, freq: 2500 });
+      tone(ctx, 880 * j, { dur: 0.08, vol: 0.11, to: 440 }, gainScale);
+      noise(ctx, { dur: 0.015, vol: 0.05, freq: 2500 }, gainScale);
       break;
+    case 'mute':
+      tone(ctx, 740 * j, { dur: 0.07, type: 'triangle', vol: 0.1, to: 300 }, gainScale);
+      noise(ctx, { dur: 0.02, vol: 0.04, freq: 1800 }, gainScale);
+      break;
+    case 'unmute':
+      tone(ctx, 330 * j, { dur: 0.07, type: 'triangle', vol: 0.1, to: 780 }, gainScale);
+      tone(ctx, 990 * j, { at: 0.05, dur: 0.05, vol: 0.06 }, gainScale);
+      break;
+    case 'volume': {
+      const v = Math.max(0, Math.min(200, step));
+      const base = 420 + (v / 200) * 520;
+      tone(ctx, base * j, { dur: 0.03, vol: 0.06 }, gainScale);
+      break;
+    }
     case 'play':
-      tone(ctx, 196 * j, { dur: 0.09, type: 'triangle', vol: 0.2, to: 98 });
-      tone(ctx, 784 * j, { at: 0.02, dur: 0.05, vol: 0.06 });
+      tone(ctx, 196 * j, { dur: 0.09, type: 'triangle', vol: 0.2, to: 98 }, gainScale);
+      tone(ctx, 784 * j, { at: 0.02, dur: 0.05, vol: 0.06 }, gainScale);
       break;
     case 'roll':
       // Dice rattling, then a "ding" when it lands.
-      for (let i = 0; i < 6; i += 1) noise(ctx, { at: i * 0.055, dur: 0.03, vol: 0.09, freq: 1800 + Math.random() * 2500 });
-      tone(ctx, 1175 * j, { at: 0.36, dur: 0.18, type: 'triangle', vol: 0.14 });
+      for (let i = 0; i < 6; i += 1) noise(ctx, { at: i * 0.055, dur: 0.03, vol: 0.09, freq: 1800 + Math.random() * 2500 }, gainScale);
+      tone(ctx, 1175 * j, { at: 0.36, dur: 0.18, type: 'triangle', vol: 0.14 }, gainScale);
       break;
     case 'select':
-      noise(ctx, { dur: 0.025, vol: 0.07, freq: 2200 });
-      tone(ctx, 330 * j, { dur: 0.04, vol: 0.07 });
+      noise(ctx, { dur: 0.025, vol: 0.07, freq: 2200 }, gainScale);
+      tone(ctx, 330 * j, { dur: 0.04, vol: 0.07 }, gainScale);
       break;
     case 'copy':
-      tone(ctx, 1047 * j, { dur: 0.05, vol: 0.09 });
-      tone(ctx, 1568 * j, { at: 0.05, dur: 0.05, vol: 0.09 });
-      tone(ctx, 2093 * j, { at: 0.1, dur: 0.1, vol: 0.07 });
+      tone(ctx, 1047 * j, { dur: 0.05, vol: 0.09 }, gainScale);
+      tone(ctx, 1568 * j, { at: 0.05, dur: 0.05, vol: 0.09 }, gainScale);
+      tone(ctx, 2093 * j, { at: 0.1, dur: 0.1, vol: 0.07 }, gainScale);
       break;
     default: {
       // Generic button: crisp mechanical tick + short blip.
-      noise(ctx, { dur: 0.018, vol: 0.07, freq: 3500 });
-      tone(ctx, 660 * j, { dur: 0.04, vol: 0.09 });
-      tone(ctx, 990 * j, { at: 0.035, dur: 0.06, vol: 0.08 });
+      noise(ctx, { dur: 0.018, vol: 0.07, freq: 3500 }, gainScale);
+      tone(ctx, 660 * j, { dur: 0.04, vol: 0.09 }, gainScale);
+      tone(ctx, 990 * j, { at: 0.035, dur: 0.06, vol: 0.08 }, gainScale);
     }
   }
 }

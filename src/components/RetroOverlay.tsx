@@ -121,9 +121,9 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
           )}
           <div
             data-side={sideOpen ? 'open' : 'closed'}
-            className="pixel-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain bg-r-bg px-5 pb-8 pt-6 transition-[padding] duration-300 ease-out sm:px-8 lg:data-[side=open]:pl-[452px]"
+            className="pixel-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain bg-r-bg px-5 pb-8 pt-6 transition-[padding] duration-300 ease-out sm:px-8 lg:data-[side=open]:pl-[452px]"
           >
-            <div className="w-full">{children}</div>
+            <div className="min-w-0 w-full max-w-full">{children}</div>
           </div>
         </div>
       </div>

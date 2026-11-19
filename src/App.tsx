@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
 import SoundToggle from '@/components/SoundToggle';
+import ClickDiskIndicator from '@/components/ClickDiskIndicator';
 import MainView from '@/views/MainView';
 import InterestsView from '@/views/InterestsView';
 import SocialsView from '@/views/SocialsView';
@@ -20,17 +21,7 @@ type Panel = {
   render: (route: Route, openInterest: (id: InterestId | null) => void) => ReactNode;
 };
 
-const ALL_PANELS: Panel[] = [
-  { id: 'main', render: () => <MainView /> },
-  { id: 'socials', render: () => <SocialsView /> },
-  {
-    id: 'interests',
-    render: (route, openInterest) => (
-      <InterestsView openId={route.tab === 'interests' ? route.interest : null} onOpen={openInterest} />
-    ),
-  },
-  { id: 'specs', render: () => <SpecsView /> },
-];
+// (panels defined inside App to pass CRT toggle)
 
 const PANELS = ALL_PANELS.filter((panel) => enabledTabs.some((tab) => tab.id === panel.id));
 
@@ -93,13 +84,13 @@ export default function App() {
           className={
             staged
               ? 'w-[800px] shrink-0 pb-2 pr-2'
-              : 'mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col pb-2 pr-2 max-[859px]:max-h-[46rem] max-[768px]:h-auto'
+              : 'mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col pb-2 pr-2 max-[859px]:max-h-[46rem] max-[768px]:h-auto max-[859px]:pb-20'
           }
           style={staged ? { zoom: scale } : undefined}
         >
           <div className="flex items-end justify-between gap-2">
             <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={selectTab} />
-            <SoundToggle className="flex" />
+            <SoundToggle className="hidden min-[860px]:flex" />
           </div>
           <section
             data-compact={activeId === 'main'}
@@ -115,13 +106,21 @@ export default function App() {
                 key={id}
                 role="tabpanel"
                 hidden={id !== activeId}
-                className="pixel-scroll min-h-0 flex-1 overflow-y-auto p-5 max-sm:p-4 sm:p-8"
+                className="pixel-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-5 max-sm:p-4 sm:p-8"
               >
-                {render(route, openInterest)}
+                <div className="min-w-0 w-full max-w-full">{render(route, openInterest)}</div>
               </div>
             ))}
           </section>
         </div>
+        {!staged && (
+          <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-end p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] min-[860px]:hidden">
+            <div className="pointer-events-auto">
+              <SoundToggle />
+            </div>
+          </div>
+        )}
+        <ClickDiskIndicator />
       </main>
     </div>
   );
