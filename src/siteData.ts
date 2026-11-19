@@ -1,4 +1,5 @@
 import bgmAsset from "@/assets/bgm.mp3.asset.json";
+import { minecraftAchievements } from '@/data/minecraftAchievements';
 /*
  * ============================================================================
  *  SITE CONTENT - edit everything on the website from this one file.
@@ -70,6 +71,17 @@ export type GamePlatform = 'PC' | 'MOBILE';
 
 // Games come from Steam automatically (public/data/steam-games.json, synced by
 // .github/workflows/sync-steam.yml). Anything that is NOT on Steam goes here as a manual entry.
+export interface ManualAchievement {
+  id: string;
+  name: string;
+  description: string;
+  hidden: boolean;
+  unlocked: boolean;
+  unlockTime?: number;
+  icon?: string;
+  iconGray?: string;
+}
+
 export interface ManualGame {
   title: string;
   platforms: string[];
@@ -81,6 +93,7 @@ export interface ManualGame {
   playtimeHours: number; // used for sorting + totals
   playtimeLabel: string; // shown as-is, e.g. '3000+ HRS'
   lastPlayed?: number; // unix seconds, optional (only used by the "Recently played" sort)
+  achievements?: ManualAchievement[];
 }
 
 export interface TrackItem {
@@ -1292,10 +1305,12 @@ export const manualGames: ManualGame[] = [
     platforms: ['PC', 'MOBILE'],
     note: 'just perfect.',
     cover: 'https://cdn2.steamgriddb.com/thumb/a73027901f88055aaa0fd1a9e25d36c7.jpg',
+    banner: 'https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/Minecraft_WildernessBound_2560x932.jpg',
     link: 'https://minecraft.net',
     linkLabel: 'View on minecraft.net',
     playtimeHours: 4678,
     playtimeLabel: '4678 HRS',
+    achievements: minecraftAchievements,
   },
 ];
 
