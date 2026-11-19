@@ -213,56 +213,72 @@ export default function MainView() {
   };
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-col -mx-8 -mb-8 max-sm:-mx-4 max-sm:-mb-4">
-      <div className="px-8 pt-8 pb-7 max-sm:px-4 max-sm:pt-4 max-sm:pb-5">
+    <div className="-mx-8 -mb-8 flex h-full min-h-0 min-w-0 flex-col max-sm:-mx-4 max-sm:-mb-4">
+      {/* Profile: untouched content, just given more room underneath. */}
+      <div className="px-8 pb-12 pt-8 max-sm:px-4 max-sm:pb-9 max-sm:pt-4">
         <div className="grid grid-cols-[auto_1fr] items-start gap-x-5 gap-y-2 max-[768px]:gap-x-[3cqw] max-[768px]:gap-y-[0.8cqw]">
-        <img
-          src={hero.avatar}
-          alt={hero.avatarAlt}
-          className="pixel-frame row-span-2 aspect-square w-28 shrink-0 object-cover max-[768px]:w-[16cqw]"
-        />
-        <h1 className="min-w-0 break-words text-2xl tracking-wide max-[768px]:text-[max(clamp(11px,3.3vw,12px),3.2cqw)]">
-          {hero.name}
-        </h1>
-        <div className="col-start-2 flex min-w-0 flex-col gap-1 max-[768px]:col-span-2 max-[768px]:col-start-1">
-          {prose.map((paragraph) => (
-            <p
-              key={paragraph}
-              className="leading-[1.35] max-[768px]:text-[max(clamp(10px,3vw,11px),2.4cqw)] max-[768px]:leading-[1.2]"
-            >
-              {paragraph}
-            </p>
-          ))}
-        </div>
+          <img
+            src={hero.avatar}
+            alt={hero.avatarAlt}
+            className="pixel-frame row-span-2 aspect-square w-28 shrink-0 object-cover max-[768px]:w-[16cqw]"
+          />
+          <h1 className="min-w-0 break-words text-2xl tracking-wide max-[768px]:text-[max(clamp(11px,3.3vw,12px),3.2cqw)]">
+            {hero.name}
+          </h1>
+          <div className="col-start-2 flex min-w-0 flex-col gap-1 max-[768px]:col-span-2 max-[768px]:col-start-1">
+            {prose.map((paragraph) => (
+              <p
+                key={paragraph}
+                className="leading-[1.35] max-[768px]:text-[max(clamp(10px,3vw,11px),2.4cqw)] max-[768px]:leading-[1.2]"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
 
-      <section className="relative mt-5 flex min-h-0 flex-1 flex-col overflow-hidden bg-cool-white max-[768px]:mt-[3cqw]">
-        {/* A full-width lavender rule, with the terminal name and status riding the line. */}
-        <header className="relative z-20 mb-3 flex h-7 shrink-0 items-center justify-between border-t-2 border-lavender px-8 font-pixel uppercase leading-none max-[768px]:px-4">
-          <h2 className="-mt-3 bg-[#F3E6F0] px-2 py-1 font-pixel text-[9px] tracking-wide text-wine max-[768px]:text-[max(7px,1.2cqw)]">
+      {/* Open terminal: full-width, edge to edge inside the card. */}
+      <section className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
+        {/* Divider: the rule runs the full card width; label and status sit on it.
+            The header's background splits at the rule so the terminal tint starts exactly on the line. */}
+        <header className="relative z-20 flex h-7 shrink-0 items-center bg-gradient-to-b from-cool-white from-50% to-[#F3E6F0] to-50% font-pixel uppercase leading-none">
+          <span
+            aria-hidden="true"
+            className="h-[3px] w-8 shrink-0 bg-lavender shadow-[0_3px_0_0_#CD9EBA99] max-[768px]:w-4"
+          />
+          <h2 className="flex shrink-0 items-center gap-2.5 px-3.5 font-pixel text-[10px] font-normal tracking-[0.12em] text-wine max-[768px]:gap-1.5 max-[768px]:px-2 max-[768px]:text-[max(7px,1.4cqw)]">
+            <span className="block h-1.5 w-1.5 rotate-45 bg-lavender" aria-hidden="true" />
             novoumy_terminal
           </h2>
-          <span className="-mt-3 flex items-center gap-1.5 bg-[#F3E6F0] px-2 py-1 font-pixel text-[7px] tracking-wide text-lavender max-[768px]:text-[max(6px,1cqw)]">
-            <span className="block h-1.5 w-1.5 bg-rose" aria-hidden="true" />
+          <span
+            aria-hidden="true"
+            className="h-[3px] min-w-4 flex-1 bg-lavender shadow-[0_3px_0_0_#CD9EBA99]"
+          />
+          <span className="flex shrink-0 items-center gap-2 px-3.5 font-pixel text-[8px] tracking-[0.14em] text-lavender max-[768px]:gap-1.5 max-[768px]:px-2 max-[768px]:text-[max(6px,1.1cqw)]">
+            <span className="block h-2 w-2 animate-pulse bg-rose shadow-[0_0_0_2px_#CD9EBA55]" aria-hidden="true" />
             online
           </span>
+          <span
+            aria-hidden="true"
+            className="h-[3px] w-8 shrink-0 bg-lavender shadow-[0_3px_0_0_#CD9EBA99] max-[768px]:w-4"
+          />
         </header>
 
         {/* Output */}
         <div
           ref={outRef}
           onClick={() => inputRef.current?.focus()}
-          className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-[#F3E6F0] px-8 pb-3 pt-6 font-mono text-[18px] leading-[1.35] text-wine [scrollbar-color:var(--lavender)_transparent] [scrollbar-width:thin] max-[768px]:px-4 max-[768px]:pb-2 max-[768px]:pt-5 max-[768px]:text-[max(10px,2.3cqw)]"
+          className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-gradient-to-b from-[#F3E6F0] to-[#F0E4F0] px-8 pb-4 pt-6 font-mono text-[18px] leading-[1.4] text-wine [scrollbar-color:var(--lavender)_transparent] [scrollbar-width:thin] max-[768px]:px-4 max-[768px]:pb-2 max-[768px]:pt-5 max-[768px]:text-[max(10px,2.3cqw)]"
         >
           {matrix && <MatrixRain />}
-          <div className="relative z-0 flex min-h-full flex-col justify-end gap-0.5">
+          <div className="relative z-0 flex min-h-full flex-col justify-end gap-1">
             {lines.map((line) => {
               const style = KIND_STYLE[line.kind ?? 'out'];
               return (
                 <p
                   key={line.id}
-                  className="grid grid-cols-[1.25ch_1fr] gap-x-2 whitespace-pre-wrap break-words [overflow-wrap:anywhere]"
+                  className="grid grid-cols-[1.25ch_1fr] gap-x-2.5 whitespace-pre-wrap break-words [overflow-wrap:anywhere]"
                 >
                   <span className={`select-none text-center ${style.glyphClass}`} aria-hidden="true">
                     {style.glyph}
@@ -274,12 +290,12 @@ export default function MainView() {
           </div>
         </div>
 
-        {/* Prompt */}
+        {/* Prompt, docked at the very bottom */}
         <form
           onSubmit={onSubmit}
-          className="flex items-center gap-2 border-t border-lavender bg-[#E8DFF0] px-8 py-3 max-[768px]:px-4 max-[768px]:py-[0.8cqw]"
+          className="flex shrink-0 items-center gap-3 border-t-2 border-lavender/60 bg-[#E8DFF0] px-8 py-4 max-[768px]:gap-2 max-[768px]:px-4 max-[768px]:py-[1.6cqw]"
         >
-          <span className="select-none font-mono text-[18px] leading-none text-lavender max-[768px]:text-[max(10px,2.3cqw)]">❯</span>
+          <span className="select-none font-mono text-[20px] leading-none text-lavender max-[768px]:text-[max(10px,2.3cqw)]">❯</span>
           <input
             ref={inputRef}
             value={input}
@@ -288,9 +304,15 @@ export default function MainView() {
             autoCapitalize="off"
             autoCorrect="off"
             spellCheck={false}
-            className="min-w-0 flex-1 bg-transparent font-mono text-[18px] leading-none text-wine caret-lavender outline-none placeholder:text-lavender/70 max-[768px]:text-[max(10px,2.3cqw)]"
+            className="min-w-0 flex-1 bg-transparent font-mono text-[18px] leading-none text-wine caret-wine outline-none placeholder:text-lavender/70 max-[768px]:text-[max(10px,2.3cqw)]"
             placeholder="type /help"
           />
+          <span
+            className="hidden select-none font-pixel text-[7px] uppercase tracking-[0.14em] text-lavender/80 sm:block"
+            aria-hidden="true"
+          >
+            enter ↵
+          </span>
         </form>
       </section>
     </div>
