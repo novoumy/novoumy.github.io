@@ -1,0 +1,120 @@
+/* novoumy terminal: cozy CRT. Uses the site palette vars from styles.css. */
+
+/* ---------- tokens (day + night phosphor) ---------- */
+.term {
+  --t-bg: #F3E6F0;
+  --t-bg-deep: #E8DFF0;
+  --t-text: var(--wine);
+  --t-dim: color-mix(in oklab, var(--wine) 60%, var(--lavender));
+  --t-accent: var(--lavender);
+  --t-glow: color-mix(in oklab, var(--rose) 70%, transparent);
+  --t-scan: color-mix(in oklab, var(--wine) 7%, transparent);
+  --t-edge: color-mix(in oklab, var(--wine) 14%, transparent);
+  --t-err-bg: var(--wine);      --t-err-fg: var(--cool-white);
+  --t-warn-bg: var(--lavender); --t-warn-fg: var(--cool-white);
+  --t-ok-bg: var(--rose);       --t-ok-fg: var(--wine);
+  background: var(--t-bg);
+  color: var(--t-text);
+}
+.term[data-theme='night'] {
+  --t-bg: color-mix(in oklab, var(--wine) 38%, black);
+  --t-bg-deep: color-mix(in oklab, var(--wine) 26%, black);
+  --t-text: color-mix(in oklab, var(--rose) 55%, var(--cool-white));
+  --t-dim: var(--lavender);
+  --t-accent: var(--rose);
+  --t-glow: color-mix(in oklab, var(--rose) 80%, transparent);
+  --t-scan: rgb(0 0 0 / 0.28);
+  --t-edge: rgb(0 0 0 / 0.45);
+  --t-err-bg: var(--cool-white); --t-err-fg: var(--wine);
+  --t-warn-bg: var(--lavender);  --t-warn-fg: var(--cool-white);
+  --t-ok-bg: var(--rose);        --t-ok-fg: var(--wine);
+}
+.term ::selection { background: var(--t-accent); color: var(--t-bg); }
+
+/* ---------- CRT overlay: scanlines + vignette ---------- */
+.term-crt { position: relative; isolation: isolate; }
+.term-crt::before,
+.term-crt::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+.term-crt::before {
+  z-index: 5;
+  background-image: linear-gradient(to bottom, transparent 0 2px, var(--t-scan) 2px 3px);
+  background-size: 100% 3px;
+  animation: term-crawl 9s linear infinite;
+}
+.term-crt::after {
+  z-index: 6;
+  background: radial-gradient(ellipse at center, transparent 55%, var(--t-edge) 100%);
+}
+@keyframes term-crawl { to { background-position: 0 30px; } }
+
+/* ---------- text: pixel font, soft halo, rare flicker ---------- */
+.term-out,
+.term-prompt {
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 0.5px currentColor, 0 0 7px var(--t-glow);
+}
+.term-out { animation: term-flicker 7s steps(1) infinite; }
+@keyframes term-flicker {
+  0%, 100% { opacity: 1; }
+  93% { opacity: 0.94; } 94% { opacity: 1; }
+  97% { opacity: 0.96; } 98% { opacity: 1; }
+}
+
+/* ---------- pixel scrollbar ---------- */
+.term-scroll::-webkit-scrollbar { width: 10px; }
+.term-scroll::-webkit-scrollbar-track { background: var(--t-bg-deep); }
+.term-scroll::-webkit-scrollbar-thumb { background: var(--t-accent); border: 2px solid var(--t-bg-deep); }
+
+/* ---------- log lines ---------- */
+.t-line {
+  display: grid; grid-template-columns: 1.25ch 1fr; gap: 0 0.65rem;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.t-gutter { text-align: center; user-select: none; color: var(--t-accent); }
+.t-cmd .t-msg { font-weight: 700; }
+.t-sys .t-msg { color: var(--t-dim); }
+.t-err .t-msg { font-weight: 700; }
+.t-warn .t-msg { color: var(--t-accent); }
+.t-tag {
+  display: inline-block; margin-right: 0.6em; padding: 3px 5px 2px; vertical-align: 0.15em;
+  font: 400 8px/1 'Press Start 2P', monospace; letter-spacing: 0.08em; text-shadow: none;
+}
+.t-err  .t-tag { background: var(--t-err-bg);  color: var(--t-err-fg); }
+.t-warn .t-tag { background: var(--t-warn-bg); color: var(--t-warn-fg); }
+.t-ok   .t-tag { background: var(--t-ok-bg);   color: var(--t-ok-fg); }
+
+/* ---------- prompt with block cursor ---------- */
+.term-prompt {
+  display: flex; align-items: center; gap: 0.7rem; padding: 1rem 2rem;
+  background: var(--t-bg-deep);
+  border-top: 2px solid color-mix(in oklab, var(--t-accent) 60%, transparent);
+}
+.t-ps1 { display: flex; white-space: nowrap; user-select: none; }
+.t-user { color: var(--t-accent); }
+.t-path { color: var(--t-dim); }
+.t-dollar { margin-left: 0.6ch; }
+.t-field { position: relative; flex: 1; min-width: 0; min-height: 1.25em; cursor: text; }
+.t-input { position: absolute; inset: 0; width: 100%; opacity: 0; font: inherit; }
+.t-typed { display: block; white-space: pre; overflow: hidden; }
+.t-cursor {
+  display: inline-block; width: 0.55em; height: 1em; margin-left: 1px; vertical-align: -0.12em;
+  background: var(--t-text); box-shadow: 0 0 8px var(--t-glow);
+  animation: term-blink 1.1s steps(1) infinite;
+}
+.t-ph { margin-left: 0.6ch; color: var(--t-dim); opacity: 0.7; font-style: normal; }
+.term-prompt:not(:focus-within) .t-cursor {
+  background: transparent; outline: 1px solid var(--t-text); outline-offset: -1px; animation: none;
+}
+@keyframes term-blink { 50% { opacity: 0; } }
+
+@media (max-width: 768px) {
+  .term-out, .term-prompt { font-size: 18px; }
+  .term-prompt { padding: 0.6rem 1rem; }
+  .t-user { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .term-out, .term-crt::before, .t-cursor { animation: none; }
+}
