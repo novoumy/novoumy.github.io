@@ -239,7 +239,7 @@ export default function MainView() {
 
       <section className="relative flex min-h-0 flex-1 flex-col overflow-hidden border-t border-wine bg-cool-white">
         {/* Inline terminal labels sit directly on the full-width divider. */}
-        <header className="absolute left-0 right-0 top-0 z-20 flex -translate-y-1/2 items-center justify-between gap-3 bg-cool-white px-0 font-pixel uppercase leading-none">
+        <header className="relative z-20 -mt-px mb-4 flex items-center justify-between gap-3 bg-cool-white px-0 font-pixel uppercase leading-none">
           <h2 className="bg-cool-white pr-3 font-pixel text-[9px] text-wine max-[768px]:text-[max(7px,1.2cqw)]">
             novoumy_terminal
           </h2>
