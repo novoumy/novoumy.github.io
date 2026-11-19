@@ -8,7 +8,7 @@ interface PixelIconProps {
 
 // Draws a 16x16 bitmap as crisp SVG squares: wine for '#', rose for 'o'.
 export default function PixelIcon({ name, className, tint = false }: PixelIconProps) {
-  const rows = PIXEL_ICONS[name];
+  const rows = PIXEL_ICONS[name] ?? [];
   return (
     <svg
       viewBox="0 0 16 16"

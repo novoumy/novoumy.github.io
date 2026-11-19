@@ -46,7 +46,7 @@ export default function SocialsView() {
       </div>
 
       {/* Link slots */}
-      <ul className="flex flex-wrap justify-center gap-4">
+      <ul data-stagger className="flex flex-wrap justify-center gap-4">
         {links.map((social) => (
           <li key={`${social.platform}-${social.url}`} className="flex w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)]">
             <a
@@ -94,7 +94,7 @@ export default function SocialsView() {
             </a>
             <button
               type="button"
-              data-no-sfx
+              data-sfx="copy"
               data-copied={address.copied}
               onClick={() => address.copy(email.handle as string)}
               aria-label="Copy email address"

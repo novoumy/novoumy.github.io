@@ -1,0 +1,1 @@
+COMMENT ON TABLE public.steam_library IS 'DEPRECATED: unused. Steam data is read from the GitHub repository (public/data/steam-games.json).';
