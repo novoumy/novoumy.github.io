@@ -21,9 +21,7 @@ type Panel = {
   render: (route: Route, openInterest: (id: InterestId | null) => void) => ReactNode;
 };
 
-// (panels defined inside App to pass CRT toggle)
-
-const PANELS = ALL_PANELS.filter((panel) => enabledTabs.some((tab) => tab.id === panel.id));
+  // panels defined inside App to pass CRT toggle
 
 // The URL hash is the single source of truth for which tab / folder is open.
 function setHash(route: Route) {
@@ -34,6 +32,7 @@ function setHash(route: Route) {
 export default function App() {
   const [route, setRoute] = useState<Route>(parseHash);
   const activeId = route.tab;
+  const [crt, setCrt] = useState(false);
 
   // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
   useEffect(() => {
@@ -67,6 +66,21 @@ export default function App() {
     document.title = site.title;
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle('crt-on', crt);
+  }, [crt]);
+
+  const panels: Panel[] = [
+    { id: 'main', render: () => <MainView onToggleCrt={() => setCrt((v) => !v)} /> },
+    { id: 'socials', render: () => <SocialsView /> },
+    {
+      id: 'interests',
+      render: (r, open) => <InterestsView openId={r.tab === 'interests' ? r.interest : null} onOpen={open} />,
+    },
+    { id: 'specs', render: () => <SpecsView /> },
+  ];
+  const visiblePanels = panels.filter((panel) => enabledTabs.some((tab) => tab.id === panel.id));
+
   const scale = useStageScale();
   const staged = scale !== null;
 
@@ -95,20 +109,20 @@ export default function App() {
           <section
             data-compact={activeId === 'main'}
             className={[
-              'pixel-frame relative mt-1 flex flex-col bg-cool-white text-wine',
+              'pixel-frame relative mt-1 flex min-h-0 flex-col bg-cool-white text-wine',
               staged ? 'aspect-[4/3]' : 'win-section min-h-0 flex-1',
             ].join(' ')}
           >
             {/* Every tab stays mounted and is only shown/hidden, so switching is instant:
                 no remount, no re-fetch, no fade. Animations live inside the pages. */}
-            {PANELS.map(({ id, render }) => (
+            {visiblePanels.map(({ id, render }) => (
               <div
                 key={id}
                 role="tabpanel"
                 hidden={id !== activeId}
                 className="pixel-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-5 max-sm:p-4 sm:p-8"
               >
-                <div className="min-w-0 w-full max-w-full">{render(route, openInterest)}</div>
+                <div className="flex h-full min-h-0 min-w-0 w-full max-w-full flex-col">{render(route, openInterest)}</div>
               </div>
             ))}
           </section>
@@ -121,6 +135,7 @@ export default function App() {
           </div>
         )}
         <ClickDiskIndicator />
+        {crt && <div className="crt-overlay" aria-hidden="true" />}
       </main>
     </div>
   );
