@@ -132,17 +132,38 @@ function fromSteam(game: SteamGameRaw): LibraryGame {
   };
 }
 
-function fromManual(game: (typeof manualGames)[number]): LibraryGame {
+function fromManual(game: ManualGame): LibraryGame {
+  const list = game.achievements ?? [];
+  const unlocked = list.filter((item) => item.unlocked).length;
+  const achievements = game.achievements
+    ? {
+        total: list.length,
+        unlocked,
+        percent: list.length ? Math.round((unlocked / list.length) * 100) : 0,
+        list: list.map((item) => {
+          const icon = item.icon ?? '';
+          const iconGray = item.iconGray ?? icon;
+          return {
+            ...item,
+            unlockTime: item.unlockTime ?? 0,
+            icon,
+            iconGray,
+            iconUrl: icon,
+            iconGrayUrl: iconGray,
+          };
+        }),
+      }
+    : null;
   return {
     key: `manual-${game.title.toLowerCase().replace(/\W+/g, '-')}`,
     title: game.title,
     manual: true,
     covers: [game.cover],
-    heroes: [game.banner ?? game.cover],
+    heroes: uniqueUrls([game.banner, game.cover]),
     playtimeHours: game.playtimeHours,
     playtimeLabel: game.playtimeLabel,
     lastPlayed: game.lastPlayed ?? 0,
-    achievements: null,
+    achievements,
     url: game.link,
     urlLabel: game.linkLabel,
     note: game.note,
