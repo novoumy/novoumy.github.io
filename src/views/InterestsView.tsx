@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef, type ComponentType } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type ComponentType } from 'react';
 import { closeOverlayAnimated } from '@/lib/motion';
 import PixelIcon from '@/components/PixelIcon';
 import RetroLoading from '@/components/RetroLoading';
@@ -28,7 +28,20 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
   const open = openId ? FOLDERS[openId] : null;
   const label = interests.find((item) => item.id === openId)?.label ?? '';
   const closing = useRef(false);
-  // Plays the CRT power-off before the folder unmounts (button, header and Escape all land here).
+  const [entered, setEntered] = useState(false);
+
+  useEffect(() => {
+    if (!openId) {
+      setEntered(false);
+      return;
+    }
+    setEntered(false);
+    void FOLDERS[openId].load();
+    const timer = window.setTimeout(() => setEntered(true), 480);
+    return () => window.clearTimeout(timer);
+  }, [openId]);
+
+  // Plays the overlay close animation before the folder unmounts (button, header and Escape all land here).
   const close = () => {
     if (closing.current) return;
     closing.current = true;
@@ -52,7 +65,7 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
                 onPointerEnter={() => void FOLDERS[item.id].load()}
                 onFocus={() => void FOLDERS[item.id].load()}
                 aria-label={`Open ${item.label}`}
-                className="group flex w-full max-w-[150px] flex-col items-center gap-3 outline-offset-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-wine"
+                className="group flex w-full max-w-[150px] flex-col items-center gap-3 outline-none outline-offset-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-wine"
               >
                 <PixelIcon
                   name={item.id}
@@ -69,9 +82,14 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
       </div>
 
       {open && (
-        <Suspense fallback={<RetroLoading label={label} accent={openId ?? undefined} onClose={close} />}>
-          <open.View onClose={close} />
-        </Suspense>
+        <>
+          {!entered && <RetroLoading label={label} accent={openId ?? undefined} onClose={close} />}
+          {entered && (
+            <Suspense fallback={<RetroLoading label={label} accent={openId ?? undefined} onClose={close} />}>
+              <open.View onClose={close} />
+            </Suspense>
+          )}
+        </>
       )}
     </>
   );

@@ -126,7 +126,7 @@ function GameCard({ game, onOpen }: { game: LibraryGame; onOpen: (key: string) =
         data-key={game.key}
         onClick={() => onOpen(game.key)}
         aria-label={`Open ${game.title}`}
-        className="r-box r-box-hover group flex w-full flex-col gap-2.5 p-2 text-left max-sm:p-2.5"
+        className="r-box r-box-hover group flex w-full flex-col gap-2.5 p-2 text-left outline-none focus:outline-none focus-visible:outline-none max-sm:p-2.5"
       >
         <span className="relative block aspect-[2/3] w-full overflow-hidden border border-r-line bg-r-bg">
           <Art
@@ -406,7 +406,9 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
     setSelectedKey(null);
     requestAnimationFrame(() => {
       scroller()?.scrollTo({ top: savedScroll.current });
-      bodyRef.current?.querySelector<HTMLElement>(`[data-key="${key}"]`)?.focus({ preventScroll: true });
+      const target = bodyRef.current?.querySelector<HTMLElement>(`[data-key="${key}"]`);
+      target?.focus({ preventScroll: true });
+      target?.blur();
     });
   };
 
