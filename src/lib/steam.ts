@@ -26,6 +26,9 @@ interface SteamGameRaw {
 interface SteamFile {
   generatedAt: string | null;
   games: SteamGameRaw[];
+  extras?: {
+    minecraftBonusHours?: number;
+  };
 }
 
 // ---- what the UI works with: Steam games and manual entries in one shape -----------------
@@ -67,15 +70,27 @@ export function formatHours(hours: number): string {
   return `${rounded.toLocaleString('en-US', { maximumFractionDigits: 1 })} HRS`;
 }
 
+const EXTRA_COVERS: Record<number, string[]> = {
+  3527290: [
+    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900.jpg',
+    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/header.jpg',
+  ],
+  1912410: [
+    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1912410/library_600x900.jpg',
+    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1912410/header.jpg',
+  ],
+};
+
 function fromSteam(game: SteamGameRaw): LibraryGame {
   const hours = game.playtimeMinutes / 60;
+  const extra = EXTRA_COVERS[game.appid] ?? [];
   return {
     key: `steam-${game.appid}`,
     title: game.name,
     appid: game.appid,
     manual: false,
-    covers: [game.images.capsule, game.images.header],
-    heroes: [game.images.hero, game.images.header],
+    covers: [game.images.capsule, game.images.header, ...extra],
+    heroes: [game.images.hero, game.images.header, ...extra],
     playtimeHours: hours,
     playtimeLabel: formatHours(hours),
     lastPlayed: game.lastPlayed,
@@ -113,7 +128,16 @@ function fromManual(game: (typeof manualGames)[number]): LibraryGame {
 }
 
 export function buildLibrary(file: SteamFile | null): Library {
-  const manual = manualGames.map(fromManual);
+  const bonusHours = Math.max(0, Number(file?.extras?.minecraftBonusHours ?? 0));
+  const manual = manualGames.map((game) => {
+    const entry = fromManual(game);
+    if (game.title.toLowerCase() === 'minecraft' && bonusHours > 0) {
+      const hours = game.playtimeHours + bonusHours;
+      entry.playtimeHours = hours;
+      entry.playtimeLabel = formatHours(hours);
+    }
+    return entry;
+  });
   const manualTitles = new Set(manual.map((game) => game.title.toLowerCase()));
   // A manual entry wins over a Steam game with the same name.
   const steam = (file?.games ?? []).filter((game) => !manualTitles.has(game.name.toLowerCase())).map(fromSteam);
@@ -152,7 +176,7 @@ export function loadLibrary(): Promise<Library> {
 export type FilterKey = 'all' | 'completed' | 'progress' | 'unplayed';
 
 export const isCompleted = (game: LibraryGame) => !!game.achievements && game.achievements.total > 0 && game.achievements.unlocked === game.achievements.total;
-export const isUnplayed = (game: LibraryGame) => !game.manual && game.playtimeHours === 0;
+export const isUnplayed = (game: LibraryGame) => !game.manual && game.playtimeHours <= 0.3;
 
 export function matchesFilter(game: LibraryGame, filter: FilterKey): boolean {
   if (filter === 'completed') return isCompleted(game);

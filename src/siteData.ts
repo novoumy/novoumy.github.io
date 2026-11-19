@@ -1294,8 +1294,8 @@ export const manualGames: ManualGame[] = [
     cover: 'https://cdn2.steamgriddb.com/thumb/a73027901f88055aaa0fd1a9e25d36c7.jpg',
     link: 'https://minecraft.net',
     linkLabel: 'View on minecraft.net',
-    playtimeHours: 3000,
-    playtimeLabel: '3000+ HRS',
+    playtimeHours: 4678,
+    playtimeLabel: '4678 HRS',
   },
 ];
 

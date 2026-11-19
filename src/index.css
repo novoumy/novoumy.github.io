@@ -687,6 +687,79 @@
     animation: vinyl-spin 6s steps(24) infinite;
   }
 
+  /* Music cards: album art sleeve with a spinning vinyl disc alongside it. */
+  .vinyl-scene {
+    position: relative;
+    width: 172px;
+    height: 124px;
+    flex-shrink: 0;
+  }
+
+  .vinyl-cover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 124px;
+    height: 124px;
+    object-fit: cover;
+    border: 2px solid var(--wine);
+    background: var(--r-panel);
+    z-index: 2;
+  }
+
+  .vinyl-record {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    width: 104px;
+    height: 104px;
+    border-radius: 9999px;
+    background:
+      conic-gradient(
+        from 0deg,
+        transparent 0 18%,
+        rgb(236 239 241 / 0.18) 22% 28%,
+        transparent 32% 68%,
+        rgb(236 239 241 / 0.18) 72% 78%,
+        transparent 82%
+      ),
+      repeating-radial-gradient(circle at center, #4d1f29 0 2px, var(--wine) 2px 4px);
+    box-shadow: 0 0 0 3px #3a1720;
+    animation: vinyl-spin 8s linear infinite;
+    z-index: 1;
+  }
+
+  .vinyl-record::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    transform: translate(-50%, -50%);
+    border-radius: 9999px;
+    background: var(--cool-white);
+    border: 3px solid #3a1720;
+  }
+
+  @media (max-width: 640px) {
+    .vinyl-scene {
+      width: 156px;
+      height: 112px;
+    }
+
+    .vinyl-cover {
+      width: 112px;
+      height: 112px;
+    }
+
+    .vinyl-record {
+      top: 8px;
+      width: 94px;
+      height: 94px;
+    }
+  }
+
   /* Decorative "track progress" fill that loops. */
   .progress-fill {
     width: 35%;
@@ -816,6 +889,7 @@
   .animate-float-particle,
   .eq-bars i,
   .vinyl,
+  .vinyl-record,
   .progress-fill,
   .blink-arrow,
   .quote-flash,

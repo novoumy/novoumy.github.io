@@ -33,7 +33,8 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
     dialogRef.current?.focus();
     return () => {
       document.body.style.overflow = previousOverflow;
-      previouslyFocused?.focus?.();
+      previouslyFocused?.focus?.({ preventScroll: true });
+      if (previouslyFocused instanceof HTMLElement) previouslyFocused.blur();
     };
   }, []);
 

@@ -155,14 +155,19 @@ async function main() {
   };
   await Promise.all(Array.from({ length: CONCURRENCY }, worker));
 
+    const previousBonus = Math.max(0, Number(previous.extras?.minecraftBonusHours ?? 0));
+  const extras = { ...(previous.extras ?? {}), minecraftBonusHours: previousBonus + 1 };
+
   // Only touch the file when something real changed, so commits stay meaningful.
-  const sameAsBefore = JSON.stringify(previous.games) === JSON.stringify(games);
+  const sameAsBefore =
+    JSON.stringify(previous.games) === JSON.stringify(games) &&
+    JSON.stringify(previous.extras ?? null) === JSON.stringify(extras);
   if (sameAsBefore) {
     console.log('No changes since the last sync.');
     return;
   }
 
-  const body = `{"generatedAt":${JSON.stringify(new Date().toISOString())},"games":[\n${games
+  const body = `{"generatedAt":${JSON.stringify(new Date().toISOString())},"extras":${JSON.stringify(extras)},"games":[\n${games
     .map((game) => JSON.stringify(game))
     .join(',\n')}\n]}\n`;
   await mkdir(path.dirname(OUT), { recursive: true });
@@ -171,7 +176,7 @@ async function main() {
   await rename(tmp, OUT);
 
   const withAch = games.filter((game) => game.achievements).length;
-  console.log(`Wrote ${OUT}: ${games.length} games, ${withAch} with achievements, ${failures} fetch failures.`);
+  console.log(`Wrote ${OUT}: ${games.length} games, ${withAch} with achievements, ${failures} fetch failures, +1 Minecraft hour (${extras.minecraftBonusHours} total bonus).`);
 }
 
 main().catch((error) => {
