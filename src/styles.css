@@ -806,31 +806,6 @@
   animation: panel-sweep 520ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Loader stays hidden for 150ms, then snaps in with no fade. */
-@keyframes loading-show {
-  to {
-    visibility: visible;
-  }
-}
-
-.retro-loading {
-  visibility: hidden;
-  animation: loading-show 0s 150ms forwards;
-}
-
-@keyframes loading-bar {
-  from {
-    width: 0%;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-.retro-loading-bar {
-  animation: loading-bar 1.2s steps(12) infinite;
-}
-
 .animate-float-particle {
   animation: float-particle linear infinite;
 }
@@ -850,7 +825,6 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-tab-in,
   .animate-overlay-in,
-  .retro-loading-bar,
   .animate-float-particle,
   .r-desk,
   .vinyl-card .vinyl-spin,

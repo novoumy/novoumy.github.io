@@ -8,18 +8,9 @@ type Pop = {
   center: boolean;
 };
 
-const INTERACTIVE_SELECTOR = [
-  'button',
-  'a[href]',
-  '[role="tab"]',
-  '[role="button"]',
-  'select',
-  'summary',
-  'label',
-  '[data-disk-target]',
-].join(',');
-
-const OPT_OUT_SELECTOR = '[data-no-loading-disk], [data-no-disk], input, textarea';
+// Only the four Interests folder icons opt in; navigation tabs and every other
+// control stay silent.
+const DISK_TARGET_SELECTOR = '[data-disk-target]';
 
 const DURATION_MS = 850;
 
@@ -32,8 +23,8 @@ export default function ClickDiskIndicator() {
     const onPointerDown = (event: PointerEvent) => {
       if (event.button !== 0 && event.pointerType === 'mouse') return;
       const raw = event.target instanceof Element ? event.target : null;
-      const target = raw?.closest(INTERACTIVE_SELECTOR);
-      if (!target || target.closest(OPT_OUT_SELECTOR)) return;
+      const target = raw?.closest(DISK_TARGET_SELECTOR);
+      if (!target) return;
       if (target instanceof HTMLButtonElement && target.disabled) return;
 
       const coarse = window.matchMedia('(hover: none), (pointer: coarse)').matches;

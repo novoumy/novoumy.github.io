@@ -1,12 +1,11 @@
-import { lazy, Suspense, useEffect, useRef, useState, type ComponentType } from 'react';
+import { lazy, Suspense, useEffect, useRef, type ComponentType } from 'react';
 import { closeOverlayAnimated } from '@/lib/motion';
 import PixelIcon from '@/components/PixelIcon';
-import RetroLoading from '@/components/RetroLoading';
 import { interests, type InterestId } from '@/siteData';
 import { loadGames, loadMedia, loadMusic, loadQuotes } from '@/lib/preload';
 
 // Folder views are code-split and preloaded (idle + on hover), so opening one is
-// normally instant; if the network is slow, RetroLoading shows instead of a fade.
+// instant; there is deliberately no loading overlay in the way.
 type FolderView = ComponentType<{ onClose: () => void }>;
 const FOLDERS: Record<InterestId, { View: FolderView; load: () => Promise<unknown> }> = {
   media: { View: lazy(loadMedia), load: loadMedia },
@@ -26,19 +25,11 @@ interface InterestsViewProps {
 export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
   const setOpenId = onOpen;
   const open = openId ? FOLDERS[openId] : null;
-  const label = interests.find((item) => item.id === openId)?.label ?? '';
   const closing = useRef(false);
-  const [entered, setEntered] = useState(false);
 
   useEffect(() => {
-    if (!openId) {
-      setEntered(false);
-      return;
-    }
-    setEntered(false);
+    if (!openId) return;
     void FOLDERS[openId].load();
-    const timer = window.setTimeout(() => setEntered(true), 480);
-    return () => window.clearTimeout(timer);
   }, [openId]);
 
   // Plays the overlay close animation before the folder unmounts (button, header and Escape all land here).
@@ -61,6 +52,7 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
             <li key={item.id} className={`accent-${item.id} flex justify-center`}>
               <button
                 type="button"
+                data-disk-target
                 onClick={() => setOpenId(item.id)}
                 onPointerEnter={() => void FOLDERS[item.id].load()}
                 onFocus={() => void FOLDERS[item.id].load()}
@@ -82,14 +74,9 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
       </div>
 
       {open && (
-        <>
-          {!entered && <RetroLoading label={label} accent={openId ?? undefined} onClose={close} />}
-          {entered && (
-            <Suspense fallback={<RetroLoading label={label} accent={openId ?? undefined} onClose={close} />}>
-              <open.View onClose={close} />
-            </Suspense>
-          )}
-        </>
+        <Suspense fallback={null}>
+          <open.View onClose={close} />
+        </Suspense>
       )}
     </>
   );
