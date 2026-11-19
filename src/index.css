@@ -618,7 +618,7 @@
   /* Thin pixel scrollbar that matches the palette. */
   .pixel-scroll {
     scrollbar-width: thin;
-    scrollbar-color: var(--wine) transparent;
+    scrollbar-color: var(--wine) var(--rose);
   }
 
   .pixel-scroll::-webkit-scrollbar {
@@ -626,11 +626,12 @@
   }
 
   .pixel-scroll::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--rose);
   }
 
   .pixel-scroll::-webkit-scrollbar-thumb {
     background: var(--wine);
+    border: 2px solid var(--rose);
   }
 
   /* Equalizer bars: animate only while the parent row is hovered. */

@@ -124,6 +124,8 @@ export default function App() {
           >
             {/* Every tab stays mounted and is only shown/hidden, so switching is instant:
                 no remount, no re-fetch, no fade. Animations live inside the pages. */}
+            {/* CRT scan sweep across the window on every tab swap (decorative). */}
+            <div key={activeId} aria-hidden="true" className="panel-sweep" />
             {PANELS.map(({ id, render }) => (
               <div
                 key={id}

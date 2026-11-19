@@ -287,15 +287,16 @@
   }
 
   .retro-theme .pixel-scroll {
-    scrollbar-color: var(--wine) transparent;
+    scrollbar-color: var(--wine) var(--r-panel);
   }
 
   .retro-theme .pixel-scroll::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--r-panel);
   }
 
   .retro-theme .pixel-scroll::-webkit-scrollbar-thumb {
     background: var(--wine);
+    border: 2px solid var(--r-panel);
   }
 
   /* ---- Music: vinyl records ------------------------------------------ */
@@ -770,7 +771,39 @@
   animation: tab-pop 360ms cubic-bezier(0.3, 1.4, 0.5, 1);
 }
 
+/* CRT scan bar that sweeps down the window when switching tabs. */
+@keyframes panel-sweep {
+  from {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
 
+.panel-sweep {
+  pointer-events: none;
+  position: absolute;
+  inset: 4px;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.panel-sweep::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in oklab, var(--rose) 35%, transparent) 46%,
+    color-mix(in oklab, var(--cool-white) 70%, transparent) 50%,
+    transparent 54%
+  );
+  animation: panel-sweep 520ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
 
 .animate-float-particle {
   animation: float-particle linear infinite;
@@ -800,8 +833,13 @@
   .quote-pulse,
   .r-caret::after,
   .animate-overlay-in > *,
-  .tab-pop {
+  .tab-pop,
+  .panel-sweep::before {
     animation: none;
+  }
+
+  .panel-sweep {
+    display: none;
   }
 
   .vinyl-disc,
