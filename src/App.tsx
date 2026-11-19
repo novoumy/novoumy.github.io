@@ -108,7 +108,7 @@ export default function App() {
             data-compact={activeId === 'main'}
             className={[
               // Borderless menu surface: stationary cream padding, content clipped inside it.
-              'relative mt-1 flex min-h-0 flex-col overflow-hidden bg-transparent p-5 text-wine max-sm:p-4 sm:p-6',
+              'relative mt-1 flex min-h-0 flex-col overflow-hidden bg-cool-white p-5 text-wine max-sm:p-4 sm:p-6',
               staged ? 'aspect-[4/3]' : 'win-section min-h-0 flex-1',
             ].join(' ')}
           >
