@@ -122,29 +122,12 @@ export function buildLibrary(file: SteamFile | null): Library {
 
 let cached: Promise<Library> | null = null;
 
-// The Steam library is synced by the GitHub Action in the novoumy/novoumy.github.io repository
-// (scripts/sync-steam.mjs, every 12 hours). The site reads that committed file straight from GitHub,
-// so new syncs show up without republishing, and no API key ever reaches the browser.
-const STEAM_FILE_URLS = [
-  'https://raw.githubusercontent.com/novoumy/novoumy.github.io/main/public/data/steam-games.json',
-  'https://novoumy.github.io/data/steam-games.json',
-];
-
-async function fetchSteamFile(): Promise<SteamFile | null> {
-  for (const url of STEAM_FILE_URLS) {
-    try {
-      const response = await fetch(url);
-      if (response.ok) return (await response.json()) as SteamFile;
-    } catch {
-      // try the next source
-    }
-  }
-  return null;
-}
-
-// Loaded once per page visit.
+// Loaded once per page visit; the file is a plain static asset (no API key anywhere in the browser).
 export function loadLibrary(): Promise<Library> {
-  cached ??= fetchSteamFile().then(buildLibrary);
+  cached ??= fetch(`${import.meta.env.BASE_URL}data/steam-games.json`)
+    .then((response) => (response.ok ? (response.json() as Promise<SteamFile>) : null))
+    .catch(() => null)
+    .then(buildLibrary);
   return cached;
 }
 

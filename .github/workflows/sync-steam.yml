@@ -1,0 +1,54 @@
+name: Sync Steam library
+
+on:
+  schedule:
+    - cron: '17 */12 * * *' # every 12 hours
+  workflow_dispatch: # Actions tab -> "Sync Steam library" -> Run workflow
+
+permissions:
+  contents: write # commit public/data/steam-games.json
+  actions: write # start the Pages deploy after committing
+
+concurrency:
+  group: sync-steam
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch Steam library
+        env:
+          STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
+          STEAM_ID: ${{ secrets.STEAM_ID }}
+        run: node scripts/sync-steam.mjs
+
+      - name: Commit changes
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/steam-games.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Nothing new to commit."
+          else
+            git commit -m "chore: sync Steam library"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Commits made with the default token don't trigger the normal "on: push" deploy,
+      # so start it explicitly.
+      - name: Redeploy site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"

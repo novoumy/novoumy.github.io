@@ -1,5 +1,4 @@
-import { lazy, Suspense, useRef, type ComponentType } from 'react';
-import { closeOverlayAnimated } from '@/lib/motion';
+import { lazy, Suspense, type ComponentType } from 'react';
 import PixelIcon from '@/components/PixelIcon';
 import RetroLoading from '@/components/RetroLoading';
 import { interests, type InterestId } from '@/siteData';
@@ -27,23 +26,13 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
   const setOpenId = onOpen;
   const open = openId ? FOLDERS[openId] : null;
   const label = interests.find((item) => item.id === openId)?.label ?? '';
-  const closing = useRef(false);
-  // Plays the CRT power-off before the folder unmounts (button, header and Escape all land here).
-  const close = () => {
-    if (closing.current) return;
-    closing.current = true;
-    void closeOverlayAnimated().then(() => {
-      closing.current = false;
-      setOpenId(null);
-    });
-  };
 
   // The hub is always rendered in the same spot, so opening/closing a folder never remounts it.
   return (
     <>
       <div className="flex min-h-full flex-col gap-6">
         <p className="leading-none">&gt; select a folder to open //</p>
-        <ul data-stagger className="grid grid-cols-2 content-start gap-x-4 gap-y-8 max-sm:my-auto sm:grid-cols-4">
+        <ul className="grid grid-cols-2 content-start gap-x-4 gap-y-8 max-sm:my-auto sm:grid-cols-4">
           {interests.map((item) => (
             <li key={item.id} className={`accent-${item.id} flex justify-center`}>
               <button
@@ -69,8 +58,8 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
       </div>
 
       {open && (
-        <Suspense fallback={<RetroLoading label={label} accent={openId ?? undefined} onClose={close} />}>
-          <open.View onClose={close} />
+        <Suspense fallback={<RetroLoading label={label} accent={openId ?? undefined} onClose={() => setOpenId(null)} />}>
+          <open.View onClose={() => setOpenId(null)} />
         </Suspense>
       )}
     </>

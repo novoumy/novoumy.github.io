@@ -1,0 +1,788 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cool-white: #ECEFF1;
+  --lavender: #847FA4;
+  --wine: #6B2D39;
+  --rose: #CD9EBA;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-lavender font-body text-wine antialiased;
+    font-size: 22px;
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-pixel;
+    line-height: 1.2;
+  }
+}
+
+@layer components {
+  /* Discord-style dark theme for the full-screen media library only. */
+  .media-dark {
+    color-scheme: dark;
+  }
+
+  .media-dark ::selection {
+    background: #5865f2;
+    color: #fff;
+  }
+
+  .media-dark .pixel-scroll {
+    scrollbar-color: #1a1b1e #2b2d31;
+  }
+
+  .media-dark .pixel-scroll::-webkit-scrollbar-track {
+    background: #2b2d31;
+  }
+
+  .media-dark .pixel-scroll::-webkit-scrollbar-thumb {
+    background: #1a1b1e;
+    border: 2px solid #2b2d31;
+  }
+
+  .media-dark .eq-bars i {
+    background: #5865f2;
+  }
+
+  .media-dark .player-range {
+    --track: #404249;
+    --fillc: #f2f3f5;
+  }
+
+  .media-dark .player-range:hover {
+    --fillc: #5865f2;
+  }
+
+  /* Seek / volume sliders in the music player bar. */
+  .player-range {
+    --fill: 0%;
+    --track: #404249;
+    --fillc: #f2f3f5;
+    width: 100%;
+    height: 20px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    touch-action: pan-y;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .player-range:focus-visible {
+    outline: 2px solid #5865f2;
+    outline-offset: 2px;
+  }
+
+  .player-range::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--fillc) var(--fill), var(--track) var(--fill));
+  }
+
+  .player-range::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--fillc) var(--fill), var(--track) var(--fill));
+  }
+
+  .player-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    margin-top: -4px;
+    border-radius: 50%;
+    border: 0;
+    background: #f2f3f5;
+  }
+
+  .player-range::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 0;
+    background: #f2f3f5;
+  }
+
+  @media (pointer: coarse) {
+    .player-range {
+      height: 28px;
+    }
+
+    .player-range::-webkit-slider-thumb {
+      width: 18px;
+      height: 18px;
+      margin-top: -7px;
+    }
+
+    .player-range::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .media-dark .pixel-badge {
+    background: rgb(30 31 34 / 0.92);
+    color: #f2f3f5;
+  }
+
+  /* ------------------------------------------------------------------
+     Retro terminal theme: shared by /music, /games, /media and /quotes.
+     Everything is scoped under .retro-dark, so nothing else is affected.
+     ------------------------------------------------------------------ */
+  .retro-dark {
+    --r-bg: #1e1e1e;
+    --r-panel: #252526;
+    --r-raised: #2d2d30;
+    --r-line: #3c3c3c;
+    --r-line-hi: #6a6a6a;
+    --r-text: #d4d4d4;
+    --r-dim: #8a8a8a;
+    --r-accent: #CC97A3;
+    --r-accent-dim: #7d5560;
+    --r-accent-rgb: 204 151 163;
+    color-scheme: dark;
+    background: var(--r-bg);
+    color: var(--r-text);
+    font-family: 'VT323', monospace;
+  }
+
+  /* Per-library accent colours. Put one of these classes next to .retro-dark. */
+  .accent-music {
+    --r-accent: #CC97A3;
+    --r-accent-dim: #7d5560;
+    --r-accent-rgb: 204 151 163;
+  }
+
+  .accent-media {
+    --r-accent: #7dc4e4;
+    --r-accent-dim: #4b7689;
+    --r-accent-rgb: 125 196 228;
+  }
+
+  .accent-games {
+    --r-accent: #ed8796;
+    --r-accent-dim: #8e515a;
+    --r-accent-rgb: 237 135 150;
+  }
+
+  .accent-quotes {
+    --r-accent: #eed49f;
+    --r-accent-dim: #8f7f5f;
+    --r-accent-rgb: 238 212 159;
+  }
+
+  .retro-dark ::selection {
+    background: var(--r-accent);
+    color: #1e1e1e;
+  }
+
+  .retro-dark .pixel-scroll {
+    scrollbar-color: var(--r-line-hi) var(--r-bg);
+  }
+
+  .retro-dark .pixel-scroll::-webkit-scrollbar-track {
+    background: var(--r-bg);
+  }
+
+  .retro-dark .pixel-scroll::-webkit-scrollbar-thumb {
+    background: var(--r-line-hi);
+    border: 2px solid var(--r-bg);
+  }
+
+  .retro-dark .eq-bars i {
+    background: var(--r-accent);
+  }
+
+  .retro-dark .player-range {
+    --track: var(--r-line);
+    --fillc: var(--r-accent);
+  }
+
+  .retro-dark .player-range::-webkit-slider-thumb {
+    background: var(--r-accent);
+    border-radius: 0;
+  }
+
+  .retro-dark .player-range::-moz-range-thumb {
+    background: var(--r-accent);
+    border-radius: 0;
+  }
+
+  .retro-dark .player-range::-webkit-slider-runnable-track,
+  .retro-dark .player-range::-moz-range-track {
+    border-radius: 0;
+  }
+
+  .retro-dark .pixel-badge {
+    background: #1e1e1e;
+    color: var(--r-accent);
+    border: 2px solid var(--r-accent-dim);
+  }
+
+  /* Crisp 2px pixel border with a hard offset shadow. */
+  .r-box {
+    background: var(--r-panel);
+    border: 2px solid var(--r-accent-dim);
+    transition:
+      border-color 150ms steps(2),
+      background-color 150ms steps(2),
+      transform 150ms steps(2),
+      box-shadow 150ms steps(2);
+  }
+
+  .r-box-hover:hover,
+  .r-box-hover:focus-visible {
+    border-color: var(--r-accent);
+    box-shadow: 4px 4px 0 0 var(--r-accent-dim);
+    transform: translate(-2px, -2px);
+    outline: none;
+  }
+
+  .r-box-active {
+    border-color: var(--r-accent);
+    background: var(--r-raised);
+  }
+
+  .r-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--r-bg);
+    color: var(--r-text);
+    border: 2px solid var(--r-line-hi);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      background-color 150ms steps(2),
+      color 150ms steps(2),
+      border-color 150ms steps(2);
+  }
+
+  .r-btn:hover,
+  .r-btn:focus-visible {
+    background: var(--r-accent);
+    color: #1e1e1e;
+    border-color: var(--r-accent);
+    outline: none;
+  }
+
+  .r-btn:active {
+    transform: translateY(2px);
+  }
+
+  .r-tag {
+    display: inline-block;
+    padding: 5px 7px;
+    background: var(--r-bg);
+    color: var(--r-accent);
+    border: 2px solid var(--r-accent-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .r-glow {
+    text-shadow: 0 0 8px rgb(var(--r-accent-rgb) / 0.55);
+  }
+
+  .r-scanlines::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0.018) 0 1px,
+      transparent 1px 3px
+    );
+  }
+
+  .r-caret::after {
+    content: '_';
+    margin-left: 2px;
+    animation: blink 1s steps(2) infinite;
+  }
+
+  /* Smooth open/close for the games details drawer. */
+  .r-drawer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 250ms ease-out;
+  }
+
+  .r-drawer[data-open='true'] {
+    grid-template-rows: 1fr;
+  }
+
+  .r-drawer > div {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Quote fade used by the random roller. */
+  @keyframes quote-flash {
+    0% {
+      opacity: 0.25;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .quote-flash {
+    animation: quote-flash 450ms ease-out both;
+  }
+
+  /* Dice button: the die tumbles in steps when rolled. */
+  @keyframes die-roll {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .die-roll {
+    animation: die-roll 600ms steps(8) both;
+  }
+
+  /* Rolled quote card: glow pulses a few times, then settles on a steady highlight. */
+  @keyframes quote-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(var(--r-accent-rgb) / 0);
+    }
+    50% {
+      box-shadow: 0 0 28px 6px rgb(var(--r-accent-rgb) / 0.6);
+    }
+  }
+
+  .quote-pulse {
+    background: #2b2b2b;
+    box-shadow: 4px 4px 0 0 var(--r-accent-dim);
+    animation: quote-pulse 700ms ease-in-out 3;
+  }
+
+  /* Large stepped frame: wine outline, rose inner line, pixel drop shadow. */
+  .pixel-frame {
+    box-shadow:
+      0 -4px 0 0 var(--wine),
+      0 4px 0 0 var(--wine),
+      -4px 0 0 0 var(--wine),
+      4px 0 0 0 var(--wine),
+      8px 8px 0 0 var(--wine),
+      inset 0 0 0 4px var(--rose);
+  }
+
+  /* Small stepped outline used for cards, rows and tiles. */
+  .pixel-tile {
+    box-shadow:
+      0 -4px 0 0 var(--wine),
+      0 4px 0 0 var(--wine),
+      -4px 0 0 0 var(--wine),
+      4px 0 0 0 var(--wine);
+    transition:
+      transform 150ms steps(2),
+      box-shadow 150ms steps(2),
+      background-color 150ms;
+  }
+
+  .pixel-tile-interactive:hover {
+    transform: translate(-4px, -4px);
+    box-shadow:
+      0 -4px 0 0 var(--wine),
+      0 4px 0 0 var(--wine),
+      -4px 0 0 0 var(--wine),
+      4px 0 0 0 var(--wine),
+      8px 8px 0 0 var(--rose);
+  }
+
+  .pixel-tile-interactive:active {
+    transform: translate(0, 0);
+  }
+
+  /* Wine button with notched corners. */
+  .pixel-btn {
+    @apply inline-flex items-center justify-center gap-2 bg-wine font-pixel text-[10px] uppercase text-cool-white;
+    clip-path: polygon(
+      4px 0,
+      calc(100% - 4px) 0,
+      100% 4px,
+      100% calc(100% - 4px),
+      calc(100% - 4px) 100%,
+      4px 100%,
+      0 calc(100% - 4px),
+      0 4px
+    );
+    padding: 10px 14px;
+    transition: background-color 150ms, color 150ms, transform 100ms steps(2);
+  }
+
+  .pixel-btn:hover {
+    @apply bg-rose text-wine;
+  }
+
+  .pixel-btn:active {
+    transform: translateY(2px);
+  }
+
+
+  /* Volume slider: fixed-size pixel tile beside the speaker button.
+     It never changes size or position: it only fades in/out via opacity. */
+  .volume-panel {
+    position: absolute;
+    right: calc(100% + 12px);
+    top: 0;
+    bottom: 0;
+    z-index: 20;
+    width: 196px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.2s ease-in-out,
+      visibility 0s linear 0.2s;
+  }
+
+  .volume-panel[data-open='true'] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+
+  .volume-panel-inner {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    overflow: hidden;
+  }
+
+  .volume-readout {
+    flex: 0 0 auto;
+    min-width: 4.4ch;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .volume-range {
+    --fill: 50%;
+    flex: 1;
+    min-width: 0;
+    height: 28px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    touch-action: pan-y;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .volume-range:focus-visible {
+    outline: 3px solid var(--wine);
+    outline-offset: 2px;
+  }
+
+  .volume-range::-webkit-slider-runnable-track {
+    height: 8px;
+    background:
+      linear-gradient(var(--wine), var(--wine)) 50% 50% / 2px 14px no-repeat,
+      linear-gradient(to right, var(--wine) var(--fill), var(--rose) var(--fill));
+    border: 0;
+  }
+
+  .volume-range::-moz-range-track {
+    height: 8px;
+    background:
+      linear-gradient(var(--wine), var(--wine)) 50% 50% / 2px 14px no-repeat,
+      linear-gradient(to right, var(--wine) var(--fill), var(--rose) var(--fill));
+    border: 0;
+  }
+
+  .volume-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 20px;
+    margin-top: -6px;
+    background: var(--lavender);
+    border: 3px solid var(--wine);
+    border-radius: 0;
+  }
+
+  .volume-range::-moz-range-thumb {
+    width: 8px;
+    height: 14px;
+    background: var(--lavender);
+    border: 3px solid var(--wine);
+    border-radius: 0;
+  }
+
+  @media (pointer: coarse) {
+    .volume-range::-webkit-slider-thumb {
+      width: 20px;
+      height: 28px;
+      margin-top: -10px;
+    }
+
+    .volume-range::-moz-range-thumb {
+      width: 14px;
+      height: 22px;
+    }
+  }
+
+  /* Thin pixel scrollbar that matches the palette. */
+  .pixel-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--wine) var(--rose);
+  }
+
+  .pixel-scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .pixel-scroll::-webkit-scrollbar-track {
+    background: var(--rose);
+  }
+
+  .pixel-scroll::-webkit-scrollbar-thumb {
+    background: var(--wine);
+    border: 2px solid var(--rose);
+  }
+
+  /* Equalizer bars: animate only while the parent row is hovered. */
+  .eq-bars i {
+    display: block;
+    width: 4px;
+    height: 100%;
+    background: var(--wine);
+    transform-origin: bottom;
+    animation: eq-bounce 0.9s steps(4) infinite;
+    animation-play-state: paused;
+  }
+
+  .group:hover .eq-bars i {
+    animation-play-state: running;
+  }
+
+  .eq-bars i:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+
+  .eq-bars i:nth-child(3) {
+    animation-delay: -0.6s;
+  }
+
+  .eq-bars i:nth-child(4) {
+    animation-delay: -0.15s;
+  }
+
+  .blink-arrow {
+    animation: blink 1s steps(2) infinite;
+  }
+
+  /* Always-bouncing equalizer (for the "now playing" card). */
+  .eq-live i {
+    animation-play-state: running;
+  }
+
+  /* Vinyl record: grooves plus two light glints so the spin is visible. */
+  .vinyl {
+    background:
+      conic-gradient(
+        from 0deg,
+        transparent 0 18%,
+        rgb(236 239 241 / 0.22) 22% 28%,
+        transparent 32% 68%,
+        rgb(236 239 241 / 0.22) 72% 78%,
+        transparent 82%
+      ),
+      repeating-radial-gradient(circle at center, #4d1f29 0 2px, var(--wine) 2px 4px);
+    box-shadow: 0 0 0 3px #3a1720;
+    animation: vinyl-spin 6s steps(24) infinite;
+  }
+
+  /* Decorative "track progress" fill that loops. */
+  .progress-fill {
+    width: 35%;
+    animation: progress-fill 40s steps(24) infinite;
+  }
+}
+
+@keyframes eq-bounce {
+  0% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.4);
+  }
+}
+
+@keyframes vinyl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes progress-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes tab-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float-particle {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-110vh);
+  }
+}
+
+.animate-tab-in {
+  animation: tab-in 320ms steps(4) both;
+}
+
+/* Folder overlays: a quick hard pixel-wipe from the top instead of an opacity fade. */
+@keyframes overlay-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.animate-overlay-in {
+  animation: overlay-in 140ms steps(5) both;
+}
+
+/* Loader stays hidden for 150ms, then snaps in with no fade. */
+@keyframes loading-show {
+  to {
+    visibility: visible;
+  }
+}
+
+.retro-loading {
+  visibility: hidden;
+  animation: loading-show 0s 150ms forwards;
+}
+
+@keyframes loading-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.retro-loading-bar {
+  animation: loading-bar 1.2s steps(12) infinite;
+}
+
+.animate-float-particle {
+  animation: float-particle linear infinite;
+}
+
+@keyframes glow-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Cross-fades the ambient cover glow when the track changes. */
+.glow-in {
+  animation: glow-fade 700ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-tab-in,
+  .animate-overlay-in,
+  .retro-loading-bar,
+  .glow-in,
+  .animate-float-particle,
+  .eq-bars i,
+  .vinyl,
+  .progress-fill,
+  .blink-arrow,
+  .quote-flash,
+  .die-roll,
+  .quote-pulse,
+  .r-caret::after {
+    animation: none;
+  }
+}
+
+
+/* ---------------------------------------------------------------------------------------------
+   Phones only (max-width: 768px): the main window is a compact 4:3 card on #main and grows
+   (from its centre, because the window is vertically centred) into the tall window on the other
+   tabs. Desktop / stage mode never matches this media query.
+   --------------------------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  section.win-section {
+    flex: none;
+    container-type: inline-size; /* lets the #main page size itself in cqw */
+    /* tall: viewport minus page padding (3rem) and the tab row + gaps (~3.1rem), capped */
+    height: min(calc(100dvh - 6.2rem), 42.8rem);
+    transition: height 420ms cubic-bezier(0.22, 0.8, 0.2, 1);
+  }
+
+  /* compact: 4:3 of the window's width (viewport - page padding 1.5rem - shadow gutter 0.5rem) */
+  section.win-section[data-compact='true'] {
+    height: min(calc((100vw - 2rem) * 0.75), calc(100dvh - 6.2rem), 42.8rem);
+  }
+}
+
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  section.win-section {
+    transition: none;
+  }
+}

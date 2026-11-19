@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { audio } from '@/siteData';
-import { playSfx, setSfxLevel, setSfxMuted, sfxForElement } from '@/audio/sfx';
+import { playMenuBlip, setSfxLevel } from '@/audio/sfx';
 
 // Slider scale: 100 is the new baseline, which is HALF of the old physical output.
 // 200 equals the old (pre-slider) output. 0 is silent.
@@ -37,7 +37,7 @@ interface AudioContextValue {
 
 const AudioStateContext = createContext<AudioContextValue | null>(null);
 
-const SFX_TARGETS = 'button, a, select, [role="tab"], [data-sfx]';
+const SFX_TARGETS = 'button, a, [role="tab"]';
 const SFX_OPT_OUT = '[data-no-sfx]';
 
 export function AudioProvider({ children }: { children: ReactNode }) {
@@ -52,7 +52,6 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     mutedRef.current = muted;
-    setSfxMuted(muted);
     if (bgmRef.current) bgmRef.current.muted = muted;
   }, [muted]);
 
@@ -139,8 +138,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       const target = event.target instanceof Element ? event.target : null;
       const control = target?.closest(SFX_TARGETS);
       if (!control || control.closest(SFX_OPT_OUT) || mutedRef.current || volumeRef.current <= 0) return;
-      const { kind, step } = sfxForElement(control);
-      playSfx(kind, step);
+      playMenuBlip();
     };
     document.addEventListener('click', onClick, true);
 
