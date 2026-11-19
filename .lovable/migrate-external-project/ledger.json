@@ -1,0 +1,96 @@
+{
+  "source": "code archive (novoumy.github.io.zip) - Vite + React 18 SPA hosted on GitHub Pages",
+  "capabilities": [
+    {
+      "capability": "code: retro pixel UI (tabs Main/Socials/Interests/Specs, Media/Games/Music/Quotes folders, hash links)",
+      "source": "src/App.tsx, src/views/*, src/components/*",
+      "outcome": "migrated",
+      "status": "verified",
+      "next_action": "Every tab and folder renders in the preview; #hash links preserved. Unused, broken Playnite components dropped. Fixed 12 media items tagged 'Movies'/'Shows' so they appear under their filters."
+    },
+    {
+      "capability": "styles: Tailwind v3 theme + custom CSS (pixel frame, retro-dark, accents, animations)",
+      "source": "src/index.css, tailwind.config.js",
+      "outcome": "migrated",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "assets: avatar, favicons, og-image, background music",
+      "source": "public/*",
+      "outcome": "migrated",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "metadata: title, favicon, og:image (https://novoumy.com/og-image.png), twitter card, Google fonts",
+      "source": "index.html",
+      "outcome": "migrated",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "external: YouTube IFrame API music player, Steam CDN images",
+      "source": "src/lib/youtube.ts, src/lib/steam.ts",
+      "outcome": "preserved",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "schema/records",
+      "source": "none (no database; @supabase/supabase-js was an unused dependency)",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "auth identities / authorization",
+      "source": "none (public site, no sign-in)",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "schedule: Steam library sync every 12h (GitHub Action -> public/data/steam-games.json)",
+      "source": ".github/workflows/sync-steam.yml, scripts/sync-steam.mjs",
+      "outcome": "kept on GitHub (user's choice); site reads the repo's steam-games.json live",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "secrets: STEAM_API_KEY, STEAM_ID",
+      "source": "GitHub repository secrets",
+      "outcome": "stay in GitHub repository secrets (user's choice)",
+      "status": "accepted",
+      "next_action": "none"
+    },
+    {
+      "capability": "deploy: GitHub Pages workflow",
+      "source": ".github/workflows/deploy.yml",
+      "outcome": "replace with Lovable publish",
+      "status": "pending",
+      "next_action": "User publishes; custom domain novoumy.com cutover is user's choice"
+    },
+    {
+      "capability": "build-time OG image generator script",
+      "source": "scripts/generate-og.py",
+      "outcome": "not migrated (generated public/og-image.png kept)",
+      "status": "accepted",
+      "next_action": "none"
+    },
+    {
+      "capability": "cutover: novoumy.com domain",
+      "source": "GitHub Pages",
+      "outcome": "pending user decision",
+      "status": "pending",
+      "next_action": "Connect custom domain in Lovable after publish"
+    },
+    {
+      "capability": "verification",
+      "source": "-",
+      "outcome": "all tabs, folders and Steam library (76 games from GitHub) verified",
+      "status": "verified",
+      "next_action": "none"
+    }
+  ]
+}
