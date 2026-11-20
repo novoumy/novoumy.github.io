@@ -1,34 +1,15 @@
 import { minecraftAchievements } from '@/data/minecraftAchievements';
-/*
- * ============================================================================
- *  SITE CONTENT - edit everything on the website from this one file.
- * ============================================================================
- *  - Text, links, images and tab names all live here. Change the strings
- *    between quotes, add items by copying an existing entry, remove items by
- *    deleting their block, reorder by moving blocks up or down.
- *  - Images: paste any image URL (https://...) into the "image", "poster",
- *    "cover" or "avatar" fields.
- *  - Tabs: set "enabled: false" to hide a tab. Change "label" to rename it.
- *    The first enabled tab in the list is the one shown when the site loads.
- *  - Keep commas between entries and quotes around text, just like a list.
- * ============================================================================
- */
 
 // ----------------------------------------------------------------------------
-// Types (the shapes each section expects - you normally don't need to touch these)
+// Types
 // ----------------------------------------------------------------------------
 
-// Top-level tabs in the tab bar.
 export type TabId = 'main' | 'socials' | 'interests' | 'specs';
 
-// Sections inside the Interests hub (opened from its 2x2 grid).
 export type InterestId = 'media' | 'games' | 'music' | 'quotes';
 
-// Built-in icons available for tabs. Options: 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid' | 'cpu'
 export type TabIconName = 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid' | 'cpu';
 
-// Built-in icons available for social tiles (used when no "image" is given).
-// Options include 'github' | 'youtube' | 'x' | 'discord' | 'steam' | 'instagram' | 'linkedin' | 'globe' | 'mail' | 'roblox'
 export type SocialIconName =
   | 'github'
   | 'youtube'
@@ -62,15 +43,13 @@ export interface HeroBadge {
 export interface MediaItem {
   title: string;
   category: MediaCategory;
-  year: number; // release year only, e.g. 2014
+  year: number;
   poster: string;
-  link: string; // external page (IMDb, MyAnimeList...), opened in a new tab when the card is clicked
+  link: string;
 }
 
 export type GamePlatform = 'PC' | 'MOBILE';
 
-// Games come from Steam automatically (public/data/steam-games.json, synced by
-// .github/workflows/sync-steam.yml). Anything that is NOT on Steam goes here as a manual entry.
 export interface ManualAchievement {
   id: string;
   name: string;
@@ -85,13 +64,13 @@ export interface ManualAchievement {
 export interface ManualGame {
   title: string;
   note: string;
-  cover: string; // vertical cover art
-  banner?: string; // optional wide art for the details screen (falls back to the cover)
+  cover: string;
+  banner?: string;
   link: string;
-  linkLabel: string; // concise external button label, e.g. 'minecraft.net'
-  playtimeHours: number; // used for sorting + totals
-  playtimeLabel: string; // shown as-is, e.g. '3000+ HRS'
-  lastPlayed?: number; // unix seconds, optional (only used by the "Recently played" sort)
+  linkLabel: string;
+  playtimeHours: number;
+  playtimeLabel: string;
+  lastPlayed?: number;
   achievements?: ManualAchievement[];
 }
 
@@ -100,11 +79,9 @@ export interface TrackItem {
   title: string;
   artist: string;
   album?: string;
-  genre: string; // used for the filter pills, e.g. 'INDIE / ALT'
-  duration?: string; // 'm:ss'. Optional: shown on the record when set.
+  genre: string;
+  duration?: string;
   coverUrl: string;
-  // YouTube video ID (the part after ?v=). Not used by the site any more (there is no
-  // built-in player); kept so the list stays easy to edit. Leave '' if you don't have one.
   youtubeId: string;
   spotifyUrl: string;
   geniusUrl: string;
@@ -117,11 +94,11 @@ export interface QuoteItem {
 }
 
 export interface SocialItem {
-  platform: string; // e.g. 'Discord'
-  handle?: string; // e.g. 'novoumy'. Leave out when the profile has no readable handle.
+  platform: string;
+  handle?: string;
   url: string;
-  icon?: SocialIconName; // built-in pixel icon...
-  image?: string; // ...or your own image URL (takes priority over icon)
+  icon?: SocialIconName;
+  image?: string;
 }
 
 // ----------------------------------------------------------------------------
@@ -129,7 +106,6 @@ export interface SocialItem {
 // ----------------------------------------------------------------------------
 
 export const site = {
-  // Shown in the browser tab.
   title: "novoumy",
 };
 
@@ -138,15 +114,12 @@ export const site = {
 // ----------------------------------------------------------------------------
 
 export const audio = {
-  // Looping background music. Put your MP3 in the "public/audio" folder and
-  // keep this path, or point it at any other MP3 URL.
   bgmSrc: '/audio/bgm.mp3',
-  // 0 = silent, 1 = full volume.
   bgmVolume: 0.35,
 };
 
 // ----------------------------------------------------------------------------
-// Tabs - order here is the order on screen
+// Tabs
 // ----------------------------------------------------------------------------
 
 export const tabs: TabConfig[] = [
@@ -156,7 +129,6 @@ export const tabs: TabConfig[] = [
   { id: 'specs', label: 'Specs', icon: 'cpu', enabled: true },
 ];
 
-// The four cards in the Interests hub. Change the subtitles to whatever you like.
 export const interests: { id: InterestId; label: string; subtitle: string; icon: TabIconName }[] = [
   { id: 'media', label: 'Media', subtitle: 'favorite anime & shows', icon: 'film' },
   { id: 'games', label: 'Games', subtitle: "what I'm playing / played", icon: 'gamepad' },
@@ -183,7 +155,7 @@ export const hero = {
 };
 
 // ----------------------------------------------------------------------------
-// 2. MEDIA - movies, anime and shows (keep sorted A-Z by title)
+// 2. MEDIA - movies, anime and shows (sorted A-Z by title)
 // ----------------------------------------------------------------------------
 
 export const mediaFilters: { label: string; value: 'all' | MediaCategory }[] = [
@@ -196,6 +168,13 @@ export const mediaFilters: { label: string; value: 'all' | MediaCategory }[] = [
 ];
 
 export const media: MediaItem[] = [
+  {
+    title: 'A Silent Voice',
+    category: 'Anime',
+    year: 2016,
+    poster: 'https://m.media-amazon.com/images/M/MV5BOTFiNzRiOWEtYTQwNy00NmRiLWE0ZWYtNTE0YjExZjFmZjkwXkEyXkFqcGc@._V1_QL75_UY562_CR5,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt5323662/',
+  },
   {
     title: 'Adventure Time',
     category: 'Animation',
@@ -253,7 +232,7 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt0230011/',
   },
   {
-    title: 'Attack on titan',
+    title: 'Attack on Titan',
     category: 'Anime',
     year: 2013,
     poster:
@@ -273,6 +252,27 @@ export const media: MediaItem[] = [
     year: 2005,
     poster: 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak%3D/v3/t/assets/p186109_b_v8_ah.jpg',
     link: 'https://www.imdb.com/title/tt0417299/',
+  },
+  {
+    title: 'Avengers: Age of Ultron',
+    category: 'Movie',
+    year: 2015,
+    poster: 'https://m.media-amazon.com/images/M/MV5BODBhYTg1NGQtNGVmNS00ZTdiLThjYTYtZDFkNzRiNTZmNDZjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt2395427/',
+  },
+  {
+    title: 'Avengers: Endgame',
+    category: 'Movie',
+    year: 2019,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt4154796/',
+  },
+  {
+    title: 'Avengers: Infinity War',
+    category: 'Movie',
+    year: 2018,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt4154756/',
   },
   {
     title: 'Bambi',
@@ -346,12 +346,223 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt0877057/',
   },
   {
+    title: 'Delicious in Dungeon',
+    category: 'Anime',
+    year: 2024,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNmU3ZGFhMmYtNzczYy00NTE0LThkYjgtNWFiYTY2NzRkM2QzXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt21621494/',
+  },
+  {
     title: 'Demon Slayer',
     category: 'Anime',
     year: 2019,
     poster:
       'https://m.media-amazon.com/images/M/MV5BMWU1OGEwNmQtNGM3MS00YTYyLThmYmMtN2FjYzQzNzNmNTE0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt9335498/',
+  },
+  {
+    title: 'Detective Conan: Black Iron Submarine',
+    category: 'Anime',
+    year: 2023,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMWIwZDJhY2YtOGYxNS00OTgxLWE2OWEtZGNiZTk2YzA5NjY1XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt27521477/',
+  },
+  {
+    title: 'Detective Conan: Captured in Her Eyes',
+    category: 'Anime',
+    year: 2000,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNGFjMmM3Y2EtMjEwMC00NzMwLWE0M2QtM2Q4YWI1YTg2YTFiXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1068773/',
+  },
+  {
+    title: 'Detective Conan: Countdown to Heaven',
+    category: 'Anime',
+    year: 2001,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNjJhNjZjYjItYjIzYS00NDY0LTlhZDctYWZkY2MyOWU3ZWQxXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1073223/',
+  },
+  {
+    title: 'Detective Conan: Crossroad in the Ancient Capital',
+    category: 'Anime',
+    year: 2003,
+    poster: 'https://m.media-amazon.com/images/M/MV5BY2M0Mzc2ZTctZGI2Mi00Zjk1LTg5MWItMGRmNWNjMDE0ZjdjXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1133935/',
+  },
+  {
+    title: 'Detective Conan: Dimensional Sniper',
+    category: 'Anime',
+    year: 2014,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNGQ5Y2RmZGMtN2I4NS00OWNlLWI1YzAtNjUxNzcwNDA4Y2IxXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt3455204/',
+  },
+  {
+    title: 'Detective Conan: Fallen Angel of the Highway',
+    category: 'Anime',
+    year: 2026,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNmRjMzMyODUtNTg3Ny00NjJhLTk5NTQtY2M2YzE2YzI4OTYyXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt39123115/',
+  },
+  {
+    title: 'Detective Conan: Full Score of Fear',
+    category: 'Anime',
+    year: 2008,
+    poster: 'https://m.media-amazon.com/images/M/MV5BZGU5OWZjYzktMjVmNy00NWE4LTkyYWUtYjI1ZjlhYzkwODllXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1155696/',
+  },
+  {
+    title: 'Detective Conan: Jolly Roger in the Deep Azure',
+    category: 'Anime',
+    year: 2007,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMGY1YWU1YWQtYzcyZC00ZTkwLWJiYzMtMzg0NDAwNWEwNGFkXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1146290/',
+  },
+  {
+    title: 'Detective Conan: Magician of the Silver Sky',
+    category: 'Anime',
+    year: 2004,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNGVjNjJiYTMtODE3Yi00OWY4LTgxYjAtNTUwODQwMjI2ODJmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1133559/',
+  },
+  {
+    title: 'Detective Conan: One-Eyed Flashback',
+    category: 'Anime',
+    year: 2025,
+    poster: 'https://m.media-amazon.com/images/M/MV5BZGRmMzYwOTEtMDI0Yi00MGJmLWJkNDEtYWQ4OWEyNjBiZTIwXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt35444710/',
+  },
+  {
+    title: 'Detective Conan: Private Eye in the Distant Sea',
+    category: 'Anime',
+    year: 2013,
+    // TODO: wrong poster — currently duplicates "The Private Eyes Requiem". Swap in the correct 2013 art.
+    poster: 'https://m.media-amazon.com/images/M/MV5BY2MxM2U1OGYtY2U2YS00MjZjLWE5ZDMtNWM4M2E5YTRkM2Q3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt3303446/',
+  },
+  {
+    title: 'Detective Conan: Quarter of Silence',
+    category: 'Anime',
+    year: 2011,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMTU4OGU2NjMtMGMwMS00MzlkLTlkOGMtMzdjZmM5YmExZTI5XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1840372/',
+  },
+  {
+    title: 'Detective Conan: Strategy Above the Depths',
+    category: 'Anime',
+    year: 2005,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMThjYWZlNjMtYTA4MC00OGE1LTk1MGQtMDNjZDdjM2E0NmQ2XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1133936/',
+  },
+  {
+    title: 'Detective Conan: Sunflowers of Inferno',
+    category: 'Anime',
+    year: 2015,
+    poster: 'https://m.media-amazon.com/images/M/MV5BYzQ2MTgwNzctZjU5Ni00NmVlLTkxMGEtYTMxNDk1YWNjNDhkXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt3737650/',
+  },
+  {
+    title: 'Detective Conan: The Bride of Halloween',
+    category: 'Anime',
+    year: 2022,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNTQ4ZTAyZDAtYjhjMS00MWZjLWI4OGYtYTFkNTEyMjllNzc0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt19770970/',
+  },
+  {
+    title: 'Detective Conan: The Crimson Love Letter',
+    category: 'Anime',
+    year: 2017,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMmM1NjQ4N2EtOWUyZS00Njc3LWE3MWEtMDQ0MTIwY2IxNTc3XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt5692622/',
+  },
+  {
+    title: 'Detective Conan: The Darkest Nightmare',
+    category: 'Anime',
+    year: 2016,
+    poster: 'https://m.media-amazon.com/images/M/MV5BN2I3Y2RlOTQtYjUwNy00ZjNkLTgzMjAtYmFkZWY1N2IzYjA3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt4954660/',
+  },
+  {
+    title: 'Detective Conan: The Eleventh Striker',
+    category: 'Anime',
+    year: 2012,
+    poster: 'https://m.media-amazon.com/images/M/MV5BN2E5NTcwOGUtOTkzNC00YjAwLWFkNWQtYWRmMmU5YjQ2YWNhXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt2131586/',
+  },
+  {
+    title: 'Detective Conan: The Fist of Blue Sapphire',
+    category: 'Anime',
+    year: 2019,
+    poster: 'https://m.media-amazon.com/images/M/MV5BY2Q0NzIxOTItOWUwZi00YjA5LWIxNTgtNGQ5ODYwNWFjMWMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt9501310/',
+  },
+  {
+    title: 'Detective Conan: The Fourteenth Target',
+    category: 'Anime',
+    year: 1998,
+    poster: 'https://m.media-amazon.com/images/M/MV5BZGE3ZTJiODQtYjY1My00MDJmLTkxOWItYzE1ZDIyOTA5MmNjXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0965649/',
+  },
+  {
+    title: 'Detective Conan: The Last Wizard of the Century',
+    category: 'Anime',
+    year: 1999,
+    poster: 'https://m.media-amazon.com/images/M/MV5BYzg0NjJhNDktODA0Zi00YjY0LWEwN2UtYzc0YmMxNzNhZmM5XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1067920/',
+  },
+  {
+    title: 'Detective Conan: The Lost Ship in the Sky',
+    category: 'Anime',
+    year: 2010,
+    poster: 'https://m.media-amazon.com/images/M/MV5BZWIxOGQxZTAtMjE1NC00MzBmLTk2YWQtMTUwYTA3YzI5ZDQ5XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1636815/',
+  },
+  {
+    title: 'Detective Conan: The Million-Dollar Pentagram',
+    category: 'Anime',
+    year: 2024,
+    poster: 'https://m.media-amazon.com/images/M/MV5BYjQ4OWRiOTEtMDhjYS00YWEyLWFlNDEtNWJlYmViZjBjNjhhXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt31474158/',
+  },
+  {
+    title: 'Detective Conan: The Phantom of Baker Street',
+    category: 'Anime',
+    year: 2002,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNzlkYjcyZTItMzY3NS00MzYzLWIwOTUtMGI3NDc2MmZmMWNiXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0990372/',
+  },
+  {
+    title: 'Detective Conan: The Private Eyes Requiem',
+    category: 'Anime',
+    year: 2006,
+    poster: 'https://m.media-amazon.com/images/M/MV5BY2MxM2U1OGYtY2U2YS00MjZjLWE5ZDMtNWM4M2E5YTRkM2Q3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0498536/',
+  },
+  {
+    title: 'Detective Conan: The Raven Chaser',
+    category: 'Anime',
+    year: 2009,
+    poster: 'https://m.media-amazon.com/images/M/MV5BOGM3YTQ3YWItZDdlMS00YzIzLWFjNGQtMmQ0ZGE4MWQzMmViXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1343046/',
+  },
+  {
+    title: 'Detective Conan: The Scarlet Bullet',
+    category: 'Anime',
+    year: 2021,
+    poster: 'https://m.media-amazon.com/images/M/MV5BYzFjOWZkN2UtODk5Yi00NDE5LWIxMTAtMjZhODZkMzYzMmJlXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt12093860/',
+  },
+  {
+    title: 'Detective Conan: The Time Bombed Skyscraper',
+    category: 'Anime',
+    year: 1997,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNGEwMGEwZTctMTcyYS00NDg3LThiM2MtMzMxMzc2MmYxZmVhXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0131479/',
+  },
+  {
+    title: 'Detective Conan: Zero the Enforcer',
+    category: 'Anime',
+    year: 2018,
+    poster: 'https://m.media-amazon.com/images/M/MV5BOGEzZGU2M2ItMTY1My00ZTBkLWExNGUtNjIzYTZiODg0NzEyXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt7880466/',
   },
   {
     title: "Don't Look Up",
@@ -382,7 +593,7 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt0137523/',
   },
   {
-    title: 'Frieren: Beyond Journey’s End',
+    title: "Frieren: Beyond Journey's End",
     category: 'Anime',
     year: 2023,
     poster:
@@ -454,13 +665,6 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt9848626/',
   },
   {
-    title: "Howl's Moving Castle",
-    category: 'Anime',
-    year: 2004,
-    poster: '/images/howls-moving-castle.png',
-    link: 'https://www.imdb.com/title/tt0347149/',
-  },
-  {
     title: 'House',
     category: 'Show',
     year: 2004,
@@ -489,6 +693,13 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt2386490/',
   },
   {
+    title: "Howl's Moving Castle",
+    category: 'Anime',
+    year: 2004,
+    poster: '/images/howls-moving-castle.png',
+    link: 'https://www.imdb.com/title/tt0347149/',
+  },
+  {
     title: 'Hunger',
     category: 'Movie',
     year: 2009,
@@ -502,6 +713,13 @@ export const media: MediaItem[] = [
     poster:
       'https://m.media-amazon.com/images/M/MV5BYzYxOTlkYzctNGY2MC00MjNjLWIxOWMtY2QwYjcxZWIwMmEwXkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt2098220/',
+  },
+  {
+    title: 'I Want to Eat Your Pancreas',
+    category: 'Anime',
+    year: 2018,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMTQ1ODIzOGQtOGFkZC00MWViLTgyYmUtNWJkNmIxZjYxMTdmXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt7236034/',
   },
   {
     title: 'Ice Age',
@@ -540,6 +758,48 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt0816692/',
   },
   {
+    title: 'John Wick: Chapter 1',
+    category: 'Movie',
+    year: 2014,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt2911666/',
+  },
+  {
+    title: 'John Wick: Chapter 2',
+    category: 'Movie',
+    year: 2017,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMjE2NDkxNTY2M15BMl5BanBnXkFtZTgwMDc2NzE0MTI@._V1_QL75_UX380_CR0,12,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt4425200/',
+  },
+  {
+    title: 'John Wick: Chapter 3 – Parabellum',
+    category: 'Movie',
+    year: 2019,
+    poster: 'https://m.media-amazon.com/images/M/MV5BYjdlNWFlZjEtM2U0NS00ZWU5LTk1M2EtZmQxNWFiZjk0MGM5XkEyXkFqcGc@._V1_QL75_UX380_CR0,12,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt6146586/',
+  },
+  {
+    title: 'John Wick: Chapter 4',
+    category: 'Movie',
+    year: 2023,
+    poster: 'https://m.media-amazon.com/images/M/MV5BY2Q2ZmI5ZjUtNWVhMC00YzJkLTlmYjMtY2RmZDhkNzEzYjZhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt10366206/',
+  },
+  {
+    title: 'Jujutsu Kaisen',
+    category: 'Anime',
+    year: 2020,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMjBlNTExMDAtMWZjZi00MDc5LWFkMjgtZDU0ZWQ5ODk3YWY5XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt12343534/',
+  },
+  {
+    title: "Kiki's Delivery Service",
+    category: 'Anime',
+    year: 1989,
+    poster: 'https://m.media-amazon.com/images/M/MV5BOTFhYWI1NGUtZWFhZS00MTdkLWIzZTItMDBhNWNiZDNlMjYyXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0097814/',
+  },
+  {
     title: 'Kung Fu Panda',
     category: 'Cartoon',
     year: 2008,
@@ -568,6 +828,13 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt0275847/',
   },
   {
+    title: 'Lovely Complex',
+    category: 'Anime',
+    year: 2007,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNGVhZGExOTktMzU0OC00N2IzLThlZmQtZGIxZWI3ZTUzZThlXkEyXkFqcGc@._V1_QL75_UY562_CR24,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt1587394/',
+  },
+  {
     title: 'Manchester by the Sea',
     category: 'Movie',
     year: 2016,
@@ -582,11 +849,46 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt0117008/',
   },
   {
+    title: 'More Than a Married Couple, But Not Lovers',
+    category: 'Anime',
+    year: 2022,
+    poster: 'https://m.media-amazon.com/images/M/MV5BZDY5ZWE1YTYtMTY4NC00NDdkLTgzNjQtMzM2Nzc1MDBiNzFlXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt16231800/',
+  },
+  {
+    title: 'My Dress-Up Darling',
+    category: 'Anime',
+    year: 2022,
+    poster: 'https://m.media-amazon.com/images/M/MV5BYmJhYjgzYTQtMzMxYi00NTkyLWI2MWItNTgxNjk1NzU0YmQzXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt15765670/',
+  },
+  {
+    title: 'My Love Story with Yamada-kun at Lv999',
+    category: 'Anime',
+    year: 2023,
+    poster: 'https://m.media-amazon.com/images/M/MV5BOGU4NzQ3YzQtOTU4MC00ZGMzLThlOGMtODMzODg3YzM1Mzg2XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt22297712/',
+  },
+  {
     title: 'Oddballs',
     category: 'Cartoon',
     year: 2022,
     poster: 'https://m.media-amazon.com/images/M/MV5BZTJmNjZkYzYtYzdjMy00MmY3LWE5MzgtOWIyMmY5ZGNjMThiXkEyXkFqcGc@._V1_QL75_UY562_CR22,0,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt21107718/',
+  },
+  {
+    title: 'One-Punch Man',
+    category: 'Anime',
+    year: 2015,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNzMwOGQ5MWItNzE3My00ZDYyLTk4NzAtZWIyYWI0NTZhYzY0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt4508902/',
+  },
+  {
+    title: 'Our Dating Story: The Experienced You and the Inexperienced Me',
+    category: 'Anime',
+    year: 2023,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMjgyZTdhZDMtYzUxNC00Yzc0LTgxYWMtYjBiNjYwMTJmMzRmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt22017206/',
   },
   {
     title: 'Over the Garden Wall',
@@ -596,6 +898,13 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt3718778/',
   },
   {
+    title: 'Penguin Highway',
+    category: 'Anime',
+    year: 2018,
+    poster: 'https://m.media-amazon.com/images/M/MV5BY2Y5Y2RlNGEtNjkwMi00NjU3LTlhYTItMmI5YjFhNDk4YzU4XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt8076344/',
+  },
+  {
     title: 'Pinocchio',
     category: 'Cartoon',
     year: 1940,
@@ -603,11 +912,25 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt0032910/',
   },
   {
+    title: 'Ponyo',
+    category: 'Anime',
+    year: 2008,
+    poster: 'https://m.media-amazon.com/images/M/MV5BZDkzMzQ5ZmQtOTA3MC00MjhiLTk5M2UtNzk0MjEzZmVjN2UxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0876563/',
+  },
+  {
     title: 'Primal Fear',
     category: 'Movie',
     year: 1996,
     poster: 'https://m.media-amazon.com/images/M/MV5BZTJlYjM5MTYtZWU3YS00ZDRhLTk1MWEtZGQyODc1ZDU2MWEwXkEyXkFqcGc@._V1_QL75_UX380_CR0,3,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt0117381/',
+  },
+  {
+    title: 'Pseudo Harem',
+    category: 'Anime',
+    year: 2024,
+    poster: 'https://m.media-amazon.com/images/M/MV5BZWQzMDBlOGItNGVjOC00YjUzLWI5MWMtMThlM2MwZmU2ZTRmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt32552529/',
   },
   {
     title: 'Rascal Does Not Dream series',
@@ -630,6 +953,13 @@ export const media: MediaItem[] = [
     year: 2021,
     poster: 'https://m.media-amazon.com/images/M/MV5BN2QzZTQ3MzktN2JiYS00MDEzLTgxMWQtZWFmMDI3NWFkZTY0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt5109280/',
+  },
+  {
+    title: 'Red Notice',
+    category: 'Movie',
+    year: 2021,
+    poster: 'https://m.media-amazon.com/images/M/MV5BOGNjNGQ3MmItYTM5NS00NjBiLWI0ZTItZDE5ZjQyNjg3ODBjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt7991608/',
   },
   {
     title: 'Regular Show',
@@ -667,6 +997,55 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt0029583/',
   },
   {
+    title: 'Solo Leveling',
+    category: 'Anime',
+    year: 2024,
+    poster: 'https://m.media-amazon.com/images/M/MV5BM2M4YzdkMTEtMjUyYy00ZWY0LWI5ODQtNGRkZWQ1MzU5MWM2XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt21209876/',
+  },
+  {
+    title: 'Spider-Man (Tobey Maguire)',
+    category: 'Movie',
+    year: 2002,
+    poster: 'https://m.media-amazon.com/images/M/MV5BZWM0OWVmNTEtNWVkOS00MzgyLTkyMzgtMmE2ZTZiNjY4MmFiXkEyXkFqcGc@._V1_QL75_UY562_CR0,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0145487/',
+  },
+  {
+    title: 'Spider-Man 2 (Tobey Maguire)',
+    category: 'Movie',
+    year: 2004,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNGQ0YTQyYTgtNWI2YS00NTE2LWJmNDItNTFlMTUwNmFlZTM0XkEyXkFqcGc@._V1_QL75_UY562_CR15,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0316654/',
+  },
+  {
+    title: 'Spider-Man 3 (Tobey Maguire)',
+    category: 'Movie',
+    year: 2007,
+    poster: 'https://m.media-amazon.com/images/M/MV5BODE2NzNhMDctYjUzMC00Y2M5LWI2Y2EtODJkZTFjN2Y5ODlmXkEyXkFqcGc@._V1_QL75_UX380_CR0,1,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0413300/',
+  },
+  {
+    title: 'Spider-Man: Across the Spider-Verse',
+    category: 'Animation',
+    year: 2023,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNThiZjA3MjItZGY5Ni00ZmJhLWEwN2EtOTBlYTA4Y2E0M2ZmXkEyXkFqcGc@._V1_QL75_UX380_CR0,1,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt9362722/',
+  },
+  {
+    title: 'Spider-Man: Into the Spider-Verse',
+    category: 'Animation',
+    year: 2018,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_QL75_UX380_CR0,1,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt4633694/',
+  },
+  {
+    title: 'Spy x Family',
+    category: 'Anime',
+    year: 2022,
+    poster: 'https://m.media-amazon.com/images/M/MV5BZDkwNjc0NWEtNzJlOC00N2YwLTk4MjktZGFlZDE2Y2QzOWI0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt13706018/',
+  },
+  {
     title: 'Squid Game',
     category: 'Show',
     year: 2021,
@@ -681,6 +1060,20 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt4574334/',
   },
   {
+    title: 'Swiss Family Robinson',
+    category: 'Anime',
+    year: 1981,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNDdhZjY4YmYtNGQ4Ni00ZTVlLTg1MGEtOTEwNTUxODdiNDkxXkEyXkFqcGc@._V1_FMjpg_UY2100_.jpg',
+    link: 'https://www.imdb.com/title/tt0168341/',
+  },
+  {
+    title: 'Tanken Driland',
+    category: 'Anime',
+    year: 2012,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNTYzZDRiNmUtMWJmOS00N2I1LTk5MGItZmRkOWM2YmU1NmIxXkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt2250138/',
+  },
+  {
     title: 'Teen Titans Go!',
     category: 'Cartoon',
     year: 2013,
@@ -688,18 +1081,25 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt2771780/',
   },
   {
-    title: 'The Cat Returns',
-    category: 'Anime',
-    year: 2002,
-    poster: 'https://m.media-amazon.com/images/M/MV5BNDEwZDkyNWItYzM3OC00N2Q1LTk0YmEtYjIxZWJlNGFjNTE3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-    link: 'https://www.imdb.com/title/tt0347618/',
-  },
-  {
     title: 'The Amazing World of Gumball',
     category: 'Cartoon',
     year: 2011,
     poster: 'https://m.media-amazon.com/images/M/MV5BNWRiZTcyMDMtYTQ1Ni00YmJiLThiNDktMTEzNzFiZmZjNzNkXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt1942683/',
+  },
+  {
+    title: 'The Angel Next Door Spoils Me Rotten',
+    category: 'Anime',
+    year: 2023,
+    poster: 'https://m.media-amazon.com/images/M/MV5BZjAzYzljMmUtYjZhZS00ZGIzLTg5ZTgtMWFmYmVkZGEwODEyXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt19064770/',
+  },
+  {
+    title: 'The Apothecary Diaries',
+    category: 'Anime',
+    year: 2023,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNjAxMmFjZjgtYjM1ZS00NzdmLTliZDktZmIyMzU5YTBlNDBmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt26743760/',
   },
   {
     title: 'The Bad Guys',
@@ -723,6 +1123,13 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt6932874/',
   },
   {
+    title: 'The Cat Returns',
+    category: 'Anime',
+    year: 2002,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNDEwZDkyNWItYzM3OC00N2Q1LTk0YmEtYjIxZWJlNGFjNTE3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt0347618/',
+  },
+  {
     title: 'The Croods',
     category: 'Cartoon',
     year: 2013,
@@ -735,6 +1142,13 @@ export const media: MediaItem[] = [
     year: 2020,
     poster: 'https://m.media-amazon.com/images/M/MV5BZTI1OTFhYmQtMzM4NS00Y2NkLTlkMmEtNTJhMWU1YWI0ZGQ2XkEyXkFqcGc@._V1_QL75_UY562_CR2,0,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt2850386/',
+  },
+  {
+    title: 'The Fragrant Flower Blooms with Dignity',
+    category: 'Anime',
+    year: 2025,
+    poster: 'https://m.media-amazon.com/images/M/MV5BY2Q0NTNlMTAtZGVkYS00NDU1LThjYzYtZDQ3M2U5NGJiNzhkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt36592690/',
   },
   {
     title: 'The Karate Kid',
@@ -793,6 +1207,13 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt0175058/',
   },
   {
+    title: "The Queen's Gambit",
+    category: 'Show',
+    year: 2020,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt10048342/',
+  },
+  {
     title: 'The Roommate',
     category: 'Movie',
     year: 2011,
@@ -807,18 +1228,18 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt4823776/',
   },
   {
-    title: 'Swiss Family Robinson',
-    category: 'Anime',
-    year: 1981,
-    poster: 'https://m.media-amazon.com/images/M/MV5BNDdhZjY4YmYtNGQ4Ni00ZTVlLTg1MGEtOTEwNTUxODdiNDkxXkEyXkFqcGc@._V1_FMjpg_UY2100_.jpg',
-    link: 'https://www.imdb.com/title/tt0168341/',
-  },
-  {
     title: 'The Terminal',
     category: 'Movie',
     year: 2004,
     poster: 'https://m.media-amazon.com/images/M/MV5BMTM1MTIwNTMxOF5BMl5BanBnXkFtZTcwNjIxMjQyMw@@._V1_FMjpg_UY2048_.jpg',
     link: 'https://www.imdb.com/title/tt0362227/',
+  },
+  {
+    title: 'Tomo-chan Is a Girl!',
+    category: 'Anime',
+    year: 2023,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMzQxMzg3N2EtN2MzNC00ZTg0LWJhNGYtZWU2Y2RlZTg1MGNlXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt21210326/',
   },
   {
     title: 'Toy Story',
@@ -849,6 +1270,13 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt1049413/',
   },
   {
+    title: 'Vinland Saga',
+    category: 'Anime',
+    year: 2019,
+    poster: 'https://m.media-amazon.com/images/M/MV5BNDA3MGNmZTEtMzFiMy00ZmViLThhNmQtMjQ4ZDc5MDEyN2U1XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt10233448/',
+  },
+  {
     title: 'WALL-E',
     category: 'Cartoon',
     year: 2008,
@@ -877,467 +1305,12 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt2543472/',
   },
   {
-  title: 'John Wick: Chapter 1',
-  category: 'Movie',
-  year: 2014,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt2911666/',
-},
-{
-  title: 'John Wick: Chapter 2',
-  category: 'Movie',
-  year: 2017,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMjE2NDkxNTY2M15BMl5BanBnXkFtZTgwMDc2NzE0MTI@._V1_QL75_UX380_CR0,12,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt4425200/',
-},
-{
-  title: 'John Wick: Chapter 3 – Parabellum',
-  category: 'Movie',
-  year: 2019,
-  poster: 'https://m.media-amazon.com/images/M/MV5BYjdlNWFlZjEtM2U0NS00ZWU5LTk1M2EtZmQxNWFiZjk0MGM5XkEyXkFqcGc@._V1_QL75_UX380_CR0,12,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt6146586/',
-},
-{
-  title: 'John Wick: Chapter 4',
-  category: 'Movie',
-  year: 2023,
-  poster: 'https://m.media-amazon.com/images/M/MV5BY2Q2ZmI5ZjUtNWVhMC00YzJkLTlmYjMtY2RmZDhkNzEzYjZhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt10366206/',
-},
-{
-  title: 'Spider-Man (Tobey Maguire)',
-  category: 'Movie',
-  year: 2002,
-  poster: 'https://m.media-amazon.com/images/M/MV5BZWM0OWVmNTEtNWVkOS00MzgyLTkyMzgtMmE2ZTZiNjY4MmFiXkEyXkFqcGc@._V1_QL75_UY562_CR0,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt0145487/',
-},
-{
-  title: 'Spider-Man 2 (Tobey Maguire)',
-  category: 'Movie',
-  year: 2004,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNGQ0YTQyYTgtNWI2YS00NTE2LWJmNDItNTFlMTUwNmFlZTM0XkEyXkFqcGc@._V1_QL75_UY562_CR15,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt0316654/',
-},
-{
-  title: 'Spider-Man 3 (Tobey Maguire)',
-  category: 'Movie',
-  year: 2007,
-  poster: 'https://m.media-amazon.com/images/M/MV5BODE2NzNhMDctYjUzMC00Y2M5LWI2Y2EtODJkZTFjN2Y5ODlmXkEyXkFqcGc@._V1_QL75_UX380_CR0,1,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt0413300/',
-},
-{
-  title: 'Red Notice',
-  category: 'Movie',
-  year: 2021,
-  poster: 'https://m.media-amazon.com/images/M/MV5BOGNjNGQ3MmItYTM5NS00NjBiLWI0ZTItZDE5ZjQyNjg3ODBjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt7991608/',
-},
-{
-  title: 'Avengers: Age of Ultron',
-  category: 'Movie',
-  year: 2015,
-  poster: 'https://m.media-amazon.com/images/M/MV5BODBhYTg1NGQtNGVmNS00ZTdiLThjYTYtZDFkNzRiNTZmNDZjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt2395427/',
-},
-{
-  title: 'Avengers: Infinity War',
-  category: 'Movie',
-  year: 2018,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt4154756/',
-},
-{
-  title: 'Avengers: Endgame',
-  category: 'Movie',
-  year: 2019,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt4154796/',
-},
-{
-  title: 'Detective Conan: The Time Bombed Skyscraper',
-  category: 'Anime',
-  year: 1997,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNGEwMGEwZTctMTcyYS00NDg3LThiM2MtMzMxMzc2MmYxZmVhXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt0131479/',
-},
-{
-  title: 'Detective Conan: The Fourteenth Target',
-  category: 'Anime',
-  year: 1998,
-  poster: 'https://m.media-amazon.com/images/M/MV5BZGE3ZTJiODQtYjY1My00MDJmLTkxOWItYzE1ZDIyOTA5MmNjXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt0965649/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: The Last Wizard of the Century',
-  category: 'Anime',
-  year: 1999,
-  poster: 'https://m.media-amazon.com/images/M/MV5BYzg0NjJhNDktODA0Zi00YjY0LWEwN2UtYzc0YmMxNzNhZmM5XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1067920/?ref_=fn_t_2',
-},
-{
-  title: 'Detective Conan: Captured in Her Eyes',
-  category: 'Anime',
-  year: 2000,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNGFjMmM3Y2EtMjEwMC00NzMwLWE0M2QtM2Q4YWI1YTg2YTFiXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1068773/?ref_=fn_t_2',
-},
-{
-  title: 'Detective Conan: Countdown to Heaven',
-  category: 'Anime',
-  year: 2001,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNjJhNjZjYjItYjIzYS00NDY0LTlhZDctYWZkY2MyOWU3ZWQxXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1073223/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: The Phantom of Baker Street',
-  category: 'Anime',
-  year: 2002,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNzlkYjcyZTItMzY3NS00MzYzLWIwOTUtMGI3NDc2MmZmMWNiXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt0990372/?ref_=fn_t_2',
-},
-{
-  title: 'Detective Conan: Crossroad in the Ancient Capital',
-  category: 'Anime',
-  year: 2003,
-  poster: 'https://m.media-amazon.com/images/M/MV5BY2M0Mzc2ZTctZGI2Mi00Zjk1LTg5MWItMGRmNWNjMDE0ZjdjXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1133935/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: Magician of the Silver Sky',
-  category: 'Anime',
-  year: 2004,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNGVjNjJiYTMtODE3Yi00OWY4LTgxYjAtNTUwODQwMjI2ODJmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1133559/',
-},
-{
-  title: 'Detective Conan: Strategy Above the Depths',
-  category: 'Anime',
-  year: 2005,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMThjYWZlNjMtYTA4MC00OGE1LTk1MGQtMDNjZDdjM2E0NmQ2XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1133936/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: The Private Eyes Requiem',
-  category: 'Anime',
-  year: 2006,
-  poster: 'https://m.media-amazon.com/images/M/MV5BY2MxM2U1OGYtY2U2YS00MjZjLWE5ZDMtNWM4M2E5YTRkM2Q3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt0498536/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: Jolly Roger in the Deep Azure',
-  category: 'Anime',
-  year: 2007,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMGY1YWU1YWQtYzcyZC00ZTkwLWJiYzMtMzg0NDAwNWEwNGFkXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1146290/?ref_=fn_t_2',
-},
-{
-  title: 'Detective Conan: Full Score of Fear',
-  category: 'Anime',
-  year: 2008,
-  poster: 'https://m.media-amazon.com/images/M/MV5BZGU5OWZjYzktMjVmNy00NWE4LTkyYWUtYjI1ZjlhYzkwODllXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1155696/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: The Raven Chaser',
-  category: 'Anime',
-  year: 2009,
-  poster: 'https://m.media-amazon.com/images/M/MV5BOGM3YTQ3YWItZDdlMS00YzIzLWFjNGQtMmQ0ZGE4MWQzMmViXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1343046/?ref_=fn_t_2',
-},
-{
-  title: 'Detective Conan: The Lost Ship in the Sky',
-  category: 'Anime',
-  year: 2010,
-  poster: 'https://m.media-amazon.com/images/M/MV5BZWIxOGQxZTAtMjE1NC00MzBmLTk2YWQtMTUwYTA3YzI5ZDQ5XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1636815/',
-},
-{
-  title: 'Detective Conan: Quarter of Silence',
-  category: 'Anime',
-  year: 2011,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMTU4OGU2NjMtMGMwMS00MzlkLTlkOGMtMzdjZmM5YmExZTI5XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1840372/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: The Eleventh Striker',
-  category: 'Anime',
-  year: 2012,
-  poster: 'https://m.media-amazon.com/images/M/MV5BN2E5NTcwOGUtOTkzNC00YjAwLWFkNWQtYWRmMmU5YjQ2YWNhXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt2131586/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: Private Eye in the Distant Sea',
-  category: 'Anime',
-  year: 2013,
-  poster: 'https://m.media-amazon.com/images/M/MV5BY2MxM2U1OGYtY2U2YS00MjZjLWE5ZDMtNWM4M2E5YTRkM2Q3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt3303446/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: Dimensional Sniper',
-  category: 'Anime',
-  year: 2014,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNGQ5Y2RmZGMtN2I4NS00OWNlLWI1YzAtNjUxNzcwNDA4Y2IxXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt3455204/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: Sunflowers of Inferno',
-  category: 'Anime',
-  year: 2015,
-  poster: 'https://m.media-amazon.com/images/M/MV5BYzQ2MTgwNzctZjU5Ni00NmVlLTkxMGEtYTMxNDk1YWNjNDhkXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt3737650/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: The Darkest Nightmare',
-  category: 'Anime',
-  year: 2016,
-  poster: 'https://m.media-amazon.com/images/M/MV5BN2I3Y2RlOTQtYjUwNy00ZjNkLTgzMjAtYmFkZWY1N2IzYjA3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt4954660/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: The Crimson Love Letter',
-  category: 'Anime',
-  year: 2017,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMmM1NjQ4N2EtOWUyZS00Njc3LWE3MWEtMDQ0MTIwY2IxNTc3XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt5692622/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: Zero the Enforcer',
-  category: 'Anime',
-  year: 2018,
-  poster: 'https://m.media-amazon.com/images/M/MV5BOGEzZGU2M2ItMTY1My00ZTBkLWExNGUtNjIzYTZiODg0NzEyXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt7880466/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: The Fist of Blue Sapphire',
-  category: 'Anime',
-  year: 2019,
-  poster: 'https://m.media-amazon.com/images/M/MV5BY2Q0NzIxOTItOWUwZi00YjA5LWIxNTgtNGQ5ODYwNWFjMWMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt9501310/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: The Scarlet Bullet',
-  category: 'Anime',
-  year: 2021,
-  poster: 'https://m.media-amazon.com/images/M/MV5BYzFjOWZkN2UtODk5Yi00NDE5LWIxMTAtMjZhODZkMzYzMmJlXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt12093860/?ref_=fn_t_2',
-},
-{
-  title: 'Detective Conan: The Bride of Halloween',
-  category: 'Anime',
-  year: 2022,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNTQ4ZTAyZDAtYjhjMS00MWZjLWI4OGYtYTFkNTEyMjllNzc0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt19770970/?ref_=fn_t_2',
-},
-{
-  title: 'Detective Conan: Black Iron Submarine',
-  category: 'Anime',
-  year: 2023,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMWIwZDJhY2YtOGYxNS00OTgxLWE2OWEtZGNiZTk2YzA5NjY1XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt27521477/?ref_=fn_t_2',
-},
-{
-  title: 'Detective Conan: The Million-Dollar Pentagram',
-  category: 'Anime',
-  year: 2024,
-  poster: 'https://m.media-amazon.com/images/M/MV5BYjQ4OWRiOTEtMDhjYS00YWEyLWFlNDEtNWJlYmViZjBjNjhhXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt31474158/?ref_=fn_t_1',
-},
-{
-  title: 'Detective Conan: One-Eyed Flashback',
-  category: 'Anime',
-  year: 2025,
-  poster: 'https://m.media-amazon.com/images/M/MV5BZGRmMzYwOTEtMDI0Yi00MGJmLWJkNDEtYWQ4OWEyNjBiZTIwXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt35444710/',
-},
-{
-  title: 'Detective Conan: Fallen Angel of the Highway',
-  category: 'Anime',
-  year: 2026,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNmRjMzMyODUtNTg3Ny00NjJhLTk5NTQtY2M2YzE2YzI4OTYyXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt39123115/?ref_=fn_t_1',
-},
-{
-  title: 'Tomo-chan Is a Girl!',
-  category: 'Anime',
-  year: 2023,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMzQxMzg3N2EtN2MzNC00ZTg0LWJhNGYtZWU2Y2RlZTg1MGNlXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt21210326/?ref_=fn_t_1',
-},
-{
-  title: 'Spy x Family',
-  category: 'Anime',
-  year: 2022,
-  poster: 'https://m.media-amazon.com/images/M/MV5BZDkwNjc0NWEtNzJlOC00N2YwLTk4MjktZGFlZDE2Y2QzOWI0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt13706018/?ref_=fn_t_1',
-},
-{
-  title: 'Kiki\'s Delivery Service',
-  category: 'Anime',
-  year: 1989,
-  poster: 'https://m.media-amazon.com/images/M/MV5BOTFhYWI1NGUtZWFhZS00MTdkLWIzZTItMDBhNWNiZDNlMjYyXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt0097814/?ref_=fn_t_1',
-},
-{
-  title: 'Ponyo',
-  category: 'Anime',
-  year: 2008,
-  poster: 'https://m.media-amazon.com/images/M/MV5BZDkzMzQ5ZmQtOTA3MC00MjhiLTk5M2UtNzk0MjEzZmVjN2UxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt0876563/?ref_=fn_t_1',
-},
-{
-  title: 'Penguin Highway',
-  category: 'Anime',
-  year: 2018,
-  poster: 'https://m.media-amazon.com/images/M/MV5BY2Y5Y2RlNGEtNjkwMi00NjU3LTlhYTItMmI5YjFhNDk4YzU4XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt8076344/?ref_=fn_t_1',
-},
-{
-  title: 'One-Punch Man',
-  category: 'Anime',
-  year: 2015,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNzMwOGQ5MWItNzE3My00ZDYyLTk4NzAtZWIyYWI0NTZhYzY0XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt4508902/?ref_=fn_t_1',
-},
-{
-  title: 'Delicious in Dungeon',
-  category: 'Anime',
-  year: 2024,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNmU3ZGFhMmYtNzczYy00NTE0LThkYjgtNWFiYTY2NzRkM2QzXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt21621494/?ref_=fn_t_1',
-},
-{
-  title: 'Solo Leveling',
-  category: 'Anime',
-  year: 2024,
-  poster: 'https://m.media-amazon.com/images/M/MV5BM2M4YzdkMTEtMjUyYy00ZWY0LWI5ODQtNGRkZWQ1MzU5MWM2XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt21209876/?ref_=fn_t_1',
-},
-{
-  title: 'Vinland Saga',
-  category: 'Anime',
-  year: 2019,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNDA3MGNmZTEtMzFiMy00ZmViLThhNmQtMjQ4ZDc5MDEyN2U1XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt10233448/?ref_=fn_t_1',
-},
-{
-  title: 'My Dress-Up Darling',
-  category: 'Anime',
-  year: 2022,
-  poster: 'https://m.media-amazon.com/images/M/MV5BYmJhYjgzYTQtMzMxYi00NTkyLWI2MWItNTgxNjk1NzU0YmQzXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt15765670/?ref_=fn_t_1',
-},
-{
-  title: 'More Than a Married Couple, But Not Lovers',
-  category: 'Anime',
-  year: 2022,
-  poster: 'https://m.media-amazon.com/images/M/MV5BZDY5ZWE1YTYtMTY4NC00NDdkLTgzNjQtMzM2Nzc1MDBiNzFlXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt16231800/?ref_=fn_t_1',
-},
-{
-  title: 'The Apothecary Diaries',
-  category: 'Anime',
-  year: 2023,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNjAxMmFjZjgtYjM1ZS00NzdmLTliZDktZmIyMzU5YTBlNDBmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt26743760/?ref_=fn_t_1',
-},
-{
-  title: 'Our Dating Story: The Experienced You and the Inexperienced Me',
-  category: 'Anime',
-  year: 2023,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMjgyZTdhZDMtYzUxNC00Yzc0LTgxYWMtYjBiNjYwMTJmMzRmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt22017206/?ref_=fn_t_1',
-},
-{
-  title: 'The Fragrant Flower Blooms with Dignity',
-  category: 'Anime',
-  year: 2025,
-  poster: 'https://m.media-amazon.com/images/M/MV5BY2Q0NTNlMTAtZGVkYS00NDU1LThjYzYtZDQ3M2U5NGJiNzhkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt36592690/',
-},
-{
-  title: 'The Angel Next Door Spoils Me Rotten',
-  category: 'Anime',
-  year: 2023,
-  poster: 'https://m.media-amazon.com/images/M/MV5BZjAzYzljMmUtYjZhZS00ZGIzLTg5ZTgtMWFmYmVkZGEwODEyXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt19064770/',
-},
-{
-  title: 'Pseudo Harem',
-  category: 'Anime',
-  year: 2024,
-  poster: 'https://m.media-amazon.com/images/M/MV5BZWQzMDBlOGItNGVjOC00YjUzLWI5MWMtMThlM2MwZmU2ZTRmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt32552529/?ref_=fn_t_1',
-},
-{
-  title: 'Jujutsu Kaisen',
-  category: 'Anime',
-  year: 2020,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMjBlNTExMDAtMWZjZi00MDc5LWFkMjgtZDU0ZWQ5ODk3YWY5XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt12343534/?ref_=fn_t_1',
-},
-{
-  title: 'Lovely Complex',
-  category: 'Anime',
-  year: 2007,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNGVhZGExOTktMzU0OC00N2IzLThlZmQtZGIxZWI3ZTUzZThlXkEyXkFqcGc@._V1_QL75_UY562_CR24,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt1587394/?ref_=fn_t_1',
-},
-{
-  title: 'My Love Story with Yamada-kun at Lv999',
-  category: 'Anime',
-  year: 2023,
-  poster: 'https://m.media-amazon.com/images/M/MV5BOGU4NzQ3YzQtOTU4MC00ZGMzLThlOGMtODMzODg3YzM1Mzg2XkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt22297712/?ref_=fn_t_1',
-},
-{
-  title: 'I Want to Eat Your Pancreas',
-  category: 'Anime',
-  year: 2018,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMTQ1ODIzOGQtOGFkZC00MWViLTgyYmUtNWJkNmIxZjYxMTdmXkEyXkFqcGc@._V1_QL75_UY562_CR9,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt7236034/?ref_=fn_t_1',
-},
-{
-  title: 'Your Name.',
-  category: 'Anime',
-  year: 2016,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMjI1ODZkYTgtYTY3Yy00ZTJkLWFkOTgtZDUyYWM4MzQwNjk0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt5311514/?ref_=fn_t_1',
-},
-{
-  title: 'A Silent Voice',
-  category: 'Anime',
-  year: 2016,
-  poster: 'https://m.media-amazon.com/images/M/MV5BOTFiNzRiOWEtYTQwNy00NmRiLWE0ZWYtNTE0YjExZjFmZjkwXkEyXkFqcGc@._V1_QL75_UY562_CR5,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt5323662/',
-},
-{
-  title: 'Tanken Driland',
-  category: 'Anime',
-  year: 2012,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNTYzZDRiNmUtMWJmOS00N2I1LTk5MGItZmRkOWM2YmU1NmIxXkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt2250138/?ref_=fn_t_1',
-},
-{
-  title: 'The Queen\'s Gambit',
-  category: 'Show',
-  year: 2020,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt10048342/',
-},
-{
-  title: 'Spider-Man: Into the Spider-Verse',
-  category: 'Animation',
-  year: 2018,
-  poster: 'https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_QL75_UX380_CR0,1,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt4633694/',
-},
-{
-  title: 'Spider-Man: Across the Spider-Verse',
-  category: 'Animation',
-  year: 2023,
-  poster: 'https://m.media-amazon.com/images/M/MV5BNThiZjA3MjItZGY5Ni00ZmJhLWEwN2EtOTBlYTA4Y2E0M2ZmXkEyXkFqcGc@._V1_QL75_UX380_CR0,1,380,562_.jpg',
-  link: 'https://www.imdb.com/title/tt9362722/',
-},
+    title: 'Your Name.',
+    category: 'Anime',
+    year: 2016,
+    poster: 'https://m.media-amazon.com/images/M/MV5BMjI1ODZkYTgtYTY3Yy00ZTJkLWFkOTgtZDUyYWM4MzQwNjk0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    link: 'https://www.imdb.com/title/tt5311514/',
+  },
 ];
 
 // ----------------------------------------------------------------------------
@@ -1359,13 +1332,11 @@ export const manualGames: ManualGame[] = [
 ];
 
 // ----------------------------------------------------------------------------
-// 4. MUSIC - vinyl record crate (links out to Spotify / Genius / YouTube)
+// 4. MUSIC - vinyl record crate (links out to Amazon / Genius / YouTube)
 // ----------------------------------------------------------------------------
 
-// Search links are used where a direct link isn't filled in yet. Replace them with exact
-// track URLs whenever you like.
-const spotifySearch = (title: string, artist: string) =>
-  `https://open.spotify.com/search/${encodeURIComponent(`${title} ${artist}`)}`;
+const amazonSearch = (title: string, artist: string) =>
+  `https://www.amazon.com/s?k=${encodeURIComponent(`${title} ${artist}`)}`;
 
 export const tracks: TrackItem[] = [
   {
@@ -1377,7 +1348,7 @@ export const tracks: TrackItem[] = [
     duration: '2:17',
     coverUrl: 'https://images.genius.com/485597d10bafde06faa87e527be1324d.1000x1000x1.png',
     youtubeId: 'Qy9LTRu89FA',
-    spotifyUrl: spotifySearch('My Love Mine All Mine', 'Mitski'),
+    spotifyUrl: amazonSearch('My Love Mine All Mine', 'Mitski'),
     geniusUrl: 'https://genius.com/Mitski-my-love-mine-all-mine-lyrics',
     youtubeUrl: 'https://www.youtube.com/watch?v=Qy9LTRu89FA',
   },
@@ -1388,7 +1359,7 @@ export const tracks: TrackItem[] = [
     genre: 'AMBIENT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6041ae3ddd860d536e319c1ccba8e581.1000x1000x1.png',
     youtubeId: 'wsKhe5rTKw8',
-    spotifyUrl: spotifySearch('M.', 'Anıl Emre Daldal'),
+    spotifyUrl: amazonSearch('M.', 'Anıl Emre Daldal'),
     geniusUrl: 'https://genius.com/Genius-english-translations-anl-emre-daldal-m-english-translation-lyrics',
     youtubeUrl: 'https://www.youtube.com/watch?v=wsKhe5rTKw8',
   },
@@ -1399,7 +1370,7 @@ export const tracks: TrackItem[] = [
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F0f818dfbf74978591691d5995e9aecc0.1000x1000x1.png',
     youtubeId: 'sElE_BfQ67s',
-    spotifyUrl: spotifySearch('Apocalypse', 'Cigarettes After Sex'),
+    spotifyUrl: amazonSearch('Apocalypse', 'Cigarettes After Sex'),
     geniusUrl: 'https://genius.com/Cigarettes-after-sex-apocalypse-lyrics',
     youtubeUrl: 'https://www.youtube.com/watch?v=sElE_BfQ67s',
   },
@@ -1410,7 +1381,7 @@ export const tracks: TrackItem[] = [
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F7f53e3ec9752c0f901d9d1370b569507.1000x1000x1.jpg',
     youtubeId: '3XqqkrJENB4',
-    spotifyUrl: spotifySearch('Cry', 'Cigarettes After Sex'),
+    spotifyUrl: amazonSearch('Cry', 'Cigarettes After Sex'),
     geniusUrl: 'https://genius.com/Cigarettes-after-sex-cry-lyrics',
     youtubeUrl: 'https://www.youtube.com/watch?v=3XqqkrJENB4',
   },
@@ -1421,7 +1392,7 @@ export const tracks: TrackItem[] = [
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F3506dd94212781d0e61f0e78f5af85f7.1000x1000x1.png',
     youtubeId: '5-rbSNzU_b8',
-    spotifyUrl: spotifySearch('Sunsetz', 'Cigarettes After Sex'),
+    spotifyUrl: amazonSearch('Sunsetz', 'Cigarettes After Sex'),
     geniusUrl: 'https://genius.com/Cigarettes-after-sex-sunsetz-lyrics',
     youtubeUrl: 'https://www.youtube.com/watch?v=5-rbSNzU_b8',
   },
@@ -1432,7 +1403,7 @@ export const tracks: TrackItem[] = [
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F5d6971bbc0c53ee2b1b790e8339aeca2.1000x1000x1.png',
     youtubeId: 'SGZDBMB5PHY',
-    spotifyUrl: spotifySearch('Natalie', 'loser_theorem'),
+    spotifyUrl: amazonSearch('Natalie', 'loser_theorem'),
     geniusUrl: 'https://genius.com/Loser-theorem-natalie-lyrics',
     youtubeUrl: 'https://www.youtube.com/watch?v=SGZDBMB5PHY',
   },
@@ -1443,7 +1414,7 @@ export const tracks: TrackItem[] = [
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fb6c30c08e6c23a4911a53df25c3f90f0.1000x1000x1.png',
     youtubeId: '-2yAEUp9v6M',
-    spotifyUrl: spotifySearch('Rises the Moon', 'Liana Flores'),
+    spotifyUrl: amazonSearch('Rises the Moon', 'Liana Flores'),
     geniusUrl: 'https://genius.com/Liana-flores-rises-the-moon-lyrics',
     youtubeUrl: 'https://www.youtube.com/watch?v=-2yAEUp9v6M',
   },
@@ -1455,393 +1426,33 @@ export const tracks: TrackItem[] = [
     genre: 'INDIE / ALT',
     coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fc62e9901da159ce3cb8cca32078d87c6.1000x1000x1.png',
     youtubeId: 'pFptt7Cargc',
-    spotifyUrl: spotifySearch('Let It Happen', 'Tame Impala'),
+    spotifyUrl: amazonSearch('Let It Happen', 'Tame Impala'),
     geniusUrl: 'https://genius.com/Tame-impala-let-it-happen-lyrics',
     youtubeUrl: 'https://www.youtube.com/watch?v=pFptt7Cargc',
   },
   {
     id: 9,
-    title: 'Legacy',
-    artist: 'PIXY (UK)',
-    genre: 'INDIE / ALT',
-    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fc8f8521aea8fbbb52a0ee290777224f0.1000x1000x1.png',
-    youtubeId: 'Ps_6IcvAEm8',
-    spotifyUrl: spotifySearch('Legacy', 'PIXY (UK)'),
-    geniusUrl: 'https://genius.com/Pixy-uk-legacy-lyrics',
-    youtubeUrl: 'https://www.youtube.com/watch?v=Ps_6IcvAEm8',
-  },
-  {
-    id: 10,
-    title: 'Spit in My Face!',
-    artist: 'ThxSoMch',
-    genre: 'PHONK',
-    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F2590d316b35bf3ff7c06a4de1f537244.1000x1000x1.png',
-    youtubeId: 'ZtCOsQqrBrs',
-    spotifyUrl: spotifySearch('Spit in My Face!', 'ThxSoMch'),
-    geniusUrl: 'https://genius.com/Thxsomch-spit-in-my-face-lyrics',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ZtCOsQqrBrs',
-  },
-  {
-    id: 11,
-    title: 'Sinking Town',
-    artist: 'Dev1lCat',
-    genre: 'PHONK',
-    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Ff5e83199e03614f510dcde0ace75e3a2.1000x1000x1.png',
-    youtubeId: 'LkKmIlTiVj8',
-    spotifyUrl: 'https://open.spotify.com/search/%E5%80%89%E6%A9%8B%E3%83%A8%E3%82%A8%E3%82%B3%20(Yoeko%20Kurahashi)%20-%20%E6%B2%88%E3%82%81%E3%82%8B%E8%A1%97%20(Sinking%20Town)%20(Romanized)',
-    geniusUrl: 'https://genius.com/Genius-romanizations-yoeko-kurahashi-sinking-town-romanized-lyrics',
-    youtubeUrl: 'https://www.youtube.com/watch?v=LkKmIlTiVj8',
-  },
-  {
-    id: 12,
-    title: 'My Jealousy',
-    artist: 'vivi baby & ovg!',
-    genre: 'PHONK',
-    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fb35fc6abb85d9813b3a17ae876563583.1000x1000x1.png',
-    youtubeId: 'nbuCy7jS61Y',
-    spotifyUrl: spotifySearch('My Jealousy', 'vivi baby & ovg!'),
-    geniusUrl: 'https://genius.com/Vivi-baby-and-ovg-my-jealousy-lyrics',
-    youtubeUrl: 'https://www.youtube.com/watch?v=nbuCy7jS61Y',
-  },
-  {
-    id: 13,
-    title: 'After Dark',
-    artist: 'Mr.Kitty',
-    genre: 'INDIE / ALT',
-    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6d6ffffa21429f719636915b263b74b5.1000x1000x1.png',
-    youtubeId: 'sVx1mJDeUjY',
-    spotifyUrl: spotifySearch('After Dark', 'Mr.Kitty'),
-    geniusUrl: 'https://genius.com/Mrkitty-after-dark-lyrics',
-    youtubeUrl: 'https://www.youtube.com/watch?v=sVx1mJDeUjY',
-  },
-  {
-    id: 14,
-    title: 'Misery',
-    artist: 'Pupsies',
-    genre: 'INDIE / ALT',
-    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F6041cd6fabc7d613927bc732ea03932e.1000x1000x1.png',
-    youtubeId: 'MzYO6_ld3LA',
-    spotifyUrl: spotifySearch('Misery', 'Pupsies'),
-    geniusUrl: 'https://genius.com/Pupsies-misery-lyrics',
-    youtubeUrl: 'https://www.youtube.com/watch?v=MzYO6_ld3LA',
+    title: 'Bohemian Rhapsody',
+    artist: 'Queen',
+    album: 'A Night at the Opera',
+    genre: 'ROCK',
+    duration: '5:55',
+    coverUrl: 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F718de9d1fbcaae9f3c9b1bf483bfa8f1.1000x1000x1.png',
+    youtubeId: 'fJ9rUzIMcZQ',
+    spotifyUrl: amazonSearch('Bohemian Rhapsody', 'Queen'),
+    geniusUrl: 'https://genius.com/Queen-bohemian-rhapsody-lyrics',
+    youtubeUrl: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ',
   },
 ];
 
 // ----------------------------------------------------------------------------
-// 5. QUOTES - dialogue boxes
+// 5. QUOTES
 // ----------------------------------------------------------------------------
 
-export const quotes: QuoteItem[] = [
-  {
-    text: 'The world is cruel… and yet… so very beautiful.',
-    author: 'Mikasa Ackerman',
-  },
-  {
-    text: 'I am victim of my own conscience constantly feeling guilty for things I have not done.',
-    author: 'Franz Kafka',
-  },
-  {
-    text: 'I think, therefore I am',
-    author: 'Cogito, ergo sum',
-  },
-  {
-    text: 'I do, therefore I am',
-    author: 'N/A',
-  },
-  {
-    text: 'The only true wisdom is in knowing you know nothing.',
-    author: 'Socrates',
-  },
-  {
-    text: "I have not failed. I've just found 10,000 ways that won't work.",
-    author: 'Thomas A. Edison',
-  },
-  {
-    text: 'Everything you can imagine is real.',
-    author: 'Pablo Picasso',
-  },
-  {
-    text: "Whether you think you can, or you think you can't – you're right.",
-    author: 'Henry Ford',
-  },
-  {
-    text: 'A person who never made a mistake never tried anything new.',
-    author: 'Albert Einstein',
-  },
-  {
-    text: 'The measure of intelligence is the ability to change.',
-    author: 'Albert Einstein',
-  },
-  {
-    text: 'Knowledge is power.',
-    author: 'Francis Bacon',
-  },
-  {
-    text: 'Ignorance is bliss.',
-    author: 'Thomas Gray',
-  },
-];
+export const quotes: QuoteItem[] = [];
 
 // ----------------------------------------------------------------------------
-// 6. SOCIALS - link tiles
+// 6. SOCIALS
 // ----------------------------------------------------------------------------
 
-export const socials: SocialItem[] = [
-  {
-    platform: 'Discord',
-    handle: 'novoumy',
-    url: 'https://discord.com/users/722546564685365419',
-    icon: 'discord',
-  },
-  {
-    platform: 'Steam',
-    handle: 'novoumy',
-    url: 'https://steamcommunity.com/id/novoumy/',
-    icon: 'steam',
-  },
-  {
-    platform: 'Roblox',
-    handle: 'novoumy',
-    url: 'https://www.roblox.com/users/12026959316/profile',
-    icon: 'roblox',
-  },
-  {
-    platform: 'GitHub',
-    handle: 'novoumy',
-    url: 'https://github.com/novoumy/',
-    icon: 'github',
-  },
-  {
-    platform: 'Instagram',
-    handle: 'novoumy',
-    url: 'https://www.instagram.com/novoumy/',
-    icon: 'instagram',
-  },
-  {
-    platform: 'X',
-    handle: 'novoumy',
-    url: 'https://x.com/novoumy',
-    icon: 'x',
-  },
-  {
-    platform: 'YouTube',
-    handle: 'novoumy',
-    url: 'https://www.youtube.com/channel/UCuMbrUTzj2-Rl3umhFhAOkA',
-    icon: 'youtube',
-  },
-  {
-    platform: 'NameMC',
-    handle: 'novoumy',
-    url: 'https://namemc.com/profile/novoumy.1',
-    icon: 'namemc',
-  },
-  {
-    platform: 'Pinterest',
-    handle: 'novoumy',
-    url: 'https://de.pinterest.com/novoumy/',
-    icon: 'pinterest',
-  },
-  {
-    platform: 'Facebook',
-    url: 'https://www.facebook.com/profile.php?id=61596482073922',
-    icon: 'facebook',
-  },
-  {
-    platform: 'Snapchat',
-    handle: 'novoumy',
-    url: 'https://www.snapchat.com/@novoumy',
-    icon: 'snapchat',
-  },
-  {
-    platform: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/novoumy/',
-    icon: 'linkedin',
-  },
-  {
-    platform: 'Email',
-    handle: 'contact@novoumy.com',
-    url: 'mailto:contact@novoumy.com',
-    icon: 'mail',
-  },
-];
-
-// ----------------------------------------------------------------------------
-// SPECS - PC build. Each part has a label, the name/specs, and a store link.
-// Replace the search links with the exact product page when you have it.
-// ----------------------------------------------------------------------------
-
-export interface SpecPart {
-  label: string;
-  name: string;
-  detail?: string;
-  link: string;
-  linkLabel: string; // shown as [ LABEL ]
-}
-
-export interface SpecGroup {
-  title: string;
-  parts: SpecPart[];
-}
-
-const newegg = (query: string) => `https://www.newegg.com/p/pl?d=${encodeURIComponent(query)}`;
-const amazon = (query: string) => `https://www.amazon.com/s?k=${encodeURIComponent(query)}`;
-
-export const specsSummary = [
-  { label: 'BUILT', value: 'Nov 2025' },
-  { label: 'PURPOSE', value: '1440p gaming / coding' },
-  { label: 'CASE', value: 'Cougar FV150 RGB' },
-  { label: 'OS', value: 'Windows 11 Pro' },
-];
-
-// Headline numbers shown as big tiles at the top of the Specs tab.
-export const specHighlights = [
-  { value: '32', unit: 'GB', label: 'RAM', sub: 'DDR5-6000' },
-  { value: '12', unit: 'GB', label: 'VRAM', sub: 'RTX 5070' },
-  { value: '3', unit: 'TB', label: 'Storage', sub: '2x NVMe SSD' },
-  { value: '180', unit: 'Hz', label: 'Refresh', sub: '1440p QHD' },
-];
-
-export const specGroups: SpecGroup[] = [
-  {
-    title: 'Core',
-    parts: [
-      {
-        label: 'CPU',
-        name: 'Intel Core i7-14700KF',
-        detail: '33MB Cache, up to 5.60 GHz',
-        link: newegg('Intel Core i7-14700KF'),
-        linkLabel: 'NEW EGG',
-      },
-      {
-        label: 'Cooler',
-        name: 'Red Dragon CC-118 Dual-Tower Air Cooler',
-        detail: 'ARGB',
-        link: amazon('Red Dragon CC-118 Dual-Tower Air Cooler ARGB'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'GPU',
-        name: 'ASUS GeForce RTX 5070 PRIME',
-        detail: '12GB GDDR6',
-        link: newegg('ASUS GeForce RTX 5070 PRIME 12GB'),
-        linkLabel: 'NEW EGG',
-      },
-      {
-        label: 'Mobo',
-        name: 'ASUS PRIME Z790-P WiFi',
-        link: newegg('ASUS PRIME Z790-P WiFi'),
-        linkLabel: 'NEW EGG',
-      },
-      {
-        label: 'RAM',
-        name: '32GB (2x16GB) Lexar THOR DDR5',
-        detail: '6000 MHz, OC',
-        link: amazon('Lexar THOR DDR5 32GB 2x16GB 6000MHz'),
-        linkLabel: 'AMAZON',
-      },
-    ],
-  },
-  {
-    title: 'Storage, Power & Case',
-    parts: [
-      {
-        label: 'SSD 1',
-        name: 'Western Digital Black SN770',
-        detail: '2TB NVMe M.2 SSD',
-        link: amazon('Western Digital Black SN770 2TB NVMe'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'SSD 2',
-        name: 'Team Group MP33 Pro',
-        detail: '1TB NVMe SSD',
-        link: amazon('Team Group MP33 Pro 1TB NVMe'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'PSU',
-        name: 'FSP Hydro Pro 800W',
-        detail: '80+ Bronze',
-        link: newegg('FSP Hydro Pro 800W'),
-        linkLabel: 'NEW EGG',
-      },
-      {
-        label: 'Case',
-        name: 'Cougar FV150 RGB Mid-Tower',
-        detail: 'Black',
-        link: newegg('Cougar FV150 RGB Mid-Tower'),
-        linkLabel: 'NEW EGG',
-      },
-    ],
-  },
-  {
-    title: 'Peripherals',
-    parts: [
-      {
-        label: 'Monitor 1',
-        name: 'ASUS TUF Gaming VG27AQ3A',
-        detail: '27" 2560 x 1440 (QHD), 180Hz, VRR Supported',
-        link: amazon('ASUS TUF Gaming VG27AQ3A'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'Monitor 2',
-        name: 'LG FHD Monitor (Vertical)',
-        detail: '1080 x 1920 (Portrait), 100Hz',
-        link: amazon('LG FHD Monitor 100Hz'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'Keyboard',
-        name: 'EPOMAKER x AULA F75',
-        detail: '75% Gasket-Mounted Mechanical, Wireless',
-        link: amazon('EPOMAKER x AULA F75'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'Mouse',
-        name: 'Ajazz AJ159 Pro',
-        detail: 'Lightweight Wireless Gaming Mouse',
-        link: amazon('Ajazz AJ159 Pro'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'Mic',
-        name: 'Fifine AM8 Dynamic Microphone',
-        detail: 'USB/XLR Dual-Channel Gaming & Streaming Mic',
-        link: amazon('Fifine AM8 Dynamic Microphone'),
-        linkLabel: 'AMAZON',
-      },
-      {
-        label: 'Phone',
-        name: 'Samsung Galaxy A56 256GB',
-        link: `https://www.google.com/search?q=${encodeURIComponent('Samsung Galaxy A56 256GB')}`,
-        linkLabel: 'SEARCH',
-      },
-      {
-        label: 'Tablet',
-        name: 'Samsung Galaxy Tab S7',
-        link: `https://www.google.com/search?q=${encodeURIComponent('Samsung Galaxy Tab S7')}`,
-        linkLabel: 'SEARCH',
-      },
-      {
-        label: 'Earbuds',
-        name: 'Redmi Buds 6 Pro',
-        link: `https://www.google.com/search?q=${encodeURIComponent('Redmi Buds 6 Pro')}`,
-        linkLabel: 'SEARCH',
-      },
-      {
-        label: 'Controller',
-        name: 'Lenovo S07 Controller',
-        link: `https://www.google.com/search?q=${encodeURIComponent('Lenovo S07 controller')}`,
-        linkLabel: 'SEARCH',
-      },
-      {
-        label: 'Controller 2',
-        name: 'EasySMX D10 Controller',
-        link: `https://www.google.com/search?q=${encodeURIComponent('EasySMX D10 controller')}`,
-        linkLabel: 'SEARCH',
-      },
-    ],
-  },
-];
+export const socials: SocialItem[] = [];
