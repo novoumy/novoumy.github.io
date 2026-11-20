@@ -103,7 +103,7 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
             {meta && <span className="hidden shrink-0 font-pixel text-[8px] uppercase text-rose sm:inline">// {meta}</span>}
           </div>
           <div className="relative z-30 flex shrink-0 items-center gap-2">
-            <SoundToggle className="flex" />
+            <SoundToggle className="flex" variant="folder" />
             <button type="button" data-no-sfx onClick={onClose} aria-label={`Close ${label.toLowerCase()}`} className="r-close shrink-0">
               <X size={13} strokeWidth={3} aria-hidden="true" />
               <span>Close</span>

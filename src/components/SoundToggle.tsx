@@ -8,7 +8,9 @@ const TOUCH_CLOSE_MS = 3500; // touch: auto-hide after the last interaction
 
 const isTouchOnly = () => window.matchMedia('(hover: none)').matches;
 
-export default function SoundToggle({ className = '' }: { className?: string }) {
+type SoundToggleProps = { className?: string; variant?: 'default' | 'folder' };
+
+export default function SoundToggle({ className = '', variant = 'default' }: SoundToggleProps) {
   const { muted, toggleMuted, volume, setVolume, blocked } = useAudio();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -118,7 +120,10 @@ export default function SoundToggle({ className = '' }: { className?: string }) 
         aria-label={silent ? 'Unmute sound' : 'Mute sound'}
         title={silent ? 'Sound off' : `Volume ${shown}%`}
         onClick={onButtonClick}
-        className="pixel-tile pixel-tile-interactive flex shrink-0 items-center justify-center gap-2 bg-lavender px-2.5 py-2 text-cool-white hover:bg-rose hover:text-wine min-[860px]:px-3"
+        className={[
+          'pixel-tile pixel-tile-interactive flex shrink-0 items-center justify-center gap-2 px-2.5 py-2 text-cool-white hover:bg-rose hover:text-wine min-[860px]:px-3',
+          variant === 'folder' ? 'bg-[#6B2B32]' : 'bg-lavender',
+        ].join(' ')}
       >
         {showHint && <span className="blink-arrow hidden font-pixel text-[8px] uppercase leading-none min-[860px]:inline">Tap anywhere for sound</span>}
         <Icon size={16} strokeWidth={2.5} aria-hidden="true" />

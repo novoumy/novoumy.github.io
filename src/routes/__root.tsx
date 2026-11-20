@@ -25,7 +25,7 @@ function NotFoundComponent() {
             </h1>
             <p className="font-pixel text-[clamp(10px,2.5vw,16px)] tracking-widest">NOT FOUND</p>
             <a
-              href="https://novomi.com/"
+              href="https://novoumy.com/"
               className="pixel-btn inline-flex min-h-12 items-center justify-center border-2 border-wine px-6 py-3 shadow-[5px_5px_0_0_var(--rose),8px_8px_0_0_var(--wine)]"
             >
               GO BACK

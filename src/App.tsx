@@ -134,7 +134,7 @@ export default function App() {
           'relative z-10 flex h-full',
           staged
             ? 'items-center justify-center'
-            : 'p-3 max-[859px]:flex-col max-[859px]:items-center max-[859px]:justify-start max-[859px]:px-2 max-[859px]:py-2',
+            : 'p-3 max-[859px]:flex-col max-[859px]:items-center max-[859px]:justify-start max-[859px]:px-3 max-[859px]:py-3',
         ].join(' ')}
       >
         {/* Big screens: fixed 800px window scaled up. Phones/small windows: window fills the screen. */}
