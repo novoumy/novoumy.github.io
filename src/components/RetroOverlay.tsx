@@ -1,10 +1,11 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useContext, useEffect, useLayoutEffect, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import PixelIcon from '@/components/PixelIcon';
+import { OverlayHostContext } from '@/components/OverlayHost';
+import { setFolderLoading } from '@/lib/folderLoading';
+import { playOpenMorph } from '@/lib/morph';
 import type { InterestId } from '@/siteData';
-
-const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
 
 interface RetroOverlayProps {
   label: string;
@@ -16,23 +17,46 @@ interface RetroOverlayProps {
   sideOpen?: boolean | undefined;
   accent?: InterestId | undefined;
   onBack?: (() => void) | undefined;
+  // True while the folder's data is still loading; the "reading disk" badge stays until it is false.
+  loading?: boolean | undefined;
 }
 
-export default function RetroOverlay({ label, meta, onClose, children, toolbar, side, sideOpen = false, accent, onBack }: RetroOverlayProps) {
-  const dialogRef = useRef<HTMLDivElement>(null);
+// A folder view. It is no longer a page-wide overlay: it renders inside the main window and
+// morphs out of its folder tile (see lib/morph.ts).
+export default function RetroOverlay({ label, meta, onClose, children, toolbar, side, sideOpen = false, accent, onBack, loading = false }: RetroOverlayProps) {
+  const host = useContext(OverlayHostContext);
+  const rootRef = useRef<HTMLDivElement>(null);
   const sideRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     sideRef.current?.toggleAttribute('inert', !sideOpen);
   }, [sideOpen]);
 
+  // Expand out of the tile before the first paint.
+  useLayoutEffect(() => {
+    if (rootRef.current && accent) playOpenMorph(rootRef.current, accent);
+  }, [accent]);
+
+  // Content is ready: dismiss the loading badge right away (after one paint so the view is really on screen).
+  useEffect(() => {
+    if (loading) return;
+    let second = 0;
+    const first = requestAnimationFrame(() => {
+      second = requestAnimationFrame(() => setFolderLoading(false));
+    });
+    return () => {
+      cancelAnimationFrame(first);
+      cancelAnimationFrame(second);
+    };
+  }, [loading]);
+
+  // Never leave the badge behind when the folder goes away.
+  useEffect(() => () => setFolderLoading(false), []);
+
   useEffect(() => {
     const previouslyFocused = document.activeElement as HTMLElement | null;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    dialogRef.current?.focus();
+    rootRef.current?.focus({ preventScroll: true });
     return () => {
-      document.body.style.overflow = previousOverflow;
       previouslyFocused?.focus?.({ preventScroll: true });
       if (previouslyFocused instanceof HTMLElement) previouslyFocused.blur();
     };
@@ -43,43 +67,22 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
       if (event.key === 'Escape') {
         event.preventDefault();
         (onBack ?? onClose)();
-        return;
-      }
-      if (event.key === 'Tab' && dialogRef.current) {
-        const nodes = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
-          (node) => !node.closest('[inert]'),
-        );
-        if (nodes.length === 0) return;
-        const first = nodes[0]!;
-        const last = nodes[nodes.length - 1]!;
-        const active = document.activeElement;
-        if (event.shiftKey && (active === first || active === dialogRef.current)) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && active === last) {
-          event.preventDefault();
-          first.focus();
-        }
       }
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [onClose, onBack]);
 
-  return createPortal(
+  const node = (
     <div
-      ref={dialogRef}
-      role="dialog"
-      aria-modal="true"
+      ref={rootRef}
+      role="region"
       aria-label={label}
       tabIndex={-1}
-      className={[
-        'retro-theme r-desk fixed inset-0 z-[100] flex h-dvh w-screen p-3 pb-5 pr-5 outline-none sm:p-6 sm:pb-8 sm:pr-8 lg:p-8 lg:pb-10 lg:pr-10',
-        'pt-[max(0.75rem,env(safe-area-inset-top))] max-sm:pb-[max(1.25rem,env(safe-area-inset-bottom))]',
-        accent ? `accent-${accent}` : '',
-      ].join(' ')}
+      data-folder-overlay
+      className={['retro-theme absolute inset-0 z-20 flex min-h-0 outline-none', accent ? `accent-${accent}` : ''].join(' ')}
     >
-      <div className="r-window pixel-frame animate-overlay-in relative mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col bg-[var(--r-bg,var(--cool-white))]">
+      <div data-morph-window className="r-window relative flex min-h-0 w-full flex-1 flex-col bg-[var(--r-bg,var(--cool-white))]">
         <header className="r-titlebar flex shrink-0 items-center justify-between gap-3 px-3 py-2.5 sm:px-5 sm:py-3">
           <div onClick={onClose} className="flex min-w-0 cursor-pointer items-center gap-3 sm:gap-4">
             {accent && (
@@ -127,7 +130,10 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
           </div>
         </div>
       </div>
-    </div>,
-    document.body,
+      {/* Solid colour that grows out of the folder tile first, then dissolves into the content. */}
+      <div data-morph-skin aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 bg-rose opacity-0" />
+    </div>
   );
+
+  return host ? createPortal(node, host) : node;
 }

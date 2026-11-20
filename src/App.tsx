@@ -1,4 +1,6 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { animatePanelIn } from '@/lib/motion';
+import { OverlayHostContext } from '@/components/OverlayHost';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
 import SoundToggle from '@/components/SoundToggle';
@@ -31,6 +33,11 @@ export default function App() {
   const [route, setRoute] = useState<Route>(parseHash);
   const activeId = route.tab;
   const [crt, setCrt] = useState(false);
+  // The window element folder views morph inside of (instead of covering the whole page).
+  const [host, setHost] = useState<HTMLElement | null>(null);
+  const tabOrigin = useRef(50);
+  const panelRefs = useRef<Partial<Record<TabId, HTMLDivElement | null>>>({});
+  const previousTab = useRef<TabId | null>(null);
 
   // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
   useEffect(() => {
@@ -50,8 +57,12 @@ export default function App() {
   };
 
   // Already on this tab: do nothing (no state change, no hash write, no sound).
-  const selectTab = (id: TabId) => {
+  const selectTab = (id: TabId, clientX?: number) => {
     if (id === activeId) return;
+    // Where (as % of the window width) the clicked tab sits: the page wipe radiates from there.
+    const rect = host?.getBoundingClientRect();
+    tabOrigin.current =
+      rect && rect.width && clientX !== undefined ? Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100)) : 50;
     navigate({ tab: id, interest: null });
   };
 
@@ -79,6 +90,18 @@ export default function App() {
   ];
   const visiblePanels = panels.filter((panel) => enabledTabs.some((tab) => tab.id === panel.id));
 
+  // Tab swap animation: the new panel wipes in from the clicked tab, towards the side you're moving.
+  useEffect(() => {
+    const order = visiblePanels.map((panel) => panel.id);
+    const from = previousTab.current;
+    previousTab.current = activeId;
+    const panel = panelRefs.current[activeId];
+    if (!panel) return;
+    const direction = from === null ? 0 : order.indexOf(activeId) > order.indexOf(from) ? 1 : -1;
+    animatePanelIn(panel, direction, from === null ? 50 : tabOrigin.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeId]);
+
   const scale = useStageScale();
   const staged = scale !== null;
 
@@ -105,6 +128,7 @@ export default function App() {
             <SoundToggle className="hidden min-[860px]:flex" />
           </div>
           <section
+            ref={setHost}
             data-compact={activeId === 'main'}
             className={[
               
@@ -114,9 +138,15 @@ export default function App() {
           >
             {/* Every tab stays mounted and is only shown/hidden, so switching is instant:
                 no remount, no re-fetch, no fade. Animations live inside the pages. */}
+            {/* CRT scan bar sweeping down the window on every tab swap (decorative). */}
+            <div key={activeId} aria-hidden="true" className="panel-sweep" />
+            <OverlayHostContext.Provider value={host}>
             {visiblePanels.map(({ id, render }) => (
               <div
                 key={id}
+                ref={(el) => {
+                  panelRefs.current[id] = el;
+                }}
                 role="tabpanel"
                 hidden={id !== activeId}
                 className="pixel-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-5 max-sm:p-4 sm:p-8"
@@ -134,6 +164,7 @@ export default function App() {
                 </div>
               </div>
             ))}
+            </OverlayHostContext.Provider>
           </section>
         </div>
         {!staged && (

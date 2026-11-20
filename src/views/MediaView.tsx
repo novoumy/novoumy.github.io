@@ -34,9 +34,7 @@ interface MediaViewerProps {
   onClose: () => void;
 }
 
-// Full-screen media library. Rendered through a portal into <body> so it covers
-// the whole viewport (the retro window is scaled with CSS zoom, which would
-// otherwise shrink or offset a fixed overlay).
+// Media library. Morphs out of its folder tile and fills the main window (see RetroOverlay).
 export default function MediaView({ onClose }: MediaViewerProps) {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');

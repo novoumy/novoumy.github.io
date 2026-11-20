@@ -1,11 +1,13 @@
-import { lazy, Suspense, useEffect, useRef, type ComponentType } from 'react';
-import { closeOverlayAnimated } from '@/lib/motion';
+import { Component, lazy, Suspense, useEffect, useRef, type ComponentType, type ReactNode } from 'react';
+import { playCloseMorph } from '@/lib/morph';
+import { setFolderLoading } from '@/lib/folderLoading';
 import PixelIcon from '@/components/PixelIcon';
 import { interests, type InterestId } from '@/siteData';
 import { loadGames, loadMedia, loadMusic, loadQuotes } from '@/lib/preload';
 
 // Folder views are code-split and preloaded (idle + on hover), so opening one is
-// instant; there is deliberately no loading overlay in the way.
+// instant. If a chunk is still downloading (slow device), the "reading disk" badge covers the wait
+// and goes away as soon as the folder is ready.
 type FolderView = ComponentType<{ onClose: () => void }>;
 const FOLDERS: Record<InterestId, { View: FolderView; load: () => Promise<unknown> }> = {
   media: { View: lazy(loadMedia), load: loadMedia },
@@ -14,8 +16,23 @@ const FOLDERS: Record<InterestId, { View: FolderView; load: () => Promise<unknow
   quotes: { View: lazy(loadQuotes), load: loadQuotes },
 };
 
-// Interests is a tiny "desktop": a 2x2 grid of folders. Each folder opens as a
-// full-screen overlay; its close button returns to the grid.
+// If a folder chunk fails to download, drop back to the grid instead of blanking the site.
+class FolderBoundary extends Component<{ onFail: () => void; children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch() {
+    setFolderLoading(false);
+    this.props.onFail();
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
+// Interests is a tiny "desktop": a 2x2 grid of folders. Opening one morphs the tile straight into
+// that folder's view inside the window (no overlay); closing collapses it back into the tile.
 // Which folder is open lives in the URL hash (see App.tsx), so it survives reloads and can be shared.
 interface InterestsViewProps {
   openId: InterestId | null;
@@ -28,15 +45,18 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
   const closing = useRef(false);
 
   useEffect(() => {
-    if (!openId) return;
+    if (!openId) {
+      setFolderLoading(false);
+      return;
+    }
     void FOLDERS[openId].load();
   }, [openId]);
 
-  // Plays the overlay close animation before the folder unmounts (button, header and Escape all land here).
+  // Collapses the folder back into its tile before it unmounts (button, header and Escape all land here).
   const close = () => {
-    if (closing.current) return;
+    if (closing.current || !openId) return;
     closing.current = true;
-    void closeOverlayAnimated().then(() => {
+    void playCloseMorph(openId).then(() => {
       closing.current = false;
       setOpenId(null);
     });
@@ -45,7 +65,7 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
   // The hub is always rendered in the same spot, so opening/closing a folder never remounts it.
   return (
     <>
-      <div className="flex min-h-full flex-col gap-6">
+      <div data-folder-hub className="flex min-h-full flex-col gap-6">
         <p className="leading-none">&gt; select a folder to open //</p>
         <ul data-stagger className="grid grid-cols-2 content-start gap-x-4 gap-y-8 max-sm:my-auto sm:grid-cols-4">
           {interests.map((item) => (
@@ -53,6 +73,7 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
               <button
                 type="button"
                 data-disk-target
+                data-folder-tile={item.id}
                 onClick={() => setOpenId(item.id)}
                 onPointerEnter={() => void FOLDERS[item.id].load()}
                 onFocus={() => void FOLDERS[item.id].load()}
@@ -74,9 +95,11 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
       </div>
 
       {open && (
-        <Suspense fallback={null}>
-          <open.View onClose={close} />
-        </Suspense>
+        <FolderBoundary key={openId} onFail={() => setOpenId(null)}>
+          <Suspense fallback={null}>
+            <open.View onClose={close} />
+          </Suspense>
+        </FolderBoundary>
       )}
     </>
   );
