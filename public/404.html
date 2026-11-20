@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#847FA4" />
+    <title>404 // page not found — novoumy</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #ECEFF1;
+        --lavender: #847FA4;
+        --wine: #6B2D39;
+        --rose: #CD9EBA;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body { min-height: 100%; }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        overflow-x: hidden;
+        padding: 28px 18px;
+        color: var(--wine);
+        background-color: var(--lavender);
+        background-image:
+          linear-gradient(to right, rgba(236, 239, 241, .12) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(236, 239, 241, .12) 1px, transparent 1px);
+        background-size: 32px 32px;
+        font-family: 'VT323', monospace;
+      }
+
+      body::before, body::after {
+        position: fixed;
+        width: 5px;
+        height: 5px;
+        content: '';
+        pointer-events: none;
+        background: var(--rose);
+        box-shadow: 28px 18px 0 rgba(205, 158, 186, .55), 63vw 17vh 0 rgba(236, 239, 241, .65),
+          82vw 72vh 0 rgba(205, 158, 186, .7), 13vw 80vh 0 rgba(236, 239, 241, .55);
+      }
+      body::before { top: 15%; left: 7%; }
+      body::after { right: 9%; bottom: 15%; opacity: .75; }
+
+      .window {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 700px);
+        padding: 5px;
+        background: var(--paper);
+        border: 4px solid var(--wine);
+        box-shadow: 7px 7px 0 var(--wine);
+      }
+
+      .titlebar, .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 13px 16px;
+        color: var(--paper);
+        background: var(--wine);
+        font: 8px/1.5 'Press Start 2P', monospace;
+        text-transform: uppercase;
+      }
+
+      .signal { color: var(--rose); white-space: nowrap; }
+
+      .content {
+        padding: clamp(28px, 7vw, 52px) clamp(18px, 6vw, 46px) 42px;
+        text-align: center;
+        background: var(--paper);
+      }
+
+      .stars {
+        margin: 0 0 13px;
+        color: var(--lavender);
+        font-size: 30px;
+        letter-spacing: 18px;
+      }
+
+      h1 {
+        margin: 0;
+        color: var(--wine);
+        font: clamp(54px, 13vw, 94px)/1 'Press Start 2P', monospace;
+        letter-spacing: -8px;
+        text-shadow: 5px 5px 0 var(--rose);
+      }
+
+      h2 {
+        margin: 27px 0 12px;
+        font: 10px/1.7 'Press Start 2P', monospace;
+        text-transform: uppercase;
+      }
+
+      .message {
+        max-width: 480px;
+        margin: 0 auto;
+        font-size: clamp(23px, 4.5vw, 29px);
+        line-height: 1.2;
+      }
+
+      .hint {
+        margin: 8px 0 0;
+        color: var(--lavender);
+        font-size: 23px;
+      }
+
+      .error-box {
+        max-width: 470px;
+        margin: 27px auto 31px;
+        padding: 12px 15px;
+        border: 2px solid var(--rose);
+        background: #F3E6F0;
+        text-align: left;
+        font-size: 22px;
+        line-height: 1.3;
+      }
+
+      .error-tag {
+        display: inline-block;
+        margin-right: 7px;
+        padding: 2px 6px;
+        color: var(--paper);
+        background: var(--wine);
+        font: 8px 'Press Start 2P', monospace;
+        vertical-align: middle;
+      }
+
+      .home {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 18px;
+        border: 2px solid var(--wine);
+        background: var(--rose);
+        box-shadow: 4px 4px 0 var(--wine);
+        color: var(--wine);
+        font: 9px/1.5 'Press Start 2P', monospace;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: transform 100ms steps(2), box-shadow 100ms steps(2), background 100ms steps(2);
+      }
+
+      .home:hover, .home:focus-visible {
+        outline: 2px dashed var(--wine);
+        outline-offset: 4px;
+        background: var(--paper);
+      }
+
+      .home:active {
+        transform: translate(4px, 4px);
+        box-shadow: none;
+      }
+
+      .footer { margin-top: 5px; font-size: 7px; }
+
+      @media (max-width: 420px) {
+        .titlebar, .footer { padding: 11px 9px; font-size: 6px; }
+        .content { padding-inline: 14px; }
+        h1 { letter-spacing: -5px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="window" aria-labelledby="error-title">
+      <header class="titlebar">
+        <span>✦ novOS // system message</span>
+        <span class="signal">signal lost</span>
+      </header>
+      <section class="content">
+        <p class="stars" aria-hidden="true">✦ · ✧</p>
+        <h1 id="error-title">404</h1>
+        <h2>page not found</h2>
+        <p class="message">oopsie! this page wandered off on a little side quest.</p>
+        <p class="hint">let&apos;s get you back somewhere cozy. ^.^</p>
+        <div class="error-box">
+          <p><span class="error-tag">ERR</span> error 404: page.exe not found</p>
+          <p class="hint">hint: home is only one click away...</p>
+        </div>
+        <a class="home" href="/#main"><span aria-hidden="true">↶</span> back to main page</a>
+      </section>
+      <footer class="footer">
+        <span>novoumy terminal</span>
+        <span class="signal">status: online ♡</span>
+      </footer>
+    </main>
+  </body>
+</html>

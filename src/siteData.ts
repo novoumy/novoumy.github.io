@@ -203,7 +203,7 @@ export const mediaFilters: { label: string; value: 'all' | MediaCategory }[] = [
 export const media: MediaItem[] = [
   {
     title: 'Adventure Time',
-    category: 'Cartoon',
+    category: 'Animation',
     year: 2010,
     poster: 'https://m.media-amazon.com/images/M/MV5BMjkxMzIwNmQtMzM5Ni00YWJiLTg4YjQtNjBiN2IxMjZhMGQ2XkEyXkFqcGc@._V1_QL75_UX380_CR0,2,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt1305826/',
@@ -267,10 +267,17 @@ export const media: MediaItem[] = [
   },
   {
     title: 'Avatar: Aang the Last Airbender',
-    category: 'Cartoon',
+    category: 'Animation',
     year: 2026,
     poster: 'https://m.media-amazon.com/images/M/MV5BZGQzMzIzODAtZjc5Ni00ODRkLTlhMzMtNTVkOTI4MjBhNWEyXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt18259538/',
+  },
+  {
+    title: 'Avatar: The Last Airbender',
+    category: 'Animation',
+    year: 2005,
+    poster: 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak%3D/v3/t/assets/p186109_b_v8_ah.jpg',
+    link: 'https://www.imdb.com/title/tt0417299/',
   },
   {
     title: 'Bambi',
@@ -1309,15 +1316,15 @@ export const media: MediaItem[] = [
   link: 'https://www.imdb.com/title/tt10048342/',
 },
 {
-  title: 'Spider-Man: Into the Spider-Verse (Miles Morales)',
-  category: 'Cartoon',
+  title: 'Spider-Man: Into the Spider-Verse',
+  category: 'Animation',
   year: 2018,
   poster: 'https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_QL75_UX380_CR0,1,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt4633694/',
 },
 {
-  title: 'Spider-Man: Across the Spider-Verse (Miles Morales)',
-  category: 'Cartoon',
+  title: 'Spider-Man: Across the Spider-Verse',
+  category: 'Animation',
   year: 2023,
   poster: 'https://m.media-amazon.com/images/M/MV5BNThiZjA3MjItZGY5Ni00ZmJhLWEwN2EtOTBlYTA4Y2E0M2ZmXkEyXkFqcGc@._V1_QL75_UX380_CR0,1,380,562_.jpg',
   link: 'https://www.imdb.com/title/tt9362722/',

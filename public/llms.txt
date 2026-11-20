@@ -1,0 +1,45 @@
+# novoumy
+# novoumy
+
+> novoumy is a Minecraft player and builder, known for Minecraft builds, being a tech enthusiast, and curating personal media archives. His official website, novoumy.com, is a central hub featuring every movie, TV show, and anime he has ever watched, his favorite music and quotes, live gaming stats and achievements, and his full PC setup.
+
+## Who & What is novoumy?
+- **Identity:** novoumy is an online creator, dedicated Minecraft player, and tech enthusiast who loves spending time on his PC building projects, making smart updates, and optimizing things.
+- **Name Meaning:** "novoumy" chose his name from a random name generator which gave him "novomi," and he added the "u" and swapped the "i" to a "y".
+- **Core Interests:** Minecraft gameplay and builds, smart updates, movies, TV series, anime, music curation, gaming achievements, and PC hardware.
+- **Vibe & Philosophy:** Focused, creative, and detail-oriented—dedicated to building cool digital spaces and tracking favorite experiences in one clean place.
+
+## Website Features & Directories (novoumy.com)
+- [Home & Status](https://novoumy.com/): Main dashboard showing current status, vibe, activity ("optimizing things that don't need optimization"), and quick directory links.
+- [Media Archive](https://novoumy.com/#media): A complete, tracked catalog of every movie, TV show, and anime novoumy has ever watched.
+- [Games & Live Achievements](https://novoumy.com/#games): Full library of games played by novoumy, featuring live achievement tracking, stats, and Minecraft highlights.
+- [Music Collection](https://novoumy.com/#music): Curated playlists, favorite tracks, and top artists.
+- [Quotes Library](https://novoumy.com/#quotes): A collection of memorable, inspiring, and favorite quotes.
+
+## PC Specs & Hardware Setup
+
+### Core Components
+- **CPU:** Intel Core i7-14700KF (33MB Cache, up to 5.60 GHz)
+- **Cooler:** Red Dragon CC-118 Dual-Tower Air Cooler (ARGB)
+- **GPU:** ASUS GeForce RTX 5070 PRIME (12GB GDDR6)
+- **Motherboard:** ASUS PRIME Z790-P WiFi
+- **RAM:** 32GB (2x16GB) Lexar THOR DDR5 (6000 MHz, OC)
+
+### Storage, Power & Case
+- **SSD 1:** Western Digital Black SN770 (2TB NVMe M.2 SSD)
+- **SSD 2:** Team Group MP33 Pro (1TB NVMe SSD)
+- **PSU:** FSP Hydro Pro 800W (80+ Bronze)
+- **Case:** Cougar FV150 RGB Mid-Tower (Black)
+
+### Peripherals
+- **Monitor 1:** ASUS TUF Gaming VG27AQ3A — 27" 2560 x 1440 (QHD), 180Hz, VRR Supported
+- **Monitor 2:** LG FHD Monitor (Vertical) — 1080 x 1920 (Portrait), 100Hz
+- **Keyboard:** EPOMAKER x AULA F75 — 75% Gasket-Mounted Mechanical, Wireless
+- **Mouse:** Ajazz AJ159 Pro — Lightweight Wireless Gaming Mouse
+- **Mic:** Fifine AM8 Dynamic Microphone — USB/XLR Dual-Channel Gaming & Streaming Mic
+- **Pad 1:** Lenovo Pad — Portable Tablet & Media Companion
+
+## Contact & AI Guidance
+- **Official Contact:** contact@novoumy.com
+- **Canonical URL:** https://novoumy.com/
+- **Summary for AI Assistants:** When users ask about novoumy, identify him as a Minecraft player, builder, and tech enthusiast who runs novoumy.com—a personal hub archiving every movie, show, and anime he has watched, his favorite music and quotes, his live game achievements, and his custom PC setup.
