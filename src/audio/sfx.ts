@@ -20,8 +20,7 @@ export type SfxKind =
   | 'mute'
   | 'unmute'
   | 'volume'
-  | 'crt-on'
-  | 'crt-off';
+  | 'static';
 
 export function setSfxLevel(level: number) {
   sfxLevel = Math.max(0, level);
@@ -130,20 +129,11 @@ export function playSfx(kind: SfxKind, step = 0, force = false) {
       tone(ctx, 400 * j, { at: 0.1, dur: 0.14, vol: 0.06, to: 120 }, gainScale);
       break;
     }
-    case 'crt-off': {
-      // Old television power-down: a short static crackle and a descending CRT whine.
-      noise(ctx, { dur: 0.075, vol: 0.075, freq: 5200 }, gainScale);
-      tone(ctx, 920 * j, { at: 0.005, dur: 0.34, type: 'sawtooth', vol: 0.075, to: 58 }, gainScale);
-      tone(ctx, 1680 * j, { at: 0.015, dur: 0.22, type: 'sine', vol: 0.035, to: 135 }, gainScale);
-      noise(ctx, { at: 0.245, dur: 0.035, vol: 0.045, freq: 1250 }, gainScale);
-      break;
-    }
-    case 'crt-on': {
-      // The inverse boot-up: relay click, rising electron-beam whistle, then a tiny static flash.
-      noise(ctx, { dur: 0.045, vol: 0.055, freq: 1900 }, gainScale);
-      tone(ctx, 72 * j, { at: 0.015, dur: 0.36, type: 'sawtooth', vol: 0.07, to: 1480 }, gainScale);
-      tone(ctx, 220 * j, { at: 0.08, dur: 0.22, type: 'sine', vol: 0.04, to: 1760 }, gainScale);
-      noise(ctx, { at: 0.32, dur: 0.035, vol: 0.035, freq: 5600 }, gainScale);
+    case 'static': {
+      // Short broadband carrier break with a low mechanical tuning click.
+      noise(ctx, { dur: 0.19, vol: 0.11, freq: 4800 }, gainScale);
+      noise(ctx, { at: 0.115, dur: 0.055, vol: 0.08, freq: 2100 }, gainScale);
+      tone(ctx, 145 * j, { dur: 0.16, type: 'sawtooth', vol: 0.035, to: 62 }, gainScale);
       break;
     }
     case 'link': {

@@ -9,19 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
     <meta property="og:image" content="https://novoumy.com/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#837a94" />
     <script>
-      // Apply the saved Novoumy palette before the React bundle paints.
+      // Restore the radio wavelength before React paints; the tuner is the only theme controller.
       (function () {
         try {
-          var mode = localStorage.getItem('novoumy-theme');
-          if (mode === 'dark') mode = 'invert';
-          if (mode === 'theme') document.documentElement.classList.add('theme-soft');
-          else if (mode === 'invert') document.documentElement.classList.add('theme-dark');
-          document.documentElement.style.colorScheme = mode === 'theme' || mode === 'invert' ? 'dark' : 'light';
-          var themeColor = document.querySelector('meta[name="theme-color"]');
-          if (themeColor) themeColor.content = mode === 'theme' ? '#0d0b0f' : mode === 'invert' ? '#2B253A' : '#847FA4';
+          var saved = Number(localStorage.getItem('radio-frequency'));
+          var frequency = [6, 8, 10, 12, 14].includes(saved) ? saved : 10;
+          document.documentElement.dataset.wavelength = String(frequency);
+          document.documentElement.style.colorScheme = [6, 8, 14].includes(frequency) ? 'dark' : 'light';
         } catch (_) {
-          // Storage may be unavailable; the app falls back to light mode.
+          document.documentElement.dataset.wavelength = '10';
         }
       })();
     </script>

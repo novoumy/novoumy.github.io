@@ -44,7 +44,7 @@ const pad2 = (n: number) => String(n).padStart(2, '0');
 
 export default function SpecsView({ frequency = 10 }: { frequency?: number }) {
   const [rig, ...rest] = specsSummary;
-  const rigValue = ({ 6: 'DEEP_SEA', 8: 'MIDNIGHT_LOFI', 10: 'TINTED_LILAC', 12: 'SOLAR_GOLD', 14: 'OVERCLOCKED' } as Record<number, string>)[frequency] ?? 'TINTED_LILAC';
+  const rigValue = ({ 6: 'ABYSSAL_DEEP', 8: 'MIDNIGHT_LOFI', 10: 'TINTED_LILAC', 12: 'SOLAR_OVERDRIVE', 14: 'SYSTEM_BREACH' } as Record<number, string>)[frequency] ?? 'TINTED_LILAC';
   const totalParts = specGroups.reduce((sum, group) => sum + group.parts.length, 0);
   let cardIndex = 0;
 
