@@ -2,17 +2,17 @@
 
 /* ---------- tokens (day + night phosphor) ---------- */
 .term {
-  --t-bg: #F3E6F0;
-  --t-bg-deep: #E8DFF0;
+  --t-bg: var(--terminal-bg);
+  --t-bg-deep: var(--terminal-bg-deep);
   --t-text: var(--wine);
-  --t-dim: color-mix(in oklab, var(--wine) 60%, var(--lavender));
-  --t-accent: var(--lavender);
+  --t-dim: var(--terminal-muted);
+  --t-accent: var(--terminal-accent);
   --t-glow: color-mix(in oklab, var(--rose) 70%, transparent);
   --t-scan: color-mix(in oklab, var(--wine) 7%, transparent);
   --t-edge: color-mix(in oklab, var(--wine) 14%, transparent);
-  --t-err-bg: var(--wine);      --t-err-fg: var(--cool-white);
-  --t-warn-bg: var(--lavender); --t-warn-fg: var(--cool-white);
-  --t-ok-bg: var(--rose);       --t-ok-fg: var(--wine);
+  --t-err-bg: var(--terminal-error-bg); --t-err-fg: var(--terminal-error-fg);
+  --t-warn-bg: var(--terminal-warn-bg); --t-warn-fg: var(--terminal-warn-fg);
+  --t-ok-bg: var(--terminal-ok-bg); --t-ok-fg: var(--terminal-ok-fg);
   background: var(--t-bg);
   color: var(--t-text);
 }

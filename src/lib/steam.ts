@@ -54,7 +54,6 @@ export interface LibraryGame {
   url: string;
   urlLabel: string;
   note?: string;
-  platforms?: string[];
 }
 
 export interface Library {
@@ -147,7 +146,7 @@ function fromSteam(game: SteamGameRaw): LibraryGame {
         }
       : null,
     url: game.storeUrl,
-    urlLabel: 'View on Steam store',
+    urlLabel: 'Steam',
   };
 }
 
@@ -189,7 +188,6 @@ function fromManual(game: ManualGame): LibraryGame {
     url: game.link,
     urlLabel: game.linkLabel,
     note: game.note,
-    platforms: game.platforms,
   };
 }
 

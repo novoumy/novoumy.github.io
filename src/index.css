@@ -4,9 +4,70 @@
 
 :root {
   --cool-white: #ECEFF1;
+  --cool-white-rgb: 236 239 241;
   --lavender: #847FA4;
+  --lavender-rgb: 132 127 164;
   --wine: #6B2D39;
+  --wine-rgb: 107 45 57;
   --rose: #CD9EBA;
+  --rose-rgb: 205 158 186;
+  --terminal-bg: #F3E6F0;
+  --terminal-bg-deep: #E8DFF0;
+  --terminal-accent: var(--lavender);
+  --terminal-muted: color-mix(in oklab, var(--wine) 60%, var(--lavender));
+  --terminal-error-bg: var(--wine);
+  --terminal-error-fg: var(--cool-white);
+  --terminal-warn-bg: var(--lavender);
+  --terminal-warn-fg: var(--cool-white);
+  --terminal-ok-bg: var(--rose);
+  --terminal-ok-fg: var(--wine);
+}
+
+/* Deliberately art-directed night palette: plum-black surfaces, soft lilac accents, warm readable text. */
+html.theme-dark {
+  color-scheme: dark;
+  --cool-white: #191622;
+  --cool-white-rgb: 25 22 34;
+  --lavender: #2B253A;
+  --lavender-rgb: 43 37 58;
+  --wine: #F1EAF5;
+  --wine-rgb: 241 234 245;
+  --rose: #8F76AD;
+  --rose-rgb: 143 118 173;
+  --terminal-bg: #211D2D;
+  --terminal-bg-deep: #2B253A;
+  --terminal-accent: #B7A9C9;
+  --terminal-muted: #B7A9C9;
+  --terminal-error-bg: #D987A2;
+  --terminal-error-fg: #241722;
+  --terminal-warn-bg: #B79AD7;
+  --terminal-warn-fg: #211A2C;
+  --terminal-ok-bg: #83C5A7;
+  --terminal-ok-fg: #17251F;
+}
+
+html.theme-dark body {
+  background-color: var(--lavender);
+  color: var(--wine);
+}
+
+/* Text and hover states stay readable where the light palette used dark text on rose/lavender fills. */
+html.theme-dark .text-lavender { color: var(--terminal-muted); }
+html.theme-dark .term .bg-lavender { background-color: var(--terminal-accent); }
+html.theme-dark [role='tab'][aria-selected='false'] {
+  color: var(--wine);
+  text-shadow: 2px 2px 0 #191622;
+}
+html.theme-dark [role='tab'][aria-selected='false']:hover,
+html.theme-dark [role='tab'][aria-selected='false']:focus-visible {
+  background-color: var(--rose);
+  color: var(--cool-white);
+  text-shadow: none;
+}
+html.theme-dark .hover\:text-wine:hover,
+html.theme-dark .focus-visible\:text-wine:focus-visible,
+html.theme-dark .group:hover .group-hover\:text-wine {
+  color: var(--cool-white);
 }
 
 @layer base {
@@ -146,19 +207,57 @@
   .retro-theme,
   .retro-dark {
     --r-bg: var(--cool-white);
+    --r-bg-rgb: var(--cool-white-rgb);
     --r-panel: #f6edf2;
+    --r-panel-rgb: 246 237 242;
     --r-raised: #efdde8;
+    --r-raised-rgb: 239 221 232;
     --r-line: var(--rose);
+    --r-line-rgb: var(--rose-rgb);
     --r-line-hi: var(--wine);
+    --r-line-hi-rgb: var(--wine-rgb);
     --r-text: var(--wine);
+    --r-text-rgb: var(--wine-rgb);
     --r-dim: var(--lavender);
+    --r-dim-rgb: var(--lavender-rgb);
     --r-accent: var(--rose);
     --r-accent-dim: #9b6b84;
-    --r-accent-rgb: 205 158 186;
+    --r-accent-dim-rgb: 155 107 132;
+    --r-accent-rgb: var(--rose-rgb);
+    --r-vinyl: #241015;
+    --r-vinyl-groove: #3a1c24;
+    --r-vinyl-edge: #3a1720;
     color-scheme: light;
     background: var(--r-bg);
     color: var(--r-text);
     font-family: 'VT323', monospace;
+  }
+
+  /* Night mode overrides the folder surface tokens, including content in body portals. */
+  html.theme-dark .retro-theme,
+  html.theme-dark .retro-dark {
+    --r-bg: #191622;
+    --r-bg-rgb: 25 22 34;
+    --r-panel: #252033;
+    --r-panel-rgb: 37 32 51;
+    --r-raised: #332B43;
+    --r-raised-rgb: 51 43 67;
+    --r-line: #6C5B82;
+    --r-line-rgb: 108 91 130;
+    --r-line-hi: #F1EAF5;
+    --r-line-hi-rgb: 241 234 245;
+    --r-text: #F1EAF5;
+    --r-text-rgb: 241 234 245;
+    --r-dim: #B7A9C9;
+    --r-dim-rgb: 183 169 201;
+    --r-accent: #B69AD3;
+    --r-accent-rgb: 182 154 211;
+    --r-accent-dim: #8F76AD;
+    --r-accent-dim-rgb: 143 118 173;
+    --r-vinyl: #0C0A12;
+    --r-vinyl-groove: #292237;
+    --r-vinyl-edge: #0B0911;
+    color-scheme: dark;
   }
 
   /* All interest folders share the same pale pink accent palette. */
@@ -231,7 +330,7 @@
   }
 
   .r-desk {
-    background: rgb(132 127 164 / 0.45);
+    background: rgb(var(--lavender-rgb) / 0.45);
   }
 
   .r-window {
@@ -366,7 +465,7 @@
   }
 
   .r-glow {
-    text-shadow: 2px 2px 0 rgb(205 158 186 / 0.55);
+    text-shadow: 2px 2px 0 rgb(var(--rose-rgb) / 0.55);
   }
 
   .r-scanlines::after {
@@ -440,7 +539,7 @@
   }
 
   .quote-pulse {
-    background: #fdf6fa;
+    background: var(--r-raised);
     box-shadow: 4px 4px 0 0 var(--rose);
     animation: quote-pulse 700ms ease-in-out 3;
   }
@@ -676,13 +775,13 @@
       conic-gradient(
         from 0deg,
         transparent 0 18%,
-        rgb(236 239 241 / 0.22) 22% 28%,
+        rgb(var(--cool-white-rgb) / 0.22) 22% 28%,
         transparent 32% 68%,
-        rgb(236 239 241 / 0.22) 72% 78%,
+        rgb(var(--cool-white-rgb) / 0.22) 72% 78%,
         transparent 82%
       ),
-      repeating-radial-gradient(circle at center, #4d1f29 0 2px, var(--wine) 2px 4px);
-    box-shadow: 0 0 0 3px #3a1720;
+      repeating-radial-gradient(circle at center, var(--r-vinyl-groove) 0 2px, var(--r-vinyl) 2px 4px);
+    box-shadow: 0 0 0 3px var(--r-vinyl-edge);
     animation: vinyl-spin 6s steps(24) infinite;
   }
 
@@ -717,13 +816,13 @@
       conic-gradient(
         from 0deg,
         transparent 0 18%,
-        rgb(236 239 241 / 0.18) 22% 28%,
+        rgb(var(--cool-white-rgb) / 0.18) 22% 28%,
         transparent 32% 68%,
-        rgb(236 239 241 / 0.18) 72% 78%,
+        rgb(var(--cool-white-rgb) / 0.18) 72% 78%,
         transparent 82%
       ),
-      repeating-radial-gradient(circle at center, #4d1f29 0 2px, var(--wine) 2px 4px);
-    box-shadow: 0 0 0 3px #3a1720;
+      repeating-radial-gradient(circle at center, var(--r-vinyl-groove) 0 2px, var(--r-vinyl) 2px 4px);
+    box-shadow: 0 0 0 3px var(--r-vinyl-edge);
     animation: vinyl-spin 8s linear infinite;
     z-index: 1;
   }
@@ -738,7 +837,7 @@
     transform: translate(-50%, -50%);
     border-radius: 9999px;
     background: var(--cool-white);
-    border: 3px solid #3a1720;
+    border: 3px solid var(--r-vinyl-edge);
   }
 
   @media (max-width: 640px) {
@@ -1074,4 +1173,49 @@ html[data-crt-transition='true'] .animate-overlay-in > * {
     height: 46px;
     width: min(196px, calc(100vw - 24px));
   }
+}
+
+
+/* Keep the folder audio button wine-red in light mode; shift it to lilac in dark mode for contrast. */
+html.theme-dark .folder-sound-toggle,
+html.theme-dark .main-sound-toggle {
+  color: var(--wine);
+}
+html.theme-dark .folder-sound-toggle {
+  background-color: var(--rose);
+  color: var(--cool-white);
+}
+html.theme-dark .main-sound-toggle:hover,
+html.theme-dark .main-sound-toggle:focus-visible {
+  background-color: var(--rose);
+  color: var(--cool-white);
+}
+html.theme-dark .folder-sound-toggle:hover,
+html.theme-dark .folder-sound-toggle:focus-visible {
+  background-color: var(--wine);
+  color: var(--cool-white);
+}
+
+html.theme-dark .r-btn:hover,
+html.theme-dark .r-btn:focus-visible,
+html.theme-dark .r-link:hover,
+html.theme-dark .r-link:focus-visible,
+html.theme-dark .pixel-btn:hover {
+  color: var(--cool-white);
+}
+
+html.theme-dark .r-close {
+  color: var(--cool-white);
+  border-color: var(--wine);
+}
+
+html.theme-dark .quote-pulse {
+  background: var(--r-raised);
+}
+
+html.theme-dark .r-close:hover,
+html.theme-dark .r-close:focus-visible {
+  background: var(--wine);
+  color: var(--cool-white);
+  border-color: var(--wine);
 }

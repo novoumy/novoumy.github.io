@@ -286,11 +286,6 @@ function GameDetails({ game, onBack }: { game: LibraryGame; onBack: () => void }
               <h2 className="r-glow break-words text-[13px] uppercase leading-[1.5] text-wine sm:text-[22px]">{game.title}</h2>
               <div className="flex flex-wrap gap-2">
                 <span className="r-tag">{game.playtimeLabel}</span>
-                {game.platforms?.map((platform) => (
-                  <span key={platform} className="r-tag !text-r-dim">
-                    {platform}
-                  </span>
-                ))}
                 {game.lastPlayed > 0 && (
                   <span className="r-tag max-w-full !text-r-dim max-sm:!whitespace-normal max-sm:!leading-[1.5]">Last played {formatDate(game.lastPlayed)}</span>
                 )}
@@ -318,9 +313,9 @@ function GameDetails({ game, onBack }: { game: LibraryGame; onBack: () => void }
               href={game.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="r-btn !px-5 !py-4"
+              className="r-btn self-start whitespace-nowrap !px-3 !py-3 sm:self-auto"
             >
-              <span>[ {game.urlLabel} ]</span>
+              <span>{game.urlLabel}</span>
               <ExternalLink size={14} strokeWidth={3} aria-hidden="true" />
             </a>
           </div>

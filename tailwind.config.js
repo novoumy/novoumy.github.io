@@ -6,13 +6,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        'cool-white': '#ECEFF1',
-        lavender: '#847FA4',
-        wine: '#6B2D39',
-        rose: '#CD9EBA',
-        // Per-library accent (set by .accent-* classes in index.css; defaults to the dusty pink).
-        accent: 'var(--r-accent)',
-        'accent-dim': 'var(--r-accent-dim)',
+        'cool-white': 'rgb(var(--cool-white-rgb) / <alpha-value>)',
+        lavender: 'rgb(var(--lavender-rgb) / <alpha-value>)',
+        wine: 'rgb(var(--wine-rgb) / <alpha-value>)',
+        rose: 'rgb(var(--rose-rgb) / <alpha-value>)',
+        // Retro-folder tokens are runtime variables so /theme recolors every component.
+        'r-bg': 'rgb(var(--r-bg-rgb) / <alpha-value>)',
+        'r-panel': 'rgb(var(--r-panel-rgb) / <alpha-value>)',
+        'r-raised': 'rgb(var(--r-raised-rgb) / <alpha-value>)',
+        'r-line': 'rgb(var(--r-line-rgb) / <alpha-value>)',
+        'r-text': 'rgb(var(--r-text-rgb) / <alpha-value>)',
+        'r-dim': 'rgb(var(--r-dim-rgb) / <alpha-value>)',
+        // Per-library accent (shared across the folder views).
+        accent: 'rgb(var(--r-accent-rgb) / <alpha-value>)',
+        'accent-dim': 'rgb(var(--r-accent-dim-rgb) / <alpha-value>)',
       },
       fontFamily: {
         pixel: ['"Press Start 2P"', 'monospace'],

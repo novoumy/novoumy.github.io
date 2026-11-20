@@ -41,6 +41,7 @@ const HELP = [
   '/help      - list all available commands',
   "/novotime  - Shows novoumy's local time (GMT+3)",
   '/whoami    - show novoumy profile',
+  '/theme     - toggle the whole website between light and dark mode',
   '/reboot    - replay the boot sequence',
 ];
 
@@ -52,7 +53,7 @@ const WHOAMI = [
 ];
 
 // Tab-complete only knows the documented commands; the easter eggs stay secret.
-const COMMANDS = ['/help', '/novotime', '/whoami', '/reboot'];
+const COMMANDS = ['/help', '/novotime', '/whoami', '/theme', '/reboot'];
 
 const FORTUNES = [
   'you will fix one bug and discover three.',
@@ -101,7 +102,19 @@ const BOOT: Step[] = [
   { t: 'type /help for available commands.', k: 'sys', s: 22 },
 ];
 
-export default function MainView() {
+export default function MainView({ onToggleTheme }: { onToggleTheme?: () => boolean } = {}) {
+  const toggleTheme = onToggleTheme ?? (() => {
+    const root = document.documentElement;
+    const enabled = !root.classList.contains('theme-dark');
+    root.classList.toggle('theme-dark', enabled);
+    root.style.colorScheme = enabled ? 'dark' : 'light';
+    try {
+      window.localStorage.setItem('novoumy-theme', enabled ? 'dark' : 'light');
+    } catch {
+      // The in-memory theme still works when storage is unavailable.
+    }
+    return enabled;
+  });
   const [lines, setLines] = useState<TermLine[]>([]);
   const [input, setInput] = useState('');
   const idRef = useRef(1);
@@ -231,6 +244,11 @@ export default function MainView() {
       typeLines(WHOAMI);
       return;
     }
+    if (normalized === '/theme') {
+      const enabled = toggleTheme();
+      push(`theme: ${enabled ? 'dark mode enabled' : 'light mode restored'}`, 'ok');
+      return;
+    }
     if (normalized === '/reboot') {
       cancelTyping();
       setLines([]);
@@ -344,7 +362,7 @@ export default function MainView() {
         <header className="relative z-20 flex h-7 shrink-0 items-center bg-gradient-to-b from-cool-white from-50% to-[color:var(--t-bg)] to-50% font-pixel uppercase leading-none">
           <span
             aria-hidden="true"
-            className="h-[3px] w-8 shrink-0 bg-lavender shadow-[0_3px_0_0_#CD9EBA99] max-[768px]:w-4"
+            className="h-[3px] w-8 shrink-0 bg-lavender shadow-[0_3px_0_0_var(--rose)] max-[768px]:w-4"
           />
           <h2 className="flex shrink-0 items-center gap-2.5 px-3.5 font-pixel text-[10px] font-normal tracking-[0.12em] text-wine max-[768px]:gap-1.5 max-[768px]:px-2 max-[768px]:text-[max(7px,1.4cqw)]">
             <span className="block h-1.5 w-1.5 rotate-45 bg-lavender" aria-hidden="true" />
@@ -352,15 +370,15 @@ export default function MainView() {
           </h2>
           <span
             aria-hidden="true"
-            className="h-[3px] min-w-4 flex-1 bg-lavender shadow-[0_3px_0_0_#CD9EBA99]"
+            className="h-[3px] min-w-4 flex-1 bg-lavender shadow-[0_3px_0_0_var(--rose)]"
           />
           <span className="flex shrink-0 items-center gap-2 px-3.5 font-pixel text-[8px] tracking-[0.14em] text-lavender max-[768px]:gap-1.5 max-[768px]:px-2 max-[768px]:text-[max(6px,1.1cqw)]">
-            <span className="block h-2 w-2 animate-pulse bg-rose shadow-[0_0_0_2px_#CD9EBA55]" aria-hidden="true" />
+            <span className="block h-2 w-2 animate-pulse bg-rose shadow-[0_0_0_2px_var(--rose)]" aria-hidden="true" />
             online
           </span>
           <span
             aria-hidden="true"
-            className="h-[3px] w-8 shrink-0 bg-lavender shadow-[0_3px_0_0_#CD9EBA99] max-[768px]:w-4"
+            className="h-[3px] w-8 shrink-0 bg-lavender shadow-[0_3px_0_0_var(--rose)] max-[768px]:w-4"
           />
         </header>
 

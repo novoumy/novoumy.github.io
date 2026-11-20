@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
@@ -33,6 +33,31 @@ export default function App() {
   const [route, setRoute] = useState<Route>(parseHash);
   const activeId = route.tab;
   const [crt, setCrt] = useState(false);
+  const [darkTheme, setDarkTheme] = useState(() => {
+    try {
+      return typeof window !== 'undefined' && window.localStorage.getItem('novoumy-theme') === 'dark';
+    } catch {
+      return false;
+    }
+  });
+
+  // Apply the theme to <html> so every tab and portal-rendered folder shares it.
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle('theme-dark', darkTheme);
+    root.style.colorScheme = darkTheme ? 'dark' : 'light';
+    try {
+      window.localStorage.setItem('novoumy-theme', darkTheme ? 'dark' : 'light');
+    } catch {
+      // Theme still works for this session when storage is unavailable.
+    }
+  }, [darkTheme]);
+
+  const toggleTheme = () => {
+    const next = !darkTheme;
+    setDarkTheme(next);
+    return next;
+  };
 
   // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
   useEffect(() => {
@@ -111,7 +136,7 @@ export default function App() {
   }, [crt]);
 
   const panels: Panel[] = [
-    { id: 'main', render: () => <MainView onToggleCrt={() => setCrt((v) => !v)} /> },
+    { id: 'main', render: () => <MainView onToggleTheme={toggleTheme} /> },
     { id: 'socials', render: () => <SocialsView /> },
     {
       id: 'interests',
