@@ -93,13 +93,11 @@ const weatherLabel = (code: number) => {
   return 'weather';
 };
 
-// Animated pixel-art border between the pink status bars and the cream window (styles in main.css).
+// Animated pixel-dither fade between the pink status bars and the cream window (styles in main.css).
 function PixelDivider({ position }: { position: 'top' | 'bottom' }) {
   return (
     <div ref={syncDividerPhase} className={`pixel-divider pixel-divider-${position}`} aria-hidden="true">
-      <i className="pd-fill" />
-      <i className="pd-line" />
-      <i className="pd-gems" />
+      <i />
     </div>
   );
 }
