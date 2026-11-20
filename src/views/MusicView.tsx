@@ -86,7 +86,7 @@ export default function MusicView({ onClose }: { onClose: () => void }) {
         <aside className="pixel-tile mb-10 bg-r-bg">
           <h3 className="bg-wine px-3 py-2.5 text-[9px] uppercase leading-none text-cool-white sm:text-[10px]">&gt; record_crate</h3>
           <p className="px-3 py-3 text-[21px] leading-[1.3] text-r-text sm:px-4 sm:text-[22px]">
-            Songs on repeat. Pick a record and jump to Spotify, Genius or YouTube.
+            all the songs I like are here.. enjoy! ^^
           </p>
         </aside>
 

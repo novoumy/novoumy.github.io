@@ -9,6 +9,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
     <meta property="og:image" content="https://novoumy.com/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      // Apply the saved Novoumy palette before the React bundle paints.
+      (function () {
+        try {
+          var mode = localStorage.getItem('novoumy-theme');
+          if (mode === 'dark') mode = 'invert';
+          if (mode === 'theme') document.documentElement.classList.add('theme-soft');
+          else if (mode === 'invert') document.documentElement.classList.add('theme-dark');
+          document.documentElement.style.colorScheme = mode === 'theme' || mode === 'invert' ? 'dark' : 'light';
+          var themeColor = document.querySelector('meta[name="theme-color"]');
+          if (themeColor) themeColor.content = mode === 'theme' ? '#0d0b0f' : mode === 'invert' ? '#2B253A' : '#847FA4';
+        } catch (_) {
+          // Storage may be unavailable; the app falls back to light mode.
+        }
+      })();
+    </script>
     <title>novoumy</title>
   </head>
   <body>

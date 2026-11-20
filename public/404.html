@@ -4,6 +4,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#847FA4" />
+    <script>
+      // The static 404 page shares the same saved theme preference as the app.
+      (function () {
+        try {
+          var mode = localStorage.getItem('novoumy-theme');
+          if (mode === 'dark') mode = 'invert';
+          if (mode === 'theme') document.documentElement.classList.add('theme-soft');
+          else if (mode === 'invert') document.documentElement.classList.add('theme-dark');
+          document.documentElement.style.colorScheme = mode === 'theme' || mode === 'invert' ? 'dark' : 'light';
+          var themeColor = document.querySelector('meta[name="theme-color"]');
+          if (themeColor) themeColor.content = mode === 'theme' ? '#0d0b0f' : mode === 'invert' ? '#2B253A' : '#847FA4';
+        } catch (_) {
+          // Keep the default light retro 404 if storage is unavailable.
+        }
+      })();
+    </script>
     <title>404 Not Found — novoumy</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -151,6 +167,108 @@
         .error-code { font-size: clamp(40px, 12vh, 54px); }
         .error-label { font-size: 8px; }
         .go-home { min-height: 38px; padding-block: 8px; }
+      }
+
+      /* Saved /theme palette: same plum-charcoal surfaces as Novoumy OS. */
+      html.theme-soft {
+        color-scheme: dark;
+        --paper: #1a161b;
+        --lavender: #0d0b0f;
+        --wine: #e6ded1;
+        --rose: #9d75b2;
+        --edge: #3f353d;
+        --grid: rgb(63 53 61 / 0.18);
+        --scanline: rgb(230 222 209 / 0.025);
+        --button-bg: #29232e;
+        --button-fg: #e6ded1;
+        --button-edge: #3f353d;
+        --button-shadow: #3f353d;
+      }
+      html.theme-soft body {
+        color: var(--wine);
+        background-color: var(--lavender);
+        background-image:
+          linear-gradient(to right, var(--grid) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+      }
+      html.theme-soft .error-window {
+        background: var(--paper);
+        border-color: var(--edge);
+        box-shadow: 7px 7px 0 var(--edge);
+      }
+      html.theme-soft .error-screen {
+        border-top-color: #554650;
+        border-bottom-color: #554650;
+      }
+      html.theme-soft .error-screen::before {
+        background: repeating-linear-gradient(to bottom, var(--scanline) 0 1px, transparent 1px 4px);
+      }
+      html.theme-soft h1 { color: #e6ded1; }
+      html.theme-soft .error-code {
+        text-shadow: 4px 4px 0 #765d83, 8px 8px 0 rgb(13 11 15 / 0.45);
+      }
+      html.theme-soft .go-home {
+        background: var(--button-bg);
+        border-color: var(--button-edge);
+        box-shadow: 5px 5px 0 #765d83, 8px 8px 0 var(--button-shadow);
+        color: var(--button-fg);
+      }
+      html.theme-soft .go-home:hover,
+      html.theme-soft .go-home:focus-visible {
+        outline-color: #c7809d;
+        background: #342738;
+        color: #f4eedb;
+      }
+
+      /* Saved /invert palette: preserve the original inverted option on the 404 too. */
+      html.theme-dark {
+        color-scheme: dark;
+        --paper: #191622;
+        --lavender: #2B253A;
+        --wine: #F1EAF5;
+        --rose: #8F76AD;
+        --edge: #574967;
+        --grid: rgb(183 169 201 / 0.10);
+        --scanline: rgb(183 169 201 / 0.035);
+        --button-bg: #8F76AD;
+        --button-fg: #191622;
+        --button-edge: #8F76AD;
+        --button-shadow: #191622;
+      }
+      html.theme-dark body {
+        color: var(--wine);
+        background-color: var(--lavender);
+        background-image:
+          linear-gradient(to right, var(--grid) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+      }
+      html.theme-dark .error-window {
+        background: var(--paper);
+        border-color: var(--rose);
+        box-shadow: 7px 7px 0 var(--paper);
+      }
+      html.theme-dark .error-screen {
+        border-top-color: var(--rose);
+        border-bottom-color: var(--rose);
+      }
+      html.theme-dark .error-screen::before {
+        background: repeating-linear-gradient(to bottom, var(--scanline) 0 1px, transparent 1px 4px);
+      }
+      html.theme-dark h1 { color: var(--wine); }
+      html.theme-dark .error-code {
+        text-shadow: 5px 5px 0 var(--rose), 10px 10px 0 rgb(0 0 0 / 0.22);
+      }
+      html.theme-dark .go-home {
+        background: var(--button-bg);
+        border-color: var(--button-edge);
+        box-shadow: 5px 5px 0 var(--rose), 8px 8px 0 var(--button-shadow);
+        color: var(--button-fg);
+      }
+      html.theme-dark .go-home:hover,
+      html.theme-dark .go-home:focus-visible {
+        outline-color: var(--rose);
+        background: #B7A9C9;
+        color: #191622;
       }
     </style>
   </head>
