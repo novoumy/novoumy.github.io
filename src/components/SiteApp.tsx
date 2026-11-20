@@ -113,6 +113,14 @@ export default function App() {
     previousTab.current = activeId;
     const panel = panelRefs.current[activeId];
     if (!panel) return;
+    // Arriving from the 404 morph: that page already drew this window, so don't fade it in a second time.
+    if (from === null) {
+      try {
+        const morphed = sessionStorage.getItem('novoumy:from404') === '1';
+        sessionStorage.removeItem('novoumy:from404');
+        if (morphed) return;
+      } catch { /* storage blocked */ }
+    }
     const direction = from === null ? 0 : order.indexOf(activeId) > order.indexOf(from) ? 1 : -1;
     animatePanelIn(panel, direction);
   }, [activeId]);

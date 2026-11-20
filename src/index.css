@@ -12,16 +12,6 @@
   --rose: #CD9EBA;
   --rose-rgb: 205 158 186;
   --backdrop-grid: var(--cool-white);
-  --terminal-bg: #F3E6F0;
-  --terminal-bg-deep: #E8DFF0;
-  --terminal-accent: var(--lavender);
-  --terminal-muted: color-mix(in oklab, var(--wine) 60%, var(--lavender));
-  --terminal-error-bg: var(--wine);
-  --terminal-error-fg: var(--cool-white);
-  --terminal-warn-bg: var(--lavender);
-  --terminal-warn-fg: var(--cool-white);
-  --terminal-ok-bg: var(--rose);
-  --terminal-ok-fg: var(--wine);
 }
 
 /* Deliberately art-directed night palette: plum-black surfaces, soft lilac accents, warm readable text. */
@@ -35,16 +25,6 @@ html.theme-dark {
   --wine-rgb: 241 234 245;
   --rose: #8F76AD;
   --rose-rgb: 143 118 173;
-  --terminal-bg: #211D2D;
-  --terminal-bg-deep: #2B253A;
-  --terminal-accent: #B7A9C9;
-  --terminal-muted: #B7A9C9;
-  --terminal-error-bg: #D987A2;
-  --terminal-error-fg: #241722;
-  --terminal-warn-bg: #B79AD7;
-  --terminal-warn-fg: #211A2C;
-  --terminal-ok-bg: #83C5A7;
-  --terminal-ok-fg: #17251F;
 }
 
 html.theme-dark body {
@@ -53,8 +33,7 @@ html.theme-dark body {
 }
 
 /* Text and hover states stay readable where the light palette used dark text on rose/lavender fills. */
-html.theme-dark .text-lavender { color: var(--terminal-muted); }
-html.theme-dark .term .bg-lavender { background-color: var(--terminal-accent); }
+html.theme-dark .text-lavender { color: #B7A9C9; }
 html.theme-dark [role='tab'][aria-selected='false'] {
   color: var(--wine);
   text-shadow: 2px 2px 0 #191622;
@@ -975,7 +954,7 @@ html.theme-dark .group:hover .group-hover\:text-wine {
 
 /* ---------------------------------------------------------------------------------------------
    Phones and compact windows: keep the window anchored below the single-row tab / audio bar.
-   The Main terminal remains in the window instead of being pushed below a short 4:3 card.
+   The Main window stays inside the frame instead of being pushed below a short 4:3 card.
    --------------------------------------------------------------------------------------------- */
 @media (max-width: 768px) {
   section.win-section {
@@ -1274,7 +1253,7 @@ html.theme-dark .r-close:focus-visible {
  * /theme — Novoumy OS night palette.
  * This palette is intentionally separate from /invert (.theme-dark) and light mode.
  * The outer canvas stays near-black; windows/panels use espresso charcoal, with
- * warm cream text, restrained mauve edges and precise neon terminal feedback.
+ * warm cream text, restrained mauve edges and crisp pixel feedback.
  */
 html.theme-soft {
   color-scheme: dark;
@@ -1300,18 +1279,6 @@ html.theme-soft {
   --soft-glow: #9d75b2;
   --soft-icon: #f4eedb;
 
-  /* Terminal phosphor palette */
-  --terminal-bg: #120f13;
-  --terminal-bg-deep: #1a161b;
-  --terminal-accent: #9d75b2;
-  --terminal-muted: #b9aeb7;
-  --terminal-error: #f64a4a;
-  --terminal-error-bg: #f64a4a;
-  --terminal-error-fg: #0d0b0f;
-  --terminal-warn-bg: #4ae5f6;
-  --terminal-warn-fg: #0d0b0f;
-  --terminal-ok-bg: #4af67d;
-  --terminal-ok-fg: #0d0b0f;
 }
 
 html.theme-soft body,
@@ -1633,81 +1600,6 @@ html.theme-soft .main-sound-toggle:focus-visible {
   border-color: #c7809d;
 }
 
-/* Pastel terminal phosphor: soft lilac, mint, sky and rose with no harsh neon. */
-html.theme-soft .term {
-  --t-bg: #151119;
-  --t-bg-deep: #1d1721;
-  --t-text: #dfd2e5;
-  --t-dim: #b9adbf;
-  --t-accent: #c6afd9;
-  --t-glow: rgb(198 175 217 / 0.13);
-  --t-scan: rgb(230 222 209 / 0.018);
-  --t-edge: rgb(0 0 0 / 0.2);
-  --t-err-bg: #503541;
-  --t-err-fg: #f0c0cb;
-  --t-warn-bg: #4b4335;
-  --t-warn-fg: #efdbb5;
-  --t-ok-bg: #30483d;
-  --t-ok-fg: #bde6cc;
-  background: #151119;
-  color: #dfd2e5;
-  border-top: 2px solid #514653;
-  border-bottom: 2px solid #514653;
-}
-html.theme-soft .term-out,
-html.theme-soft .term-prompt {
-  color: #dfd2e5;
-  text-shadow: 0 0 2px rgb(198 175 217 / 0.16), 0 0 5px rgb(198 175 217 / 0.08);
-}
-html.theme-soft .term .t-user,
-html.theme-soft .term .t-ok .t-msg,
-html.theme-soft .term .t-ok .t-gutter {
-  color: #bde6cc;
-}
-html.theme-soft .term .t-cmd .t-msg,
-html.theme-soft .term .t-path {
-  color: #c5d9e8;
-}
-html.theme-soft .term .t-warn .t-msg,
-html.theme-soft .term .t-warn .t-gutter {
-  color: #efdbb5;
-}
-html.theme-soft .term .t-err .t-msg,
-html.theme-soft .term .t-err .t-gutter {
-  color: #e6b1bf;
-}
-html.theme-soft .term header .text-lavender {
-  color: #c6afd9;
-}
-html.theme-soft .term header .bg-rose {
-  background-color: #bde6cc;
-  box-shadow: 0 0 0 2px rgb(189 230 204 / 0.12), 0 0 7px rgb(189 230 204 / 0.14);
-}
-html.theme-soft .term-prompt {
-  background: #1d1721;
-  border-top: 2px solid #8f78a2;
-  box-shadow: inset 0 0 10px rgb(198 175 217 / 0.07);
-}
-html.theme-soft .term-prompt:focus-within {
-  box-shadow: inset 0 0 12px rgb(198 175 217 / 0.11), 0 -2px 0 #a991bd;
-}
-html.theme-soft .term .t-cursor {
-  background: #c6afd9;
-  box-shadow: 0 0 5px rgb(198 175 217 / 0.22);
-}
-html.theme-soft .term .t-err .t-tag {
-  background: #503541;
-  color: #f0c0cb;
-}
-html.theme-soft .term .t-warn .t-tag {
-  background: #4b4335;
-  color: #efdbb5;
-}
-html.theme-soft .term .t-ok .t-tag {
-  background: #30483d;
-  color: #bde6cc;
-}
-
 /* Consistent square pixel treatment across cards, controls and clickable surfaces. */
 html.theme-soft .pixel-frame,
 html.theme-soft .pixel-tile,
@@ -1741,7 +1633,7 @@ html.theme-soft .pixel-tile-interactive:focus-visible {
   transform: translateY(-2px);
 }
 
-/* Subtle lavender glow links the active tab and active terminal prompt. */
+/* Subtle lavender glow highlights the active tab. */
 html.theme-soft [role='tab'][aria-selected='true'] {
   box-shadow: 0 0 0 1px rgb(157 117 178 / 0.38), 0 0 12px rgb(157 117 178 / 0.18);
 }

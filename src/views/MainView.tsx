@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { hero } from '@/siteData';
-import './terminal.css';
+import './main.css';
 
 // ---- Visitor counter -------------------------------------------------------------------------
 // Real, shared total via the free counterapi.dev service. A visit is counted once per browser
@@ -42,7 +42,7 @@ const weatherLabel = (code: number) => {
   return 'weather';
 };
 
-// Animated pixel-art border between the pink status bars and the cream window (styles in terminal.css).
+// Animated pixel-art border between the pink status bars and the cream window (styles in main.css).
 function PixelDivider({ position }: { position: 'top' | 'bottom' }) {
   return (
     <div className={`pixel-divider pixel-divider-${position}`} aria-hidden="true">
@@ -96,7 +96,6 @@ export default function MainView() {
       .catch(() => setWeather({ city: place.city, temp: NaN, code: -1 }));
   }, []);
 
-  const bio = hero.bio.filter((line) => line.replace(/\u00A0/g, '').trim() && !line.startsWith('>') && !line.toUpperCase().includes('A SMALL CORNER OF THE INTERNET'));
 
 
   return (
@@ -110,9 +109,10 @@ export default function MainView() {
       <PixelDivider position="top" />
 
       <section className="main-profile-center">
-        <img src={hero.avatar} alt={hero.avatarAlt} className="pixel-frame main-profile-avatar" />
+        <img src={hero.avatar} alt={hero.avatarAlt} className="main-profile-avatar" />
         <h1 className="main-profile-name">{hero.name}</h1>
-        <div className="main-profile-bio">{bio.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+        <span className="main-profile-ornament" aria-hidden="true" />
+        <div className="main-profile-bio">{hero.bio.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
       </section>
 
       <PixelDivider position="bottom" />

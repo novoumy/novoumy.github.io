@@ -174,10 +174,6 @@ export const hero = {
   name: 'novoumy',
   bio: [
     'I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^',
-    '\u00A0',
-    '> error 503: motivation service temporarily unavailable',
-    '> activity: optimizing things that don\'t need optimization',
-    '> focus_mode: enabled [██████████] 100%',
   ],
   badges: [
     { label: 'Status', value: 'studying..' },
