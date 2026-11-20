@@ -56,7 +56,9 @@ export default function SocialsView() {
               aria-label={`${social.platform}${social.handle ? ` (${social.handle})` : ''}, opens in a new tab`}
               className="pixel-tile pixel-tile-interactive group relative flex w-full min-w-0 flex-col items-center gap-3 bg-cool-white px-2 pb-3.5 pt-4 text-center hover:bg-rose/30 max-sm:gap-2 max-sm:pb-2.5 max-sm:pt-3"
             >
-              <SocialGlyph social={social} className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
+              <span className="pixel-icon-well pixel-icon-well-social">
+                <SocialGlyph social={social} className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
+              </span>
               <span className="flex w-full min-w-0 flex-col items-center gap-2">
                 <span className="font-pixel text-[8px] uppercase leading-none sm:text-[9px]">{social.platform}</span>
                 <span className="w-full truncate text-[19px] leading-none sm:text-[20px]">
@@ -78,7 +80,9 @@ export default function SocialsView() {
       {email && email.handle && (
         <section className="pixel-tile flex flex-col gap-3 bg-rose/30 p-3 sm:flex-row sm:items-center sm:gap-4 sm:p-4">
           <div className="flex min-w-0 flex-1 items-center gap-3">
-            <SocialGlyph social={email} className="h-8 w-8 shrink-0" />
+            <span className="pixel-icon-well pixel-icon-well-email">
+              <SocialGlyph social={email} className="h-8 w-8 shrink-0" />
+            </span>
             <span className="flex min-w-0 flex-col gap-1.5">
               <span className="font-pixel text-[8px] uppercase leading-none">Email</span>
               <span className="truncate text-[20px] leading-none sm:text-[22px]">{email.handle}</span>

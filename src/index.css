@@ -1223,125 +1223,226 @@ html.theme-dark .r-close:focus-visible {
 
 
 /*
- * The /theme palette is a softer night mode: charcoal-plum surfaces, warm
- * lavender-white text and muted mauve edges. The lavender desktop/grid stays
- * exactly the same as the light theme. The original full inversion remains
- * available separately through html.theme-dark (/invert).
+ * /theme — Novoumy OS night palette.
+ * This palette is intentionally separate from /invert (.theme-dark) and light mode.
+ * The outer canvas stays near-black; windows/panels use espresso charcoal, with
+ * warm cream text, restrained mauve edges and precise neon terminal feedback.
  */
 html.theme-soft {
   color-scheme: dark;
-  --cool-white: #393341;
-  --cool-white-rgb: 57 51 65;
-  --wine: #E7DFE9;
-  --wine-rgb: 231 223 233;
-  --rose: #A18DA8;
-  --rose-rgb: 161 141 168;
-  --backdrop-grid: #ECEFF1;
-  --soft-edge: #756A7D;
-  --terminal-bg: #403947;
-  --terminal-bg-deep: #37313F;
-  --terminal-accent: #B7A4BE;
-  --terminal-muted: #C4B9C9;
-  --terminal-error-bg: #805A68;
-  --terminal-error-fg: #F6EDF2;
-  --terminal-warn-bg: #766582;
-  --terminal-warn-fg: #F4EDF6;
-  --terminal-ok-bg: #526F64;
-  --terminal-ok-fg: #EFF7F1;
+
+  /* Global site palette tokens */
+  --cool-white: #1a161b;
+  --cool-white-rgb: 26 22 27;
+  --lavender: #29232e;
+  --lavender-rgb: 41 35 46;
+  --wine: #e6ded1;
+  --wine-rgb: 230 222 209;
+  --rose: #c7809d;
+  --rose-rgb: 199 128 157;
+  --backdrop-grid: #3f353d;
+
+  /* Dark-mode structure and interaction tokens */
+  --soft-canvas: #0d0b0f;
+  --soft-surface: #1a161b;
+  --soft-raised: #211c23;
+  --soft-well: #120f13;
+  --soft-edge: #3f353d;
+  --soft-hover: #c7809d;
+  --soft-glow: #9d75b2;
+  --soft-icon: #f4eedb;
+
+  /* Terminal phosphor palette */
+  --terminal-bg: #120f13;
+  --terminal-bg-deep: #1a161b;
+  --terminal-accent: #9d75b2;
+  --terminal-muted: #b9aeb7;
+  --terminal-error: #f64a4a;
+  --terminal-error-bg: #f64a4a;
+  --terminal-error-fg: #0d0b0f;
+  --terminal-warn-bg: #4ae5f6;
+  --terminal-warn-fg: #0d0b0f;
+  --terminal-ok-bg: #4af67d;
+  --terminal-ok-fg: #0d0b0f;
 }
 
-html.theme-soft body {
-  background-color: #847FA4;
-  color: var(--wine);
+html.theme-soft body,
+html.theme-soft #root {
+  background-color: var(--soft-canvas);
+  color: #e6ded1;
 }
 
-/* Keep the purple grid and its pale grid lines unchanged in /theme. */
+/* The Vite app's outer root has its own bg-lavender utility; keep it on the canvas. */
+html.theme-soft #root > .bg-lavender {
+  background-color: var(--soft-canvas) !important;
+}
+
+/* Quiet canvas grid: visible as texture, never competing with foreground content. */
 html.theme-soft .pixel-backdrop-grid {
   background-image:
-    linear-gradient(to right, #ECEFF1 1px, transparent 1px),
-    linear-gradient(to bottom, #ECEFF1 1px, transparent 1px) !important;
+    linear-gradient(to right, #3f353d 1px, transparent 1px),
+    linear-gradient(to bottom, #3f353d 1px, transparent 1px) !important;
+  opacity: 0.12 !important;
+}
+html.theme-soft .pixel-backdrop-grid ~ .animate-float-particle {
+  opacity: 0.14 !important;
 }
 
-/* Utility colours: text stays soft and readable; filled edges use muted plum, not bright white. */
-html.theme-soft .text-wine { color: #E7DFE9; }
-html.theme-soft .text-cool-white { color: #F1EAF2; }
-html.theme-soft .text-lavender { color: #BBAFC5; }
-html.theme-soft .bg-cool-white { background-color: #393341; }
-html.theme-soft .bg-wine { background-color: #62566B; }
-html.theme-soft .bg-rose { background-color: #75657D; }
-html.theme-soft .border-wine { border-color: #756A7D; }
-html.theme-soft .border-rose { border-color: #756A7D; }
+/* Palette-backed Tailwind utility overrides. */
+html.theme-soft .text-wine { color: #e6ded1; }
+html.theme-soft .text-cool-white { color: #f4eedb; }
+html.theme-soft .text-lavender { color: #9d75b2; }
+html.theme-soft .text-rose { color: #c7809d; }
+html.theme-soft .bg-cool-white { background-color: #1a161b; }
+html.theme-soft .bg-lavender { background-color: #29232e; }
+html.theme-soft .bg-wine { background-color: #3f353d; }
+html.theme-soft .bg-rose { background-color: #553746; }
+html.theme-soft .border-wine { border-color: #3f353d; }
+html.theme-soft .border-rose { border-color: #634657; }
+html.theme-soft [class~="hover:text-wine"]:hover,
+html.theme-soft [class~="focus-visible:text-wine"]:focus-visible,
+html.theme-soft .group:hover [class~="group-hover:text-wine"] {
+  color: #f4eedb;
+}
+
+/* Main window and shared tiles: espresso-charcoal fills with crisp pixel edges. */
+html.theme-soft .pixel-frame {
+  background-color: #1a161b;
+  border: 2px solid #3f353d;
+  box-shadow:
+    0 -4px 0 0 #3f353d,
+    0 4px 0 0 #3f353d,
+    -4px 0 0 0 #3f353d,
+    4px 0 0 0 #3f353d,
+    8px 8px 0 0 #211c23;
+  border-radius: 0;
+}
+html.theme-soft .pixel-tile {
+  border: 2px solid #3f353d;
+  box-shadow:
+    0 -3px 0 0 #3f353d,
+    0 3px 0 0 #3f353d,
+    -3px 0 0 0 #3f353d,
+    3px 0 0 0 #3f353d;
+  border-radius: 0;
+}
+html.theme-soft .pixel-tile-interactive:hover,
+html.theme-soft .pixel-tile-interactive:focus-visible {
+  border-color: #c7809d;
+  box-shadow:
+    0 0 0 1px #c7809d,
+    3px 3px 0 0 #3f353d,
+    0 0 12px rgb(199 128 157 / 0.12);
+  transform: translateY(-2px);
+  outline: none;
+}
+html.theme-soft .pixel-tile-interactive:active {
+  transform: translateY(0);
+}
+
+/* Recessed icon wells are enabled only in /theme; display:contents keeps light mode unchanged. */
+.pixel-icon-well { display: contents; }
+html.theme-soft .pixel-icon-well {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  background: #120f13;
+  border: 2px solid #3f353d;
+  box-shadow: inset 2px 2px 0 rgb(255 255 255 / 0.035), inset -2px -2px 0 #0a080b;
+  border-radius: 0;
+  --wine: #f4eedb;
+  --rose: #f4eedb;
+  --r-accent: #f4eedb;
+}
+html.theme-soft .pixel-icon-well svg {
+  display: block;
+  color: #f4eedb;
+}
+html.theme-soft .pixel-icon-well-folder {
+  width: 7.5rem;
+  height: 7.5rem;
+  padding: 0.45rem;
+}
+html.theme-soft .pixel-icon-well-social {
+  width: 4rem;
+  height: 4rem;
+  padding: 0.55rem;
+}
+html.theme-soft .pixel-icon-well-email {
+  width: 3.25rem;
+  height: 3.25rem;
+  padding: 0.4rem;
+}
+
+/* Main navigation: restrained surface fill and a subtle lavender active-state glow. */
+html.theme-soft [role='tab'] {
+  border: 2px solid #3f353d;
+  border-radius: 0;
+}
 html.theme-soft [role='tab'][aria-selected='false'] {
-  color: #F1EAF2;
-  text-shadow: 2px 2px 0 #62566B;
+  background-color: #29232e;
+  color: #f4eedb;
+  text-shadow: none;
 }
 html.theme-soft [role='tab'][aria-selected='false']:hover,
 html.theme-soft [role='tab'][aria-selected='false']:focus-visible {
-  background-color: #A18DA8;
-  color: #F8F2F8;
+  background-color: #493440;
+  border-color: #c7809d;
+  color: #f4eedb;
   text-shadow: none;
 }
-html.theme-soft .hover\:text-wine:hover,
-html.theme-soft .focus-visible\:text-wine:focus-visible,
-html.theme-soft .group:hover .group-hover\:text-wine {
-  color: #F8F2F8;
+html.theme-soft [role='tab'][aria-selected='true'] {
+  background-color: #1a161b;
+  border-color: #9d75b2;
+  color: #e6ded1;
+  box-shadow: 0 0 0 1px rgb(157 117 178 / 0.42), 0 0 13px rgb(157 117 178 / 0.2);
 }
 
-/* Softer pixel frames: reduce the bright white outline/shadow around panels and cards. */
-html.theme-soft .pixel-frame {
-  box-shadow:
-    0 -4px 0 0 var(--soft-edge),
-    0 4px 0 0 var(--soft-edge),
-    -4px 0 0 0 var(--soft-edge),
-    4px 0 0 0 var(--soft-edge),
-    8px 8px 0 0 var(--soft-edge);
-}
-html.theme-soft .pixel-tile {
-  box-shadow:
-    0 -4px 0 0 var(--soft-edge),
-    0 4px 0 0 var(--soft-edge),
-    -4px 0 0 0 var(--soft-edge),
-    4px 0 0 0 var(--soft-edge);
-}
-html.theme-soft .pixel-tile-interactive:hover {
-  box-shadow:
-    0 -4px 0 0 var(--soft-edge),
-    0 4px 0 0 var(--soft-edge),
-    -4px 0 0 0 var(--soft-edge),
-    4px 0 0 0 var(--soft-edge),
-    8px 8px 0 0 #8E7A96;
-}
-
-/* Folder windows/cards use a related but restrained dusk-plum surface scale. */
+/* Folder windows: same dark palette, including the portal-mounted overlay. */
 html.theme-soft .retro-theme,
 html.theme-soft .retro-dark {
-  --r-bg: #393341;
-  --r-bg-rgb: 57 51 65;
-  --r-panel: #453E4D;
-  --r-panel-rgb: 69 62 77;
-  --r-raised: #514858;
-  --r-raised-rgb: 81 72 88;
-  --r-line: #756A7D;
-  --r-line-rgb: 117 106 125;
-  --r-line-hi: #A99BAF;
-  --r-line-hi-rgb: 169 155 175;
-  --r-text: #E7DFE9;
-  --r-text-rgb: 231 223 233;
-  --r-dim: #BBAFC5;
-  --r-dim-rgb: 187 175 197;
-  --r-accent: #B39DB9;
-  --r-accent-rgb: 179 157 185;
-  --r-accent-dim: #8E7A96;
-  --r-accent-dim-rgb: 142 122 150;
-  --r-vinyl: #211C28;
-  --r-vinyl-groove: #393142;
-  --r-vinyl-edge: #211C28;
+  --r-bg: #1a161b;
+  --r-bg-rgb: 26 22 27;
+  --r-panel: #1a161b;
+  --r-panel-rgb: 26 22 27;
+  --r-raised: #211c23;
+  --r-raised-rgb: 33 28 35;
+  --r-line: #3f353d;
+  --r-line-rgb: 63 53 61;
+  --r-line-hi: #9d75b2;
+  --r-line-hi-rgb: 157 117 178;
+  --r-text: #e6ded1;
+  --r-text-rgb: 230 222 209;
+  --r-dim: #b9aeb7;
+  --r-dim-rgb: 185 174 183;
+  --r-accent: #9d75b2;
+  --r-accent-rgb: 157 117 178;
+  --r-accent-dim: #765d83;
+  --r-accent-dim-rgb: 118 93 131;
+  --r-vinyl: #100d12;
+  --r-vinyl-groove: #211a23;
+  --r-vinyl-edge: #0d0b0f;
   color-scheme: dark;
+  background-color: #1a161b;
+  color: #e6ded1;
+}
+html.theme-soft .retro-theme.r-desk,
+html.theme-soft .retro-dark.r-desk {
+  background-color: #0d0b0f;
+  background-image:
+    linear-gradient(to right, rgb(63 53 61 / 0.22) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(63 53 61 / 0.22) 1px, transparent 1px);
+}
+html.theme-soft .retro-theme .r-window,
+html.theme-soft .retro-dark .r-window {
+  background: #1a161b;
+  border: 2px solid #3f353d;
 }
 html.theme-soft .retro-theme .r-titlebar,
 html.theme-soft .retro-dark .r-titlebar {
-  background: #62566B;
-  color: #F1EAF2;
+  background: #29232e;
+  color: #e6ded1;
+  border-bottom: 2px solid #3f353d;
 }
 html.theme-soft .retro-theme .r-box,
 html.theme-soft .retro-theme .r-btn,
@@ -1349,45 +1450,25 @@ html.theme-soft .retro-theme .r-link,
 html.theme-soft .retro-dark .r-box,
 html.theme-soft .retro-dark .r-btn,
 html.theme-soft .retro-dark .r-link {
-  border-color: var(--r-line);
+  border-color: #3f353d;
+  border-radius: 0;
 }
-html.theme-soft .retro-theme .pixel-badge,
-html.theme-soft .retro-dark .pixel-badge {
-  background: #62566B;
-  color: #F1EAF2;
-  border-color: var(--r-line);
+html.theme-soft .retro-theme .r-box,
+html.theme-soft .retro-dark .r-box {
+  background-color: #1a161b;
 }
-html.theme-soft .retro-theme .pixel-scroll,
-html.theme-soft .retro-dark .pixel-scroll {
-  scrollbar-color: #8E7A96 #453E4D;
+html.theme-soft .retro-theme .r-box > span.relative.block,
+html.theme-soft .retro-dark .r-box > span.relative.block {
+  background: #120f13;
+  border-color: #3f353d;
+  box-shadow: inset 2px 2px 0 rgb(255 255 255 / 0.025), inset -2px -2px 0 #0a080b;
 }
-html.theme-soft .retro-theme .pixel-scroll::-webkit-scrollbar-track,
-html.theme-soft .retro-dark .pixel-scroll::-webkit-scrollbar-track {
-  background: #453E4D;
-}
-html.theme-soft .retro-theme .pixel-scroll::-webkit-scrollbar-thumb,
-html.theme-soft .retro-dark .pixel-scroll::-webkit-scrollbar-thumb {
-  background: #8E7A96;
-  border-color: #453E4D;
-}
-html.theme-soft .retro-theme .player-range,
-html.theme-soft .retro-dark .player-range {
-  --track: #756A7D;
-  --fillc: #B39DB9;
-}
-html.theme-soft .folder-sound-toggle {
-  background-color: #62566B;
-  color: #F1EAF2;
-}
-html.theme-soft .folder-sound-toggle:hover,
-html.theme-soft .folder-sound-toggle:focus-visible {
-  background-color: #8E7A96;
-  color: #F8F2F8;
-}
-html.theme-soft .main-sound-toggle:hover,
-html.theme-soft .main-sound-toggle:focus-visible {
-  background-color: #A18DA8;
-  color: #F8F2F8;
+html.theme-soft .retro-theme .r-btn,
+html.theme-soft .retro-theme .r-link,
+html.theme-soft .retro-dark .r-btn,
+html.theme-soft .retro-dark .r-link {
+  background-color: #211c23;
+  color: #e6ded1;
 }
 html.theme-soft .retro-theme .r-btn:hover,
 html.theme-soft .retro-theme .r-btn:focus-visible,
@@ -1397,5 +1478,202 @@ html.theme-soft .retro-dark .r-btn:hover,
 html.theme-soft .retro-dark .r-btn:focus-visible,
 html.theme-soft .retro-dark .r-link:hover,
 html.theme-soft .retro-dark .r-link:focus-visible {
-  box-shadow: 4px 4px 0 0 var(--r-line);
+  background-color: #342738;
+  border-color: #c7809d;
+  color: #f4eedb;
+  box-shadow: 3px 3px 0 0 #3f353d;
+}
+html.theme-soft .retro-theme .r-box-hover:hover,
+html.theme-soft .retro-theme .r-box-hover:focus-visible,
+html.theme-soft .retro-dark .r-box-hover:hover,
+html.theme-soft .retro-dark .r-box-hover:focus-visible {
+  border-color: #c7809d;
+  box-shadow: 0 0 0 1px #c7809d, 3px 3px 0 0 #3f353d;
+  transform: translateY(-2px);
+}
+html.theme-soft .retro-theme .r-close,
+html.theme-soft .retro-dark .r-close {
+  background: #211c23;
+  color: #e6ded1;
+  border: 2px solid #3f353d;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 #3f353d;
+}
+html.theme-soft .retro-theme .r-close:hover,
+html.theme-soft .retro-theme .r-close:focus-visible,
+html.theme-soft .retro-dark .r-close:hover,
+html.theme-soft .retro-dark .r-close:focus-visible {
+  background: #342738;
+  color: #f4eedb;
+  border-color: #c7809d;
+}
+html.theme-soft .retro-theme .r-tag,
+html.theme-soft .retro-dark .r-tag {
+  background: #120f13;
+  color: #e6ded1;
+  border-color: #3f353d;
+  border-radius: 0;
+}
+html.theme-soft .retro-theme .pixel-badge,
+html.theme-soft .retro-dark .pixel-badge {
+  background: #29232e;
+  color: #f4eedb;
+  border: 2px solid #3f353d;
+  border-radius: 0;
+}
+
+/* Media controls and scrollbars stay dark, legible and squared. */
+html.theme-soft .retro-theme .pixel-scroll,
+html.theme-soft .retro-dark .pixel-scroll {
+  scrollbar-color: #765d83 #1a161b;
+}
+html.theme-soft .retro-theme .pixel-scroll::-webkit-scrollbar-track,
+html.theme-soft .retro-dark .pixel-scroll::-webkit-scrollbar-track {
+  background: #1a161b;
+}
+html.theme-soft .retro-theme .pixel-scroll::-webkit-scrollbar-thumb,
+html.theme-soft .retro-dark .pixel-scroll::-webkit-scrollbar-thumb {
+  background: #765d83;
+  border: 2px solid #1a161b;
+  border-radius: 0;
+}
+html.theme-soft .retro-theme .player-range,
+html.theme-soft .retro-dark .player-range {
+  --track: #3f353d;
+  --fillc: #9d75b2;
+}
+html.theme-soft .retro-theme .eq-bars i,
+html.theme-soft .retro-dark .eq-bars i {
+  background: #9d75b2;
+}
+html.theme-soft .retro-theme .player-range::-webkit-slider-thumb,
+html.theme-soft .retro-theme .player-range::-moz-range-thumb,
+html.theme-soft .retro-dark .player-range::-webkit-slider-thumb,
+html.theme-soft .retro-dark .player-range::-moz-range-thumb {
+  background: #e6ded1;
+  border: 2px solid #9d75b2;
+  border-radius: 0;
+}
+html.theme-soft .folder-sound-toggle {
+  background-color: #29232e;
+  color: #f4eedb;
+  border-color: #3f353d;
+}
+html.theme-soft .folder-sound-toggle:hover,
+html.theme-soft .folder-sound-toggle:focus-visible,
+html.theme-soft .main-sound-toggle:hover,
+html.theme-soft .main-sound-toggle:focus-visible {
+  background-color: #493440;
+  color: #f4eedb;
+  border-color: #c7809d;
+}
+
+/* Terminal phosphor: lime for commands/success, cyan for the active path, red for errors. */
+html.theme-soft .term {
+  --t-bg: #120f13;
+  --t-bg-deep: #1a161b;
+  --t-text: #4af67d;
+  --t-dim: #b9aeb7;
+  --t-accent: #9d75b2;
+  --t-glow: rgb(157 117 178 / 0.22);
+  --t-scan: rgb(230 222 209 / 0.035);
+  --t-edge: rgb(0 0 0 / 0.22);
+  --t-err-bg: #f64a4a;
+  --t-err-fg: #0d0b0f;
+  --t-warn-bg: #4ae5f6;
+  --t-warn-fg: #0d0b0f;
+  --t-ok-bg: #4af67d;
+  --t-ok-fg: #0d0b0f;
+  background: #120f13;
+  color: #4af67d;
+  border-top: 2px solid #3f353d;
+  border-bottom: 2px solid #3f353d;
+}
+html.theme-soft .term-out,
+html.theme-soft .term-prompt {
+  color: #4af67d;
+  text-shadow: 0 0 1px rgb(74 246 125 / 0.7), 0 0 7px rgb(74 246 125 / 0.16);
+}
+html.theme-soft .term .t-user,
+html.theme-soft .term .t-ok .t-msg,
+html.theme-soft .term .t-ok .t-gutter {
+  color: #4af67d;
+}
+html.theme-soft .term .t-cmd .t-msg,
+html.theme-soft .term .t-path,
+html.theme-soft .term .t-warn .t-msg {
+  color: #4ae5f6;
+}
+html.theme-soft .term .t-err .t-msg,
+html.theme-soft .term .t-err .t-gutter {
+  color: #f64a4a;
+}
+html.theme-soft .term header .text-lavender {
+  color: #4ae5f6;
+}
+html.theme-soft .term header .bg-rose {
+  background-color: #4af67d;
+  box-shadow: 0 0 0 2px rgb(74 246 125 / 0.22), 0 0 9px rgb(74 246 125 / 0.35);
+}
+html.theme-soft .term-prompt {
+  background: #1a161b;
+  border-top: 2px solid #9d75b2;
+  box-shadow: inset 0 0 12px rgb(157 117 178 / 0.12);
+}
+html.theme-soft .term-prompt:focus-within {
+  box-shadow: inset 0 0 16px rgb(157 117 178 / 0.2), 0 -2px 0 #9d75b2;
+}
+html.theme-soft .term .t-cursor {
+  background: #4af67d;
+  box-shadow: 0 0 8px rgb(74 246 125 / 0.48);
+}
+html.theme-soft .term .t-err .t-tag {
+  background: #f64a4a;
+  color: #0d0b0f;
+}
+html.theme-soft .term .t-warn .t-tag {
+  background: #4ae5f6;
+  color: #0d0b0f;
+}
+html.theme-soft .term .t-ok .t-tag {
+  background: #4af67d;
+  color: #0d0b0f;
+}
+
+/* Consistent square pixel treatment across cards, controls and clickable surfaces. */
+html.theme-soft .pixel-frame,
+html.theme-soft .pixel-tile,
+html.theme-soft .pixel-btn,
+html.theme-soft .r-window,
+html.theme-soft .r-box,
+html.theme-soft .r-btn,
+html.theme-soft .r-link,
+html.theme-soft .r-tag,
+html.theme-soft .r-close,
+html.theme-soft [role='tab'] {
+  border-radius: 0 !important;
+}
+html.theme-soft .pixel-btn {
+  clip-path: none;
+  border: 2px solid #3f353d;
+}
+html.theme-soft .retro-theme :where(button, input, select, textarea, a, section, article, [role='button'], [role='tab']),
+html.theme-soft .retro-dark :where(button, input, select, textarea, a, section, article, [role='button'], [role='tab']) {
+  border-radius: 0 !important;
+}
+
+/* Hover hierarchy for game + social cards: pink-violet edge and a restrained 2px lift. */
+html.theme-soft .retro-theme .r-box-hover:hover,
+html.theme-soft .retro-theme .r-box-hover:focus-visible,
+html.theme-soft .retro-dark .r-box-hover:hover,
+html.theme-soft .retro-dark .r-box-hover:focus-visible,
+html.theme-soft .pixel-tile-interactive:hover,
+html.theme-soft .pixel-tile-interactive:focus-visible {
+  border-color: #c7809d !important;
+  transform: translateY(-2px);
+}
+
+/* Subtle lavender glow links the active tab and active terminal prompt. */
+html.theme-soft [role='tab'][aria-selected='true'] {
+  box-shadow: 0 0 0 1px rgb(157 117 178 / 0.38), 0 0 12px rgb(157 117 178 / 0.18);
 }
