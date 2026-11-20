@@ -1011,3 +1011,126 @@
     0%, 100% { opacity: 0.82; }
     50% { opacity: 0.88; }
   }
+
+/* ---------------------------------------------------------------------------------------
+   Minecraft advancements: in-game look (only used for the Minecraft entry in GamesView).
+   Dark toast tiles, gold/rounded/purple advancement frames, yellow titles, green descriptions.
+   --------------------------------------------------------------------------------------- */
+.mc-panel {
+  background-color: #2b2b2b;
+  background-image:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25% 75%, rgba(255, 255, 255, 0.03) 75%),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25% 75%, rgba(255, 255, 255, 0.03) 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 4px 4px;
+  border: 2px solid #000;
+  box-shadow: inset 2px 2px 0 #5a5a5a, inset -2px -2px 0 #1a1a1a;
+  padding: 14px;
+}
+
+.mc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 2px 2px 0 #3f3f3f;
+  background: #6f6f6f;
+  border: 2px solid #000;
+  box-shadow: inset 2px 2px 0 #a8a8a8, inset -2px -2px 0 #3d3d3d;
+  cursor: pointer;
+}
+.mc-btn:hover,
+.mc-btn:focus-visible {
+  color: #ffffa0;
+  background: #7b7d9c;
+  outline: 2px solid #fff;
+  outline-offset: -2px;
+}
+.mc-btn[aria-pressed='true'] {
+  background: #4f4f4f;
+  color: #ffff55;
+  text-shadow: 2px 2px 0 #3f3f15;
+  box-shadow: inset 2px 2px 0 #2a2a2a, inset -2px -2px 0 #7d7d7d;
+}
+.mc-btn .mc-count {
+  color: #aaa;
+}
+
+.mc-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 76px;
+  padding: 10px 12px;
+  background: #1f1f1f;
+  border: 2px solid #000;
+  box-shadow: inset 2px 2px 0 #484848, inset -2px -2px 0 #111;
+}
+.mc-tile[data-locked='true'] {
+  opacity: 0.6;
+}
+
+/* the advancement frame: square (task), rounded (goal), spiked/notched purple (challenge) */
+.mc-frame {
+  position: relative;
+  display: grid;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  background: #b9965a;
+  box-shadow: inset 0 0 0 3px #e8cd82, inset 0 0 0 5px #7a5c26, 0 0 0 2px #000;
+}
+.mc-frame[data-kind='goal'] {
+  border-radius: 16px;
+  background: #b9965a;
+}
+.mc-frame[data-kind='challenge'] {
+  background: #7d3fb0;
+  box-shadow: inset 0 0 0 3px #d5a4ff, inset 0 0 0 5px #4a2070;
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+}
+.mc-tile[data-locked='true'] .mc-frame {
+  background: #6b6b6b;
+  box-shadow: inset 0 0 0 3px #9a9a9a, inset 0 0 0 5px #3d3d3d, 0 0 0 2px #000;
+  filter: grayscale(1);
+}
+.mc-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.35));
+}
+
+.mc-title {
+  font-family: 'VT323', monospace;
+  font-size: 26px;
+  line-height: 1;
+  color: #ffff55;
+  text-shadow: 2px 2px 0 #3f3f15;
+  overflow-wrap: anywhere;
+}
+.mc-tile[data-kind='challenge'] .mc-title {
+  color: #ff55ff;
+  text-shadow: 2px 2px 0 #3f153f;
+}
+.mc-desc {
+  margin-top: 4px;
+  font-family: 'VT323', monospace;
+  font-size: 21px;
+  line-height: 1.05;
+  color: #55ff55;
+  text-shadow: 2px 2px 0 #153f15;
+  overflow-wrap: anywhere;
+}
+.mc-tile[data-locked='true'] .mc-title,
+.mc-tile[data-locked='true'] .mc-desc {
+  color: #aaa;
+  text-shadow: 2px 2px 0 #2a2a2a;
+}
