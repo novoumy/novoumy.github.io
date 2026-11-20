@@ -49,6 +49,14 @@ async function runCrtTransition(update: () => void, destination: Destination): P
   const root = document.documentElement;
   root.dataset.crtTransition = 'true';
 
+  // When powering a folder off, the Interests hub is already mounted behind the
+  // portal. Collapse it before the folder starts shrinking, otherwise the full-size
+  // hub can flash through the transparent folder desk at the line.
+  const preCollapsedDestination = destination === 'hub'
+    ? document.querySelector<HTMLElement>(HUB_SELECTOR)
+    : null;
+  preCollapsedDestination?.classList.add('crt-screen', 'crt-collapsed');
+
   const beam = document.createElement('div');
   beam.className = 'crt-folder-beam';
   positionBeam(beam, source);
@@ -76,10 +84,10 @@ async function runCrtTransition(update: () => void, destination: Destination): P
 
     await Promise.all([finished(collapse), finished(beamOn)]);
 
-    // Keep the hub folded behind the folder while it is open.
-    if (source.matches(HUB_SELECTOR) && destination === 'folder') {
-      source.classList.add('crt-collapsed');
-    }
+    // Keep the outgoing surface folded at the line during the hold. This is
+    // important for both directions: without it the WAAPI fill disappears when
+    // cancel() runs and the folder can briefly spring back to full size.
+    source.classList.add('crt-collapsed');
     collapse.cancel();
     source.classList.remove('crt-screen');
 
@@ -91,7 +99,9 @@ async function runCrtTransition(update: () => void, destination: Destination): P
     const target = document.querySelector<HTMLElement>(destination === 'folder' ? FOLDER_SELECTOR : HUB_SELECTOR);
     if (!target) {
       source.classList.remove('crt-screen', 'crt-collapsed');
+      preCollapsedDestination?.classList.remove('crt-screen', 'crt-collapsed');
       document.querySelector<HTMLElement>(HUB_SELECTOR)?.classList.remove('crt-screen', 'crt-collapsed');
+      document.querySelector<HTMLElement>(FOLDER_SELECTOR)?.classList.remove('crt-screen', 'crt-collapsed');
       return;
     }
 
