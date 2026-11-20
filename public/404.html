@@ -32,6 +32,22 @@
         --lavender: #847FA4;
         --wine: #6B2D39;
         --rose: #CD9EBA;
+        --frame: #6B2D39;          /* window / tab outline */
+        --frame-shadow: #6B2D39;   /* hard drop shadow */
+        --tab-bg: #847FA4;
+        --tab-fg: #ECEFF1;
+        --tab-shadow: #6B2D39;
+        --term-bg: #F3E6F0;
+        --term-deep: #E8DFF0;
+        --term-dim: #8a5a66;
+        --scan: rgba(107,45,57,.035);
+        --grid: rgba(236,239,241,.12);
+        --btn-bg: #6B2D39;
+        --btn-fg: #ECEFF1;
+        --btn-edge: #6B2D39;
+        --btn-shadow: #6B2D39;
+        --btn-hover-bg: #CD9EBA;
+        --btn-hover-fg: #6B2D39;
       }
       * { box-sizing: border-box; }
       html, body { min-height: 100%; }
@@ -44,8 +60,8 @@
         color: var(--wine);
         background-color: var(--lavender);
         background-image:
-          linear-gradient(to right, rgba(236,239,241,.12) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(236,239,241,.12) 1px, transparent 1px);
+          linear-gradient(to right, var(--grid) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
         background-size: 32px 32px;
         font-family: 'VT323', monospace;
       }
@@ -54,8 +70,8 @@
         width: min(100%, 680px);
         padding: 8px;
         background: var(--paper);
-        border: 4px solid var(--wine);
-        box-shadow: 7px 7px 0 var(--wine);
+        border: 4px solid var(--frame);
+        box-shadow: 7px 7px 0 var(--frame-shadow);
       }
       .error-screen {
         position: relative;
@@ -76,7 +92,7 @@
         position: absolute;
         z-index: -1;
         inset: 0;
-        background: repeating-linear-gradient(to bottom, rgba(107,45,57,.035) 0 1px, transparent 1px 4px);
+        background: repeating-linear-gradient(to bottom, var(--scan) 0 1px, transparent 1px 4px);
         content: '';
       }
       h1 {
@@ -88,14 +104,23 @@
         color: var(--wine);
       }
       .error-code {
-        display: block;
+        display: flex;
         font: clamp(58px, 15vw, 112px)/1 'Press Start 2P', monospace;
         letter-spacing: -0.08em;
         padding-right: .08em;
         text-shadow: 5px 5px 0 var(--rose), 10px 10px 0 rgba(107,45,57,.16);
       }
+      .error-code.glitch { animation: glitch .24s steps(2) 1; }
+      @keyframes glitch {
+        0%   { transform: translate(0, 0); text-shadow: 5px 5px 0 var(--rose), 10px 10px 0 rgba(107,45,57,.16); }
+        25%  { transform: translate(-6px, 2px); text-shadow: 10px 0 0 var(--rose), -8px 0 0 var(--lavender); }
+        50%  { transform: translate(5px, -2px); text-shadow: -9px 3px 0 var(--rose), 8px -3px 0 var(--lavender); }
+        75%  { transform: translate(-3px, 0); text-shadow: 6px 5px 0 var(--rose), 10px 10px 0 rgba(107,45,57,.16); }
+        100% { transform: translate(0, 0); }
+      }
       .error-label {
         display: block;
+        min-height: 1.5em;
         font: clamp(11px, 2.5vw, 16px)/1.5 'Press Start 2P', monospace;
         letter-spacing: .08em;
       }
@@ -105,52 +130,121 @@
         align-items: center;
         justify-content: center;
         padding: 14px 24px;
-        border: 3px solid var(--wine);
-        background: var(--wine);
-        box-shadow: 5px 5px 0 var(--rose), 8px 8px 0 var(--wine);
-        color: var(--paper);
+        border: 3px solid var(--btn-edge);
+        background: var(--btn-bg);
+        box-shadow: 5px 5px 0 var(--rose), 8px 8px 0 var(--btn-shadow);
+        color: var(--btn-fg);
         font: 9px/1.5 'Press Start 2P', monospace;
         text-decoration: none;
         transition: transform 100ms steps(2), box-shadow 100ms steps(2), background 100ms steps(2), color 100ms steps(2);
       }
       .go-home:hover, .go-home:focus-visible {
-        outline: 2px dashed var(--wine);
+        outline: 2px dashed var(--frame);
         outline-offset: 5px;
-        background: var(--rose);
+        background: var(--btn-hover-bg);
+        color: var(--btn-hover-fg);
+      }
+      .go-home:active { transform: translate(5px, 5px); box-shadow: none; }
+      .go-home[aria-disabled='true'] { pointer-events: none; }
+
+      /* ---------- morph layers (hidden until GO BACK is pressed) ---------- */
+      .replica {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: var(--paper);
         color: var(--wine);
+        font-family: 'VT323', monospace;
+        font-size: 22px;
+        line-height: 1.35;
+        opacity: 0;
+        transform-origin: 0 0;
+        pointer-events: none;
       }
-      .go-home:active {
-        transform: translate(5px, 5px);
-        box-shadow: none;
+      .r-hero {
+        display: grid;
+        grid-template-columns: 112px 1fr;
+        align-items: start;
+        gap: 8px 20px;
+        padding: 32px 32px 48px;
       }
+      .r-avatar {
+        grid-row: span 2;
+        width: 112px;
+        height: 112px;
+        object-fit: cover;
+        image-rendering: pixelated;
+        box-shadow: 0 -4px 0 0 var(--frame), 0 4px 0 0 var(--frame), -4px 0 0 0 var(--frame), 4px 0 0 0 var(--frame), 8px 8px 0 0 var(--frame-shadow);
+      }
+      .r-name { margin: 0; font: 24px/1.3 'Press Start 2P', monospace; letter-spacing: .025em; }
+      .r-bio { margin: 0; grid-column: 2; }
+      .r-term { display: flex; flex: 1; min-height: 0; flex-direction: column; background: var(--term-bg); position: relative; }
+      .r-term::before {
+        content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+        background-image: linear-gradient(to bottom, transparent 0 3px, var(--scan) 3px 4px);
+        background-size: 100% 4px;
+      }
+      .r-term-head {
+        display: flex; height: 28px; flex: none; align-items: center; gap: 12px; padding: 0 32px;
+        background: linear-gradient(to bottom, var(--paper) 50%, var(--term-bg) 50%);
+        font: 9px/1 'Press Start 2P', monospace; letter-spacing: .14em; text-transform: uppercase;
+      }
+      .r-term-head i { display: block; height: 2px; min-width: 16px; flex: 1; background: var(--rose); }
+      .r-term-head em { display: flex; align-items: center; gap: 8px; font-style: normal; font-size: 8px; color: var(--lavender); }
+      .r-term-head em::before { content: ''; width: 6px; height: 6px; background: var(--rose); }
+      .r-out { display: flex; flex: 1; min-height: 0; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 24px 32px 16px; color: var(--term-dim); }
+      .r-line { white-space: pre; min-height: 1.35em; }
+      .r-prompt { display: flex; flex: none; align-items: center; gap: 11px; padding: 14px 32px; background: var(--term-deep); }
+      .r-prompt b { font-weight: 400; color: var(--lavender); }
+      .r-prompt span { color: var(--term-dim); opacity: .7; }
+      .r-cursor { display: inline-block; width: .55em; height: 1em; background: var(--wine); animation: blink 1.1s steps(1) infinite; }
+      @keyframes blink { 50% { opacity: 0; } }
+      .replica.compact { font-size: 18px; }
+      .replica.compact .r-hero { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 16px 28px; text-align: center; }
+      .replica.compact .r-avatar { width: 80px; height: 80px; }
+      .replica.compact .r-name { font-size: clamp(14px, 4vw, 18px); }
+      .replica.compact .r-term-head, .replica.compact .r-out { padding-left: 16px; padding-right: 16px; }
+      .replica.compact .r-prompt { padding: 10px 16px; }
+      .replica.compact .r-prompt b { display: none; }
+
+      .stage-tabs { position: fixed; z-index: 6; display: flex; align-items: flex-end; pointer-events: none; opacity: 0; }
+      .tabs { display: flex; align-items: flex-end; gap: 4px; width: 800px; padding-left: 4px; }
+      .tab {
+        display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 0;
+        padding: 8px 12px; background: var(--tab-bg); color: var(--tab-fg);
+        font: 11px/1.4 'Press Start 2P', monospace; text-transform: uppercase; white-space: nowrap;
+        text-shadow: 2px 2px 0 var(--tab-shadow);
+        box-shadow: 0 -4px 0 0 var(--frame), 0 4px 0 0 var(--frame), -4px 0 0 0 var(--frame), 4px 0 0 0 var(--frame);
+      }
+      .tab svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .tab.active { background: var(--paper); color: var(--wine); text-shadow: none; transform: translateY(4px); }
+      .tabs .spacer { flex: 1; }
+      .tabs .sound { padding: 8px 10px; }
+      .stage-tabs.compact .tabs { width: 100%; padding-left: 0; }
+      .stage-tabs.compact .tab { flex: 1; padding: 10px 6px; font-size: 8px; }
+      .stage-tabs.compact .tab.active { flex: 2.2; }
+      .stage-tabs.compact .tab:not(.active) span, .stage-tabs.compact .spacer, .stage-tabs.compact .sound { display: none; }
+      .surge { position: fixed; inset: 0; z-index: 9; pointer-events: none; opacity: 0; background: var(--rose); mix-blend-mode: screen; }
+      .scan-wipe {
+        position: fixed; left: 0; right: 0; z-index: 8; height: 14vh; pointer-events: none; opacity: 0;
+        background: linear-gradient(to bottom, transparent, rgba(255,255,255,.28), transparent);
+      }
+
       @media (max-width: 600px) {
-        html, body {
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-          overscroll-behavior: none;
-        }
+        html, body { width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; }
         body {
-          height: 100vh;
-          height: 100dvh;
-          min-height: 0;
-          padding: max(12px, env(safe-area-inset-top))
-                   max(12px, env(safe-area-inset-right))
-                   max(12px, env(safe-area-inset-bottom))
-                   max(12px, env(safe-area-inset-left));
+          height: 100vh; height: 100dvh; min-height: 0;
+          padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
           overflow: hidden;
         }
-        .error-window {
-          display: flex;
-          width: min(100%, 480px);
-          max-height: 100%;
-        }
+        .error-window { display: flex; width: min(100%, 480px); max-height: 100%; }
         .error-screen {
-          width: 100%;
-          min-height: 0;
+          width: 100%; min-height: 0;
           height: min(340px, calc(100dvh - max(12px, env(safe-area-inset-top)) - max(12px, env(safe-area-inset-bottom)) - 24px));
-          gap: clamp(16px, 3dvh, 28px);
-          padding: clamp(16px, 3.5dvh, 32px) 12px;
+          gap: clamp(16px, 3dvh, 28px); padding: clamp(16px, 3.5dvh, 32px) 12px;
         }
         h1 { gap: clamp(10px, 2dvh, 16px); }
         .error-code { font-size: clamp(48px, 15vw, 72px); }
@@ -172,115 +266,409 @@
       /* Saved /theme palette: same plum-charcoal surfaces as Novoumy OS. */
       html.theme-soft {
         color-scheme: dark;
-        --paper: #1a161b;
-        --lavender: #0d0b0f;
-        --wine: #e6ded1;
-        --rose: #9d75b2;
-        --edge: #3f353d;
-        --grid: rgb(63 53 61 / 0.18);
-        --scanline: rgb(230 222 209 / 0.025);
-        --button-bg: #29232e;
-        --button-fg: #e6ded1;
-        --button-edge: #3f353d;
-        --button-shadow: #3f353d;
+        --paper: #1a161b; --lavender: #0d0b0f; --wine: #e6ded1; --rose: #9d75b2;
+        --frame: #3f353d; --frame-shadow: #3f353d;
+        --tab-bg: #29232e; --tab-fg: #e6ded1; --tab-shadow: #0d0b0f;
+        --term-bg: #120f13; --term-deep: #1a161b; --term-dim: #b9aeb8;
+        --scan: rgb(230 222 209 / 0.025); --grid: rgb(63 53 61 / 0.18);
+        --btn-bg: #29232e; --btn-fg: #e6ded1; --btn-edge: #3f353d; --btn-shadow: #3f353d;
+        --btn-hover-bg: #342738; --btn-hover-fg: #f4eedb;
       }
-      html.theme-soft body {
-        color: var(--wine);
-        background-color: var(--lavender);
-        background-image:
-          linear-gradient(to right, var(--grid) 1px, transparent 1px),
-          linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-      }
-      html.theme-soft .error-window {
-        background: var(--paper);
-        border-color: var(--edge);
-        box-shadow: 7px 7px 0 var(--edge);
-      }
-      html.theme-soft .error-screen {
-        border-top-color: #554650;
-        border-bottom-color: #554650;
-      }
-      html.theme-soft .error-screen::before {
-        background: repeating-linear-gradient(to bottom, var(--scanline) 0 1px, transparent 1px 4px);
-      }
-      html.theme-soft h1 { color: #e6ded1; }
-      html.theme-soft .error-code {
-        text-shadow: 4px 4px 0 #765d83, 8px 8px 0 rgb(13 11 15 / 0.45);
-      }
-      html.theme-soft .go-home {
-        background: var(--button-bg);
-        border-color: var(--button-edge);
-        box-shadow: 5px 5px 0 #765d83, 8px 8px 0 var(--button-shadow);
-        color: var(--button-fg);
-      }
-      html.theme-soft .go-home:hover,
-      html.theme-soft .go-home:focus-visible {
-        outline-color: #c7809d;
-        background: #342738;
-        color: #f4eedb;
-      }
+      html.theme-soft .error-screen { border-top-color: #554650; border-bottom-color: #554650; }
+      html.theme-soft .error-code { text-shadow: 4px 4px 0 #765d83, 8px 8px 0 rgb(13 11 15 / 0.45); }
+      html.theme-soft .go-home { box-shadow: 5px 5px 0 #765d83, 8px 8px 0 var(--btn-shadow); }
+      html.theme-soft .go-home:hover, html.theme-soft .go-home:focus-visible { outline-color: #c7809d; }
 
       /* Saved /invert palette: preserve the original inverted option on the 404 too. */
       html.theme-dark {
         color-scheme: dark;
-        --paper: #191622;
-        --lavender: #2B253A;
-        --wine: #F1EAF5;
-        --rose: #8F76AD;
-        --edge: #574967;
-        --grid: rgb(183 169 201 / 0.10);
-        --scanline: rgb(183 169 201 / 0.035);
-        --button-bg: #8F76AD;
-        --button-fg: #191622;
-        --button-edge: #8F76AD;
-        --button-shadow: #191622;
+        --paper: #191622; --lavender: #2B253A; --wine: #F1EAF5; --rose: #8F76AD;
+        --frame: #8F76AD; --frame-shadow: #191622;
+        --tab-bg: #2B253A; --tab-fg: #F1EAF5; --tab-shadow: #191622;
+        --term-bg: #211D2D; --term-deep: #2B253A; --term-dim: #c7bad6;
+        --scan: rgb(183 169 201 / 0.035); --grid: rgb(183 169 201 / 0.10);
+        --btn-bg: #8F76AD; --btn-fg: #191622; --btn-edge: #8F76AD; --btn-shadow: #191622;
+        --btn-hover-bg: #B7A9C9; --btn-hover-fg: #191622;
       }
-      html.theme-dark body {
-        color: var(--wine);
-        background-color: var(--lavender);
-        background-image:
-          linear-gradient(to right, var(--grid) 1px, transparent 1px),
-          linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-      }
-      html.theme-dark .error-window {
-        background: var(--paper);
-        border-color: var(--rose);
-        box-shadow: 7px 7px 0 var(--paper);
-      }
-      html.theme-dark .error-screen {
-        border-top-color: var(--rose);
-        border-bottom-color: var(--rose);
-      }
-      html.theme-dark .error-screen::before {
-        background: repeating-linear-gradient(to bottom, var(--scanline) 0 1px, transparent 1px 4px);
-      }
-      html.theme-dark h1 { color: var(--wine); }
-      html.theme-dark .error-code {
-        text-shadow: 5px 5px 0 var(--rose), 10px 10px 0 rgb(0 0 0 / 0.22);
-      }
-      html.theme-dark .go-home {
-        background: var(--button-bg);
-        border-color: var(--button-edge);
-        box-shadow: 5px 5px 0 var(--rose), 8px 8px 0 var(--button-shadow);
-        color: var(--button-fg);
-      }
-      html.theme-dark .go-home:hover,
-      html.theme-dark .go-home:focus-visible {
-        outline-color: var(--rose);
-        background: #B7A9C9;
-        color: #191622;
-      }
+      html.theme-dark .error-screen { border-top-color: var(--rose); border-bottom-color: var(--rose); }
+      html.theme-dark .error-code { text-shadow: 5px 5px 0 var(--rose), 10px 10px 0 rgb(0 0 0 / 0.22); }
+      html.theme-dark .go-home { box-shadow: 5px 5px 0 var(--rose), 8px 8px 0 var(--btn-shadow); }
+      html.theme-dark .go-home:hover, html.theme-dark .go-home:focus-visible { outline-color: var(--rose); }
     </style>
   </head>
   <body>
-    <main class="error-window">
-      <section class="error-screen" aria-labelledby="error-title">
+    <main class="error-window" id="win">
+      <section class="error-screen" id="screen" aria-labelledby="error-title">
         <h1 id="error-title" aria-label="404 Not Found">
-          <span class="error-code" aria-hidden="true">404</span>
-          <span class="error-label">NOT FOUND</span>
+          <span class="error-code" id="code" aria-hidden="true"><span>4</span><span>0</span><span>4</span></span>
+          <span class="error-label" id="label" aria-hidden="true">NOT FOUND</span>
         </h1>
-        <a class="go-home" href="https://novoumy.com/">GO BACK</a>
+        <a class="go-home" id="go" href="https://novoumy.com/">GO BACK</a>
       </section>
     </main>
+    <div class="surge" id="surge" aria-hidden="true"></div>
+    <div class="scan-wipe" id="wipe" aria-hidden="true"></div>
+
+    <script>
+      (function () {
+        'use strict';
+
+        /* ====================================================================
+           Tiny 8-bit synth (same voice as the main site's UI sounds).
+           Honors the volume the visitor chose on the main site (novoumy:volume).
+           ==================================================================== */
+        var ctx = null;
+        var noiseBuf = null;
+
+        function level() {
+          try {
+            var raw = localStorage.getItem('novoumy:volume');
+            var n = raw === null ? 100 : Number(raw);
+            if (!isFinite(n)) n = 100;
+            return Math.min(200, Math.max(0, n)) / 200;
+          } catch (_) { return 0.5; }
+        }
+        function audio() {
+          if (level() <= 0) return null;
+          try {
+            if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (ctx.state === 'suspended') ctx.resume();
+          } catch (_) { return null; }
+          return ctx;
+        }
+        function running() { return !!ctx && ctx.state === 'running'; }
+
+        function tone(freq, o) {
+          var c = audio(); if (!c) return;
+          o = o || {};
+          var at = o.at || 0, dur = o.dur || 0.1, vol = (o.vol == null ? 0.12 : o.vol) * level();
+          var t = c.currentTime + at;
+          var osc = c.createOscillator(), g = c.createGain();
+          osc.type = o.type || 'square';
+          osc.frequency.setValueAtTime(freq, t);
+          if (o.to) osc.frequency.exponentialRampToValueAtTime(Math.max(1, o.to), t + dur);
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(Math.max(0.0001, vol), t + 0.004);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+          osc.connect(g); g.connect(c.destination);
+          osc.start(t); osc.stop(t + dur + 0.02);
+        }
+        function noise(o) {
+          var c = audio(); if (!c) return;
+          o = o || {};
+          var at = o.at || 0, dur = o.dur || 0.03, vol = (o.vol == null ? 0.08 : o.vol) * level();
+          if (!noiseBuf) {
+            noiseBuf = c.createBuffer(1, Math.floor(c.sampleRate * 0.25), c.sampleRate);
+            var d = noiseBuf.getChannelData(0);
+            for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+          }
+          var t = c.currentTime + at;
+          var src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+          src.buffer = noiseBuf;
+          f.type = 'bandpass'; f.frequency.value = o.freq || 3000; f.Q.value = 1.2;
+          g.gain.setValueAtTime(Math.max(0.0001, vol), t);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+          src.connect(f); f.connect(g); g.connect(c.destination);
+          src.start(t); src.stop(t + dur + 0.02);
+        }
+
+        var sfx = {
+          // arrives on the 404: static crackle, two falling "wrong" buzzes
+          error: function () {
+            noise({ dur: 0.14, vol: 0.09, freq: 1600 });
+            tone(240, { dur: 0.2, to: 110, vol: 0.1 });
+            tone(190, { at: 0.17, dur: 0.26, to: 80, vol: 0.1 });
+            tone(70, { at: 0.3, dur: 0.22, type: 'sawtooth', vol: 0.05 });
+            noise({ at: 0.42, dur: 0.05, vol: 0.04, freq: 900 });
+          },
+          hover: function () { tone(880, { dur: 0.03, vol: 0.05 }); },
+          press: function () { tone(330, { dur: 0.05, vol: 0.12 }); tone(660, { at: 0.04, dur: 0.07, vol: 0.1 }); noise({ dur: 0.02, vol: 0.05, freq: 4000 }); },
+          glitch: function () { noise({ dur: 0.06, vol: 0.05, freq: 5000 }); tone(1200, { dur: 0.04, to: 300, vol: 0.04 }); },
+          roll: function (i) { tone(260 + i * 18 + Math.random() * 60, { dur: 0.02, vol: 0.045 }); },
+          lock: function (i) {
+            var f = [523, 659, 784][i] || 784;
+            tone(f, { dur: 0.12, type: 'triangle', vol: 0.16 });
+            tone(f * 2, { at: 0.03, dur: 0.08, vol: 0.05 });
+            noise({ dur: 0.03, vol: 0.05, freq: 5200 });
+          },
+          surge: function () {
+            noise({ dur: 0.24, vol: 0.09, freq: 5200 });
+            tone(60, { dur: 0.3, to: 1500, type: 'sawtooth', vol: 0.07 });
+          },
+          morph: function () {
+            tone(140, { dur: 0.85, to: 900, type: 'sine', vol: 0.12 });
+            tone(55, { dur: 0.85, to: 130, type: 'sawtooth', vol: 0.05 });
+            [523, 659, 784, 1047, 1319].forEach(function (f, i) {
+              tone(f, { at: 0.12 + i * 0.14, dur: 0.09, type: 'triangle', vol: 0.08 });
+            });
+            noise({ at: 0.78, dur: 0.07, vol: 0.05, freq: 6000 });
+          },
+          tab: function (i) {
+            var base = 523 * Math.pow(2, (i * 3) / 12);
+            noise({ dur: 0.02, vol: 0.05, freq: 4000 });
+            tone(base, { dur: 0.05, vol: 0.1 });
+            tone(base * 1.5, { at: 0.045, dur: 0.09, vol: 0.1 });
+          },
+          key: function () { noise({ dur: 0.012, vol: 0.03, freq: 4200 }); },
+          boot: function () {
+            [523, 659, 784, 1047].forEach(function (f, i) { tone(f, { at: i * 0.05, dur: 0.1, type: 'triangle', vol: 0.15 }); });
+            tone(2093, { at: 0.2, dur: 0.12, vol: 0.05 });
+            noise({ dur: 0.05, vol: 0.04, freq: 6000 });
+          }
+        };
+
+        /* ====================================================================
+           Helpers
+           ==================================================================== */
+        var win = document.getElementById('win');
+        var screen = document.getElementById('screen');
+        var codeEl = document.getElementById('code');
+        var labelEl = document.getElementById('label');
+        var go = document.getElementById('go');
+        var surge = document.getElementById('surge');
+        var wipe = document.getElementById('wipe');
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var started = false;
+        var errorPlayed = false;
+
+        function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+        function done(anim) { return anim.finished.then(function () {}, function () {}); }
+        function pick(chars) { return chars.charAt(Math.floor(Math.random() * chars.length)); }
+        function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+        /* ====================================================================
+           Idle behaviour on the 404 itself: arrival sound, hover blips, rare glitch
+           ==================================================================== */
+        function playError() {
+          if (errorPlayed || started) return;
+          errorPlayed = true;
+          sfx.error();
+        }
+        // Autoplay is allowed once the visitor has interacted with the site before;
+        // otherwise the first gesture on the page unlocks it.
+        audio();
+        if (running()) playError();
+        else {
+          var unlock = function (e) {
+            audio();
+            if (!(e.target && e.target.closest && e.target.closest('#go'))) playError();
+            else errorPlayed = true;
+            ['pointerdown', 'keydown', 'touchstart'].forEach(function (n) { window.removeEventListener(n, unlock, true); });
+          };
+          ['pointerdown', 'keydown', 'touchstart'].forEach(function (n) { window.addEventListener(n, unlock, true); });
+        }
+
+        go.addEventListener('pointerenter', function () { if (!started) sfx.hover(); });
+        go.addEventListener('focus', function () { if (!started) sfx.hover(); });
+
+        if (!reduce) {
+          (function idleGlitch() {
+            setTimeout(function () {
+              if (started) return;
+              codeEl.classList.remove('glitch');
+              void codeEl.offsetWidth;
+              codeEl.classList.add('glitch');
+              if (running()) sfx.glitch();
+              idleGlitch();
+            }, 4200 + Math.random() * 3000);
+          })();
+        }
+
+        /* ====================================================================
+           GO BACK: 404 -> 200, then the error window morphs into the real main window
+           ==================================================================== */
+        var ICONS = {
+          user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+          share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',
+          grid: '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
+          cpu: '<rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/>',
+          sound: '<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/>'
+        };
+        function svg(name) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS[name] + '</svg>'; }
+
+        // Mirrors the app's own layout maths (useStageScale + window position):
+        // the stage is 800 wide; tab row 34 + 4 gap + a 792x594 window + 8 shadow room = 640 tall.
+        function target() {
+          var vw = window.innerWidth, vh = window.innerHeight;
+          if (vw >= 900 && vh >= 620) {
+            var s = Math.min(1.75, (vw - 24) / 808, (vh - 64) / 656);
+            var left = (vw - 800 * s) / 2, stageTop = (vh - 640 * s) / 2;
+            return { staged: true, zoom: s, dw: 792, dh: 594, left: left, top: stageTop + 38 * s, w: 792 * s, h: 594 * s,
+                     tabsLeft: left, tabsTop: stageTop, tabsW: 800 * s, tabsH: 34 * s };
+          }
+          var w = Math.min(896, vw - 24), l = (vw - w) / 2, top = 76, h = Math.max(240, vh - 108);
+          return { staged: false, zoom: 1, dw: w, dh: h, left: l, top: top, w: w, h: h,
+                   tabsLeft: l, tabsTop: 32, tabsW: w, tabsH: 40 };
+        }
+
+        function buildReplica(t) {
+          var el = document.createElement('div');
+          el.className = 'replica' + (t.staged ? '' : ' compact');
+          el.setAttribute('aria-hidden', 'true');
+          el.style.width = t.dw + 'px';
+          el.style.height = t.dh + 'px';
+          el.style.zoom = t.zoom;
+          el.innerHTML =
+            '<div class="r-hero">' +
+              '<img class="r-avatar" src="/icon.png" alt="" />' +
+              '<h2 class="r-name">novoumy</h2>' +
+              '<p class="r-bio">I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^</p>' +
+            '</div>' +
+            '<div class="r-term">' +
+              '<div class="r-term-head"><span>novoumy_terminal</span><i></i><em>online</em></div>' +
+              '<div class="r-out"><div class="r-line" data-t="novOS v1.0 boot sequence complete"></div><div class="r-line" data-t="type /help for available commands."></div></div>' +
+              '<div class="r-prompt"><b>novo@web:~ $</b><i class="r-cursor"></i><span>type /help</span></div>' +
+            '</div>';
+          return el;
+        }
+
+        function buildTabs(t) {
+          var el = document.createElement('div');
+          el.className = 'stage-tabs' + (t.staged ? '' : ' compact');
+          el.setAttribute('aria-hidden', 'true');
+          el.style.left = t.tabsLeft + 'px';
+          el.style.top = t.tabsTop + 'px';
+          el.style.width = t.tabsW + 'px';
+          el.style.height = t.tabsH + 'px';
+          var inner = document.createElement('div');
+          inner.className = 'tabs';
+          inner.style.zoom = t.zoom;
+          inner.innerHTML =
+            '<div class="tab active">' + svg('user') + '<span>Main</span></div>' +
+            '<div class="tab">' + svg('share') + '<span>Socials</span></div>' +
+            '<div class="tab">' + svg('grid') + '<span>Interests</span></div>' +
+            '<div class="tab">' + svg('cpu') + '<span>Specs</span></div>' +
+            '<div class="spacer"></div><div class="tab sound">' + svg('sound') + '</div>';
+          el.appendChild(inner);
+          return el;
+        }
+
+        async function scrambleTo(finalCode, finalLabel) {
+          var digits = codeEl.children;
+          var locked = [false, false, false];
+          var lockAt = [380, 640, 900];
+          var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&*';
+          var t0 = performance.now(), tick = 0;
+          while (true) {
+            var el = performance.now() - t0;
+            for (var i = 0; i < 3; i++) {
+              if (!locked[i] && el >= lockAt[i]) { locked[i] = true; digits[i].textContent = finalCode[i]; sfx.lock(i); }
+              else if (!locked[i]) digits[i].textContent = String(Math.floor(Math.random() * 10));
+            }
+            // label scrambles, settling left-to-right
+            var settle = Math.floor((el / 1000) * finalLabel.length * 1.2);
+            var out = '';
+            for (var k = 0; k < finalLabel.length; k++) out += k < settle ? finalLabel[k] : (finalLabel[k] === ' ' ? ' ' : pick(chars));
+            labelEl.textContent = out;
+            if (!(tick++ % 2)) sfx.roll(tick);
+            if (locked[0] && locked[1] && locked[2] && settle >= finalLabel.length) break;
+            await sleep(55);
+          }
+          labelEl.textContent = finalLabel;
+        }
+
+        async function typeInto(el, text, perChar) {
+          for (var i = 1; i <= text.length; i++) {
+            el.textContent = text.slice(0, i);
+            if (i % 3 === 0) sfx.key();
+            await sleep(perChar);
+          }
+        }
+
+        async function run(href) {
+          started = true;
+          go.setAttribute('aria-disabled', 'true');
+          go.textContent = 'REBOOTING...';
+          sfx.press();
+          document.documentElement.style.overflow = 'hidden';
+
+          // 1) 404 -> 200
+          await scrambleTo(['2', '0', '0'], 'FOUND');
+          await sleep(180);
+
+          // 2) power surge
+          sfx.surge();
+          var surgeAnim = surge.animate([{ opacity: 0 }, { opacity: 0.55, offset: 0.25 }, { opacity: 0 }], { duration: 260, easing: 'steps(4)' });
+          wipe.style.top = '0px';
+          var wipeAnim = wipe.animate(
+            [{ transform: 'translateY(-14vh)', opacity: 0.9 }, { transform: 'translateY(105vh)', opacity: 0.9 }],
+            { duration: 700, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+          screen.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(7px)' }, { transform: 'translateX(0)' }], { duration: 220, easing: 'steps(4)' });
+          await done(surgeAnim);
+
+          // 3) the error window becomes the main window
+          var t = target();
+          var r = win.getBoundingClientRect();
+          win.style.position = 'fixed';
+          win.style.left = r.left + 'px'; win.style.top = r.top + 'px';
+          win.style.width = r.width + 'px'; win.style.height = r.height + 'px';
+          win.style.margin = '0'; win.style.maxHeight = 'none'; win.style.zIndex = '5';
+          win.style.overflow = 'hidden';
+
+          var replica = buildReplica(t);
+          win.appendChild(replica);
+          var tabs = buildTabs(t);
+          document.body.appendChild(tabs);
+
+          var s = t.zoom;
+          var startW = r.width - 8; // content box of the window (inside its 4px border)
+          var k0 = Math.max(0.35, Math.min(1, startW / t.w));
+          var frame = cssVar('--frame-shadow') || '#6B2D39';
+          var EASE = 'cubic-bezier(.76,0,.24,1)', DUR = 820;
+          sfx.morph();
+
+          var winAnim = win.animate([
+            { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', padding: '8px', borderWidth: '4px', boxShadow: '7px 7px 0 ' + frame },
+            { left: (t.left - 4 * s) + 'px', top: (t.top - 4 * s) + 'px', width: (t.w + 8 * s) + 'px', height: (t.h + 8 * s) + 'px', padding: '0px', borderWidth: (4 * s) + 'px', boxShadow: (4 * s) + 'px ' + (4 * s) + 'px 0 ' + frame }
+          ], { duration: DUR, easing: EASE, fill: 'forwards' });
+          var screenAnim = screen.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, easing: 'ease-in', fill: 'forwards' });
+          var repShow = replica.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 380, delay: DUR * 0.35, easing: 'ease-out', fill: 'forwards' });
+          var repScale = replica.animate([{ transform: 'scale(' + k0 + ')' }, { transform: 'scale(1)' }], { duration: DUR, easing: EASE, fill: 'forwards' });
+          screen.style.position = 'absolute'; screen.style.inset = '8px'; // leave flow so it can't push the window's size
+          screen.style.minHeight = '0';
+          await Promise.all([done(winAnim), done(screenAnim), done(repShow), done(repScale), done(wipeAnim)]);
+
+          // commit the final state, drop the animation fills
+          win.style.left = (t.left - 4 * s) + 'px'; win.style.top = (t.top - 4 * s) + 'px';
+          win.style.width = (t.w + 8 * s) + 'px'; win.style.height = (t.h + 8 * s) + 'px';
+          win.style.padding = '0'; win.style.borderWidth = (4 * s) + 'px'; win.style.boxShadow = (4 * s) + 'px ' + (4 * s) + 'px 0 ' + frame;
+          replica.style.opacity = '1'; replica.style.transform = 'none';
+          screen.style.display = 'none';
+          [winAnim, repShow, repScale, screenAnim, wipeAnim].forEach(function (a) { a.cancel(); });
+          wipe.style.display = 'none';
+
+          // 4) tabs drop in, one blip each
+          tabs.style.opacity = '1';
+          var items = tabs.querySelectorAll('.tab');
+          var anims = [];
+          for (var i = 0; i < items.length; i++) {
+            (function (el, idx) {
+              var rest = el.classList.contains('active') ? 'translateY(4px)' : 'none';
+              setTimeout(function () { sfx.tab(Math.min(idx, 4)); }, idx * 85);
+              anims.push(done(el.animate(
+                [{ opacity: 0, transform: 'translateY(-28px)' }, { opacity: 1, transform: rest }],
+                { duration: 300, delay: idx * 85, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' })));
+            })(items[i], i);
+          }
+          await Promise.all(anims);
+
+          // 5) terminal boots
+          sfx.boot();
+          var lines = replica.querySelectorAll('.r-line');
+          for (var j = 0; j < lines.length; j++) await typeInto(lines[j], lines[j].getAttribute('data-t'), 16);
+          await sleep(320);
+
+          window.location.assign(href);
+        }
+
+        go.addEventListener('click', function (e) {
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return; // let "open in new tab" work
+          if (started) { e.preventDefault(); return; }
+          if (reduce) return;
+          e.preventDefault();
+          run('/#main').catch(function () { window.location.assign('/#main'); });
+        });
+      })();
+    </script>
   </body>
 </html>

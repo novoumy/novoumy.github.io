@@ -11,17 +11,9 @@ const prose = hero.bio.filter((line) => {
   return t && !line.startsWith('>');
 });
 
-const GLYPH: Record<Kind, string> = { cmd: '❯', sys: '·', out: '', err: '', warn: '', ok: '' };
-const TAG: Partial<Record<Kind, string>> = { err: 'ERR', warn: 'WARN', ok: 'OK' };
-
-// Auto-classify so ambient strings and plain push() calls get the right look.
-const kindOf = (text: string, fallback: Kind): Kind => {
-  if (fallback === 'cmd' || fallback === 'err') return fallback;
-  if (/^error\b/i.test(text)) return 'err';
-  if (/^warning\b/i.test(text)) return 'warn';
-  if (fallback === 'sys' && /(success|enabled|complete|updated)/i.test(text)) return 'ok';
-  return fallback;
-};
+// Minimal log: only typed commands look different (a prompt glyph); all output shares one style.
+const GLYPH: Record<Kind, string> = { cmd: '›', sys: '', out: '', err: '', warn: '', ok: '' };
+const kindOf = (_text: string, fallback: Kind): Kind => (fallback === 'cmd' ? 'cmd' : 'out');
 
 const AMBIENT = [
   'error 503: motivation service temporarily unavailable',
@@ -380,27 +372,15 @@ export default function MainView({
       >
         {/* Divider: the rule spans the card; label and status sit on it.
             The header background splits at the rule so the terminal tint starts exactly on the line. */}
-        <header className="relative z-20 flex h-7 shrink-0 items-center bg-gradient-to-b from-cool-white from-50% to-[color:var(--t-bg)] to-50% font-pixel uppercase leading-none">
-          <span
-            aria-hidden="true"
-            className="h-[3px] w-8 shrink-0 bg-lavender shadow-[0_3px_0_0_var(--rose)] max-[768px]:w-4"
-          />
-          <h2 className="flex shrink-0 items-center gap-2.5 px-3.5 font-pixel text-[10px] font-normal tracking-[0.12em] text-wine max-[768px]:gap-1.5 max-[768px]:px-2 max-[768px]:text-[max(7px,1.4cqw)]">
-            <span className="block h-1.5 w-1.5 rotate-45 bg-lavender" aria-hidden="true" />
+        <header className="relative z-20 flex h-7 shrink-0 items-center gap-3 bg-gradient-to-b from-cool-white from-50% to-[color:var(--t-bg)] to-50% px-8 font-pixel uppercase leading-none max-[768px]:px-4">
+          <h2 className="shrink-0 font-pixel text-[9px] font-normal tracking-[0.14em] text-wine max-[768px]:text-[8px]">
             novoumy_terminal
           </h2>
-          <span
-            aria-hidden="true"
-            className="h-[3px] min-w-4 flex-1 bg-lavender shadow-[0_3px_0_0_var(--rose)]"
-          />
-          <span className="flex shrink-0 items-center gap-2 px-3.5 font-pixel text-[8px] tracking-[0.14em] text-lavender max-[768px]:gap-1.5 max-[768px]:px-2 max-[768px]:text-[max(6px,1.1cqw)]">
-            <span className="block h-2 w-2 animate-pulse bg-rose shadow-[0_0_0_2px_var(--rose)]" aria-hidden="true" />
+          <span aria-hidden="true" className="h-[2px] min-w-4 flex-1 bg-rose" />
+          <span className="flex shrink-0 items-center gap-2 text-[8px] tracking-[0.14em] text-lavender max-[768px]:text-[7px]">
+            <span className="block h-1.5 w-1.5 animate-pulse bg-rose" aria-hidden="true" />
             online
           </span>
-          <span
-            aria-hidden="true"
-            className="h-[3px] w-8 shrink-0 bg-lavender shadow-[0_3px_0_0_var(--rose)] max-[768px]:w-4"
-          />
         </header>
 
         {/* Output */}
@@ -418,10 +398,7 @@ export default function MainView({
                   <span className="t-gutter" aria-hidden="true">
                     {GLYPH[kind]}
                   </span>
-                  <span className="t-msg">
-                    {TAG[kind] && <b className="t-tag">{TAG[kind]}</b>}
-                    {line.text}
-                  </span>
+                  <span className="t-msg">{line.text}</span>
                 </p>
               );
             })}
