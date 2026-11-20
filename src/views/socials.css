@@ -53,14 +53,12 @@
 .camp-meter span.off { background: color-mix(in oklab, var(--wine) 18%, transparent); animation: none; }
 @keyframes camp-fill { 0%, 6% { opacity: 0.25; } 7%, 100% { opacity: 1; } }
 
-.camp-blink { animation: camp-blink 1.1s steps(1) infinite; }
-@keyframes camp-blink { 50% { opacity: 0; } }
 
 @media (max-width: 480px) {
   .camp-scene { --px: 4px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .camp-star, .camp-spark, .camp-meter span, .camp-blink, .camp-fire .flame-a, .camp-fire .flame-b { animation: none; }
+  .camp-star, .camp-spark, .camp-meter span, .camp-fire .flame-a, .camp-fire .flame-b { animation: none; }
   .camp-fire .flame-b { opacity: 0; }
   .camp-spark { opacity: 0; }
 }

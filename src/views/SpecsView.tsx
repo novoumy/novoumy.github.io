@@ -70,12 +70,12 @@ export default function SpecsView() {
             return (
               <li
                 key={stat.label}
-                className="spec-card spec-stat min-w-0 bg-cool-white px-3 pb-3.5 pt-3"
+                className="spec-card min-w-0 bg-cool-white px-3 pb-3.5 pt-3"
                 style={{ ['--i' as string]: index } as CSSProperties}
               >
                 <p className="flex items-center justify-between gap-2">
                   <span className="font-pixel text-[7px] uppercase leading-none text-lavender">{stat.label}</span>
-                  <span className="spec-stat-icon grid h-6 w-6 shrink-0 place-items-center bg-rose text-wine">
+                  <span className="grid h-6 w-6 shrink-0 place-items-center bg-rose text-wine">
                     <Icon size={14} strokeWidth={2.5} aria-hidden="true" />
                   </span>
                 </p>

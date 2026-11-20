@@ -308,6 +308,10 @@
 /* Bottom divider is the same strip flipped, so the bunting rises from the bottom bar
    and travels the opposite way. */
 .pixel-divider-bottom { transform: scaleY(-1); }
+/* Tuck each strip 2px under its bar so sub-pixel rounding (stage zoom) can never show a cream seam. */
+.pixel-divider-top { margin-top: -2px; }
+.pixel-divider-bottom { margin-bottom: -2px; }
+.main-playground > .kinetic-words { z-index: 1; }
 .pixel-divider-bottom > i { animation-direction: reverse; }
 .pixel-divider-bottom .pd-gems { animation-direction: reverse, normal; }
 @keyframes pd-march {
@@ -328,4 +332,25 @@
 }
 @media (max-width: 768px) {
   .main-playground > .kinetic-words { padding-inline: 12px !important; }
+}
+
+/* Mobile: status bars wrap instead of overlapping, bio gets a readable size. */
+@media (max-width: 768px) {
+  .main-playground { overflow-y: auto; }
+  .main-playground > .kinetic-words {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.4rem 0.9rem;
+    min-height: 0;
+    padding-block: 0.6rem;
+    font-size: 7px;
+    line-height: 1.6;
+  }
+  .main-playground > .kinetic-words span { width: auto; flex: 0 1 auto; text-align: left; }
+  .main-playground > .kinetic-words span:last-child { text-align: right; margin-left: auto; }
+  .main-profile-center { padding: 1rem 0.75rem; gap: 0.75rem; }
+  .main-profile-name { font-size: clamp(16px, 5vw, 20px); }
+  .main-profile-bio { font-size: clamp(21px, 5.6vw, 25px); line-height: 1.25; }
 }

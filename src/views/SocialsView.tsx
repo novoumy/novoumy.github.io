@@ -89,9 +89,6 @@ function CampfireHero({ total }: { total: number }) {
               ))}
             </span>
           </span>
-          <span className="camp-blink font-pixel text-[7px] uppercase leading-none sm:text-[8px]" aria-hidden="true">
-            &#9654; Press start
-          </span>
         </div>
       </div>
     </section>
