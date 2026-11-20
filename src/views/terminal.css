@@ -76,3 +76,163 @@
 @media (prefers-reduced-motion: reduce) {
   .t-cursor { animation: none; }
 }
+
+/* ---------- Main tab: kinetic profile / floating pixel phrases ---------- */
+.main-playground {
+  --main-ink: var(--wine);
+  --main-soft: color-mix(in oklab, var(--rose) 26%, var(--cool-white));
+  background: var(--cool-white);
+  color: var(--main-ink);
+}
+.kinetic-words {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1.2rem;
+  min-height: 2.6rem;
+  padding: 0.25rem 0.5rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(7px, 1vw, 9px);
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  color: color-mix(in oklab, var(--wine) 72%, var(--lavender));
+}
+.kinetic-words span {
+  display: inline-block;
+  transition: transform 100ms steps(3), color 120ms steps(2);
+  will-change: transform;
+  cursor: default;
+  user-select: none;
+}
+.kinetic-words span:hover { color: var(--wine); }
+.kinetic-top { border-bottom: 1px dashed color-mix(in oklab, var(--rose) 85%, var(--wine)); }
+.kinetic-bottom { border-top: 1px dashed color-mix(in oklab, var(--rose) 85%, var(--wine)); }
+.main-profile-center {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: clamp(0.65rem, 2vh, 1.15rem);
+  padding: 2rem 1rem;
+}
+.main-profile-avatar {
+  width: clamp(108px, 15vw, 150px);
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.main-profile-name {
+  margin: 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.45;
+  letter-spacing: 0.05em;
+}
+.main-profile-bio {
+  max-width: 36rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: clamp(17px, 1.6vw, 22px);
+  line-height: 1.35;
+}
+.main-profile-bio p { margin: 0; }
+.main-profile-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  color: color-mix(in oklab, var(--wine) 62%, var(--lavender));
+}
+.main-caption-pixel { width: 5px; height: 5px; flex: 0 0 5px; background: var(--rose); }
+@media (max-width: 768px) {
+  .kinetic-words { justify-content: center; font-size: 7px; gap: 0.5rem 0.8rem; }
+  .main-profile-center { padding: 1.25rem 0.5rem; }
+  .main-profile-avatar { width: 104px; }
+  .main-profile-bio { font-size: clamp(15px, 4vw, 18px); }
+  .main-profile-caption { font-size: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kinetic-words span { transition: none; }
+}
+
+/* ---------- Main profile bento ---------- */
+.main-profile-bento {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.78fr) minmax(0, 1.55fr);
+  align-items: stretch;
+  gap: clamp(0.7rem, 1.5vw, 1.2rem);
+  flex: 1;
+  min-height: 0;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+}
+.main-profile-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  text-align: center;
+  background: color-mix(in oklab, var(--rose) 18%, var(--cool-white));
+}
+.main-profile-avatar { width: clamp(110px, 13vw, 150px); }
+.main-profile-level {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  line-height: 1.8;
+  color: color-mix(in oklab, var(--wine) 65%, var(--lavender));
+}
+.main-current-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.7rem;
+  border: 2px solid var(--wine);
+  background: var(--cool-white);
+  font-size: 18px;
+}
+.main-current-box > span:last-child { display: flex; align-items: center; justify-content: center; gap: 0.35rem; }
+.main-mini-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  line-height: 1.8;
+  color: var(--lavender);
+}
+.main-profile-right { display: flex; flex-direction: column; min-width: 0; gap: 0.75rem; }
+.main-bio-box { min-width: 0; padding: 0.8rem; background: var(--cool-white); }
+.main-profile-bio { max-width: none; font-size: clamp(16px, 1.4vw, 20px); line-height: 1.4; }
+.main-info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; flex: 1; }
+.main-info-tile {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.8rem;
+  text-decoration: none;
+  background: var(--cool-white);
+}
+.main-info-tile strong { font-family: 'Press Start 2P', monospace; font-size: clamp(9px, 1.2vw, 12px); line-height: 1.7; overflow-wrap: anywhere; }
+.main-info-tile small { font-size: 16px; line-height: 1.2; opacity: 0.7; }
+.main-minecraft-tile:hover { background: color-mix(in oklab, var(--rose) 24%, var(--cool-white)); }
+.main-minecraft-tile strong span { font-size: 10px; opacity: 0.65; }
+@media (max-width: 768px) {
+  .main-profile-bento { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; padding: 0.6rem 0.25rem; }
+  .main-profile-left { gap: 0.55rem; padding: 0.7rem; }
+  .main-profile-avatar { width: 96px; }
+  .main-info-grid { gap: 0.5rem; }
+  .main-info-tile { padding: 0.6rem; }
+  .main-info-tile strong { font-size: 8px; }
+  .main-info-tile small { font-size: 14px; }
+}
