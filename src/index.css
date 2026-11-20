@@ -1758,3 +1758,9 @@ html.theme-soft .retro-dark .r-box-hover:focus-visible {
   transform: translateY(-2px);
 }
 
+
+/* Specs summary: hovering a stat cell tints it and wakes the icon chip. */
+.spec-stat { transition: background-color 150ms steps(2); }
+.spec-stat:hover { background-color: color-mix(in oklab, var(--rose) 22%, var(--cool-white)); }
+.spec-stat .spec-stat-icon { transition: background-color 150ms steps(2), color 150ms steps(2); }
+.spec-stat:hover .spec-stat-icon { background: var(--wine); color: var(--cool-white); }

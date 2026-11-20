@@ -259,42 +259,72 @@
   .main-info-tile small { font-size: 14px; }
 }
 
-/* Final main-card refinements: 12px inset text and a pixel-weave transition. */
+/* Final main-card refinements: 12px inset text and an animated pixel-art divider. */
+:root { --status-pink: color-mix(in oklab, var(--rose) 55%, var(--cool-white)); }
 .main-playground > .kinetic-words {
   padding-inline: 12px !important;
   position: relative;
-  overflow: visible;
   box-sizing: border-box;
+  background: var(--status-pink);
 }
-.main-playground > .kinetic-words.kinetic-top {
-  margin-bottom: 8px;
-}
-.main-playground > .kinetic-words.kinetic-top::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: -8px;
-  height: 8px;
+
+/* ---------- Pixel-art divider: a marching row of pink bunting with wine outline + twinkling gems ----------
+   Three masked layers share one 36x21 tile (12x7 pixels at 3px) and scroll one pixel per step. */
+.pixel-divider {
+  --pd-tile: 36px;
+  position: relative;
+  flex: none;
+  height: 21px;
   pointer-events: none;
-  background: repeating-linear-gradient(135deg,
-    var(--rose) 0 4px,
-    var(--cool-white) 4px 8px);
+  overflow: hidden;
+  image-rendering: pixelated;
 }
-.main-playground > .kinetic-words.kinetic-bottom {
-  margin-top: 8px;
-}
-.main-playground > .kinetic-words.kinetic-bottom::before {
-  content: '';
+.pixel-divider > i {
   position: absolute;
-  left: 0; right: 0; top: -8px;
-  height: 8px;
-  pointer-events: none;
-  background: repeating-linear-gradient(135deg,
-    var(--cool-white) 0 4px,
-    var(--rose) 4px 8px);
+  inset: 0;
+  display: block;
+  -webkit-mask-size: 36px 21px;
+  mask-size: 36px 21px;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  animation: pd-march 3.6s steps(12) infinite;
 }
-/* Selected MAIN tab: match the site's pink header instead of white. */
+.pixel-divider .pd-fill {
+  background: var(--status-pink);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%207%22%20width%3D%2236%22%20height%3D%2221%22%20shape-rendering%3D%22crispEdges%22%20fill%3D%22%23000%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2212%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%221%22%20width%3D%2212%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%222%22%20width%3D%2210%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%223%22%20width%3D%228%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%224%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%207%22%20width%3D%2236%22%20height%3D%2221%22%20shape-rendering%3D%22crispEdges%22%20fill%3D%22%23000%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2212%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%221%22%20width%3D%2212%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%222%22%20width%3D%2210%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%223%22%20width%3D%228%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%224%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3C%2Fsvg%3E");
+}
+.pixel-divider .pd-line {
+  background: var(--wine);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%207%22%20width%3D%2236%22%20height%3D%2221%22%20shape-rendering%3D%22crispEdges%22%20fill%3D%22%23000%22%3E%3Crect%20x%3D%220%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%225%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%226%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%207%22%20width%3D%2236%22%20height%3D%2221%22%20shape-rendering%3D%22crispEdges%22%20fill%3D%22%23000%22%3E%3Crect%20x%3D%220%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%225%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%226%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3C%2Fsvg%3E");
+}
+.pixel-divider .pd-gems {
+  background: var(--lavender);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%207%22%20width%3D%2236%22%20height%3D%2221%22%20shape-rendering%3D%22crispEdges%22%20fill%3D%22%23000%22%3E%3Crect%20x%3D%225%22%20y%3D%222%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%223%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%207%22%20width%3D%2236%22%20height%3D%2221%22%20shape-rendering%3D%22crispEdges%22%20fill%3D%22%23000%22%3E%3Crect%20x%3D%225%22%20y%3D%222%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%223%22%20width%3D%222%22%20height%3D%221%22%2F%3E%3C%2Fsvg%3E");
+  animation: pd-march 3.6s steps(12) infinite, pd-twinkle 1.6s steps(1) infinite;
+}
+/* Bottom divider is the same strip flipped, so the bunting rises from the bottom bar
+   and travels the opposite way. */
+.pixel-divider-bottom { transform: scaleY(-1); }
+.pixel-divider-bottom > i { animation-direction: reverse; }
+.pixel-divider-bottom .pd-gems { animation-direction: reverse, normal; }
+@keyframes pd-march {
+  from { -webkit-mask-position: 0 0; mask-position: 0 0; }
+  to { -webkit-mask-position: 36px 0; mask-position: 36px 0; }
+}
+@keyframes pd-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pixel-divider > i { animation: none !important; }
+}
+
+/* Selected MAIN tab: exactly the soft pink of the top / bottom status bars. */
 [role='tab'][aria-selected='true'][aria-label='Main'] {
-  background-color: #DBB9B8 !important;
+  background-color: var(--status-pink) !important;
 }
 @media (max-width: 768px) {
   .main-playground > .kinetic-words { padding-inline: 12px !important; }

@@ -2,7 +2,8 @@ import { ArrowUpRight, Check, Copy } from 'lucide-react';
 import PixelIcon from '@/components/PixelIcon';
 import { PIXEL_ICONS } from '@/lib/pixelIcons';
 import { useCopy } from '@/lib/useCopy';
-import { hero, socials, type SocialItem } from '@/siteData';
+import { socials, type SocialItem } from '@/siteData';
+import './socials.css';
 
 const HANDLE = 'novoumy';
 
@@ -10,6 +11,91 @@ function SocialGlyph({ social, className }: { social: SocialItem; className: str
   if (social.image) return <img src={social.image} alt="" loading="lazy" className={`${className} object-cover`} />;
   if (social.icon && social.icon in PIXEL_ICONS) return <PixelIcon name={social.icon} className={className} />;
   return <PixelIcon name="github" className={className} />;
+}
+
+
+// Pixel sprite, 16 x 13 cells. Two flame frames flicker against each other.
+const FLAME_A = [
+  '.......RR.......',
+  '.......RR.R.....',
+  '......RRRRR.....',
+  '.....RRRRRRR....',
+  '.....RRCCRRR....',
+  '....RRRCCCRRR...',
+  '....RRRCCCCRR...',
+  '.....RRCCCCR....',
+  '......RRCCR.....',
+];
+const FLAME_B = [
+  '........R.......',
+  '......R.RR......',
+  '......RRRRR.....',
+  '....RRRRRRRR....',
+  '....RRRCCRRRR...',
+  '....RRCCCCRRR...',
+  '.....RCCCCCRR...',
+  '.....RRCCCCR....',
+  '......RRCCR.....',
+];
+const LOGS = [
+  '...WWW.RR.WWW...',
+  '..WWWWWWWWWWWW..',
+  '...WWWWWWWWWW...',
+  '.GGGGGGGGGGGGGG.',
+];
+const CLASS_FOR: Record<string, string> = { R: 'cf-r', C: 'cf-c', W: 'cf-w', G: 'cf-ground', L: 'cf-l' };
+
+function Sprite({ rows, offsetY = 0, className }: { rows: string[]; offsetY?: number; className?: string }) {
+  return (
+    <g className={className}>
+      {rows.flatMap((row, y) =>
+        [...row].map((ch, x) =>
+          CLASS_FOR[ch] ? <rect key={`${x}-${y}`} x={x} y={y + offsetY} width={1} height={1} className={CLASS_FOR[ch]} /> : null,
+        ),
+      )}
+    </g>
+  );
+}
+
+function CampfireHero({ total }: { total: number }) {
+  return (
+    <section className="pixel-tile flex items-center gap-4 overflow-hidden bg-rose/30 p-4 sm:gap-6 sm:p-5">
+      <div className="camp-scene" aria-hidden="true">
+        <span className="camp-star" style={{ left: '14%', top: '16%' }} />
+        <span className="camp-star" style={{ left: '78%', top: '10%' }} />
+        <span className="camp-star" style={{ left: '60%', top: '30%' }} />
+        <span className="camp-spark" />
+        <span className="camp-spark" />
+        <span className="camp-spark" />
+        <svg className="camp-fire" viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg">
+          <Sprite rows={FLAME_A} className="flame-a" />
+          <Sprite rows={FLAME_B} className="flame-b" />
+          <Sprite rows={LOGS} offsetY={9} />
+        </svg>
+      </div>
+
+      <div className="flex min-w-0 flex-1 flex-col gap-3">
+        <span className="font-pixel text-[8px] uppercase leading-none opacity-60">Campfire lobby</span>
+        <h1 className="font-pixel text-[13px] uppercase leading-[1.5] tracking-wide sm:text-[18px]">Pull up a log</h1>
+        <p className="text-[19px] leading-[1.1] opacity-80 sm:text-[22px]">
+          {String(total).padStart(2, '0')} ways to find me. Pick a link below and say hi.
+        </p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <span className="flex items-center gap-2 font-pixel text-[7px] uppercase leading-none sm:text-[8px]">
+            Cozy
+            <span className="camp-meter" aria-hidden="true">
+              {Array.from({ length: 8 }, (_, n) => (
+                <span key={n} className={n < 7 ? '' : 'off'} style={{ ['--n' as string]: n }} />
+              ))}
+            </span>
+          </span>
+          <span className="camp-blink font-pixel text-[7px] uppercase leading-none sm:text-[8px]" aria-hidden="true">
+            &#9654; Press start
+          </span>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 // Same content and tiles as the guild pass, but without the nested card:
@@ -21,22 +107,7 @@ export default function SocialsView() {
 
   return (
     <div className="flex min-h-full flex-col gap-5 max-sm:gap-4 sm:gap-6">
-      {/* Identity */}
-      <section className="flex items-center gap-4 sm:gap-6">
-        <img
-          src={hero.avatar}
-          alt={hero.avatarAlt}
-          className="pixel-tile aspect-square w-20 shrink-0 bg-rose/40 object-cover sm:w-28"
-        />
-        <div className="flex min-w-0 flex-col gap-2.5">
-          <span className="font-pixel text-[8px] uppercase leading-none opacity-60">Adventurer</span>
-          <h1 className="min-w-0 break-words text-[20px] leading-[1.2] tracking-wide sm:text-[28px]">{HANDLE}</h1>
-          <span className="flex items-center gap-2 font-pixel text-[8px] uppercase leading-none">
-            <span className="inline-block h-2 w-2 bg-rose" aria-hidden="true" />
-            Open to quests
-          </span>
-        </div>
-      </section>
+      <CampfireHero total={socials.length} />
 
       {/* Divider */}
       <div className="flex items-center gap-3" aria-hidden="true">

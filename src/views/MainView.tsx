@@ -15,6 +15,17 @@ const weatherLabel = (code: number) => {
   return 'weather';
 };
 
+// Animated pixel-art border between the pink status bars and the cream window (styles in terminal.css).
+function PixelDivider({ position }: { position: 'top' | 'bottom' }) {
+  return (
+    <div className={`pixel-divider pixel-divider-${position}`} aria-hidden="true">
+      <i className="pd-fill" />
+      <i className="pd-line" />
+      <i className="pd-gems" />
+    </div>
+  );
+}
+
 export default function MainView() {
   const [clock, setClock] = useState('');
   const [weather, setWeather] = useState<Weather>(null);
@@ -51,6 +62,7 @@ export default function MainView() {
         {topWords.map((word) => <span key={word}>{word}</span>)}
       </div>
 
+      <PixelDivider position="top" />
 
       <section className="main-profile-center">
         <img src={hero.avatar} alt={hero.avatarAlt} className="pixel-frame main-profile-avatar" />
@@ -58,6 +70,7 @@ export default function MainView() {
         <div className="main-profile-bio">{bio.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
       </section>
 
+      <PixelDivider position="bottom" />
 
       <div className="kinetic-words kinetic-bottom" aria-label="Personal metadata">
         {bottomWords.map((word) => <span key={word}>{word}</span>)}

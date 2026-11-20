@@ -38,6 +38,14 @@ const iconFor = (label: string): LucideIcon => {
   return PART_ICONS.find(([prefix]) => key.startsWith(prefix))?.[1] ?? Cpu;
 };
 
+// Icons for the summary tiles at the top.
+const HIGHLIGHT_ICONS: Record<string, LucideIcon> = {
+  ram: MemoryStick,
+  vram: MonitorPlay,
+  storage: HardDrive,
+  refresh: Monitor,
+};
+
 const pad2 = (n: number) => String(n).padStart(2, '0');
 
 export default function SpecsView() {
@@ -46,27 +54,41 @@ export default function SpecsView() {
 
   return (
     <div className="flex min-w-0 w-full max-w-full flex-col gap-8 pb-3 max-sm:gap-7">
-        <ul className="grid grid-cols-2 border-t-4 border-wine sm:grid-cols-4">
-          {specHighlights.map((stat, index) => (
-            <li
-              key={stat.label}
-              className={[
-                'spec-card min-w-0 px-3 py-3.5',
-                index % 2 === 1 ? 'border-l-4 border-wine' : '',
-                index > 1 ? 'max-sm:border-t-4 max-sm:border-wine' : '',
-                index > 0 ? 'sm:border-l-4 sm:border-wine' : '',
-              ].join(' ')}
-              style={{ ['--i' as string]: index } as CSSProperties}
-            >
-              <p className="font-pixel text-[7px] uppercase leading-none text-lavender">{stat.label}</p>
-              <p className="mt-2.5 flex items-baseline gap-1.5 leading-none">
-                <span className="font-pixel text-[22px] sm:text-[26px]">{stat.value}</span>
-                <span className="font-pixel text-[9px] uppercase text-lavender">{stat.unit}</span>
-              </p>
-              <p className="mt-2 text-[17px] leading-none opacity-70">{stat.sub}</p>
-            </li>
-          ))}
+      {/* System summary: one framed panel, title bar on top, 4px wine grid lines all the way round */}
+      <section aria-label="System summary" className="pixel-tile spec-summary bg-cool-white">
+        <div className="flex items-center justify-between bg-wine px-3 py-2 text-cool-white">
+          <span className="font-pixel text-[8px] uppercase leading-none">System summary</span>
+          <span className="flex gap-1.5" aria-hidden="true">
+            <span className="h-2 w-2 bg-rose" />
+            <span className="h-2 w-2 bg-lavender" />
+            <span className="h-2 w-2 bg-cool-white" />
+          </span>
+        </div>
+        <ul className="grid grid-cols-2 gap-1 bg-wine sm:grid-cols-4">
+          {specHighlights.map((stat, index) => {
+            const Icon = HIGHLIGHT_ICONS[stat.label.toLowerCase()] ?? Cpu;
+            return (
+              <li
+                key={stat.label}
+                className="spec-card spec-stat min-w-0 bg-cool-white px-3 pb-3.5 pt-3"
+                style={{ ['--i' as string]: index } as CSSProperties}
+              >
+                <p className="flex items-center justify-between gap-2">
+                  <span className="font-pixel text-[7px] uppercase leading-none text-lavender">{stat.label}</span>
+                  <span className="spec-stat-icon grid h-6 w-6 shrink-0 place-items-center bg-rose text-wine">
+                    <Icon size={14} strokeWidth={2.5} aria-hidden="true" />
+                  </span>
+                </p>
+                <p className="mt-3 flex items-baseline gap-1.5 leading-none">
+                  <span className="font-pixel text-[22px] sm:text-[26px]">{stat.value}</span>
+                  <span className="font-pixel text-[9px] uppercase text-lavender">{stat.unit}</span>
+                </p>
+                <p className="mt-2 text-[17px] leading-none opacity-70">{stat.sub}</p>
+              </li>
+            );
+          })}
         </ul>
+      </section>
 
       {/* Component groups */}
       {specGroups.map((group, groupIndex) => (
