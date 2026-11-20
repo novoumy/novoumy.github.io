@@ -46,7 +46,7 @@ export default function MainView() {
 
 
   return (
-    <div className="main-playground -mx-8 -mb-8 flex min-h-0 h-[calc(100%+2rem)] flex-1 flex-col justify-between overflow-hidden px-5 py-5 max-sm:-mx-4 max-sm:-mb-4 max-sm:h-[calc(100%+1rem)] max-sm:px-3 max-sm:py-4">
+    <div className="main-playground -mx-8 -my-8 flex min-h-0 h-[calc(100%+2rem)] flex-1 flex-col justify-between overflow-hidden p-0 max-sm:-mx-4 max-sm:-my-4 max-sm:h-[calc(100%+1rem)]">
       <div className="kinetic-words kinetic-top" aria-label="Live time and personal metadata">
         {topWords.map((word) => <span key={word}>{word}</span>)}
       </div>
