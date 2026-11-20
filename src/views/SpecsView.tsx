@@ -45,13 +45,13 @@ export default function SpecsView() {
   let cardIndex = 0;
 
   return (
-    <div className="flex min-w-0 w-full max-w-full flex-col gap-8 pb-3 max-sm:gap-7">
+    <div className="specs-retro flex min-w-0 w-full max-w-full flex-col gap-6 pb-3 max-sm:gap-5">
         <ul className="grid grid-cols-2 border-t-4 border-wine sm:grid-cols-4">
           {specHighlights.map((stat, index) => (
             <li
               key={stat.label}
               className={[
-                'spec-card min-w-0 px-3 py-3.5',
+                'spec-card min-w-0 px-3 py-3',
                 index % 2 === 1 ? 'border-l-4 border-wine' : '',
                 index > 1 ? 'max-sm:border-t-4 max-sm:border-wine' : '',
                 index > 0 ? 'sm:border-l-4 sm:border-wine' : '',
@@ -71,7 +71,7 @@ export default function SpecsView() {
       {/* Component groups */}
       {specGroups.map((group, groupIndex) => (
         <section key={group.title} className="min-w-0 w-full max-w-full">
-          <div className="mb-4 flex items-center gap-3">
+          <div className="mb-3 flex items-center gap-3">
             <span className="grid h-7 w-9 shrink-0 place-items-center bg-wine font-pixel text-[9px] leading-none text-cool-white">
               {pad2(groupIndex + 1)}
             </span>
@@ -82,7 +82,7 @@ export default function SpecsView() {
             </span>
           </div>
 
-          <ul className="grid min-w-0 grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2">
+          <ul className="grid min-w-0 grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
             {group.parts.map((part) => {
               const Icon = iconFor(part.label);
               const i = cardIndex++;
@@ -93,23 +93,23 @@ export default function SpecsView() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${part.name} on ${part.linkLabel}`}
-                    className="spec-card pixel-tile pixel-tile-interactive box-border flex h-full min-w-0 flex-col gap-3 bg-cool-white p-3 outline-none focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-wine"
+                    className="spec-card pixel-tile pixel-tile-interactive box-border flex h-full min-w-0 flex-col gap-2.5 bg-cool-white p-2.5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wine"
                     style={{ ['--i' as string]: i } as CSSProperties}
                   >
                     <span className="flex items-center gap-3">
-                      <span className="spec-icon grid h-10 w-10 shrink-0 place-items-center bg-rose text-wine">
-                        <Icon size={20} strokeWidth={2.5} aria-hidden="true" />
+                      <span className="spec-icon grid h-8 w-8 shrink-0 place-items-center bg-rose/60 text-wine">
+                        <Icon size={17} strokeWidth={2.25} aria-hidden="true" />
                       </span>
                       <span className="min-w-0 flex-1 truncate font-pixel text-[8px] uppercase leading-none text-lavender">
                         {part.label}
                       </span>
-                      <span className="spec-link-mark shrink-0 grid h-5 w-5 place-items-center bg-rose/70 text-wine"><ExternalLink size={11} strokeWidth={2.5} aria-hidden="true" /></span>
+                      <span className="spec-link-mark shrink-0 grid h-4 w-4 place-items-center bg-rose/50 text-wine"><ExternalLink size={10} strokeWidth={2.25} aria-hidden="true" /></span>
                     </span>
 
-                    <span className="min-w-0 flex-1 break-words text-[21px] leading-[1.05] [overflow-wrap:anywhere]">
+                    <span className="min-w-0 flex-1 break-words text-[19px] leading-[1.08] [overflow-wrap:anywhere]">
                       {part.name}
                       {part.detail && (
-                        <span className="mt-1.5 block break-words text-[18px] leading-tight opacity-70 [overflow-wrap:anywhere]">
+                        <span className="mt-1.5 block break-words text-[16px] leading-tight opacity-70 [overflow-wrap:anywhere]">
                           {part.detail}
                         </span>
                       )}

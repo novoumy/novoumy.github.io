@@ -30,8 +30,8 @@ export default function MainView() {
   const [bottomDrift, setBottomDrift] = useState<Drift[]>([]);
   const [clock, setClock] = useState('');
   const [weather, setWeather] = useState<Weather>(null);
-  const topWords = ['GMT+3 · ' + (clock || '--:--:--'), 'OBSESSED WITH MINECRAFT', 'TINTED_LILAC', weather ? `${weather.city.toUpperCase()} · ${Number.isFinite(weather.temp) ? `${weather.temp}°C · ${weatherLabel(weather.code).toUpperCase()}` : 'WEATHER UNAVAILABLE'}` : 'RANDOM WEATHER · CHECKING'];
-  const bottomWords = ['MINECRAFT', 'TINTED_LILAC', '1440P / 180HZ', weather ? `WEATHER · ${weather.city.toUpperCase()}` : 'WEATHER · RANDOM CITY'];
+  const topWords = ['GMT+3 · ' + (clock || '--:--:--'), 'OBSESSED WITH MINECRAFT', 'TINTED_LILAC'];
+  const bottomWords = ['MINECRAFT', 'TINTED_LILAC', weather ? `WEATHER · ${Number.isFinite(weather.temp) ? `${weather.temp}°C · ${weatherLabel(weather.code).toUpperCase()}` : 'UNAVAILABLE'}` : 'WEATHER · CHECKING'];
 
   useEffect(() => {
     const update = () => setClock(new Intl.DateTimeFormat('en-GB', {
@@ -86,7 +86,6 @@ export default function MainView() {
         <img src={hero.avatar} alt={hero.avatarAlt} className="pixel-frame main-profile-avatar" />
         <h1 className="main-profile-name">{hero.name}</h1>
         <div className="main-profile-bio">{bio.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-        <div className="main-profile-caption"><span className="main-caption-pixel" aria-hidden="true" />A SMALL CORNER OF THE INTERNET<span className="main-caption-pixel" aria-hidden="true" /></div>
       </section>
 
       <div className="kinetic-words kinetic-bottom" aria-label="Personal metadata">
