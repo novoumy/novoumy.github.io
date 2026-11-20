@@ -1802,13 +1802,6 @@ export const specGroups: SpecGroup[] = [
         link: amazon('Fifine AM8 Dynamic Microphone'),
         linkLabel: 'AMAZON',
       },
-      {
-        label: 'Pad 1',
-        name: 'Lenovo Pad',
-        detail: 'Portable Tablet & Media Companion',
-        link: amazon('Lenovo Pad'),
-        linkLabel: 'AMAZON',
-      },
     ],
   },
 ];
