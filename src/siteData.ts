@@ -28,7 +28,7 @@ export type InterestId = 'media' | 'games' | 'music' | 'quotes';
 export type TabIconName = 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid' | 'cpu';
 
 // Built-in icons available for social tiles (used when no "image" is given).
-// Options: 'github' | 'youtube' | 'x' | 'discord' | 'steam' | 'instagram' | 'linkedin' | 'globe' | 'mail'
+// Options include 'github' | 'youtube' | 'x' | 'discord' | 'steam' | 'instagram' | 'linkedin' | 'globe' | 'mail' | 'roblox'
 export type SocialIconName =
   | 'github'
   | 'youtube'
@@ -42,7 +42,8 @@ export type SocialIconName =
   | 'namemc'
   | 'pinterest'
   | 'facebook'
-  | 'snapchat';
+  | 'snapchat'
+  | 'roblox';
 
 export type MediaCategory = 'Movie' | 'Anime' | 'Show' | 'Cartoon';
 
@@ -1513,6 +1514,12 @@ export const socials: SocialItem[] = [
     handle: 'novoumy',
     url: 'https://steamcommunity.com/id/novoumy/',
     icon: 'steam',
+  },
+  {
+    platform: 'Roblox',
+    handle: 'novoumy',
+    url: 'https://www.roblox.com/users/12026959316/profile',
+    icon: 'roblox',
   },
   {
     platform: 'GitHub',

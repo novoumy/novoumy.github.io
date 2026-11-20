@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { flushSync } from 'react-dom';
 import { animatePanelIn } from '@/lib/motion';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
@@ -10,7 +11,8 @@ import SpecsView from '@/views/SpecsView';
 import { site, tabs, type InterestId, type TabId } from '@/siteData';
 import { useStageScale } from '@/lib/useStageScale';
 import { hashFor, parseHash, type Route } from '@/lib/route';
-import { preloadInterestViews } from '@/lib/preload';
+import { loadInterestView, preloadInterestViews } from '@/lib/preload';
+import { crtMorph } from '@/lib/morph';
 
 const sameRoute = (a: Route, b: Route) => a.tab === b.tab && a.interest === b.interest;
 
@@ -45,22 +47,50 @@ export default function App() {
   const [route, setRoute] = useState<Route>(parseHash);
   const activeId = route.tab;
 
-  // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
-  useEffect(() => {
-    // Returning the previous object when nothing changed skips a pointless re-render.
-    const onHashChange = () => setRoute((prev) => {
-      const next = parseHash();
-      return sameRoute(prev, next) ? prev : next;
-    });
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+  // Track the route synchronously so browser back/forward and clicks share one transition path.
+  const routeRef = useRef(route);
+
+  const transitionTo = useCallback((next: Route, writeHash: boolean) => {
+    const previous = routeRef.current;
+    if (sameRoute(previous, next)) {
+      if (writeHash) setHash(next);
+      return;
+    }
+
+    routeRef.current = next;
+    const folderChange =
+      previous.tab === 'interests' &&
+      next.tab === 'interests' &&
+      previous.interest !== next.interest &&
+      (previous.interest !== null || next.interest !== null);
+
+    if (folderChange) {
+      // Load the folder before powering the old screen off, so the new window is ready to expand.
+      void (next.interest ? loadInterestView(next.interest) : Promise.resolve()).then(() => {
+        if (!sameRoute(routeRef.current, next)) return;
+        return crtMorph(() => {
+          if (sameRoute(routeRef.current, next)) flushSync(() => setRoute(next));
+        }, next.interest ? 'folder' : 'hub');
+      });
+    } else {
+      // Leaving a folder for Main / Specs / Socials is a normal tab switch, never a CRT transition.
+      if (previous.interest !== null && next.tab !== 'interests') {
+        document.querySelector('section[data-compact], .win-section')?.classList.remove('crt-collapsed');
+      }
+      setRoute(next);
+    }
+
+    if (writeHash) setHash(next);
   }, []);
 
-  // Update the view immediately (no waiting on the async hashchange event), then mirror to the URL.
-  const navigate = (next: Route) => {
-    setRoute((prev) => (sameRoute(prev, next) ? prev : next));
-    setHash(next);
-  };
+  // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
+  useEffect(() => {
+    const onHashChange = () => transitionTo(parseHash(), false);
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, [transitionTo]);
+
+  const navigate = (next: Route) => transitionTo(next, true);
 
   // Already on this tab: do nothing (no state change, no hash write, no sound).
   const selectTab = (id: TabId) => {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
@@ -12,7 +12,7 @@ import { site, tabs, type InterestId, type TabId } from '@/siteData';
 import { useStageScale } from '@/lib/useStageScale';
 import { hashFor, parseHash, type Route } from '@/lib/route';
 import { loadInterestView, preloadInterestViews } from '@/lib/preload';
-import { morph } from '@/lib/morph';
+import { crtMorph } from '@/lib/morph';
 import { animatePanelIn } from '@/lib/motion';
 
 const sameRoute = (a: Route, b: Route) => a.tab === b.tab && a.interest === b.interest;
@@ -56,18 +56,21 @@ export default function App() {
   const go = (next: Route) => {
     targetRef.current = next;
     const prev = routeRef.current;
-    const folderChange = prev.interest !== next.interest && (prev.interest !== null || next.interest !== null);
+    const folderChange = prev.tab === 'interests' && next.tab === 'interests' && prev.interest !== next.interest && (prev.interest !== null || next.interest !== null);
     const apply = () => {
       if (targetRef.current !== next) return; // a newer navigation won
       routeRef.current = next;
       flushSync(() => setRoute(next));
     };
     if (!folderChange) {
+      if (prev.interest !== null && next.tab !== 'interests') {
+        document.querySelector('section[data-compact], .win-section')?.classList.remove('crt-collapsed');
+      }
       apply();
       return;
     }
     const opening = next.interest;
-    void (opening ? loadInterestView(opening) : Promise.resolve()).then(() => morph(apply, opening ? 'open' : 'close'));
+    void (opening ? loadInterestView(opening) : Promise.resolve()).then(() => crtMorph(apply, opening ? 'folder' : 'hub'));
   };
 
   const navigate = (next: Route) => {
@@ -149,7 +152,6 @@ export default function App() {
           </div>
           <section
             data-compact={activeId === 'main'}
-            style={folderOpen ? undefined : ({ viewTransitionName: 'site-window' } as CSSProperties)}
             className={[
               'pixel-frame relative mt-1 flex min-h-0 flex-col bg-cool-white text-wine',
               staged ? 'aspect-[4/3]' : 'win-section min-h-0 flex-1',
