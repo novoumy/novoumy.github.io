@@ -1077,3 +1077,24 @@ html[data-crt-transition='true'] .animate-overlay-in > * {
   }
   .tab-burst { display: none; }
 }
+
+
+/* Mobile navigation and fixed audio-control clearance. */
+@media (max-width: 640px) {
+  /* The two-row tab grid needs one extra row of room above the main window. */
+  section.win-section {
+    height: min(calc(100dvh - 9rem), 42.8rem);
+  }
+
+  section.win-section[data-compact='true'] {
+    height: min(calc((100vw - 2rem) * 0.75), calc(100dvh - 9rem), 42.8rem);
+  }
+}
+
+@media (max-width: 859px) {
+  /* Allow the last row of every scrollable tab to move above the fixed bottom audio toggle. */
+  .mobile-scroll-safe {
+    padding-bottom: calc(7rem + env(safe-area-inset-bottom)) !important;
+    scroll-padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+  }
+}

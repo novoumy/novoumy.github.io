@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#847FA4" />
-    <title>404 // page not found — novoumy</title>
+    <title>404 Not Found — novoumy</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,184 +17,84 @@
         --wine: #6B2D39;
         --rose: #CD9EBA;
       }
-
       * { box-sizing: border-box; }
-
       html, body { min-height: 100%; }
-
       body {
         min-height: 100vh;
         margin: 0;
         display: grid;
         place-items: center;
-        overflow-x: hidden;
-        padding: 28px 18px;
+        padding: 24px 18px;
         color: var(--wine);
         background-color: var(--lavender);
         background-image:
-          linear-gradient(to right, rgba(236, 239, 241, .12) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(236, 239, 241, .12) 1px, transparent 1px);
+          linear-gradient(to right, rgba(236,239,241,.12) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(236,239,241,.12) 1px, transparent 1px);
         background-size: 32px 32px;
         font-family: 'VT323', monospace;
       }
-
-      body::before, body::after {
-        position: fixed;
-        width: 5px;
-        height: 5px;
-        content: '';
-        pointer-events: none;
-        background: var(--rose);
-        box-shadow: 28px 18px 0 rgba(205, 158, 186, .55), 63vw 17vh 0 rgba(236, 239, 241, .65),
-          82vw 72vh 0 rgba(205, 158, 186, .7), 13vw 80vh 0 rgba(236, 239, 241, .55);
-      }
-      body::before { top: 15%; left: 7%; }
-      body::after { right: 9%; bottom: 15%; opacity: .75; }
-
-      .window {
-        position: relative;
-        z-index: 1;
-        width: min(100%, 700px);
-        padding: 5px;
+      .menu-frame {
+        width: min(100%, 560px);
+        padding: 7px;
         background: var(--paper);
         border: 4px solid var(--wine);
-        box-shadow: 7px 7px 0 var(--wine);
+        box-shadow: 6px 6px 0 var(--wine);
       }
-
-      .titlebar, .footer {
+      .menu-lines {
         display: flex;
+        min-height: 230px;
+        flex-direction: column;
         align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 13px 16px;
-        color: var(--paper);
-        background: var(--wine);
-        font: 8px/1.5 'Press Start 2P', monospace;
-        text-transform: uppercase;
-      }
-
-      .signal { color: var(--rose); white-space: nowrap; }
-
-      .content {
-        padding: clamp(28px, 7vw, 52px) clamp(18px, 6vw, 46px) 42px;
+        justify-content: center;
+        gap: 34px;
+        padding: 38px 18px;
+        border-top: 2px solid var(--rose);
+        border-bottom: 2px solid var(--rose);
         text-align: center;
-        background: var(--paper);
       }
-
-      .stars {
-        margin: 0 0 13px;
-        color: var(--lavender);
-        font-size: 30px;
-        letter-spacing: 18px;
-      }
-
       h1 {
         margin: 0;
+        font: clamp(14px, 4.5vw, 19px)/1.7 'Press Start 2P', monospace;
         color: var(--wine);
-        font: clamp(54px, 13vw, 94px)/1 'Press Start 2P', monospace;
-        letter-spacing: -8px;
-        text-shadow: 5px 5px 0 var(--rose);
       }
-
-      h2 {
-        margin: 27px 0 12px;
-        font: 10px/1.7 'Press Start 2P', monospace;
-        text-transform: uppercase;
-      }
-
-      .message {
-        max-width: 480px;
-        margin: 0 auto;
-        font-size: clamp(23px, 4.5vw, 29px);
-        line-height: 1.2;
-      }
-
-      .hint {
-        margin: 8px 0 0;
-        color: var(--lavender);
-        font-size: 23px;
-      }
-
-      .error-box {
-        max-width: 470px;
-        margin: 27px auto 31px;
-        padding: 12px 15px;
-        border: 2px solid var(--rose);
-        background: #F3E6F0;
-        text-align: left;
-        font-size: 22px;
-        line-height: 1.3;
-      }
-
-      .error-tag {
-        display: inline-block;
-        margin-right: 7px;
-        padding: 2px 6px;
-        color: var(--paper);
-        background: var(--wine);
-        font: 8px 'Press Start 2P', monospace;
-        vertical-align: middle;
-      }
-
-      .home {
+      button {
         display: inline-flex;
         min-height: 48px;
         align-items: center;
         justify-content: center;
-        gap: 10px;
-        padding: 12px 18px;
+        padding: 12px 22px;
         border: 2px solid var(--wine);
-        background: var(--rose);
+        background: var(--wine);
         box-shadow: 4px 4px 0 var(--wine);
-        color: var(--wine);
+        color: var(--paper);
         font: 9px/1.5 'Press Start 2P', monospace;
-        text-decoration: none;
-        text-transform: uppercase;
-        transition: transform 100ms steps(2), box-shadow 100ms steps(2), background 100ms steps(2);
+        cursor: pointer;
+        transition: transform 100ms steps(2), box-shadow 100ms steps(2), background 100ms steps(2), color 100ms steps(2);
       }
-
-      .home:hover, .home:focus-visible {
+      button:hover, button:focus-visible {
         outline: 2px dashed var(--wine);
         outline-offset: 4px;
-        background: var(--paper);
+        background: var(--rose);
+        color: var(--wine);
       }
-
-      .home:active {
-        transform: translate(4px, 4px);
-        box-shadow: none;
-      }
-
-      .footer { margin-top: 5px; font-size: 7px; }
-
+      button:active { transform: translate(4px, 4px); box-shadow: none; }
       @media (max-width: 420px) {
-        .titlebar, .footer { padding: 11px 9px; font-size: 6px; }
-        .content { padding-inline: 14px; }
-        h1 { letter-spacing: -5px; }
+        .menu-lines { min-height: 205px; gap: 28px; }
       }
     </style>
   </head>
   <body>
-    <main class="window" aria-labelledby="error-title">
-      <header class="titlebar">
-        <span>✦ novOS // system message</span>
-        <span class="signal">signal lost</span>
-      </header>
-      <section class="content">
-        <p class="stars" aria-hidden="true">✦ · ✧</p>
-        <h1 id="error-title">404</h1>
-        <h2>page not found</h2>
-        <p class="message">oopsie! this page wandered off on a little side quest.</p>
-        <p class="hint">let&apos;s get you back somewhere cozy. ^.^</p>
-        <div class="error-box">
-          <p><span class="error-tag">ERR</span> error 404: page.exe not found</p>
-          <p class="hint">hint: home is only one click away...</p>
-        </div>
-        <a class="home" href="/#main"><span aria-hidden="true">↶</span> back to main page</a>
+    <main class="menu-frame">
+      <section class="menu-lines" aria-labelledby="error-title">
+        <h1 id="error-title">404 Not Found</h1>
+        <button type="button" id="go-back">Go Back</button>
       </section>
-      <footer class="footer">
-        <span>novoumy terminal</span>
-        <span class="signal">status: online ♡</span>
-      </footer>
     </main>
+    <script>
+      document.getElementById('go-back').addEventListener('click', function () {
+        if (window.history.length > 1) window.history.back();
+        else window.location.assign('/#main');
+      });
+    </script>
   </body>
 </html>
