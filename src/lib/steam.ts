@@ -91,8 +91,16 @@ const EXTRA_COVERS: Record<number, string[]> = {
 
 // Real portrait posters, tried BEFORE Steam's wide header (which looks stretched on a card).
 const POSTER_FIRST: Record<number, string[]> = {
-  // Bundled portrait poster (scripts/generate-peak-poster.py); Steam has no public library_600x900 for PEAK.
-  3527290: ['/posters/peak.png'],
+  3527290: [
+    'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900_2x.jpg',
+    'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900.jpg',
+    'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900_2x.jpg',
+    'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900.jpg',
+    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900_2x.jpg',
+    'https://cdn.cloudflare.steamstatic.com/steam/apps/3527290/library_600x900_2x.jpg',
+    'https://cdn.cloudflare.steamstatic.com/steam/apps/3527290/library_600x900.jpg',
+    'https://steamcdn-a.akamaihd.net/steam/apps/3527290/library_600x900_2x.jpg',
+  ],
 };
 
 function uniqueUrls(urls: Array<string | undefined | null>) {

@@ -172,21 +172,3 @@ export function minecraftIconSources(id: string): string[] {
   }
   return [...new Set(out)];
 }
-
-// Advancement frame types as in the game: task = square, goal = rounded, challenge = purple spiked.
-const CHALLENGES = new Set([
-  'nether/return_to_sender', 'nether/uneasy_alliance', 'nether/fast_travel', 'nether/netherite_armor',
-  'nether/explore_nether', 'nether/ride_strider_in_overworld_lava', 'nether/all_potions', 'nether/all_effects',
-  'adventure/kill_all_mobs', 'adventure/adventuring_time', 'adventure/arbalistic', 'adventure/hero_of_the_village',
-  'adventure/two_birds_one_arrow', 'adventure/sniper_duel', 'adventure/trim_with_all_exclusive_armor_patterns',
-  'adventure/overoverkill', 'husbandry/bred_all_animals', 'husbandry/balanced_diet',
-  'husbandry/obtain_netherite_hoe', 'husbandry/complete_catalogue', 'husbandry/froglights',
-]);
-const GOALS = new Set([
-  'nether/create_full_beacon', 'end/dragon_egg', 'end/respawn_dragon', 'end/dragon_breath', 'end/elytra',
-  'husbandry/leash_all_frog_variants', 'husbandry/whole_pack',
-]);
-
-export function minecraftFrame(id: string): 'task' | 'goal' | 'challenge' {
-  return CHALLENGES.has(id) ? 'challenge' : GOALS.has(id) ? 'goal' : 'task';
-}

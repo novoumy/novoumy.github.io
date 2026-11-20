@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ArrowLeft, ChevronDown, ExternalLink, Search, SlidersHorizontal, X } from 'lucide-react';
 import RetroOverlay from '@/components/RetroOverlay';
-import { minecraftFrame } from '@/data/minecraftIcons';
 import {
   formatDate,
   isCompleted,
@@ -186,25 +185,7 @@ function AchievementItem({ item }: { item: Achievement }) {
   );
 }
 
-// In-game advancement look, used for Minecraft only (styles: .mc-* in index.css).
-function McAchievement({ item }: { item: Achievement }) {
-  const kind = minecraftFrame(item.id);
-  const description = item.description || (item.hidden && !item.unlocked ? 'Hidden advancement.' : '');
-  return (
-    <li className="mc-tile" data-kind={kind} data-locked={!item.unlocked}>
-      <div className="mc-frame" data-kind={kind}>
-        <Art sources={item.iconSources ?? []} alt="" title="?" className="mc-icon" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <h4 className="mc-title">{item.hidden && !item.unlocked ? 'Hidden advancement' : item.name}</h4>
-        {description && <p className="mc-desc">{description}</p>}
-      </div>
-    </li>
-  );
-}
-
 function Achievements({ game }: { game: LibraryGame }) {
-  const mc = game.title === 'Minecraft';
   const [filter, setFilter] = useState<AchFilter>('all');
   const [limit, setLimit] = useState(PAGE);
   const ach = game.achievements;
@@ -229,7 +210,7 @@ function Achievements({ game }: { game: LibraryGame }) {
   const shown = list.slice(0, limit);
 
   return (
-    <div className={`flex flex-col gap-4 ${mc ? 'mc-panel' : ''}`}>
+    <div className="flex flex-col gap-4">
       <div role="group" aria-label="Filter achievements" className="flex flex-wrap gap-2.5">
         {(['all', 'unlocked', 'locked'] as AchFilter[]).map((value) => (
           <button
@@ -240,10 +221,10 @@ function Achievements({ game }: { game: LibraryGame }) {
               setFilter(value);
               setLimit(PAGE);
             }}
-            className={mc ? 'mc-btn' : pillClass(filter === value)}
+            className={pillClass(filter === value)}
           >
             {value}
-            <span className={mc ? 'mc-count' : filter === value ? 'text-r-bg/70' : 'text-r-dim'}>{counts[value]}</span>
+            <span className={filter === value ? 'text-r-bg/70' : 'text-r-dim'}>{counts[value]}</span>
           </button>
         ))}
       </div>
@@ -251,11 +232,13 @@ function Achievements({ game }: { game: LibraryGame }) {
         <p className="border-2 border-dashed border-rose px-4 py-6 text-[22px] text-r-dim">&gt; nothing here.</p>
       ) : (
         <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
-          {shown.map((item) => (mc ? <McAchievement key={item.id} item={item} /> : <AchievementItem key={item.id} item={item} />))}
+          {shown.map((item) => (
+            <AchievementItem key={item.id} item={item} />
+          ))}
         </ul>
       )}
       {shown.length < list.length && (
-        <button type="button" onClick={() => setLimit((value) => value + PAGE)} className={`${mc ? 'mc-btn' : 'r-btn'} self-center`}>
+        <button type="button" onClick={() => setLimit((value) => value + PAGE)} className="r-btn self-center">
           Show more ({list.length - shown.length})
         </button>
       )}
