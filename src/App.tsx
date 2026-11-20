@@ -3,7 +3,6 @@ import { flushSync } from 'react-dom';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
 import SoundToggle from '@/components/SoundToggle';
-import ClickDiskIndicator from '@/components/ClickDiskIndicator';
 import MainView from '@/views/MainView';
 import InterestsView from '@/views/InterestsView';
 import SocialsView from '@/views/SocialsView';
@@ -192,7 +191,6 @@ export default function App() {
             </div>
           </div>
         )}
-        <ClickDiskIndicator />
         {crt && <div className="crt-overlay" aria-hidden="true" />}
       </main>
     </div>

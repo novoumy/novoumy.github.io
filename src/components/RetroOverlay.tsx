@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import PixelIcon from '@/components/PixelIcon';
 import type { InterestId } from '@/siteData';
-import { diskReady } from '@/lib/diskReady';
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
 
@@ -17,20 +16,11 @@ interface RetroOverlayProps {
   sideOpen?: boolean | undefined;
   accent?: InterestId | undefined;
   onBack?: (() => void) | undefined;
-  // False while the folder is still fetching its content; the "reading disk" pop waits for it.
-  ready?: boolean | undefined;
 }
 
-export default function RetroOverlay({ label, meta, onClose, children, toolbar, side, sideOpen = false, accent, onBack, ready = true }: RetroOverlayProps) {
+export default function RetroOverlay({ label, meta, onClose, children, toolbar, side, sideOpen = false, accent, onBack }: RetroOverlayProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const sideRef = useRef<HTMLElement>(null);
-
-  // Dismiss the "reading disk" pop as soon as the folder has painted its content.
-  useEffect(() => {
-    if (!ready) return;
-    const frame = window.requestAnimationFrame(() => diskReady());
-    return () => window.cancelAnimationFrame(frame);
-  }, [ready]);
 
   useEffect(() => {
     sideRef.current?.toggleAttribute('inert', !sideOpen);

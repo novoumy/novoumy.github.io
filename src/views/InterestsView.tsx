@@ -42,7 +42,6 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
             <li key={item.id} className={`accent-${item.id} flex justify-center`}>
               <button
                 type="button"
-                data-disk-target
                 data-no-sfx
                 onClick={() => setOpenId(item.id)}
                 onPointerEnter={() => void FOLDERS[item.id].load()}

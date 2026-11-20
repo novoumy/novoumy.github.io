@@ -11,7 +11,7 @@ interface PixelTabBarProps {
 // Phones: icon-only tiles with real gaps; the active tab grows to show its name.
 // Wide screens (>= 860px): every tab shows its label, as before.
 export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarProps) {
-  // Every click replays a pixel shockwave on the clicked tab (the key remounts it).
+  // A pixel shockwave is triggered only when navigating to a different tab.
   const [burst, setBurst] = useState<{ id: TabId; n: number } | null>(null);
   return (
     <div
@@ -32,7 +32,11 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
             data-no-sfx={active ? '' : undefined}
             aria-label={tab.label}
             onClick={() => {
-              setBurst((prev) => ({ id: tab.id, n: (prev?.n ?? 0) + 1 }));
+              // Keep the existing navigation behaviour (Interests can still return from a
+              // folder to its hub), but don't replay the tab flourish when this tab is active.
+              if (!active) {
+                setBurst((prev) => ({ id: tab.id, n: (prev?.n ?? 0) + 1 }));
+              }
               onSelect(tab.id);
             }}
             className={[
