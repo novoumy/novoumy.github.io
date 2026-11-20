@@ -235,7 +235,7 @@
       }
       .r-center {
         display: flex; flex: 1; min-height: 0; flex-direction: column; align-items: center; justify-content: center;
-        gap: 1rem; padding: 1.5rem; text-align: center;
+        gap: 1.25rem; padding: 1.5rem; text-align: center;
       }
       .r-center > * { opacity: 0; }
       .r-avatar {
@@ -249,13 +249,12 @@
                     0 -8px 0 0 #553746, 0 8px 0 0 #553746, -8px 0 0 0 #553746, 8px 0 0 0 #553746;
       }
       .r-name { margin: 0; font: 24px/1.4 'Press Start 2P', monospace; letter-spacing: 0.05em; }
-      .r-orn { display: block; width: 6px; height: 6px; background: var(--wine); box-shadow: -14px 0 0 var(--rose), 14px 0 0 var(--rose); }
       .r-bio {
         width: min(34rem, 100%); margin: 0 auto; font: 26px/1.25 'VT323', monospace; letter-spacing: 0.03em; text-wrap: balance;
         color: color-mix(in oklab, var(--wine) 90%, var(--lavender));
         text-shadow: 2px 2px 0 color-mix(in oklab, var(--rose) 38%, transparent);
       }
-      .replica.compact .r-center { gap: 0.75rem; padding: 1rem 0.75rem; }
+      .replica.compact .r-center { gap: 0.9rem; padding: 1rem 0.75rem; }
       .replica.compact .r-avatar { width: 96px; height: 96px; }
       .replica.compact .r-name { font-size: var(--r-name, 20px); }
       .replica.compact .r-bio { font-size: var(--r-bio, 25px); }
@@ -564,6 +563,14 @@
           return '----';
         }
 
+        // Divider animation phase comes from the wall clock (same maths as src/lib/dividerSync.ts),
+        // so the real page picks the march up exactly where this one is instead of restarting it.
+        function syncDividers(root) {
+          var now = Date.now(), march = '-' + (now % 3600) + 'ms', twinkle = '-' + (now % 1600) + 'ms';
+          root.querySelectorAll('.pd-fill, .pd-line').forEach(function (i) { i.style.animationDelay = march; });
+          root.querySelectorAll('.pd-gems').forEach(function (i) { i.style.animationDelay = march + ', ' + twinkle; });
+        }
+
         function buildReplica(t) {
           var el = document.createElement('div');
           el.className = 'replica' + (t.staged ? '' : ' compact');
@@ -589,11 +596,11 @@
             '<div class="r-center">' +
               '<img class="r-avatar" src="/icon.png" alt="" />' +
               '<h2 class="r-name">novoumy</h2>' +
-              '<span class="r-orn"></span>' +
               '<p class="r-bio">' + BIO + '</p>' +
             '</div>' +
             divider('bottom') +
             '<div class="r-bar"><span>VISITORS: ' + visitorsText() + '</span><span class="kw-center">TINTED_LILAC</span><span class="kw-end">FRANKFURT \u2022 CHECKING WEATHER</span></div>';
+          syncDividers(el);
           return el;
         }
 

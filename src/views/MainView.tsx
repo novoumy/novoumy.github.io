@@ -1,28 +1,79 @@
 import { useEffect, useRef, useState } from 'react';
 import { hero } from '@/siteData';
+import { syncDividerPhase } from '@/lib/dividerSync';
 import './main.css';
 
 // ---- Visitor counter -------------------------------------------------------------------------
-// Real, shared total via the free counterapi.dev service. A visit is counted once per browser
-// session (so tab switches / reloads don't inflate it); later reads just fetch the total.
-const COUNTER_URL = 'https://api.counterapi.dev/v1/novoumy-github-io/visits';
+// The site is static (GitHub Pages), so the shared total lives in a free hosted counter.
+// Two providers are tried in order; whichever answered last time goes first so a browser keeps
+// seeing one consistent number. A visit is counted once per browser session (tab switches and
+// reloads only read the total). Every failure is logged as "[visitors] ..." in the console.
+const NAMESPACE = 'novoumy-github-io';
+const KEY = 'visits';
 const CACHE_KEY = 'novoumy:visitors';
+const SOURCE_KEY = 'novoumy:visitors-src';
+const COUNTED_KEY = 'novoumy:counted';
+
+type Provider = { id: string; hit: string; get: string; read: (json: unknown) => unknown };
+const PROVIDERS: Provider[] = [
+  {
+    id: 'counterapi',
+    hit: `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/up`,
+    get: `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}`,
+    read: (json) => (json as { count?: unknown })?.count,
+  },
+  {
+    id: 'abacus',
+    hit: `https://abacus.jasoncameron.dev/hit/${NAMESPACE}/${KEY}`,
+    get: `https://abacus.jasoncameron.dev/get/${NAMESPACE}/${KEY}`,
+    read: (json) => (json as { value?: unknown })?.value,
+  },
+];
+
+const store = {
+  get: (area: 'local' | 'session', key: string) => {
+    try { return (area === 'local' ? localStorage : sessionStorage).getItem(key); } catch { return null; }
+  },
+  set: (area: 'local' | 'session', key: string, value: string) => {
+    try { (area === 'local' ? localStorage : sessionStorage).setItem(key, value); } catch { /* storage blocked */ }
+  },
+};
+
+async function requestCount(provider: Provider, url: string): Promise<number> {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), 6000);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const count = Number(provider.read(await res.json()));
+    if (!Number.isFinite(count) || count < 0) throw new Error('unexpected response shape');
+    return count;
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
 let visitsPromise: Promise<number | null> | null = null;
 
-function loadVisitors(): Promise<number | null> {
+function loadVisitors(retry = false): Promise<number | null> {
+  if (retry) visitsPromise = null;
   visitsPromise ??= (async () => {
-    let counted = false;
-    try { counted = sessionStorage.getItem('novoumy:counted') === '1'; } catch { /* storage blocked */ }
-    try {
-      const res = await fetch(counted ? COUNTER_URL : `${COUNTER_URL}/up`);
-      if (!res.ok) throw new Error(String(res.status));
-      const count = Number((await res.json()).count);
-      if (!Number.isFinite(count)) throw new Error('bad count');
-      try { sessionStorage.setItem('novoumy:counted', '1'); localStorage.setItem(CACHE_KEY, String(count)); } catch { /* ignore */ }
-      return count;
-    } catch {
-      try { const cached = Number(localStorage.getItem(CACHE_KEY)); return cached > 0 ? cached : null; } catch { return null; }
+    const counted = store.get('session', COUNTED_KEY) === '1';
+    const preferred = store.get('local', SOURCE_KEY);
+    const ordered = [...PROVIDERS].sort((a, b) => Number(b.id === preferred) - Number(a.id === preferred));
+    for (const provider of ordered) {
+      try {
+        const count = await requestCount(provider, counted ? provider.get : provider.hit);
+        store.set('session', COUNTED_KEY, '1');
+        store.set('local', CACHE_KEY, String(count));
+        store.set('local', SOURCE_KEY, provider.id);
+        return count;
+      } catch (error) {
+        console.warn(`[visitors] ${provider.id} failed:`, error);
+      }
     }
+    const cached = Number(store.get('local', CACHE_KEY));
+    return cached > 0 ? cached : null;
   })();
   return visitsPromise;
 }
@@ -45,7 +96,7 @@ const weatherLabel = (code: number) => {
 // Animated pixel-art border between the pink status bars and the cream window (styles in main.css).
 function PixelDivider({ position }: { position: 'top' | 'bottom' }) {
   return (
-    <div className={`pixel-divider pixel-divider-${position}`} aria-hidden="true">
+    <div ref={syncDividerPhase} className={`pixel-divider pixel-divider-${position}`} aria-hidden="true">
       <i className="pd-fill" />
       <i className="pd-line" />
       <i className="pd-gems" />
@@ -82,10 +133,19 @@ export default function MainView() {
     return () => { window.clearInterval(retarget); window.clearInterval(glide); };
   }, []);
 
+  // Load the total; if nothing answered, try again a few times instead of leaving "----" forever.
   useEffect(() => {
     let alive = true;
-    void loadVisitors().then((count) => { if (alive) setVisitors(count); });
-    return () => { alive = false; };
+    let timer = 0;
+    const attempt = (n: number) => {
+      void loadVisitors(n > 0).then((count) => {
+        if (!alive) return;
+        if (count !== null) setVisitors(count);
+        if (count === null && n < 4) timer = window.setTimeout(() => attempt(n + 1), 15000);
+      });
+    };
+    attempt(0);
+    return () => { alive = false; window.clearTimeout(timer); };
   }, []);
 
   useEffect(() => {
@@ -111,7 +171,6 @@ export default function MainView() {
       <section className="main-profile-center">
         <img src={hero.avatar} alt={hero.avatarAlt} className="main-profile-avatar" />
         <h1 className="main-profile-name">{hero.name}</h1>
-        <span className="main-profile-ornament" aria-hidden="true" />
         <div className="main-profile-bio">{hero.bio.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
       </section>
 
