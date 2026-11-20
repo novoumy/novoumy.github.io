@@ -129,7 +129,7 @@ export default function App() {
       <main
         className={[
           'relative z-10 flex h-full',
-          staged ? 'items-center justify-center' : 'p-3 max-[859px]:items-center max-[859px]:px-3 max-[859px]:py-6 max-[859px]:[@media(max-height:620px)]:py-3',
+          staged ? 'items-center justify-center' : 'px-3 py-8 max-[859px]:items-center max-[859px]:px-3 max-[859px]:py-8',
         ].join(' ')}
       >
         {/* Big screens: fixed 800px window scaled up. Phones/small windows: window fills the screen. */}

@@ -8,13 +8,18 @@ const STAGE_HEIGHT = 656;
 const MIN_VIEWPORT_WIDTH = 900;
 const MIN_VIEWPORT_HEIGHT = 620;
 const MAX_SCALE = 1.75;
-const MARGIN = 64;
+const HORIZONTAL_MARGIN = 24; // 12px on each side
+const VERTICAL_MARGIN = 64; // 32px above and below
 
 function computeScale(): number | null {
   const width = window.innerWidth;
   const height = window.innerHeight;
   if (width < MIN_VIEWPORT_WIDTH || height < MIN_VIEWPORT_HEIGHT) return null;
-  return Math.min(MAX_SCALE, (width - MARGIN) / STAGE_WIDTH, (height - MARGIN) / STAGE_HEIGHT);
+  return Math.min(
+    MAX_SCALE,
+    (width - HORIZONTAL_MARGIN) / STAGE_WIDTH,
+    (height - VERTICAL_MARGIN) / STAGE_HEIGHT,
+  );
 }
 
 export function useStageScale() {
