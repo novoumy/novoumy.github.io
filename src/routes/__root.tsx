@@ -15,11 +15,11 @@ import PixelBackdrop from "@/components/PixelBackdrop";
 
 function NotFoundComponent() {
   return (
-    <div className="relative grid min-h-dvh place-items-center overflow-hidden bg-lavender px-5 py-8 text-wine">
+    <div className="relative grid h-dvh min-h-0 place-items-center overflow-hidden bg-lavender px-4 py-4 text-wine">
       <PixelBackdrop />
-      <main className="relative z-10 w-full max-w-2xl">
+      <main className="relative z-10 max-h-full w-full max-w-2xl">
         <section className="pixel-frame bg-cool-white p-2">
-          <div className="flex min-h-[300px] flex-col items-center justify-center gap-8 border-y-2 border-rose px-5 py-12 text-center sm:min-h-[340px]">
+          <div className="flex min-h-[210px] flex-col items-center justify-center gap-6 border-y-2 border-rose px-4 py-6 text-center sm:min-h-[340px] sm:gap-8 sm:px-5 sm:py-12">
             <h1 className="font-pixel text-[clamp(52px,13vw,104px)] leading-none [text-shadow:5px_5px_0_var(--rose),10px_10px_0_rgba(107,45,57,.16)]">
               404
             </h1>

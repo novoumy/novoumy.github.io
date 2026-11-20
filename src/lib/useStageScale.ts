@@ -8,7 +8,7 @@ const STAGE_HEIGHT = 656;
 const MIN_VIEWPORT_WIDTH = 900;
 const MIN_VIEWPORT_HEIGHT = 620;
 const MAX_SCALE = 1.75;
-const MARGIN = 48;
+const MARGIN = 64;
 
 function computeScale(): number | null {
   const width = window.innerWidth;
