@@ -1340,23 +1340,26 @@ html.theme-soft .pixel-tile-interactive:active {
   transform: translateY(0);
 }
 
-/* Recessed icon wells are enabled only in /theme; display:contents keeps light mode unchanged. */
+/* Recessed icon wells are enabled only in /theme; preserve the artwork's two-tone pixels. */
 .pixel-icon-well { display: contents; }
 html.theme-soft .pixel-icon-well {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
   background: #120f13;
-  border: 2px solid #3f353d;
-  box-shadow: inset 2px 2px 0 rgb(255 255 255 / 0.035), inset -2px -2px 0 #0a080b;
+  border: 2px solid #514653;
+  box-shadow: inset 2px 2px 0 rgb(255 255 255 / 0.025), inset -2px -2px 0 #0a080b;
   border-radius: 0;
-  --wine: #f4eedb;
-  --rose: #f4eedb;
-  --r-accent: #f4eedb;
+  /* PixelIcon uses --wine for its main pixels and --rose / --r-accent for highlights. */
+  --wine: #d8c9df;
+  --rose: #cb9fb9;
+  --r-accent: #a99acb;
 }
 html.theme-soft .pixel-icon-well svg {
   display: block;
-  color: #f4eedb;
+  color: #eadfe9;
+  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.35));
+  shape-rendering: crispEdges;
 }
 html.theme-soft .pixel-icon-well-folder {
   width: 7.5rem;
@@ -1568,76 +1571,79 @@ html.theme-soft .main-sound-toggle:focus-visible {
   border-color: #c7809d;
 }
 
-/* Terminal phosphor: lime for commands/success, cyan for the active path, red for errors. */
+/* Pastel terminal phosphor: soft lilac, mint, sky and rose with no harsh neon. */
 html.theme-soft .term {
-  --t-bg: #120f13;
-  --t-bg-deep: #1a161b;
-  --t-text: #4af67d;
-  --t-dim: #b9aeb7;
-  --t-accent: #9d75b2;
-  --t-glow: rgb(157 117 178 / 0.22);
-  --t-scan: rgb(230 222 209 / 0.035);
-  --t-edge: rgb(0 0 0 / 0.22);
-  --t-err-bg: #f64a4a;
-  --t-err-fg: #0d0b0f;
-  --t-warn-bg: #4ae5f6;
-  --t-warn-fg: #0d0b0f;
-  --t-ok-bg: #4af67d;
-  --t-ok-fg: #0d0b0f;
-  background: #120f13;
-  color: #4af67d;
-  border-top: 2px solid #3f353d;
-  border-bottom: 2px solid #3f353d;
+  --t-bg: #151119;
+  --t-bg-deep: #1d1721;
+  --t-text: #dfd2e5;
+  --t-dim: #b9adbf;
+  --t-accent: #c6afd9;
+  --t-glow: rgb(198 175 217 / 0.13);
+  --t-scan: rgb(230 222 209 / 0.018);
+  --t-edge: rgb(0 0 0 / 0.2);
+  --t-err-bg: #503541;
+  --t-err-fg: #f0c0cb;
+  --t-warn-bg: #4b4335;
+  --t-warn-fg: #efdbb5;
+  --t-ok-bg: #30483d;
+  --t-ok-fg: #bde6cc;
+  background: #151119;
+  color: #dfd2e5;
+  border-top: 2px solid #514653;
+  border-bottom: 2px solid #514653;
 }
 html.theme-soft .term-out,
 html.theme-soft .term-prompt {
-  color: #4af67d;
-  text-shadow: 0 0 1px rgb(74 246 125 / 0.7), 0 0 7px rgb(74 246 125 / 0.16);
+  color: #dfd2e5;
+  text-shadow: 0 0 2px rgb(198 175 217 / 0.16), 0 0 5px rgb(198 175 217 / 0.08);
 }
 html.theme-soft .term .t-user,
 html.theme-soft .term .t-ok .t-msg,
 html.theme-soft .term .t-ok .t-gutter {
-  color: #4af67d;
+  color: #bde6cc;
 }
 html.theme-soft .term .t-cmd .t-msg,
-html.theme-soft .term .t-path,
-html.theme-soft .term .t-warn .t-msg {
-  color: #4ae5f6;
+html.theme-soft .term .t-path {
+  color: #c5d9e8;
+}
+html.theme-soft .term .t-warn .t-msg,
+html.theme-soft .term .t-warn .t-gutter {
+  color: #efdbb5;
 }
 html.theme-soft .term .t-err .t-msg,
 html.theme-soft .term .t-err .t-gutter {
-  color: #f64a4a;
+  color: #e6b1bf;
 }
 html.theme-soft .term header .text-lavender {
-  color: #4ae5f6;
+  color: #c6afd9;
 }
 html.theme-soft .term header .bg-rose {
-  background-color: #4af67d;
-  box-shadow: 0 0 0 2px rgb(74 246 125 / 0.22), 0 0 9px rgb(74 246 125 / 0.35);
+  background-color: #bde6cc;
+  box-shadow: 0 0 0 2px rgb(189 230 204 / 0.12), 0 0 7px rgb(189 230 204 / 0.14);
 }
 html.theme-soft .term-prompt {
-  background: #1a161b;
-  border-top: 2px solid #9d75b2;
-  box-shadow: inset 0 0 12px rgb(157 117 178 / 0.12);
+  background: #1d1721;
+  border-top: 2px solid #8f78a2;
+  box-shadow: inset 0 0 10px rgb(198 175 217 / 0.07);
 }
 html.theme-soft .term-prompt:focus-within {
-  box-shadow: inset 0 0 16px rgb(157 117 178 / 0.2), 0 -2px 0 #9d75b2;
+  box-shadow: inset 0 0 12px rgb(198 175 217 / 0.11), 0 -2px 0 #a991bd;
 }
 html.theme-soft .term .t-cursor {
-  background: #4af67d;
-  box-shadow: 0 0 8px rgb(74 246 125 / 0.48);
+  background: #c6afd9;
+  box-shadow: 0 0 5px rgb(198 175 217 / 0.22);
 }
 html.theme-soft .term .t-err .t-tag {
-  background: #f64a4a;
-  color: #0d0b0f;
+  background: #503541;
+  color: #f0c0cb;
 }
 html.theme-soft .term .t-warn .t-tag {
-  background: #4ae5f6;
-  color: #0d0b0f;
+  background: #4b4335;
+  color: #efdbb5;
 }
 html.theme-soft .term .t-ok .t-tag {
-  background: #4af67d;
-  color: #0d0b0f;
+  background: #30483d;
+  color: #bde6cc;
 }
 
 /* Consistent square pixel treatment across cards, controls and clickable surfaces. */

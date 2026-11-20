@@ -41,8 +41,8 @@ const HELP = [
   '/help      - list all available commands',
   "/novotime  - Shows novoumy's local time (GMT+3)",
   '/whoami    - show novoumy profile',
-  '/theme     - toggle the softer dark palette (keeps the purple grid)',
-  '/invert    - toggle the original inverted colour palette',
+  '/theme     - toggle dark mode.',
+  '/invert    - toggle inverted theme',
   '/reboot    - replay the boot sequence',
 ];
 
