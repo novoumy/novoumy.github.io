@@ -105,9 +105,18 @@
   cursor: default;
   user-select: none;
 }
-.kinetic-words span:hover { color: var(--wine); }
-.kinetic-top { border-bottom: 1px dashed color-mix(in oklab, var(--rose) 85%, var(--wine)); }
-.kinetic-bottom { border-top: 1px dashed color-mix(in oklab, var(--rose) 85%, var(--wine)); }
+.kinetic-words span:hover { color: color-mix(in oklab, var(--wine) 70%, black); }
+/* Header / footer bars: pink fill, dark red border + text, with a retro hard shadow */
+.kinetic-words {
+  flex-wrap: nowrap;
+  min-height: 2.9rem;
+  padding: 0.55rem 1rem;
+  color: var(--wine);
+  background: color-mix(in oklab, var(--rose) 55%, var(--cool-white));
+  border: 2px solid var(--wine);
+}
+.kinetic-top { box-shadow: 0 3px 0 var(--rose); }
+.kinetic-bottom { box-shadow: 0 -3px 0 var(--rose); }
 .main-profile-center {
   display: flex;
   flex: 1;
@@ -152,7 +161,7 @@
 }
 .main-caption-pixel { width: 5px; height: 5px; flex: 0 0 5px; background: var(--rose); }
 @media (max-width: 768px) {
-  .kinetic-words { justify-content: center; font-size: 7px; gap: 0.5rem 0.8rem; }
+  .kinetic-words { justify-content: space-between; font-size: 6px; gap: 0.4rem; padding: 0.5rem 0.5rem; }
   .main-profile-center { padding: 1.25rem 0.5rem; }
   .main-profile-avatar { width: 104px; }
   .main-profile-bio { font-size: clamp(15px, 4vw, 18px); }
