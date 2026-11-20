@@ -64,7 +64,7 @@ export default function App() {
     };
     if (!folderChange) {
       if (prev.interest !== null && next.tab !== 'interests') {
-        document.querySelector('section[data-compact], .win-section')?.classList.remove('crt-collapsed');
+        document.querySelector<HTMLElement>('[data-crt-stage]')?.classList.remove('crt-screen', 'crt-collapsed');
       }
       apply();
       return;
@@ -145,6 +145,7 @@ export default function App() {
           }
           style={staged ? { zoom: scale } : undefined}
           data-folder-open={folderOpen}
+          data-crt-stage
         >
           <div className="flex items-end justify-between gap-2">
             <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={selectTab} />

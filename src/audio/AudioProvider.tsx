@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { audio } from '@/siteData';
-import { playSfx, setSfxLevel, setSfxMuted, sfxForElement } from '@/audio/sfx';
+import { playSfx, setSfxLevel, setSfxMuted, sfxForElement, unlockSfxAudio } from '@/audio/sfx';
 
 // Slider scale: 100 is the new baseline, which is HALF of the old physical output.
 // 200 equals the old (pre-slider) output. 0 is silent.
@@ -102,6 +102,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     // suspended it while the page was in the background.
     const gestures = ['pointerdown', 'mousedown', 'pointerup', 'touchstart', 'touchend', 'click', 'keydown'] as const;
     const onGesture = () => {
+      unlockSfxAudio();
       if (bgm.paused) sync();
     };
     gestures.forEach((name) => window.addEventListener(name, onGesture, { capture: true, passive: true }));

@@ -43,6 +43,7 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
               <button
                 type="button"
                 data-disk-target
+                data-no-sfx
                 onClick={() => setOpenId(item.id)}
                 onPointerEnter={() => void FOLDERS[item.id].load()}
                 onFocus={() => void FOLDERS[item.id].load()}

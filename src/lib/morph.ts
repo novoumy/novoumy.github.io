@@ -1,13 +1,24 @@
+import { playSfx } from '@/audio/sfx';
+
 // A CRT-style power cycle used only when opening or closing an Interests folder.
-// The main window collapses to a glowing centre line, the route updates, and the
-// destination window expands from that same line. No page snapshots are cross-faded.
+// The whole hub (tabs + window) collapses together, the route updates at the line,
+// and the destination expands in the exact reverse motion. No snapshot cross-fades.
 type Destination = 'folder' | 'hub';
 
-const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const HUB_SELECTOR = '[data-crt-stage]';
+const FOLDER_SELECTOR = '.r-window';
+const COLLAPSE_DURATION = 430;
+const EXPAND_DURATION = 430;
+const LINE_HOLD_MS = 185;
+const COLLAPSE_EASING = 'cubic-bezier(0.14, 0.82, 0.24, 1)';
+// Exact time-reverse of COLLAPSE_EASING: slow at the line, quick in the middle, slow at full size.
+const EXPAND_EASING = 'cubic-bezier(0.76, 0, 0.86, 0.18)';
 
+const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let running: Promise<void> | null = null;
 
 const nextFrame = () => new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
+const wait = (duration: number) => new Promise<void>((resolve) => window.setTimeout(resolve, duration));
 
 function positionBeam(beam: HTMLElement, surface: HTMLElement) {
   const rect = surface.getBoundingClientRect();
@@ -24,16 +35,14 @@ function finished(animation: Animation): Promise<void> {
 }
 
 async function runCrtTransition(update: () => void, destination: Destination): Promise<void> {
-  const hubSelector = 'section[data-compact], .win-section';
-  const source =
-    document.querySelector<HTMLElement>('.r-window') ??
-    document.querySelector<HTMLElement>(hubSelector);
+  // The hub selector deliberately includes the tab bar as well as the main window.
+  const sourceSelector = destination === 'folder' ? HUB_SELECTOR : FOLDER_SELECTOR;
+  const source = document.querySelector<HTMLElement>(sourceSelector);
 
   if (!source || reducedMotion()) {
-    if (destination === 'hub') {
-      document.querySelector<HTMLElement>(hubSelector)?.classList.remove('crt-collapsed');
-    }
     update();
+    document.querySelector<HTMLElement>(HUB_SELECTOR)?.classList.remove('crt-screen', 'crt-collapsed');
+    document.querySelector<HTMLElement>(FOLDER_SELECTOR)?.classList.remove('crt-screen', 'crt-collapsed');
     return;
   }
 
@@ -46,67 +55,70 @@ async function runCrtTransition(update: () => void, destination: Destination): P
   document.body.appendChild(beam);
 
   try {
+    // Power off: fast at first, then progressively slower as the screen reaches its line.
+    playSfx('crt-off');
     source.classList.add('crt-screen');
 
     const collapse = source.animate(
       [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0.004)' }],
       {
-        duration: 270,
-        easing: 'cubic-bezier(0.68, 0, 0.84, 0)',
+        duration: COLLAPSE_DURATION,
+        easing: COLLAPSE_EASING,
         fill: 'forwards',
       },
     );
     const beamOn = beam.animate([{ opacity: 0 }, { opacity: 1 }], {
-      duration: 150,
-      delay: 115,
+      duration: 145,
+      delay: COLLAPSE_DURATION - 125,
       easing: 'ease-out',
       fill: 'forwards',
     });
 
     await Promise.all([finished(collapse), finished(beamOn)]);
 
-    // Keep the Interests hub folded behind the folder until it is closed again.
-    if (!source.matches('.r-window') && destination === 'folder') {
+    // Keep the hub folded behind the folder while it is open.
+    if (source.matches(HUB_SELECTOR) && destination === 'folder') {
       source.classList.add('crt-collapsed');
     }
     collapse.cancel();
     source.classList.remove('crt-screen');
 
+    // Let the glowing line hang for a moment before the next screen powers on.
+    await wait(LINE_HOLD_MS);
     update();
     await nextFrame();
 
-    const target =
-      destination === 'folder'
-        ? document.querySelector<HTMLElement>('.r-window')
-        : document.querySelector<HTMLElement>(hubSelector);
-
+    const target = document.querySelector<HTMLElement>(destination === 'folder' ? FOLDER_SELECTOR : HUB_SELECTOR);
     if (!target) {
-      source.classList.remove('crt-collapsed');
-      document.querySelector<HTMLElement>(hubSelector)?.classList.remove('crt-collapsed');
+      source.classList.remove('crt-screen', 'crt-collapsed');
+      document.querySelector<HTMLElement>(HUB_SELECTOR)?.classList.remove('crt-screen', 'crt-collapsed');
       return;
     }
 
-    target.classList.add('crt-screen');
-    if (destination === 'hub') target.classList.add('crt-collapsed');
+    target.classList.add('crt-screen', 'crt-collapsed');
+    // Avoid the folder's usual one-shot fade/clip animation restarting after this CRT cycle.
+    target.classList.remove('animate-overlay-in');
+    target.closest<HTMLElement>('.r-desk')?.classList.add('crt-powered');
     positionBeam(beam, target);
 
+    // Power on is the reverse of power-off, expanding away from the line with a gentle landing.
+    playSfx('crt-on');
     const expand = target.animate(
       [{ transform: 'scaleY(0.004)' }, { transform: 'scaleY(1)' }],
       {
-        duration: 410,
-        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        duration: EXPAND_DURATION,
+        easing: EXPAND_EASING,
         fill: 'forwards',
       },
     );
     const beamOff = beam.animate([{ opacity: 1 }, { opacity: 0 }], {
-      duration: 210,
-      delay: 45,
+      duration: 235,
+      delay: 85,
       easing: 'ease-out',
       fill: 'forwards',
     });
 
     await Promise.all([finished(expand), finished(beamOff)]);
-
     target.classList.remove('crt-screen', 'crt-collapsed');
     expand.cancel();
   } finally {

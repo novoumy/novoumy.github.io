@@ -1103,9 +1103,17 @@
   visibility: hidden;
 }
 
+.crt-powered,
+.crt-powered .animate-overlay-in,
+.crt-powered .animate-overlay-in > * {
+  animation: none !important;
+}
+
 .crt-screen {
   transform-origin: center center;
   overflow: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .crt-collapsed {
@@ -1116,7 +1124,7 @@
 .crt-folder-beam {
   position: fixed;
   z-index: 2147483000;
-  height: 3px;
+  height: 4px;
   pointer-events: none;
   transform: translateY(-50%);
   opacity: 0;
@@ -1135,7 +1143,8 @@
 }
 
 html[data-crt-transition='true'] .r-desk,
-html[data-crt-transition='true'] .animate-overlay-in {
+html[data-crt-transition='true'] .animate-overlay-in,
+html[data-crt-transition='true'] .animate-overlay-in > * {
   animation: none !important;
 }
 

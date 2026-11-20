@@ -75,7 +75,7 @@ export default function App() {
     } else {
       // Leaving a folder for Main / Specs / Socials is a normal tab switch, never a CRT transition.
       if (previous.interest !== null && next.tab !== 'interests') {
-        document.querySelector('section[data-compact], .win-section')?.classList.remove('crt-collapsed');
+        document.querySelector<HTMLElement>('[data-crt-stage]')?.classList.remove('crt-screen', 'crt-collapsed');
       }
       setRoute(next);
     }
@@ -140,6 +140,7 @@ export default function App() {
               : 'mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col pb-2 pr-2 max-[859px]:max-h-[46rem] max-[768px]:h-auto'
           }
           style={staged ? { zoom: scale } : undefined}
+          data-crt-stage
         >
           <div className="flex items-end justify-between gap-2">
             <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={selectTab} />

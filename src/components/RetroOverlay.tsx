@@ -102,6 +102,7 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
             <h2 className="min-w-0 truncate text-[10px] uppercase sm:text-[13px]">
               <button
                 type="button"
+                data-no-sfx
                 aria-label={`Close ${label.toLowerCase()}`}
                 className="cursor-pointer truncate border-0 bg-transparent p-0 text-left uppercase text-cool-white outline-none [font:inherit] focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4"
               >
@@ -110,7 +111,7 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
             </h2>
             {meta && <span className="hidden shrink-0 font-pixel text-[8px] uppercase text-rose sm:inline">// {meta}</span>}
           </div>
-          <button type="button" onClick={onClose} aria-label={`Close ${label.toLowerCase()}`} className="r-close shrink-0">
+          <button type="button" data-no-sfx onClick={onClose} aria-label={`Close ${label.toLowerCase()}`} className="r-close shrink-0">
             <X size={13} strokeWidth={3} aria-hidden="true" />
             <span>Close</span>
           </button>
