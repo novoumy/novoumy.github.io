@@ -41,7 +41,8 @@ const HELP = [
   '/help      - list all available commands',
   "/novotime  - Shows novoumy's local time (GMT+3)",
   '/whoami    - show novoumy profile',
-  '/theme     - toggle the whole website between light and dark mode',
+  '/theme     - toggle the softer dark palette (keeps the purple grid)',
+  '/invert    - toggle the original inverted colour palette',
   '/reboot    - replay the boot sequence',
 ];
 
@@ -53,7 +54,7 @@ const WHOAMI = [
 ];
 
 // Tab-complete only knows the documented commands; the easter eggs stay secret.
-const COMMANDS = ['/help', '/novotime', '/whoami', '/theme', '/reboot'];
+const COMMANDS = ['/help', '/novotime', '/whoami', '/theme', '/invert', '/reboot'];
 
 const FORTUNES = [
   'you will fix one bug and discover three.',
@@ -102,17 +103,32 @@ const BOOT: Step[] = [
   { t: 'type /help for available commands.', k: 'sys', s: 22 },
 ];
 
-export default function MainView({ onToggleTheme }: { onToggleTheme?: () => boolean } = {}) {
-  const toggleTheme = onToggleTheme ?? (() => {
+export default function MainView({
+  onToggleTheme,
+  onToggleInvert,
+}: {
+  onToggleTheme?: () => boolean;
+  onToggleInvert?: () => boolean;
+} = {}) {
+  const applyFallbackMode = (mode: 'light' | 'theme' | 'invert') => {
     const root = document.documentElement;
-    const enabled = !root.classList.contains('theme-dark');
-    root.classList.toggle('theme-dark', enabled);
-    root.style.colorScheme = enabled ? 'dark' : 'light';
+    root.classList.toggle('theme-dark', mode === 'invert');
+    root.classList.toggle('theme-soft', mode === 'theme');
+    root.style.colorScheme = mode === 'light' ? 'light' : 'dark';
     try {
-      window.localStorage.setItem('novoumy-theme', enabled ? 'dark' : 'light');
+      window.localStorage.setItem('novoumy-theme', mode);
     } catch {
       // The in-memory theme still works when storage is unavailable.
     }
+  };
+  const toggleTheme = onToggleTheme ?? (() => {
+    const enabled = !document.documentElement.classList.contains('theme-soft');
+    applyFallbackMode(enabled ? 'theme' : 'light');
+    return enabled;
+  });
+  const toggleInvert = onToggleInvert ?? (() => {
+    const enabled = !document.documentElement.classList.contains('theme-dark');
+    applyFallbackMode(enabled ? 'invert' : 'light');
     return enabled;
   });
   const [lines, setLines] = useState<TermLine[]>([]);
@@ -246,7 +262,12 @@ export default function MainView({ onToggleTheme }: { onToggleTheme?: () => bool
     }
     if (normalized === '/theme') {
       const enabled = toggleTheme();
-      push(`theme: ${enabled ? 'dark mode enabled' : 'light mode restored'}`, 'ok');
+      push(`theme: ${enabled ? 'softer dark palette enabled' : 'light palette restored'}`, 'ok');
+      return;
+    }
+    if (normalized === '/invert') {
+      const enabled = toggleInvert();
+      push(`invert: ${enabled ? 'original inverted palette enabled' : 'light palette restored'}`, 'ok');
       return;
     }
     if (normalized === '/reboot') {

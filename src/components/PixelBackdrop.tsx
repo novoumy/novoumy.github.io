@@ -12,10 +12,10 @@ export default function PixelBackdrop() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
       <div
-        className="absolute inset-0 opacity-[0.12]"
+        className="pixel-backdrop-grid absolute inset-0 opacity-[0.12]"
         style={{
           backgroundImage:
-            'linear-gradient(to right, var(--cool-white) 1px, transparent 1px), linear-gradient(to bottom, var(--cool-white) 1px, transparent 1px)',
+            'linear-gradient(to right, var(--backdrop-grid, var(--cool-white)) 1px, transparent 1px), linear-gradient(to bottom, var(--backdrop-grid, var(--cool-white)) 1px, transparent 1px)',
           backgroundSize: '32px 32px',
         }}
       />
