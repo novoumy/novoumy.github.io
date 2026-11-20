@@ -91,7 +91,9 @@ const EXTRA_COVERS: Record<number, string[]> = {
 
 // Real portrait posters, tried BEFORE Steam's wide header (which looks stretched on a card).
 const POSTER_FIRST: Record<number, string[]> = {
+  // PEAK: the official poster lives in this site's own public/images folder.
   3527290: [
+    '/images/peak_poster.jpg',
     'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900_2x.jpg',
     'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900.jpg',
     'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900_2x.jpg',

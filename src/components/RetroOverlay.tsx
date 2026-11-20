@@ -1,8 +1,9 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import PixelIcon from '@/components/PixelIcon';
 import type { InterestId } from '@/siteData';
+import { diskReady } from '@/lib/diskReady';
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
 
@@ -16,11 +17,20 @@ interface RetroOverlayProps {
   sideOpen?: boolean | undefined;
   accent?: InterestId | undefined;
   onBack?: (() => void) | undefined;
+  // False while the folder is still fetching its content; the "reading disk" pop waits for it.
+  ready?: boolean | undefined;
 }
 
-export default function RetroOverlay({ label, meta, onClose, children, toolbar, side, sideOpen = false, accent, onBack }: RetroOverlayProps) {
+export default function RetroOverlay({ label, meta, onClose, children, toolbar, side, sideOpen = false, accent, onBack, ready = true }: RetroOverlayProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const sideRef = useRef<HTMLElement>(null);
+
+  // Dismiss the "reading disk" pop as soon as the folder has painted its content.
+  useEffect(() => {
+    if (!ready) return;
+    const frame = window.requestAnimationFrame(() => diskReady());
+    return () => window.cancelAnimationFrame(frame);
+  }, [ready]);
 
   useEffect(() => {
     sideRef.current?.toggleAttribute('inert', !sideOpen);
@@ -74,12 +84,13 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
       aria-label={label}
       tabIndex={-1}
       className={[
-        'retro-theme r-desk fixed inset-0 z-[100] flex h-dvh w-screen p-3 pb-5 pr-5 outline-none sm:p-6 sm:pb-8 sm:pr-8 lg:p-8 lg:pb-10 lg:pr-10',
+        'retro-theme r-desk folder-desk fixed inset-0 z-[100] flex h-dvh w-screen p-3 pb-5 pr-5 outline-none sm:p-6 sm:pb-8 sm:pr-8 lg:p-8 lg:pb-10 lg:pr-10',
         'pt-[max(0.75rem,env(safe-area-inset-top))] max-sm:pb-[max(1.25rem,env(safe-area-inset-bottom))]',
         accent ? `accent-${accent}` : '',
       ].join(' ')}
     >
-      <div className="r-window pixel-frame animate-overlay-in relative mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col bg-[var(--r-bg,var(--cool-white))]">
+      <div style={{ viewTransitionName: 'site-window' } as CSSProperties}
+        className="r-window pixel-frame animate-overlay-in relative mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col bg-[var(--r-bg,var(--cool-white))]">
         <header className="r-titlebar flex shrink-0 items-center justify-between gap-3 px-3 py-2.5 sm:px-5 sm:py-3">
           <div onClick={onClose} className="flex min-w-0 cursor-pointer items-center gap-3 sm:gap-4">
             {accent && (

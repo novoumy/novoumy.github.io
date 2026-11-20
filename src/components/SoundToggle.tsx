@@ -120,8 +120,8 @@ export default function SoundToggle({ className = '' }: { className?: string }) 
         onClick={onButtonClick}
         className="pixel-tile pixel-tile-interactive flex shrink-0 items-center justify-center gap-2 bg-lavender px-2.5 py-2 text-cool-white hover:bg-rose hover:text-wine min-[860px]:px-3"
       >
-        {showHint && <span className="blink-arrow font-pixel text-[8px] uppercase leading-none max-[859px]:hidden">Tap for sound</span>}
-        <Icon size={16} strokeWidth={2.5} aria-hidden="true" className={showHint ? 'max-[859px]:blink-arrow' : undefined} />
+        {showHint && <span className="blink-arrow font-pixel text-[8px] uppercase leading-none">Tap anywhere for sound</span>}
+        <Icon size={16} strokeWidth={2.5} aria-hidden="true" />
       </button>
     </div>
   );

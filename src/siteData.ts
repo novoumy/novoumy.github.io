@@ -1,4 +1,3 @@
-import bgmAsset from "@/assets/bgm.mp3.asset.json";
 import { minecraftAchievements } from '@/data/minecraftAchievements';
 /*
  * ============================================================================
@@ -141,7 +140,7 @@ export const site = {
 export const audio = {
   // Looping background music. Put your MP3 in the "public/audio" folder and
   // keep this path, or point it at any other MP3 URL.
-  bgmSrc: bgmAsset.url,
+  bgmSrc: '/audio/bgm.mp3',
   // 0 = silent, 1 = full volume.
   bgmVolume: 0.35,
 };

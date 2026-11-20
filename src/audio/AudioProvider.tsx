@@ -42,7 +42,8 @@ const SFX_OPT_OUT = '[data-no-sfx]';
 
 export function AudioProvider({ children }: { children: ReactNode }) {
   const [muted, setMuted] = useState(false);
-  const [blocked, setBlocked] = useState(false);
+  // Browsers refuse sound until the first interaction, so start in the "tap anywhere" state.
+  const [blocked, setBlocked] = useState(true);
   const [volume, setVolumeState] = useState(loadVolume);
   const mutedRef = useRef(muted);
   const volumeRef = useRef(volume);
@@ -99,7 +100,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     // listen to all of them and keep listening: the handler is a cheap no-op once
     // the music is playing, and it also recovers playback if the browser
     // suspended it while the page was in the background.
-    const gestures = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'] as const;
+    const gestures = ['pointerdown', 'mousedown', 'pointerup', 'touchstart', 'touchend', 'click', 'keydown'] as const;
     const onGesture = () => {
       if (bgm.paused) sync();
     };
@@ -117,6 +118,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       focused = false;
       sync();
     };
+    // Leaving the site (closing the tab, navigating away, reloading) always stops the music.
     const onPageHide = () => bgm.pause();
     const onPageShow = () => {
       visible = document.visibilityState === 'visible';
@@ -127,6 +129,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     window.addEventListener('focus', onFocus);
     window.addEventListener('blur', onBlur);
     window.addEventListener('pagehide', onPageHide);
+    window.addEventListener('beforeunload', onPageHide);
     window.addEventListener('pageshow', onPageShow);
     // If the first play() raced with loading, try again once data is ready.
     bgm.addEventListener('canplay', sync);
@@ -150,6 +153,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       window.removeEventListener('focus', onFocus);
       window.removeEventListener('blur', onBlur);
       window.removeEventListener('pagehide', onPageHide);
+      window.removeEventListener('beforeunload', onPageHide);
       window.removeEventListener('pageshow', onPageShow);
       bgm.removeEventListener('canplay', sync);
       bgm.removeEventListener('playing', onPlaying);

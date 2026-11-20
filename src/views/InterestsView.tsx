@@ -1,12 +1,10 @@
-import { lazy, Suspense, useEffect, useRef, type ComponentType } from 'react';
-import { closeOverlayAnimated } from '@/lib/motion';
+import { lazy, Suspense, useEffect } from 'react';
 import PixelIcon from '@/components/PixelIcon';
 import { interests, type InterestId } from '@/siteData';
-import { loadGames, loadMedia, loadMusic, loadQuotes } from '@/lib/preload';
+import { loadGames, loadMedia, loadMusic, loadQuotes, loadedInterestView, type FolderView } from '@/lib/preload';
 
 // Folder views are code-split and preloaded (idle + on hover), so opening one is
 // instant; there is deliberately no loading overlay in the way.
-type FolderView = ComponentType<{ onClose: () => void }>;
 const FOLDERS: Record<InterestId, { View: FolderView; load: () => Promise<unknown> }> = {
   media: { View: lazy(loadMedia), load: loadMedia },
   music: { View: lazy(loadMusic), load: loadMusic },
@@ -14,8 +12,8 @@ const FOLDERS: Record<InterestId, { View: FolderView; load: () => Promise<unknow
   quotes: { View: lazy(loadQuotes), load: loadQuotes },
 };
 
-// Interests is a tiny "desktop": a 2x2 grid of folders. Each folder opens as a
-// full-screen overlay; its close button returns to the grid.
+// Interests is a tiny "desktop": a 2x2 grid of folders. Opening one morphs the main
+// window into the full-size folder window; its close button morphs it back.
 // Which folder is open lives in the URL hash (see App.tsx), so it survives reloads and can be shared.
 interface InterestsViewProps {
   openId: InterestId | null;
@@ -25,22 +23,14 @@ interface InterestsViewProps {
 export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
   const setOpenId = onOpen;
   const open = openId ? FOLDERS[openId] : null;
-  const closing = useRef(false);
 
   useEffect(() => {
     if (!openId) return;
     void FOLDERS[openId].load();
   }, [openId]);
 
-  // Plays the overlay close animation before the folder unmounts (button, header and Escape all land here).
-  const close = () => {
-    if (closing.current) return;
-    closing.current = true;
-    void closeOverlayAnimated().then(() => {
-      closing.current = false;
-      setOpenId(null);
-    });
-  };
+  // Closing morphs the folder window back into the main window (App runs the transition).
+  const close = () => setOpenId(null);
 
   // The hub is always rendered in the same spot, so opening/closing a folder never remounts it.
   return (
@@ -73,11 +63,16 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
         </ul>
       </div>
 
-      {open && (
-        <Suspense fallback={null}>
-          <open.View onClose={close} />
-        </Suspense>
-      )}
+      {open && openId && <OpenFolder View={loadedInterestView(openId) ?? open.View} onClose={close} />}
     </>
+  );
+}
+
+// Already-loaded folders render straight away (no Suspense tick), so the morph has real content.
+function OpenFolder({ View, onClose }: { View: FolderView; onClose: () => void }) {
+  return (
+    <Suspense fallback={null}>
+      <View onClose={onClose} />
+    </Suspense>
   );
 }

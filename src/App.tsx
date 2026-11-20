@@ -1,4 +1,5 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { flushSync } from 'react-dom';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
 import SoundToggle from '@/components/SoundToggle';
@@ -10,7 +11,9 @@ import SpecsView from '@/views/SpecsView';
 import { site, tabs, type InterestId, type TabId } from '@/siteData';
 import { useStageScale } from '@/lib/useStageScale';
 import { hashFor, parseHash, type Route } from '@/lib/route';
-import { preloadInterestViews } from '@/lib/preload';
+import { loadInterestView, preloadInterestViews } from '@/lib/preload';
+import { morph } from '@/lib/morph';
+import { animatePanelIn } from '@/lib/motion';
 
 const sameRoute = (a: Route, b: Route) => a.tab === b.tab && a.interest === b.interest;
 
@@ -34,28 +37,65 @@ export default function App() {
 
   // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
   useEffect(() => {
-    // Returning the previous object when nothing changed skips a pointless re-render.
-    const onHashChange = () => setRoute((prev) => {
+    const onHashChange = () => {
       const next = parseHash();
-      return sameRoute(prev, next) ? prev : next;
-    });
+      if (!sameRoute(targetRef.current, next)) go(next);
+    };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
   // Update the view immediately (no waiting on the async hashchange event), then mirror to the URL.
+  const routeRef = useRef(route);
+  // The route we are heading to (a folder morph waits for its code before it lands).
+  const targetRef = useRef(route);
+
+  // Opening / closing a folder morphs the main window into the folder window (and back)
+  // instead of popping an overlay on top. The folder code is loaded first so the morph
+  // lands on real content.
+  const go = (next: Route) => {
+    targetRef.current = next;
+    const prev = routeRef.current;
+    const folderChange = prev.interest !== next.interest && (prev.interest !== null || next.interest !== null);
+    const apply = () => {
+      if (targetRef.current !== next) return; // a newer navigation won
+      routeRef.current = next;
+      flushSync(() => setRoute(next));
+    };
+    if (!folderChange) {
+      apply();
+      return;
+    }
+    const opening = next.interest;
+    void (opening ? loadInterestView(opening) : Promise.resolve()).then(() => morph(apply, opening ? 'open' : 'close'));
+  };
+
   const navigate = (next: Route) => {
-    setRoute((prev) => (sameRoute(prev, next) ? prev : next));
+    if (sameRoute(targetRef.current, next)) return;
+    go(next);
     setHash(next);
   };
 
   // Already on this tab: do nothing (no state change, no hash write, no sound).
   const selectTab = (id: TabId) => {
-    if (id === activeId) return;
+    if (id === targetRef.current.tab && !targetRef.current.interest) return;
     navigate({ tab: id, interest: null });
   };
 
   const openInterest = (id: InterestId | null) => navigate({ tab: 'interests', interest: id });
+
+  // Tab switch: the new panel glides in from the side the tab sits on, its blocks staggered.
+  const panelRefs = useRef<Partial<Record<TabId, HTMLDivElement | null>>>({});
+  const lastTab = useRef(activeId);
+  useEffect(() => {
+    const prev = lastTab.current;
+    lastTab.current = activeId;
+    if (prev === activeId) return;
+    const order = enabledTabs.map((tab) => tab.id);
+    const direction = Math.sign(order.indexOf(activeId) - order.indexOf(prev)) || 1;
+    const panel = panelRefs.current[activeId];
+    if (panel) animatePanelIn(panel, direction);
+  }, [activeId]);
 
   // Warm the heavy folder views once the first paint is done, so opening them is instant.
   useEffect(() => preloadInterestViews(), []);
@@ -81,6 +121,8 @@ export default function App() {
 
   const scale = useStageScale();
   const staged = scale !== null;
+  // While a folder is open it *is* the window: the main window is hidden, not left behind it.
+  const folderOpen = route.tab === 'interests' && route.interest !== null;
 
   return (
     <div className="relative h-dvh overflow-hidden bg-lavender">
@@ -99,6 +141,7 @@ export default function App() {
               : 'mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col pb-2 pr-2 max-[859px]:max-h-[46rem] max-[768px]:h-auto max-[859px]:pb-20'
           }
           style={staged ? { zoom: scale } : undefined}
+          data-folder-open={folderOpen}
         >
           <div className="flex items-end justify-between gap-2">
             <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={selectTab} />
@@ -106,8 +149,8 @@ export default function App() {
           </div>
           <section
             data-compact={activeId === 'main'}
+            style={folderOpen ? undefined : ({ viewTransitionName: 'site-window' } as CSSProperties)}
             className={[
-              
               'pixel-frame relative mt-1 flex min-h-0 flex-col bg-cool-white text-wine',
               staged ? 'aspect-[4/3]' : 'win-section min-h-0 flex-1',
             ].join(' ')}
@@ -117,6 +160,9 @@ export default function App() {
             {visiblePanels.map(({ id, render }) => (
               <div
                 key={id}
+                ref={(el) => {
+                  panelRefs.current[id] = el;
+                }}
                 role="tabpanel"
                 hidden={id !== activeId}
                 className="pixel-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-5 max-sm:p-4 sm:p-8"

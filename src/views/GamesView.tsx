@@ -536,6 +536,7 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
 
   return (
     <RetroOverlay
+      ready={library !== null}
       label="Game library"
       meta={library ? `${all.length} games${synced}` : undefined}
       onClose={onClose}
