@@ -1347,6 +1347,9 @@ html.theme-soft .bg-wine { background-color: #3f353d; }
 html.theme-soft .bg-rose { background-color: #553746; }
 html.theme-soft .border-wine { border-color: #3f353d; }
 html.theme-soft .border-rose { border-color: #634657; }
+/* Translucent rose fills (Main status chips, Specs stat strip) get a quiet plum tint in the soft dark theme. */
+html.theme-soft .bg-rose\/20 { background-color: #231b22; }
+html.theme-soft .bg-rose\/25 { background-color: #2a1f27; }
 html.theme-soft [class~="hover:text-wine"]:hover,
 html.theme-soft [class~="focus-visible:text-wine"]:focus-visible,
 html.theme-soft .group:hover [class~="group-hover:text-wine"] {
