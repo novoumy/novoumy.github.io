@@ -310,7 +310,7 @@ export default function MainView() {
   };
 
   return (
-    <div className="-mx-8 -mb-7 flex h-[calc(100%+1.75rem)] min-h-0 min-w-0 flex-col max-sm:-mx-4 max-sm:-mb-3 max-sm:h-[calc(100%+0.75rem)]">
+    <div className="-mx-8 -mb-8 flex h-[calc(100%+2rem)] min-h-0 min-w-0 flex-col max-sm:-mx-4 max-sm:-mb-4 max-sm:h-[calc(100%+1rem)]">
       {/* Profile: untouched content, with extra room underneath. */}
       <div className="px-8 pb-12 pt-8 max-sm:px-4 max-sm:pb-9 max-sm:pt-4">
         <div className="grid grid-cols-[auto_1fr] items-start gap-x-5 gap-y-2 max-[768px]:gap-x-[3cqw] max-[768px]:gap-y-[0.8cqw]">

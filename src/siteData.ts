@@ -45,7 +45,7 @@ export type SocialIconName =
   | 'snapchat'
   | 'roblox';
 
-export type MediaCategory = 'Movie' | 'Anime' | 'Show' | 'Cartoon';
+export type MediaCategory = 'Movie' | 'Anime' | 'Show' | 'Cartoon' | 'Animation';
 
 export interface TabConfig {
   id: TabId;
@@ -197,6 +197,7 @@ export const mediaFilters: { label: string; value: 'all' | MediaCategory }[] = [
   { label: 'Anime', value: 'Anime' },
   { label: 'Shows', value: 'Show' },
   { label: 'Cartoons', value: 'Cartoon' },
+  { label: 'Animation', value: 'Animation' },
 ];
 
 export const media: MediaItem[] = [
@@ -209,7 +210,7 @@ export const media: MediaItem[] = [
   },
   {
     title: 'Adventure Time: Fionna and Cake',
-    category: 'Cartoon',
+    category: 'Animation',
     year: 2023,
     poster: 'https://m.media-amazon.com/images/M/MV5BMzE2MTA5YjQtMzU5Ni00MWY5LWJiMTktOWRjZjZkMDVjYjlkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt15248880/',
@@ -244,7 +245,7 @@ export const media: MediaItem[] = [
   },
   {
     title: 'Arcane',
-    category: 'Cartoon',
+    category: 'Animation',
     year: 2021,
     poster: 'https://m.media-amazon.com/images/M/MV5BYjA2NzhlMDItNWRmZC00MzRjLWE3ZjAtZjBlZDAwOWY2ODdjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt11126994/',
@@ -312,6 +313,13 @@ export const media: MediaItem[] = [
     year: 1950,
     poster: 'https://m.media-amazon.com/images/M/MV5BZWY3ZTM4YTUtZjg1OC00NjM2LTllMTItZjA4MGU0MzcwNjhkXkEyXkFqcGc@._V1_QL75_UY562_CR3,0,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt0042332/',
+  },
+  {
+    title: 'Clarence',
+    category: 'Cartoon',
+    year: 2014,
+    poster: 'https://image.tmdb.org/t/p/w500/pYsDGh5ud5R5X4myDgUVj5lLvi0.jpg',
+    link: 'https://www.imdb.com/title/tt3061050/',
   },
   {
     title: 'Craig of the Creek',
@@ -399,6 +407,13 @@ export const media: MediaItem[] = [
     year: 1990,
     poster: 'https://m.media-amazon.com/images/M/MV5BNzNmNmQ2ZDEtMTc1MS00NjNiLThlMGUtZmQxNTg1Nzg5NWMzXkEyXkFqcGc@._V1_QL75_UX380_CR0,1,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt0099785/',
+  },
+  {
+    title: 'Home Alone 2: Lost in New York',
+    category: 'Movie',
+    year: 1992,
+    poster: 'https://image.tmdb.org/t/p/w500/e6mLyTaQCcB4lHa6iJmahT4f2wo.jpg',
+    link: 'https://www.imdb.com/title/tt0104431/',
   },
   {
     title: 'Horimiya',
@@ -566,7 +581,7 @@ export const media: MediaItem[] = [
   },
   {
     title: 'Over the Garden Wall',
-    category: 'Cartoon',
+    category: 'Animation',
     year: 2014,
     poster: 'https://m.media-amazon.com/images/M/MV5BOTA2MTdhZmItODM3NS00ZmFlLWE4YWYtOWYxODBmNGU5YjRjXkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt3718778/',
@@ -714,7 +729,7 @@ export const media: MediaItem[] = [
   },
   {
     title: 'The Legend of Korra',
-    category: 'Cartoon',
+    category: 'Animation',
     year: 2012,
     poster: 'https://m.media-amazon.com/images/M/MV5BMWIyMDNmMGMtZTRjZi00ZWJkLWE2ZjAtMjYwOGFiZGVkZmYzXkEyXkFqcGc@._V1_QL75_UY562_CR1,0,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt1695360/',
@@ -746,6 +761,13 @@ export const media: MediaItem[] = [
     year: 2019,
     poster: 'https://m.media-amazon.com/images/M/MV5BYjUyZjNmYmMtNjA1My00ZWMyLTliZGQtODgzZjIxM2Y4NGI1XkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt8228288/',
+  },
+  {
+    title: 'The Platform 2',
+    category: 'Movie',
+    year: 2024,
+    poster: 'https://image.tmdb.org/t/p/w500/iv9CyaiOdvgZduYYkPlC8pJln7v.jpg',
+    link: 'https://www.imdb.com/title/tt27729779/',
   },
   {
     title: 'The Powerpuff Girls',
@@ -802,6 +824,13 @@ export const media: MediaItem[] = [
     year: 2010,
     poster: 'https://m.media-amazon.com/images/M/MV5BY2FiZjg3YzgtNDk4Ny00MjAyLWI2ODctNzdhZmRmYTg5N2ZlXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt3042608/',
+  },
+  {
+    title: 'Up',
+    category: 'Animation',
+    year: 2009,
+    poster: 'https://cdn.posteritati.com/posters/000/000/062/520/up-md-web.jpg',
+    link: 'https://www.imdb.com/title/tt1049413/',
   },
   {
     title: 'WALL-E',
