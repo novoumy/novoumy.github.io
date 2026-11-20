@@ -42,8 +42,9 @@ const iconFor = (label: string): LucideIcon => {
 
 const pad2 = (n: number) => String(n).padStart(2, '0');
 
-export default function SpecsView() {
+export default function SpecsView({ frequency = 10 }: { frequency?: number }) {
   const [rig, ...rest] = specsSummary;
+  const rigValue = ({ 6: 'DEEP_SEA', 8: 'MIDNIGHT_LOFI', 10: 'TINTED_LILAC', 12: 'SOLAR_GOLD', 14: 'OVERCLOCKED' } as Record<number, string>)[frequency] ?? 'TINTED_LILAC';
   const totalParts = specGroups.reduce((sum, group) => sum + group.parts.length, 0);
   let cardIndex = 0;
 
@@ -61,7 +62,7 @@ export default function SpecsView() {
             <div className="min-w-0">
               <p className="font-pixel text-[8px] uppercase leading-none text-lavender">{rig.label}</p>
               <p className="mt-3 break-words font-pixel text-[15px] uppercase leading-[1.25] sm:text-[19px] [overflow-wrap:anywhere]">
-                {rig.value}
+                {rig.label === 'RIG_ID' ? rigValue : rig.value}
               </p>
               <span aria-hidden="true" className="mt-4 block h-1 w-16 bg-rose" />
             </div>
