@@ -1,5 +1,4 @@
 import { manualGames, type ManualGame } from '@/siteData';
-import { minecraftIconSources } from '@/data/minecraftIcons';
 
 // ---- shape of public/data/steam-games.json (written by scripts/sync-steam.mjs) ----------
 export interface SteamAchievementRaw {
@@ -36,8 +35,6 @@ interface SteamFile {
 export interface Achievement extends SteamAchievementRaw {
   iconUrl: string;
   iconGrayUrl: string;
-  iconSources?: string[]; // fallback chain, used when there is no single icon URL (Minecraft)
-  pixelIcon?: boolean; // render with crisp pixel scaling
 }
 
 export interface LibraryGame {
@@ -89,20 +86,6 @@ const EXTRA_COVERS: Record<number, string[]> = {
   ],
 };
 
-// Real portrait posters, tried BEFORE Steam's wide header (which looks stretched on a card).
-const POSTER_FIRST: Record<number, string[]> = {
-  3527290: [
-    'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900_2x.jpg',
-    'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900.jpg',
-    'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900_2x.jpg',
-    'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900.jpg',
-    'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/3527290/library_600x900_2x.jpg',
-    'https://cdn.cloudflare.steamstatic.com/steam/apps/3527290/library_600x900_2x.jpg',
-    'https://cdn.cloudflare.steamstatic.com/steam/apps/3527290/library_600x900.jpg',
-    'https://steamcdn-a.akamaihd.net/steam/apps/3527290/library_600x900_2x.jpg',
-  ],
-};
-
 function uniqueUrls(urls: Array<string | undefined | null>) {
   const out: string[] = [];
   const seen = new Set<string>();
@@ -129,7 +112,7 @@ function fromSteam(game: SteamGameRaw): LibraryGame {
     title: game.name,
     appid: game.appid,
     manual: false,
-    covers: uniqueUrls([...(POSTER_FIRST[game.appid] ?? []), game.images.capsule, game.images.header, ...extra, ...generated]),
+    covers: uniqueUrls([game.images.capsule, game.images.header, ...extra, ...generated]),
     heroes: uniqueUrls([game.images.hero, game.images.header, ...extra, ...generated]),
     playtimeHours: hours,
     playtimeLabel: formatHours(hours),
@@ -160,11 +143,8 @@ function fromManual(game: ManualGame): LibraryGame {
         list: list.map((item) => {
           const icon = item.icon ?? '';
           const iconGray = item.iconGray ?? icon;
-          const iconSources = icon ? undefined : minecraftIconSources(item.id);
           return {
             ...item,
-            iconSources,
-            pixelIcon: !!iconSources?.length,
             unlockTime: item.unlockTime ?? 0,
             icon,
             iconGray,

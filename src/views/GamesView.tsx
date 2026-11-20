@@ -167,10 +167,10 @@ function AchievementItem({ item }: { item: Achievement }) {
       ].join(' ')}
     >
       <Art
-        sources={item.iconSources?.length ? item.iconSources : [item.unlocked ? item.iconUrl : item.iconGrayUrl || item.iconUrl].filter(Boolean)}
+        sources={[item.unlocked ? item.iconUrl : item.iconGrayUrl || item.iconUrl].filter(Boolean)}
         alt=""
         title="?"
-        className={`h-14 w-14 shrink-0 border-2 ${item.pixelIcon ? 'bg-r-bg object-contain p-1.5 [image-rendering:pixelated]' : 'object-cover'} ${item.unlocked ? 'border-wine' : 'border-rose opacity-50 grayscale'}`}
+        className={`h-14 w-14 shrink-0 border-2 object-cover ${item.unlocked ? 'border-wine' : 'border-rose opacity-50 grayscale'}`}
       />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <h4 className={`break-words font-pixel text-[9px] leading-[1.5] ${item.unlocked ? 'text-r-text' : 'text-r-dim'}`}>
