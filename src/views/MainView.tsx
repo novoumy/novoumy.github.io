@@ -342,20 +342,18 @@ export default function MainView({
 
   return (
     <div className="-mx-8 -mb-8 flex h-[calc(100%+2rem)] min-h-0 min-w-0 flex-col max-sm:-mx-4 max-sm:-mb-4 max-sm:h-[calc(100%+1rem)]">
-      {/* Profile: same content, now vertically centred against the avatar, plus the status chips
-          that already lived in siteData (hero.badges) but were never shown. */}
-      <div className="px-8 pb-10 pt-7 max-sm:px-4 max-sm:pb-8 max-sm:pt-4">
-        <div className="grid grid-cols-[auto_1fr] items-center gap-x-5 max-[768px]:flex max-[768px]:flex-col max-[768px]:items-stretch max-[768px]:gap-3">
+      {/* Profile: untouched content, with extra room underneath. */}
+      <div className="px-8 pb-12 pt-8 max-sm:px-4 max-sm:pb-9 max-sm:pt-4">
+        <div className="grid grid-cols-[auto_1fr] items-start gap-x-5 gap-y-2 max-[768px]:flex max-[768px]:flex-col max-[768px]:items-stretch max-[768px]:gap-3">
           <img
             src={hero.avatar}
             alt={hero.avatarAlt}
-            className="pixel-frame aspect-square w-28 shrink-0 object-cover max-[768px]:w-20 max-[768px]:self-center"
+            className="pixel-frame row-span-2 aspect-square w-28 shrink-0 object-cover max-[768px]:w-20 max-[768px]:self-center"
           />
-          <div className="flex min-w-0 flex-col gap-2 max-[768px]:items-center max-[768px]:text-center">
-            <h1 className="min-w-0 break-words text-2xl tracking-wide max-[768px]:w-full max-[768px]:text-[clamp(14px,4vw,18px)]">
-              {hero.name}
-            </h1>
-            <span aria-hidden="true" className="block h-1 w-12 bg-rose" />
+          <h1 className="min-w-0 break-words text-2xl tracking-wide max-[768px]:w-full max-[768px]:text-center max-[768px]:text-[clamp(14px,4vw,18px)]">
+            {hero.name}
+          </h1>
+          <div className="col-start-2 flex min-w-0 flex-col gap-1 max-[768px]:w-full max-[768px]:items-center max-[768px]:text-center">
             {prose.map((paragraph) => (
               <p
                 key={paragraph}
@@ -364,17 +362,6 @@ export default function MainView({
                 {paragraph}
               </p>
             ))}
-            <ul className="mt-1 flex flex-wrap gap-x-2 gap-y-2 max-[768px]:justify-center">
-              {hero.badges.map((badge) => (
-                <li
-                  key={badge.label}
-                  className="flex items-center gap-2 border-2 border-rose bg-rose/25 px-2 py-1 leading-none"
-                >
-                  <span className="font-pixel text-[7px] uppercase leading-none text-lavender">{badge.label}</span>
-                  <span className="pt-[3px] text-[18px] leading-none">{badge.value}</span>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </div>
@@ -385,12 +372,12 @@ export default function MainView({
       >
         {/* Divider: the rule spans the card; label and status sit on it.
             The header background splits at the rule so the terminal tint starts exactly on the line. */}
-        <header className="relative z-20 flex h-10 shrink-0 items-center gap-3 bg-gradient-to-b from-cool-white from-50% to-[color:var(--t-bg)] to-50% px-8 font-pixel uppercase leading-none max-[768px]:px-4">
-          <h2 className="shrink-0 font-pixel text-[9px] font-normal leading-none tracking-[0.14em] text-wine max-[768px]:text-[8px]">
+        <header className="relative z-20 flex h-7 shrink-0 items-center gap-3 bg-gradient-to-b from-cool-white from-50% to-[color:var(--t-bg)] to-50% px-8 font-pixel uppercase leading-none max-[768px]:px-4">
+          <h2 className="shrink-0 font-pixel text-[9px] font-normal tracking-[0.14em] text-wine max-[768px]:text-[8px]">
             novoumy_terminal
           </h2>
           <span aria-hidden="true" className="h-[2px] min-w-4 flex-1 bg-rose" />
-          <span className="flex shrink-0 items-center gap-2 text-[8px] leading-none tracking-[0.14em] text-lavender max-[768px]:text-[7px]">
+          <span className="flex shrink-0 items-center gap-2 text-[8px] tracking-[0.14em] text-lavender max-[768px]:text-[7px]">
             <span className="block h-1.5 w-1.5 animate-pulse bg-rose" aria-hidden="true" />
             online
           </span>
@@ -401,7 +388,7 @@ export default function MainView({
           ref={outRef}
           role="log"
           onClick={() => inputRef.current?.focus()}
-          className="term-out term-scroll relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-8 pb-4 pt-4 max-[768px]:px-4 max-[768px]:pb-2 max-[768px]:pt-3"
+          className="term-out term-scroll relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-8 pb-4 pt-6 max-[768px]:px-4 max-[768px]:pb-2 max-[768px]:pt-5"
         >
           <div className="relative z-0 flex min-h-full flex-col justify-end gap-1">
             {lines.map((line) => {
