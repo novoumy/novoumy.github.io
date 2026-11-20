@@ -292,9 +292,9 @@
     var(--cool-white) 0 4px,
     var(--rose) 4px 8px);
 }
-/* Explicitly keep the selected MAIN tab white, independent of theme overrides. */
-[role='tab'][aria-selected='true'][aria-label='MAIN'] {
-  background-color: #fff !important;
+/* Selected MAIN tab: match the site's pink header instead of white. */
+[role='tab'][aria-selected='true'][aria-label='Main'] {
+  background-color: #DBB9B8 !important;
 }
 @media (max-width: 768px) {
   .main-playground > .kinetic-words { padding-inline: 12px !important; }
