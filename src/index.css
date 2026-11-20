@@ -1340,25 +1340,31 @@ html.theme-soft .pixel-tile-interactive:active {
   transform: translateY(0);
 }
 
-/* Recessed icon wells are enabled only in /theme; preserve the artwork's two-tone pixels. */
+/* Recessed icon wells: integrated mauve tiles with a deliberate three-tone pixel hierarchy. */
 .pixel-icon-well { display: contents; }
 html.theme-soft .pixel-icon-well {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
-  background: #120f13;
-  border: 2px solid #514653;
-  box-shadow: inset 2px 2px 0 rgb(255 255 255 / 0.025), inset -2px -2px 0 #0a080b;
+  background: #3b3038;
+  border: 2px solid #554650;
+  box-shadow: inset 1px 1px 0 rgb(244 238 219 / 0.035), inset -2px -2px 0 #241c22;
   border-radius: 0;
-  /* PixelIcon uses --wine for its main pixels and --rose / --r-accent for highlights. */
-  --wine: #d8c9df;
-  --rose: #cb9fb9;
-  --r-accent: #a99acb;
+  transition: background-color 150ms steps(2), border-color 150ms steps(2), box-shadow 150ms steps(2);
+  /* PixelIcon paints these as shadow, body and sparse top-edge highlight pixels. */
+  --pixel-icon-shadow: #241c22;
+  --pixel-icon-base: #b89fa8;
+  --pixel-icon-highlight: #f4eedb;
+  /* Keep legacy accent tokens available to any non-PixelIcon glyphs in this well. */
+  --wine: #b89fa8;
+  --rose: #c9aab6;
+  --r-accent: #c9aab6;
 }
 html.theme-soft .pixel-icon-well svg {
   display: block;
-  color: #eadfe9;
-  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.35));
+  color: #b89fa8;
+  filter: none;
+  overflow: visible;
   shape-rendering: crispEdges;
 }
 html.theme-soft .pixel-icon-well-folder {
@@ -1375,6 +1381,15 @@ html.theme-soft .pixel-icon-well-email {
   width: 3.25rem;
   height: 3.25rem;
   padding: 0.4rem;
+}
+html.theme-soft .pixel-tile-interactive:hover .pixel-icon-well,
+html.theme-soft .pixel-tile-interactive:focus-visible .pixel-icon-well,
+html.theme-soft .group:hover .pixel-icon-well,
+html.theme-soft .group:focus-visible .pixel-icon-well {
+  background: #443640;
+  border-color: #806276;
+  box-shadow: inset 1px 1px 0 rgb(244 238 219 / 0.055), inset -2px -2px 0 #241c22;
+  --pixel-icon-highlight: #fff2df;
 }
 
 /* Main navigation: restrained surface fill and a subtle lavender active-state glow. */
@@ -1683,3 +1698,16 @@ html.theme-soft .pixel-tile-interactive:focus-visible {
 html.theme-soft [role='tab'][aria-selected='true'] {
   box-shadow: 0 0 0 1px rgb(157 117 178 / 0.38), 0 0 12px rgb(157 117 178 / 0.18);
 }
+
+/* Dark-mode card hover: gentle lift, muted edge, and a small icon highlight increase. */
+html.theme-soft .pixel-tile-interactive:hover,
+html.theme-soft .pixel-tile-interactive:focus-visible,
+html.theme-soft .retro-theme .r-box-hover:hover,
+html.theme-soft .retro-theme .r-box-hover:focus-visible,
+html.theme-soft .retro-dark .r-box-hover:hover,
+html.theme-soft .retro-dark .r-box-hover:focus-visible {
+  border-color: #8f6e83 !important;
+  box-shadow: 0 0 0 1px rgb(199 128 157 / 0.16), 0 5px 12px rgb(0 0 0 / 0.18);
+  transform: translateY(-2px);
+}
+
