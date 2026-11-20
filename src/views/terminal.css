@@ -258,3 +258,44 @@
   .main-info-tile strong { font-size: 8px; }
   .main-info-tile small { font-size: 14px; }
 }
+
+/* Final main-card refinements: 12px inset text and a pixel-weave transition. */
+.main-playground > .kinetic-words {
+  padding-inline: 12px !important;
+  position: relative;
+  overflow: visible;
+  box-sizing: border-box;
+}
+.main-playground > .kinetic-words.kinetic-top {
+  margin-bottom: 8px;
+}
+.main-playground > .kinetic-words.kinetic-top::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -8px;
+  height: 8px;
+  pointer-events: none;
+  background: repeating-linear-gradient(135deg,
+    var(--rose) 0 4px,
+    var(--cool-white) 4px 8px);
+}
+.main-playground > .kinetic-words.kinetic-bottom {
+  margin-top: 8px;
+}
+.main-playground > .kinetic-words.kinetic-bottom::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: -8px;
+  height: 8px;
+  pointer-events: none;
+  background: repeating-linear-gradient(135deg,
+    var(--cool-white) 0 4px,
+    var(--rose) 4px 8px);
+}
+/* Explicitly keep the selected MAIN tab white, independent of theme overrides. */
+[role='tab'][aria-selected='true'][aria-label='MAIN'] {
+  background-color: #fff !important;
+}
+@media (max-width: 768px) {
+  .main-playground > .kinetic-words { padding-inline: 12px !important; }
+}
