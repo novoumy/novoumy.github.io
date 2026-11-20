@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import PixelBackdrop from '@/components/PixelBackdrop';
-import RadioStaticOverlay from '@/components/RadioStaticOverlay';
-import { playSfx } from '@/audio/sfx';
 import PixelTabBar from '@/components/PixelTabBar';
 import SoundToggle from '@/components/SoundToggle';
 import MainView from '@/views/MainView';
@@ -17,6 +15,20 @@ import { folderMorph } from '@/lib/morph';
 import { animatePanelIn } from '@/lib/motion';
 
 const sameRoute = (a: Route, b: Route) => a.tab === b.tab && a.interest === b.interest;
+type VisualMode = 'light' | 'invert' | 'theme';
+
+function getInitialVisualMode(): VisualMode {
+  try {
+    const saved = typeof window !== 'undefined' ? window.localStorage.getItem('novoumy-theme') : null;
+    // Older releases stored the original inverted palette as 'dark'.
+    if (saved === 'dark' || saved === 'invert') return 'invert';
+    if (saved === 'theme') return 'theme';
+  } catch {
+    // Use the default light palette when storage is unavailable.
+  }
+  return 'light';
+}
+
 const enabledTabs = tabs.filter((tab) => tab.enabled);
 
 type Panel = {
@@ -33,51 +45,35 @@ function setHash(route: Route) {
 export default function App() {
   const [route, setRoute] = useState<Route>(parseHash);
   const activeId = route.tab;
-  const [frequency, setFrequency] = useState(() => {
-    try { const saved = Number(window.localStorage.getItem('radio-frequency')); return [6, 8, 10, 12, 14].includes(saved) ? saved : 10; }
-    catch { return 10; }
-  });
-  const [radioStage, setRadioStage] = useState<'idle' | 'surge' | 'shift' | 'reveal'>('idle');
-  const pendingFrequency = useRef(frequency);
-  const radioTimers = useRef<number[]>([]);
+  const [crt, setCrt] = useState(false);
+  const [visualMode, setVisualMode] = useState<VisualMode>(getInitialVisualMode);
 
-  // Radio frequency is the sole theme controller. Persist and broadcast its wavelength.
+  // Apply the selected palette to <html> so every tab and portal-rendered folder shares it.
   useLayoutEffect(() => {
     const root = document.documentElement;
-    root.dataset.wavelength = String(frequency);
-    try { window.localStorage.setItem('radio-frequency', String(frequency)); } catch { /* session state still works */ }
-    const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-    if (themeColor) themeColor.content = ({ 6: '#051324', 8: '#0d0618', 10: '#837a94', 12: '#9e472a', 14: '#050505' } as Record<number, string>)[frequency] ?? '#837a94';
-  }, [frequency]);
+    root.classList.toggle('theme-dark', visualMode === 'invert');
+    root.classList.toggle('theme-soft', visualMode === 'theme');
+    root.style.colorScheme = visualMode === 'light' ? 'light' : 'dark';
+    try {
+      window.localStorage.setItem('novoumy-theme', visualMode);
+    } catch {
+      // Theme still works for this session when storage is unavailable.
+    }
+  }, [visualMode]);
 
-  const tune = useCallback((next: number) => {
-    const lockedFrequency = [6, 8, 10, 12, 14].includes(next) ? next : 10;
-    if (lockedFrequency === pendingFrequency.current) return;
-    pendingFrequency.current = lockedFrequency;
-    radioTimers.current.forEach((timer) => window.clearTimeout(timer));
-    radioTimers.current = [];
-    setRadioStage('surge');
-    document.documentElement.dataset.radioTransition = 'surge';
-    playSfx('static');
-    radioTimers.current.push(window.setTimeout(() => {
-      setFrequency(pendingFrequency.current);
-      setRadioStage('shift');
-      document.documentElement.dataset.radioTransition = 'shift';
-    }, 250));
-    radioTimers.current.push(window.setTimeout(() => {
-      setRadioStage('reveal');
-      document.documentElement.dataset.radioTransition = 'reveal';
-    }, 400));
-    radioTimers.current.push(window.setTimeout(() => {
-      setRadioStage('idle');
-      delete document.documentElement.dataset.radioTransition;
-    }, 750));
-  }, []);
+  // /theme toggles the softer palette; using it while inverted switches directly to it.
+  const toggleTheme = () => {
+    const next = visualMode === 'theme' ? 'light' : 'theme';
+    setVisualMode(next);
+    return next === 'theme';
+  };
 
-  useEffect(() => () => {
-    radioTimers.current.forEach((timer) => window.clearTimeout(timer));
-    delete document.documentElement.dataset.radioTransition;
-  }, []);
+  // /invert preserves the original high-contrast inverted palette as a separate option.
+  const toggleInvert = () => {
+    const next = visualMode === 'invert' ? 'light' : 'invert';
+    setVisualMode(next);
+    return next === 'invert';
+  };
 
   // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
   useEffect(() => {
@@ -150,14 +146,18 @@ export default function App() {
     document.title = site.title;
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle('crt-on', crt);
+  }, [crt]);
+
   const panels: Panel[] = [
-    { id: 'main', render: () => <MainView frequency={frequency} onTune={tune} /> },
+    { id: 'main', render: () => <MainView onToggleTheme={toggleTheme} onToggleInvert={toggleInvert} /> },
     { id: 'socials', render: () => <SocialsView /> },
     {
       id: 'interests',
       render: (r, open) => <InterestsView openId={r.tab === 'interests' ? r.interest : null} onOpen={open} />,
     },
-    { id: 'specs', render: () => <SpecsView frequency={frequency} /> },
+    { id: 'specs', render: () => <SpecsView /> },
   ];
   const visiblePanels = panels.filter((panel) => enabledTabs.some((tab) => tab.id === panel.id));
 
@@ -167,8 +167,8 @@ export default function App() {
   const folderOpen = route.tab === 'interests' && route.interest !== null;
 
   return (
-    <div className="site-shell relative h-dvh overflow-hidden bg-lavender" data-radio-stage={radioStage}>
-      <PixelBackdrop frequency={frequency} />
+    <div className="relative h-dvh overflow-hidden bg-lavender">
+      <PixelBackdrop />
       <main
         className={[
           'relative z-10 flex h-full',
@@ -187,7 +187,6 @@ export default function App() {
           style={staged ? { zoom: scale } : undefined}
           data-folder-open={folderOpen}
           data-crt-stage
-          data-radio-frequency={frequency}
         >
           <div className="relative z-30 flex w-full min-w-0 items-end justify-between gap-2 overflow-visible">
             <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={selectTab} />
@@ -227,8 +226,8 @@ export default function App() {
             ))}
           </section>
         </div>
+        {crt && <div className="crt-overlay" aria-hidden="true" />}
       </main>
-      <RadioStaticOverlay active={radioStage !== 'idle'} />
     </div>
   );
 }

@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
-import { playSfx } from '@/audio/sfx';
 import { animatePanelIn } from '@/lib/motion';
 import PixelBackdrop from '@/components/PixelBackdrop';
-import RadioStaticOverlay from '@/components/RadioStaticOverlay';
 import PixelTabBar from '@/components/PixelTabBar';
 import SoundToggle from '@/components/SoundToggle';
 import MainView from '@/views/MainView';
@@ -25,6 +23,20 @@ type Panel = {
   render: (route: Route, openInterest: (id: InterestId | null) => void) => ReactNode;
 };
 
+const ALL_PANELS: Panel[] = [
+  { id: 'main', render: () => <MainView /> },
+  { id: 'socials', render: () => <SocialsView /> },
+  {
+    id: 'interests',
+    render: (route, openInterest) => (
+      <InterestsView openId={route.tab === 'interests' ? route.interest : null} onOpen={openInterest} />
+    ),
+  },
+  { id: 'specs', render: () => <SpecsView /> },
+];
+
+const PANELS = ALL_PANELS.filter((panel) => enabledTabs.some((tab) => tab.id === panel.id));
+
 // The URL hash is the single source of truth for which tab / folder is open.
 function setHash(route: Route) {
   const next = hashFor(route);
@@ -34,55 +46,6 @@ function setHash(route: Route) {
 export default function App() {
   const [route, setRoute] = useState<Route>(parseHash);
   const activeId = route.tab;
-  const [frequency, setFrequency] = useState(() => {
-    try {
-      const saved = Number(window.localStorage.getItem('radio-frequency'));
-      return [6, 8, 10, 12, 14].includes(saved) ? saved : 10;
-    } catch {
-      return 10;
-    }
-  });
-  const [radioStage, setRadioStage] = useState<'idle' | 'surge' | 'shift' | 'reveal'>('idle');
-  const pendingFrequency = useRef(frequency);
-  const radioTimers = useRef<number[]>([]);
-
-  useLayoutEffect(() => {
-    const root = document.documentElement;
-    root.dataset.wavelength = String(frequency);
-    try { window.localStorage.setItem('radio-frequency', String(frequency)); } catch { /* storage may be unavailable */ }
-    const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-    if (themeColor) themeColor.content = ({ 6: '#051324', 8: '#0d0618', 10: '#837a94', 12: '#9e472a', 14: '#050505' } as Record<number, string>)[frequency] ?? '#837a94';
-  }, [frequency]);
-
-  const tune = useCallback((next: number) => {
-    const lockedFrequency = [6, 8, 10, 12, 14].includes(next) ? next : 10;
-    if (lockedFrequency === pendingFrequency.current) return;
-    pendingFrequency.current = lockedFrequency;
-    radioTimers.current.forEach((timer) => window.clearTimeout(timer));
-    radioTimers.current = [];
-    setRadioStage('surge');
-    document.documentElement.dataset.radioTransition = 'surge';
-    playSfx('static');
-
-    radioTimers.current.push(window.setTimeout(() => {
-      setFrequency(pendingFrequency.current);
-      setRadioStage('shift');
-      document.documentElement.dataset.radioTransition = 'shift';
-    }, 250));
-    radioTimers.current.push(window.setTimeout(() => {
-      setRadioStage('reveal');
-      document.documentElement.dataset.radioTransition = 'reveal';
-    }, 400));
-    radioTimers.current.push(window.setTimeout(() => {
-      setRadioStage('idle');
-      delete document.documentElement.dataset.radioTransition;
-    }, 750));
-  }, []);
-
-  useEffect(() => () => {
-    radioTimers.current.forEach((timer) => window.clearTimeout(timer));
-    delete document.documentElement.dataset.radioTransition;
-  }, []);
 
   // Track the route synchronously so browser back/forward and clicks share one transition path.
   const routeRef = useRef(route);
@@ -126,14 +89,6 @@ export default function App() {
 
   const navigate = (next: Route) => transitionTo(next, true);
 
-  const panels: Panel[] = [
-    { id: 'main', render: () => <MainView frequency={frequency} onTune={tune} /> },
-    { id: 'socials', render: () => <SocialsView /> },
-    { id: 'interests', render: (currentRoute, openInterest) => <InterestsView openId={currentRoute.tab === 'interests' ? currentRoute.interest : null} onOpen={openInterest} /> },
-    { id: 'specs', render: () => <SpecsView frequency={frequency} /> },
-  ];
-  const visiblePanels = panels.filter((panel) => enabledTabs.some((tab) => tab.id === panel.id));
-
   // Already on this tab: do nothing (no state change, no hash write, no sound).
   const selectTab = (id: TabId) => {
     if (id === activeId) return;
@@ -153,7 +108,7 @@ export default function App() {
   const panelRefs = useRef<Partial<Record<TabId, HTMLDivElement | null>>>({});
   const previousTab = useRef<TabId | null>(null);
   useEffect(() => {
-    const order = enabledTabs.map((tab) => tab.id);
+    const order = PANELS.map((panel) => panel.id);
     const from = previousTab.current;
     previousTab.current = activeId;
     const panel = panelRefs.current[activeId];
@@ -166,8 +121,8 @@ export default function App() {
   const staged = scale !== null;
 
   return (
-    <div className="site-shell relative h-dvh overflow-hidden bg-lavender" data-radio-stage={radioStage}>
-      <PixelBackdrop frequency={frequency} />
+    <div className="relative h-dvh overflow-hidden bg-lavender">
+      <PixelBackdrop />
       <main
         className={[
           'relative z-10 flex h-full',
@@ -183,7 +138,6 @@ export default function App() {
           }
           style={staged ? { zoom: scale } : undefined}
           data-crt-stage
-          data-radio-frequency={frequency}
         >
           <div className="flex items-end justify-between gap-2">
             <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={selectTab} />
@@ -200,7 +154,7 @@ export default function App() {
                 no remount, no re-fetch, no fade. Animations live inside the pages. */}
             {/* CRT scan sweep across the window on every tab swap (decorative). */}
             <div key={activeId} aria-hidden="true" className="panel-sweep" />
-            {visiblePanels.map(({ id, render }) => (
+            {PANELS.map(({ id, render }) => (
               <div
                 key={id}
                 ref={(el) => {
@@ -216,7 +170,6 @@ export default function App() {
           </section>
         </div>
       </main>
-      <RadioStaticOverlay active={radioStage !== 'idle'} />
     </div>
   );
 }
