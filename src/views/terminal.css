@@ -334,23 +334,33 @@
   .main-playground > .kinetic-words { padding-inline: 12px !important; }
 }
 
-/* Mobile: status bars wrap instead of overlapping, bio gets a readable size. */
-@media (max-width: 768px) {
-  .main-playground { overflow-y: auto; }
+/* Status bars collapse by the Main window's own width (not the viewport), so the fixed 800px
+   stage and narrow phone layouts follow the same rules:
+   >= 640px  3 items   |  420-639px  2 items (center hidden)  |  < 420px  1 item (end hidden too) */
+.main-playground { container-type: inline-size; container-name: mainwin; }
+.main-playground > .kinetic-words { font-size: 9px; }
+.main-playground > .kinetic-words span { overflow: hidden; text-overflow: clip; }
+
+@container mainwin (max-width: 639px) {
   .main-playground > .kinetic-words {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
-    gap: 0.4rem 0.9rem;
-    min-height: 0;
-    padding-block: 0.6rem;
-    font-size: 7px;
-    line-height: 1.6;
+    gap: 0.75rem;
+    min-height: 2.6rem;
+    font-size: 8px;
   }
   .main-playground > .kinetic-words span { width: auto; flex: 0 1 auto; text-align: left; }
-  .main-playground > .kinetic-words span:last-child { text-align: right; margin-left: auto; }
+  .main-playground > .kinetic-words span:last-child { text-align: right; }
+  .main-playground > .kinetic-words .kw-center { display: none; }
+}
+@container mainwin (max-width: 419px) {
+  .main-playground > .kinetic-words { font-size: 7px; }
+  .main-playground > .kinetic-words .kw-end { display: none; }
+}
+
+@media (max-width: 768px) {
   .main-profile-center { padding: 1rem 0.75rem; gap: 0.75rem; }
   .main-profile-name { font-size: clamp(16px, 5vw, 20px); }
   .main-profile-bio { font-size: clamp(21px, 5.6vw, 25px); line-height: 1.25; }
+  .main-playground { overflow-y: auto; }
 }

@@ -1,6 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { hero } from '@/siteData';
 import './terminal.css';
+
+// ---- Visitor counter -------------------------------------------------------------------------
+// Real, shared total via the free counterapi.dev service. A visit is counted once per browser
+// session (so tab switches / reloads don't inflate it); later reads just fetch the total.
+const COUNTER_URL = 'https://api.counterapi.dev/v1/novoumy-github-io/visits';
+const CACHE_KEY = 'novoumy:visitors';
+let visitsPromise: Promise<number | null> | null = null;
+
+function loadVisitors(): Promise<number | null> {
+  visitsPromise ??= (async () => {
+    let counted = false;
+    try { counted = sessionStorage.getItem('novoumy:counted') === '1'; } catch { /* storage blocked */ }
+    try {
+      const res = await fetch(counted ? COUNTER_URL : `${COUNTER_URL}/up`);
+      if (!res.ok) throw new Error(String(res.status));
+      const count = Number((await res.json()).count);
+      if (!Number.isFinite(count)) throw new Error('bad count');
+      try { sessionStorage.setItem('novoumy:counted', '1'); localStorage.setItem(CACHE_KEY, String(count)); } catch { /* ignore */ }
+      return count;
+    } catch {
+      try { const cached = Number(localStorage.getItem(CACHE_KEY)); return cached > 0 ? cached : null; } catch { return null; }
+    }
+  })();
+  return visitsPromise;
+}
+
+const randomPing = () => 18 + Math.floor(Math.random() * 18); // 18..35
 
 type Weather = { city: string; temp: number; code: number } | null;
 const weatherPlace = { city: 'Frankfurt', lat: 50.11, lon: 8.682 };
@@ -29,12 +56,13 @@ function PixelDivider({ position }: { position: 'top' | 'bottom' }) {
 export default function MainView() {
   const [clock, setClock] = useState('');
   const [weather, setWeather] = useState<Weather>(null);
+  const [visitors, setVisitors] = useState<number | null>(null);
+  const [ping, setPing] = useState(randomPing);
+  const pingTarget = useRef(ping);
   const weatherWord = weather
     ? `${weather.city.toUpperCase()} • ${Number.isFinite(weather.temp) ? `${weather.temp}°C • ${weatherLabel(weather.code).toUpperCase()}` : 'WEATHER UNAVAILABLE'}`
     : 'FRANKFURT • CHECKING WEATHER';
-  const topWords = ['GMT+3 • ' + (clock || '--:--:--'), 'OBSESSED WITH MINECRAFT', 'TINTED_LILAC'];
-  const bottomWords = ['MINECRAFT', 'TINTED_LILAC', weatherWord];
-
+  
   useEffect(() => {
     const update = () => setClock(new Intl.DateTimeFormat('en-GB', {
       timeZone: 'Etc/GMT-3', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
@@ -44,6 +72,21 @@ export default function MainView() {
     return () => window.clearInterval(timer);
   }, []);
 
+
+  // Ping: pick a new target every few seconds and glide to it one ms at a time.
+  useEffect(() => {
+    const retarget = window.setInterval(() => { pingTarget.current = randomPing(); }, 3500);
+    const glide = window.setInterval(() => {
+      setPing((current) => current === pingTarget.current ? current : current + Math.sign(pingTarget.current - current));
+    }, 140);
+    return () => { window.clearInterval(retarget); window.clearInterval(glide); };
+  }, []);
+
+  useEffect(() => {
+    let alive = true;
+    void loadVisitors().then((count) => { if (alive) setVisitors(count); });
+    return () => { alive = false; };
+  }, []);
 
   useEffect(() => {
     const place = weatherPlace;
@@ -59,7 +102,9 @@ export default function MainView() {
   return (
     <div className="main-playground -mx-8 -my-8 flex min-h-0 h-[calc(100%+2rem)] flex-1 flex-col justify-between overflow-hidden p-0 max-sm:-mx-4 max-sm:-my-4 max-sm:h-[calc(100%+1rem)]">
       <div className="kinetic-words kinetic-top" aria-label="Live time and personal metadata">
-        {topWords.map((word) => <span key={word}>{word}</span>)}
+        <span>{'GMT+3 • ' + (clock || '--:--:--')}</span>
+        <span className="kw-center">OBSESSED WITH MINECRAFT</span>
+        <span className="kw-end">PING: {String(ping).padStart(2, '0')}MS</span>
       </div>
 
       <PixelDivider position="top" />
@@ -73,7 +118,9 @@ export default function MainView() {
       <PixelDivider position="bottom" />
 
       <div className="kinetic-words kinetic-bottom" aria-label="Personal metadata">
-        {bottomWords.map((word) => <span key={word}>{word}</span>)}
+        <span>VISITORS: {visitors === null ? '----' : String(visitors).padStart(4, '0')}</span>
+        <span className="kw-center">TINTED_LILAC</span>
+        <span className="kw-end">{weatherWord}</span>
       </div>
     </div>
   );
