@@ -14,23 +14,22 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import PixelBackdrop from "@/components/PixelBackdrop";
 
 function NotFoundComponent() {
-  const goBack = () => {
-    if (window.history.length > 1) window.history.back();
-    else window.location.assign('/#main');
-  };
-
   return (
     <div className="relative grid min-h-dvh place-items-center overflow-hidden bg-lavender px-5 py-8 text-wine">
       <PixelBackdrop />
-      <main className="relative z-10 w-full max-w-xl">
+      <main className="relative z-10 w-full max-w-2xl">
         <section className="pixel-frame bg-cool-white p-2">
-          <div className="flex flex-col items-center border-y-2 border-rose px-5 py-12 text-center sm:py-14">
-            <h1 className="font-pixel text-[clamp(13px,4vw,18px)] leading-[1.8]">
-              404 Not Found
+          <div className="flex min-h-[300px] flex-col items-center justify-center gap-8 border-y-2 border-rose px-5 py-12 text-center sm:min-h-[340px]">
+            <h1 className="font-pixel text-[clamp(52px,13vw,104px)] leading-none [text-shadow:5px_5px_0_var(--rose),10px_10px_0_rgba(107,45,57,.16)]">
+              404
             </h1>
-            <button type="button" onClick={goBack} className="pixel-btn mt-9 min-h-12 border-2 border-wine px-6 py-3 shadow-[4px_4px_0_0_var(--wine)]">
-              Go Back
-            </button>
+            <p className="font-pixel text-[clamp(10px,2.5vw,16px)] tracking-widest">NOT FOUND</p>
+            <a
+              href="https://novomi.com/"
+              className="pixel-btn inline-flex min-h-12 items-center justify-center border-2 border-wine px-6 py-3 shadow-[5px_5px_0_0_var(--rose),8px_8px_0_0_var(--wine)]"
+            >
+              GO BACK
+            </a>
           </div>
         </section>
       </main>

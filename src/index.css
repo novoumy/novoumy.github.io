@@ -874,28 +874,15 @@
 
 
 /* ---------------------------------------------------------------------------------------------
-   Phones only (max-width: 768px): the main window is a compact 4:3 card on #main and grows
-   (from its centre, because the window is vertically centred) into the tall window on the other
-   tabs. Desktop / stage mode never matches this media query.
+   Phones and compact windows: keep the window anchored below the single-row tab / audio bar.
+   The Main terminal remains in the window instead of being pushed below a short 4:3 card.
    --------------------------------------------------------------------------------------------- */
 @media (max-width: 768px) {
   section.win-section {
-    flex: none;
-    container-type: inline-size; /* lets the #main page size itself in cqw */
-    /* tall: viewport minus page padding (3rem) and the tab row + gaps (~3.1rem), capped */
-    height: min(calc(100dvh - 6.2rem), 42.8rem);
-    transition: height 420ms cubic-bezier(0.22, 0.8, 0.2, 1);
-  }
-
-  /* compact: 4:3 of the window's width (viewport - page padding 1.5rem - shadow gutter 0.5rem) */
-  section.win-section[data-compact='true'] {
-    height: min(calc((100vw - 2rem) * 0.75), calc(100dvh - 6.2rem), 42.8rem);
-  }
-}
-
-@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
-  section.win-section {
-    transition: none;
+    flex: 1 1 0%;
+    min-height: 0;
+    height: auto;
+    container-type: inline-size;
   }
 }
 
@@ -1079,22 +1066,12 @@ html[data-crt-transition='true'] .animate-overlay-in > * {
 }
 
 
-/* Mobile navigation and fixed audio-control clearance. */
-@media (max-width: 640px) {
-  /* The two-row tab grid needs one extra row of room above the main window. */
-  section.win-section {
-    height: min(calc(100dvh - 9rem), 42.8rem);
-  }
-
-  section.win-section[data-compact='true'] {
-    height: min(calc((100vw - 2rem) * 0.75), calc(100dvh - 9rem), 42.8rem);
-  }
-}
-
 @media (max-width: 859px) {
-  /* Allow the last row of every scrollable tab to move above the fixed bottom audio toggle. */
-  .mobile-scroll-safe {
-    padding-bottom: calc(7rem + env(safe-area-inset-bottom)) !important;
-    scroll-padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+  .volume-panel {
+    top: calc(100% + 8px);
+    right: 0;
+    bottom: auto;
+    height: 46px;
+    width: min(196px, calc(100vw - 24px));
   }
 }

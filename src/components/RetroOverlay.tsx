@@ -2,6 +2,7 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import PixelIcon from '@/components/PixelIcon';
+import SoundToggle from '@/components/SoundToggle';
 import type { InterestId } from '@/siteData';
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
@@ -101,10 +102,13 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
             </h2>
             {meta && <span className="hidden shrink-0 font-pixel text-[8px] uppercase text-rose sm:inline">// {meta}</span>}
           </div>
-          <button type="button" data-no-sfx onClick={onClose} aria-label={`Close ${label.toLowerCase()}`} className="r-close shrink-0">
-            <X size={13} strokeWidth={3} aria-hidden="true" />
-            <span>Close</span>
-          </button>
+          <div className="relative z-30 flex shrink-0 items-center gap-2">
+            <SoundToggle className="flex" />
+            <button type="button" data-no-sfx onClick={onClose} aria-label={`Close ${label.toLowerCase()}`} className="r-close shrink-0">
+              <X size={13} strokeWidth={3} aria-hidden="true" />
+              <span>Close</span>
+            </button>
+          </div>
         </header>
 
         {toolbar && <div className="shrink-0 border-b-4 border-rose/70 bg-r-panel px-4 py-4 max-sm:py-3 sm:px-7">{toolbar}</div>}
