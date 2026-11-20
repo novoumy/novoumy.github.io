@@ -221,8 +221,7 @@ const STEAM_FILE_URLS = [
 async function fetchSteamFile(): Promise<SteamFile | null> {
   for (const url of STEAM_FILE_URLS) {
     try {
-      // Don't let a slow or hung connection keep the folder on its loading screen forever.
-      const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+      const response = await fetch(url);
       if (response.ok) return (await response.json()) as SteamFile;
     } catch {
       // try the next source

@@ -540,7 +540,6 @@ export default function GamesView({ onClose }: { onClose: () => void }) {
       meta={library ? `${all.length} games${synced}` : undefined}
       onClose={onClose}
       onBack={selected ? back : undefined}
-      loading={!library}
       toolbar={selected ? undefined : toolbar}
       accent="games"
     >
