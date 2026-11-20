@@ -40,13 +40,8 @@ const HELP = [
   'available commands:',
   '/help      - list all available commands',
   "/novotime  - Shows novoumy's local time (GMT+3)",
-  '/clear     - clear console output history (or Ctrl+L)',
   '/whoami    - show novoumy profile',
-  '/matrix    - toggle matrix rain inside terminal (Esc or /clear to stop)',
-  '/theme     - toggle night phosphor mode',
   '/reboot    - replay the boot sequence',
-  'tip: Up/Down = history, Tab = autocomplete',
-  'alias: /novoumytime -> /novotime',
 ];
 
 const WHOAMI = [
@@ -57,7 +52,7 @@ const WHOAMI = [
 ];
 
 // Tab-complete only knows the documented commands; the easter eggs stay secret.
-const COMMANDS = ['/help', '/novotime', '/novoumytime', '/clear', '/whoami', '/matrix', '/theme', '/reboot'];
+const COMMANDS = ['/help', '/novotime', '/whoami', '/reboot'];
 
 const FORTUNES = [
   'you will fix one bug and discover three.',
@@ -100,61 +95,6 @@ function novoTime() {
   return `novotime: ${time} (GMT+3)`;
 }
 
-function MatrixRain({ dark }: { dark: boolean }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    let raf = 0;
-    const chars = '01ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ<>/[]{}*+#';
-    let drops: number[] = [];
-    const resize = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = parent.clientWidth;
-      const h = parent.clientHeight;
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const cols = Math.max(1, Math.floor(w / 14));
-      drops = Array.from({ length: cols }, () => Math.random() * (h / 14));
-      ctx.fillStyle = dark ? 'rgba(40,14,20,0.95)' : 'rgba(236,239,241,0.95)';
-      ctx.fillRect(0, 0, w, h);
-    };
-    resize();
-    const ro = new ResizeObserver(resize);
-    if (canvas.parentElement) ro.observe(canvas.parentElement);
-    const draw = () => {
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      ctx.fillStyle = dark ? 'rgba(40,14,20,0.18)' : 'rgba(236,239,241,0.18)';
-      ctx.fillRect(0, 0, w, h);
-      ctx.font = '14px VT323, monospace';
-      for (let i = 0; i < drops.length; i++) {
-        const char = chars[Math.floor(Math.random() * chars.length)] ?? '0';
-        const x = i * 14;
-        const y = drops[i]! * 14;
-        ctx.fillStyle = Math.random() > 0.92 ? '#847FA4' : dark ? '#CD9EBA' : '#6B2D39';
-        ctx.fillText(char, x, y);
-        if (y > h && Math.random() > 0.975) drops[i] = 0;
-        else drops[i] = drops[i]! + 1;
-      }
-      raf = requestAnimationFrame(draw);
-    };
-    raf = requestAnimationFrame(draw);
-    return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-    };
-  }, [dark]);
-  return <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-10 h-full w-full opacity-70" aria-hidden="true" />;
-}
-
 const MAX_AUTO_LINES = 5;
 const BOOT: Step[] = [
   { t: 'novOS v1.0 boot sequence complete', k: 'sys', s: 22 },
@@ -164,8 +104,6 @@ const BOOT: Step[] = [
 export default function MainView() {
   const [lines, setLines] = useState<TermLine[]>([]);
   const [input, setInput] = useState('');
-  const [matrix, setMatrix] = useState(false);
-  const [night, setNight] = useState(false);
   const idRef = useRef(1);
   const autoRef = useRef(0); // ambient messages sent so far
   const outRef = useRef<HTMLDivElement>(null);
@@ -175,8 +113,9 @@ export default function MainView() {
   const history = useRef<string[]>([]);
   const hIdx = useRef(-1);
   const draft = useRef('');
+  const tabState = useRef<{ matches: string[]; index: number; current: string } | null>(null);
   const alive = useRef(true);
-  const epoch = useRef(0); // bumped by /clear and /reboot to cancel queued typing
+  const epoch = useRef(0); // bumped by /reboot to cancel queued typing
   const queue = useRef<Promise<void>>(Promise.resolve());
   const booted = useRef(false);
 
@@ -273,19 +212,7 @@ export default function MainView() {
   useEffect(() => {
     const el = outRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [lines, matrix]);
-
-  useEffect(() => {
-    if (!matrix) return;
-    const onKey = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        setMatrix(false);
-      }
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [matrix]);
+  }, [lines]);
 
   const runCommand = (raw: string) => {
     const cmd = raw.trim();
@@ -300,30 +227,12 @@ export default function MainView() {
       push(novoTime());
       return;
     }
-    if (normalized === '/clear') {
-      cancelTyping();
-      setMatrix(false);
-      setLines([{ id: idRef.current++, text: 'console cleared. type /help for commands.', kind: 'sys' }]);
-      return;
-    }
     if (normalized === '/whoami') {
       typeLines(WHOAMI);
       return;
     }
-    if (normalized === '/matrix') {
-      const next = !matrix;
-      setMatrix(next);
-      push(next ? 'matrix rain: enabled (Esc or /clear to stop)' : 'matrix rain: disabled', 'sys');
-      return;
-    }
-    if (normalized === '/theme') {
-      setNight(!night);
-      push(`theme: ${night ? 'day' : 'night'} phosphor`, 'sys');
-      return;
-    }
     if (normalized === '/reboot') {
       cancelTyping();
-      setMatrix(false);
       setLines([]);
       seq([
         { t: 'novOS v1.0 rebooting...', k: 'sys', s: 24 },
@@ -382,18 +291,26 @@ export default function MainView() {
       }
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      if (!input.startsWith('/')) return;
-      const m = COMMANDS.filter((c) => c.startsWith(input.toLowerCase()));
-      if (m.length === 1) setInput(m[0]!);
-      else if (m.length > 1) push(m.join('   '), 'sys');
-    } else if (e.key.toLowerCase() === 'l' && e.ctrlKey) {
-      e.preventDefault();
-      runCommand('/clear');
+      // Minecraft-style: first Tab completes, further Tabs cycle through the matches
+      // (Shift+Tab cycles backwards). The match list is frozen on the first Tab so
+      // cycling isn't disturbed by the input changing to a completed command.
+      let st = tabState.current;
+      if (!st || st.current !== input) {
+        if (!input.startsWith('/')) return;
+        const matches = COMMANDS.filter((c) => c.startsWith(input.toLowerCase()));
+        if (!matches.length) return;
+        st = { matches, index: -1, current: input };
+      }
+      const n = st.matches.length;
+      st.index = e.shiftKey ? (st.index <= 0 ? n - 1 : st.index - 1) : (st.index + 1) % n;
+      st.current = st.matches[st.index]!;
+      tabState.current = st;
+      setInput(st.current);
     }
   };
 
   return (
-    <div className="-mx-8 -mb-8 flex h-full min-h-0 min-w-0 flex-col max-sm:-mx-4 max-sm:-mb-4">
+    <div className="-mx-8 -mb-7 flex h-[calc(100%+1.75rem)] min-h-0 min-w-0 flex-col max-sm:-mx-4 max-sm:-mb-3 max-sm:h-[calc(100%+0.75rem)]">
       {/* Profile: untouched content, with extra room underneath. */}
       <div className="px-8 pb-12 pt-8 max-sm:px-4 max-sm:pb-9 max-sm:pt-4">
         <div className="grid grid-cols-[auto_1fr] items-start gap-x-5 gap-y-2 max-[768px]:gap-x-[3cqw] max-[768px]:gap-y-[0.8cqw]">
@@ -420,7 +337,6 @@ export default function MainView() {
 
       {/* Open terminal: full-width, edge to edge inside the card. */}
       <section
-        data-theme={night ? 'night' : 'day'}
         className="term term-crt relative flex min-h-0 flex-1 flex-col overflow-hidden"
       >
         {/* Divider: the rule spans the card; label and status sit on it.
@@ -455,7 +371,6 @@ export default function MainView() {
           onClick={() => inputRef.current?.focus()}
           className="term-out term-scroll relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-8 pb-4 pt-6 max-[768px]:px-4 max-[768px]:pb-2 max-[768px]:pt-5"
         >
-          {matrix && <MatrixRain dark={night} />}
           <div className="relative z-0 flex min-h-full flex-col justify-end gap-1">
             {lines.map((line) => {
               const kind = line.kind ?? 'out';

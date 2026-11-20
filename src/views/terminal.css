@@ -16,19 +16,6 @@
   background: var(--t-bg);
   color: var(--t-text);
 }
-.term[data-theme='night'] {
-  --t-bg: color-mix(in oklab, var(--wine) 38%, black);
-  --t-bg-deep: color-mix(in oklab, var(--wine) 26%, black);
-  --t-text: color-mix(in oklab, var(--rose) 55%, var(--cool-white));
-  --t-dim: var(--lavender);
-  --t-accent: var(--rose);
-  --t-glow: color-mix(in oklab, var(--rose) 80%, transparent);
-  --t-scan: rgb(0 0 0 / 0.28);
-  --t-edge: rgb(0 0 0 / 0.45);
-  --t-err-bg: var(--cool-white); --t-err-fg: var(--wine);
-  --t-warn-bg: var(--lavender);  --t-warn-fg: var(--cool-white);
-  --t-ok-bg: var(--rose);        --t-ok-fg: var(--wine);
-}
 .term ::selection { background: var(--t-accent); color: var(--t-bg); }
 
 /* ---------- CRT overlay: scanlines + vignette ---------- */
