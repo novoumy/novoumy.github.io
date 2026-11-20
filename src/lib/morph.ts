@@ -1,29 +1,27 @@
 import { playSfx } from '@/audio/sfx';
 import type { InterestId } from '@/siteData';
 
-// "Dive" transition used when opening / closing an Interests folder.
+// Window morph used when opening / closing an Interests folder.
 //
-// Opening:  the clicked folder icon pulses, a pixel ring pops off it, the hub behind
-//           zooms toward you and fades, while the folder window grows out of the icon
-//           itself (clip-path from the icon's rect to the full window). The title bar
-//           drops in and the content staggers up once the window is mostly open.
-// Closing:  the exact reverse - the window shrinks back into the same icon while the hub
-//           zooms back to rest, and the icon gives a little "landed" pop.
+// Opening:  the folder window starts exactly on top of the hub's main window (same
+//           rect, same frame) and expands to its full size, so it reads as the main
+//           window itself opening up. The hub stays perfectly still behind it. The
+//           title bar drops in and the content staggers up as the window finishes.
+// Closing:  the reverse - the window contracts back onto the main window's rect.
 //
-// Only transform / opacity / clip-path are animated, so it stays on the compositor and
-// feels smooth even with the big library views mounted.
+// Only clip-path / opacity / transform are animated, so it stays smooth even with the
+// big library views mounted.
 type Destination = 'folder' | 'hub';
 
 const STAGE_SELECTOR = '[data-crt-stage]';
+const HUB_WINDOW_SELECTOR = '[data-crt-stage] .pixel-frame';
 const WINDOW_SELECTOR = '.r-window';
-const OPEN_MS = 580;
-const CLOSE_MS = 440;
-const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
+const OPEN_MS = 600;
+const CLOSE_MS = 460;
+const EASE_OUT = 'cubic-bezier(0.22, 1, 0.36, 1)';
 const EASE_IN_OUT = 'cubic-bezier(0.65, 0, 0.35, 1)';
-const EASE_IN = 'cubic-bezier(0.5, 0, 0.85, 0.35)';
 // Negative inset so the pixel-frame box-shadow is never clipped at full size.
 const CLIP_FULL = 'inset(-16px)';
-const HUB_ZOOM = 1.5;
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let running: Promise<void> | null = null;
@@ -34,51 +32,17 @@ const finished = (animation: Animation): Promise<void> =>
     () => undefined,
   );
 
-function folderIcon(id: InterestId | null): HTMLElement | null {
-  if (!id) return null;
-  const button = document.querySelector<HTMLElement>(`[data-folder-id="${id}"]`);
-  return button?.querySelector<HTMLElement>('svg') ?? button;
-}
-
 const usable = (rect: DOMRect | undefined): rect is DOMRect => !!rect && rect.width > 0 && rect.height > 0;
 
-// clip-path that matches `icon` (padded a touch) inside the window rect.
-function clipAround(icon: DOMRect, win: DOMRect, pad = 6): string {
-  const top = Math.max(0, icon.top - pad - win.top);
-  const left = Math.max(0, icon.left - pad - win.left);
-  const right = Math.max(0, win.right - (icon.right + pad));
-  const bottom = Math.max(0, win.bottom - (icon.bottom + pad));
+// clip-path that lines the folder window's frame up with `target` (the hub window).
+// The frame is drawn with box-shadows (4px on top/left, 8px on bottom/right), so the
+// clip is pushed out by those amounts to keep the wine border visible while morphing.
+function clipOnto(target: DOMRect, win: DOMRect): string {
+  const top = target.top - win.top - 4;
+  const left = target.left - win.left - 4;
+  const right = win.right - target.right - 8;
+  const bottom = win.bottom - target.bottom - 8;
   return `inset(${top}px ${right}px ${bottom}px ${left}px)`;
-}
-
-// Percent origin (zoom-safe, unlike px) so the hub zooms toward the icon that was clicked.
-function setStageOrigin(stage: HTMLElement, icon: DOMRect | undefined) {
-  const rect = stage.getBoundingClientRect();
-  if (!usable(icon) || rect.width === 0 || rect.height === 0) {
-    stage.style.transformOrigin = '50% 50%';
-    return;
-  }
-  const x = ((icon.left + icon.width / 2 - rect.left) / rect.width) * 100;
-  const y = ((icon.top + icon.height / 2 - rect.top) / rect.height) * 100;
-  stage.style.transformOrigin = `${x}% ${y}%`;
-}
-
-// A square pixel ring that pops off the icon.
-function ringPop(icon: DOMRect): Animation {
-  const size = Math.max(icon.width, icon.height) + 12;
-  const ring = document.createElement('div');
-  ring.className = 'folder-ring';
-  ring.style.cssText = `left:${icon.left + icon.width / 2 - size / 2}px;top:${icon.top + icon.height / 2 - size / 2}px;width:${size}px;height:${size}px`;
-  document.body.appendChild(ring);
-  const animation = ring.animate(
-    [
-      { opacity: 0.95, transform: 'scale(0.7)' },
-      { opacity: 0, transform: 'scale(2.1)' },
-    ],
-    { duration: 520, easing: EASE_OUT, fill: 'forwards' },
-  );
-  void finished(animation).then(() => ring.remove());
-  return animation;
 }
 
 function windowParts(win: HTMLElement) {
@@ -91,19 +55,17 @@ function windowParts(win: HTMLElement) {
   return { titlebar, rest, items };
 }
 
-async function runOpen(update: () => void, id: InterestId | null) {
+async function runOpen(update: () => void) {
   const stage = document.querySelector<HTMLElement>(STAGE_SELECTOR);
-  const iconEl = folderIcon(id);
-  const iconRect = iconEl?.getBoundingClientRect();
+  const hubRect = document.querySelector<HTMLElement>(HUB_WINDOW_SELECTOR)?.getBoundingClientRect();
 
-  if (!stage || !iconEl || !usable(iconRect) || reducedMotion()) {
+  if (!stage || !usable(hubRect) || reducedMotion()) {
     update();
     return;
   }
 
   const root = document.documentElement;
   root.dataset.folderTransition = 'true';
-  setStageOrigin(stage, iconRect);
   playSfx('open');
 
   // The folder is already loaded, so this commits the full window synchronously.
@@ -111,18 +73,16 @@ async function runOpen(update: () => void, id: InterestId | null) {
   const win = document.querySelector<HTMLElement>(WINDOW_SELECTOR);
   if (!win) {
     delete root.dataset.folderTransition;
-    stage.style.transformOrigin = '';
     return;
   }
   // The window's own one-shot rise animation would fight this one.
   win.classList.remove('animate-overlay-in');
 
-  const winRect = win.getBoundingClientRect();
-  const startClip = clipAround(iconRect, winRect);
+  const startClip = clipOnto(hubRect, win.getBoundingClientRect());
   const { titlebar, rest, items } = windowParts(win);
   const animations: Animation[] = [];
 
-  // Window grows out of the icon.
+  // Window opens up from the hub window's exact rect.
   animations.push(
     win.animate([{ clipPath: startClip }, { clipPath: CLIP_FULL }], {
       duration: OPEN_MS,
@@ -130,34 +90,26 @@ async function runOpen(update: () => void, id: InterestId | null) {
       fill: 'backwards',
     }),
   );
-  // Hub dives away behind it.
+  // Quick cross-fade so the hub's icons dissolve into the new window instead of snapping.
+  animations.push(win.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, easing: 'ease-out', fill: 'backwards' }));
+  // The hub stays still behind and only fades once the window has grown over it.
   animations.push(
-    stage.animate(
-      [
-        { transform: 'scale(1)', opacity: 1 },
-        { transform: `scale(${HUB_ZOOM})`, opacity: 0 },
-      ],
-      { duration: OPEN_MS * 0.85, easing: EASE_IN, fill: 'forwards' },
-    ),
-  );
-  animations.push(ringPop(iconRect));
-  // The icon itself gives a quick press-and-release.
-  animations.push(
-    iconEl.animate(
-      [{ transform: 'scale(1)' }, { transform: 'scale(0.86)', offset: 0.35 }, { transform: 'scale(1.12)' }],
-      { duration: 260, easing: EASE_OUT, fill: 'forwards' },
-    ),
+    stage.animate([{ opacity: 1 }, { opacity: 1, offset: 0.5 }, { opacity: 0 }], {
+      duration: OPEN_MS,
+      easing: 'linear',
+      fill: 'forwards',
+    }),
   );
 
-  // Chrome and content arrive once the window is mostly open.
+  // Chrome and content arrive as the window finishes opening.
   if (titlebar) {
     animations.push(
       titlebar.animate(
         [
-          { opacity: 0, transform: 'translateY(-70%)' },
+          { opacity: 0, transform: 'translateY(-60%)' },
           { opacity: 1, transform: 'translateY(0)' },
         ],
-        { duration: 420, delay: 140, easing: EASE_OUT, fill: 'backwards' },
+        { duration: 400, delay: 180, easing: EASE_OUT, fill: 'backwards' },
       ),
     );
   }
@@ -168,7 +120,7 @@ async function runOpen(update: () => void, id: InterestId | null) {
           { opacity: 0, transform: 'translateY(14px)' },
           { opacity: 1, transform: 'translateY(0)' },
         ],
-        { duration: 420, delay: 190 + index * 50, easing: EASE_OUT, fill: 'backwards' },
+        { duration: 420, delay: 220 + index * 50, easing: EASE_OUT, fill: 'backwards' },
       ),
     );
   });
@@ -179,7 +131,7 @@ async function runOpen(update: () => void, id: InterestId | null) {
           { opacity: 0, transform: 'translateY(16px) scale(0.97)' },
           { opacity: 1, transform: 'translateY(0) scale(1)' },
         ],
-        { duration: 420, delay: 260 + index * 38, easing: EASE_OUT, fill: 'backwards' },
+        { duration: 420, delay: 290 + index * 38, easing: EASE_OUT, fill: 'backwards' },
       ),
     );
   });
@@ -189,73 +141,64 @@ async function runOpen(update: () => void, id: InterestId | null) {
   // Hub goes hidden again (the folder is the window now), then drop leftover fills.
   delete root.dataset.folderTransition;
   animations.forEach((animation) => animation.cancel());
-  stage.style.transformOrigin = '';
 }
 
 async function runClose(update: () => void, id: InterestId | null) {
   const stage = document.querySelector<HTMLElement>(STAGE_SELECTOR);
   const win = document.querySelector<HTMLElement>(WINDOW_SELECTOR);
-  const iconEl = folderIcon(id);
-  const iconRect = iconEl?.getBoundingClientRect();
+  const hubRect = document.querySelector<HTMLElement>(HUB_WINDOW_SELECTOR)?.getBoundingClientRect();
 
-  if (!stage || !win || !iconEl || !usable(iconRect) || reducedMotion()) {
+  if (!stage || !win || !usable(hubRect) || reducedMotion()) {
     update();
     return;
   }
 
   const root = document.documentElement;
   root.dataset.folderTransition = 'true';
-  setStageOrigin(stage, iconRect);
   playSfx('close');
 
-  const winRect = win.getBoundingClientRect();
   const { titlebar, rest } = windowParts(win);
   const animations: Animation[] = [];
 
+  // Window contracts back onto the hub window, which is already visible and still behind it.
   animations.push(
-    win.animate([{ clipPath: CLIP_FULL }, { clipPath: clipAround(iconRect, winRect) }], {
+    win.animate([{ clipPath: CLIP_FULL }, { clipPath: clipOnto(hubRect, win.getBoundingClientRect()) }], {
       duration: CLOSE_MS,
       easing: EASE_IN_OUT,
       fill: 'forwards',
     }),
   );
-  // Content fades out fast so the shrinking window never shows squashed text.
+  // Content fades out fast so the shrinking window never shows squashed text...
   [titlebar, ...rest].forEach((el) => {
     if (!el) return;
     animations.push(el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: CLOSE_MS * 0.4, easing: 'ease-in', fill: 'forwards' }));
   });
-  // Hub comes back from its zoomed-in state.
+  // ...and the window itself dissolves into the hub at the very end.
   animations.push(
-    stage.animate(
-      [
-        { transform: `scale(${HUB_ZOOM})`, opacity: 0 },
-        { transform: 'scale(1)', opacity: 1 },
-      ],
-      { duration: CLOSE_MS, delay: 40, easing: EASE_OUT, fill: 'both' },
-    ),
+    win.animate([{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], {
+      duration: CLOSE_MS,
+      easing: 'linear',
+      fill: 'forwards',
+    }),
   );
 
   await Promise.all(animations.map(finished));
 
-  // Swap to the hub while it is already at rest, then clean up in the same frame.
+  // Swap to the hub, which has been sitting fully visible behind the window the whole time.
   update();
   delete root.dataset.folderTransition;
-  stage.getAnimations().forEach((animation) => animation.cancel());
-  stage.style.transformOrigin = '';
 
-  const landed = folderIcon(id);
-  if (landed) {
-    landed.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.18)', offset: 0.4 }, { transform: 'scale(1)' }], {
-      duration: 340,
-      easing: EASE_OUT,
-    });
-  }
+  const landed = id ? document.querySelector<HTMLElement>(`[data-folder-id="${id}"] svg`) : null;
+  landed?.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.18)', offset: 0.4 }, { transform: 'scale(1)' }], {
+    duration: 340,
+    easing: EASE_OUT,
+  });
 }
 
 // Serialize quick consecutive opens/closes so each transition starts from the
 // currently visible state instead of overlapping another one.
 export function folderMorph(update: () => void, destination: Destination, id: InterestId | null): Promise<void> {
-  const start = () => (destination === 'folder' ? runOpen(update, id) : runClose(update, id));
+  const start = () => (destination === 'folder' ? runOpen(update) : runClose(update, id));
   running = (running ?? Promise.resolve()).then(start, start);
   return running;
 }

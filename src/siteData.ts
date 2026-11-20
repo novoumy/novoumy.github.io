@@ -1677,15 +1677,15 @@ const newegg = (query: string) => `https://www.newegg.com/p/pl?d=${encodeURIComp
 const amazon = (query: string) => `https://www.amazon.com/s?k=${encodeURIComponent(query)}`;
 
 export const specsSummary = [
-  { label: 'RIG_ID', value: 'BLU_MACHINE' },
+  { label: 'RIG_ID', value: 'TINTED_LILAC' },
   { label: 'OS', value: 'Windows 11 Pro' },
   { label: 'STATUS', value: 'OPTIMIZED' },
 ];
 
 // Headline numbers shown as big tiles at the top of the Specs tab.
 export const specHighlights = [
-  { value: '12', unit: 'GB', label: 'VRAM', sub: 'RTX 5070' },
   { value: '32', unit: 'GB', label: 'RAM', sub: 'DDR5-6000' },
+  { value: '12', unit: 'GB', label: 'VRAM', sub: 'RTX 5070' },
   { value: '3', unit: 'TB', label: 'Storage', sub: '2x NVMe SSD' },
   { value: '180', unit: 'Hz', label: 'Refresh', sub: '1440p QHD' },
 ];
