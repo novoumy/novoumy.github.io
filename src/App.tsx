@@ -11,7 +11,7 @@ import { site, tabs, type InterestId, type TabId } from '@/siteData';
 import { useStageScale } from '@/lib/useStageScale';
 import { hashFor, parseHash, type Route } from '@/lib/route';
 import { loadInterestView, preloadInterestViews } from '@/lib/preload';
-import { crtMorph } from '@/lib/morph';
+import { folderMorph } from '@/lib/morph';
 import { animatePanelIn } from '@/lib/motion';
 
 const sameRoute = (a: Route, b: Route) => a.tab === b.tab && a.interest === b.interest;
@@ -103,14 +103,13 @@ export default function App() {
       flushSync(() => setRoute(next));
     };
     if (!folderChange) {
-      if (prev.interest !== null && next.tab !== 'interests') {
-        document.querySelector<HTMLElement>('[data-crt-stage]')?.classList.remove('crt-screen', 'crt-collapsed');
-      }
       apply();
       return;
     }
     const opening = next.interest;
-    void (opening ? loadInterestView(opening) : Promise.resolve()).then(() => crtMorph(apply, opening ? 'folder' : 'hub'));
+    void (opening ? loadInterestView(opening) : Promise.resolve()).then(() =>
+      folderMorph(apply, opening ? 'folder' : 'hub', opening ?? prev.interest),
+    );
   };
 
   const navigate = (next: Route) => {

@@ -1682,6 +1682,14 @@ export const specsSummary = [
   { label: 'STATUS', value: 'OPTIMIZED' },
 ];
 
+// Headline numbers shown as big tiles at the top of the Specs tab.
+export const specHighlights = [
+  { value: '12', unit: 'GB', label: 'VRAM', sub: 'RTX 5070' },
+  { value: '32', unit: 'GB', label: 'RAM', sub: 'DDR5-6000' },
+  { value: '3', unit: 'TB', label: 'Storage', sub: '2x NVMe SSD' },
+  { value: '180', unit: 'Hz', label: 'Refresh', sub: '1440p QHD' },
+];
+
 export const specGroups: SpecGroup[] = [
   {
     title: 'Core',

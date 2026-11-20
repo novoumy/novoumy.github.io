@@ -43,20 +43,18 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
               <button
                 type="button"
                 data-no-sfx
+                data-folder-id={item.id}
                 onClick={() => setOpenId(item.id)}
                 onPointerEnter={() => void FOLDERS[item.id].load()}
                 onFocus={() => void FOLDERS[item.id].load()}
                 aria-label={`Open ${item.label}`}
-                className="group flex w-full max-w-[150px] flex-col items-center gap-3 outline-none outline-offset-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-wine"
+                className="folder-btn group flex w-full max-w-[150px] flex-col items-center gap-3 outline-none outline-offset-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-wine"
               >
                 <span className="pixel-icon-well pixel-icon-well-folder">
-                  <PixelIcon
-                    name={item.id}
-                    tint
-                    className="h-20 w-20 transition-transform duration-150 [transition-timing-function:steps(2)] group-hover:-translate-y-1 group-active:translate-y-0 sm:h-24 sm:w-24"
-                  />
+                  <PixelIcon name={item.id} tint className="folder-icon h-20 w-20 sm:h-24 sm:w-24" />
                 </span>
-                <span className="px-2 py-1 font-pixel text-[10px] uppercase leading-none transition-colors duration-150 group-hover:bg-rose group-hover:text-wine sm:text-[11px]">
+                <span aria-hidden="true" className="folder-shadow" />
+                <span className="folder-label px-2 py-1 font-pixel text-[10px] uppercase leading-none transition-colors duration-150 group-hover:bg-rose group-hover:text-wine sm:text-[11px]">
                   {item.label}
                 </span>
               </button>

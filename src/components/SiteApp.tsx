@@ -12,7 +12,7 @@ import { site, tabs, type InterestId, type TabId } from '@/siteData';
 import { useStageScale } from '@/lib/useStageScale';
 import { hashFor, parseHash, type Route } from '@/lib/route';
 import { loadInterestView, preloadInterestViews } from '@/lib/preload';
-import { crtMorph } from '@/lib/morph';
+import { folderMorph } from '@/lib/morph';
 
 const sameRoute = (a: Route, b: Route) => a.tab === b.tab && a.interest === b.interest;
 
@@ -68,15 +68,12 @@ export default function App() {
       // Load the folder before powering the old screen off, so the new window is ready to expand.
       void (next.interest ? loadInterestView(next.interest) : Promise.resolve()).then(() => {
         if (!sameRoute(routeRef.current, next)) return;
-        return crtMorph(() => {
+        return folderMorph(() => {
           if (sameRoute(routeRef.current, next)) flushSync(() => setRoute(next));
-        }, next.interest ? 'folder' : 'hub');
+        }, next.interest ? 'folder' : 'hub', next.interest ?? previous.interest);
       });
     } else {
       // Leaving a folder for Main / Specs / Socials is a normal tab switch, never a CRT transition.
-      if (previous.interest !== null && next.tab !== 'interests') {
-        document.querySelector<HTMLElement>('[data-crt-stage]')?.classList.remove('crt-screen', 'crt-collapsed');
-      }
       setRoute(next);
     }
 
