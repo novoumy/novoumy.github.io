@@ -1677,9 +1677,10 @@ const newegg = (query: string) => `https://www.newegg.com/p/pl?d=${encodeURIComp
 const amazon = (query: string) => `https://www.amazon.com/s?k=${encodeURIComponent(query)}`;
 
 export const specsSummary = [
-  { label: 'RIG_ID', value: 'TINTED_LILAC' },
+  { label: 'BUILT', value: 'Nov 2025' },
+  { label: 'PURPOSE', value: '1440p gaming / coding' },
+  { label: 'CASE', value: 'Cougar FV150 RGB' },
   { label: 'OS', value: 'Windows 11 Pro' },
-  { label: 'STATUS', value: 'OPTIMIZED' },
 ];
 
 // Headline numbers shown as big tiles at the top of the Specs tab.

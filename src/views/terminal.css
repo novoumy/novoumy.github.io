@@ -161,3 +161,78 @@
 @media (prefers-reduced-motion: reduce) {
   .kinetic-words span { transition: none; }
 }
+
+/* ---------- Main profile bento ---------- */
+.main-profile-bento {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.78fr) minmax(0, 1.55fr);
+  align-items: stretch;
+  gap: clamp(0.7rem, 1.5vw, 1.2rem);
+  flex: 1;
+  min-height: 0;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+}
+.main-profile-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  text-align: center;
+  background: color-mix(in oklab, var(--rose) 18%, var(--cool-white));
+}
+.main-profile-avatar { width: clamp(110px, 13vw, 150px); }
+.main-profile-level {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  line-height: 1.8;
+  color: color-mix(in oklab, var(--wine) 65%, var(--lavender));
+}
+.main-current-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.7rem;
+  border: 2px solid var(--wine);
+  background: var(--cool-white);
+  font-size: 18px;
+}
+.main-current-box > span:last-child { display: flex; align-items: center; justify-content: center; gap: 0.35rem; }
+.main-mini-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  line-height: 1.8;
+  color: var(--lavender);
+}
+.main-profile-right { display: flex; flex-direction: column; min-width: 0; gap: 0.75rem; }
+.main-bio-box { min-width: 0; padding: 0.8rem; background: var(--cool-white); }
+.main-profile-bio { max-width: none; font-size: clamp(16px, 1.4vw, 20px); line-height: 1.4; }
+.main-info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; flex: 1; }
+.main-info-tile {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.8rem;
+  text-decoration: none;
+  background: var(--cool-white);
+}
+.main-info-tile strong { font-family: 'Press Start 2P', monospace; font-size: clamp(9px, 1.2vw, 12px); line-height: 1.7; overflow-wrap: anywhere; }
+.main-info-tile small { font-size: 16px; line-height: 1.2; opacity: 0.7; }
+.main-minecraft-tile:hover { background: color-mix(in oklab, var(--rose) 24%, var(--cool-white)); }
+.main-minecraft-tile strong span { font-size: 10px; opacity: 0.65; }
+@media (max-width: 768px) {
+  .main-profile-bento { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; padding: 0.6rem 0.25rem; }
+  .main-profile-left { gap: 0.55rem; padding: 0.7rem; }
+  .main-profile-avatar { width: 96px; }
+  .main-info-grid { gap: 0.5rem; }
+  .main-info-tile { padding: 0.6rem; }
+  .main-info-tile strong { font-size: 8px; }
+  .main-info-tile small { font-size: 14px; }
+}
