@@ -149,3 +149,24 @@ html.theme-soft .main-profile-avatar {
 
 /* Selected MAIN tab: exactly the soft pink of the top / bottom status bars. */
 [role='tab'][aria-selected='true'][aria-label='Main'] { background-color: var(--status-pink) !important; }
+
+
+/* Refinement: organically wave the dither edge and avoid a straight fade seam. */
+.pixel-divider > i {
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 92% 78%, 82% 72%, 72% 86%, 62% 74%, 52% 82%, 42% 68%, 32% 78%, 22% 70%, 12% 82%, 0 72%);
+}
+
+/* Inactive navigation and main audio control share the deep wine fill. */
+[role='tab'][aria-selected='false'] {
+  background-color: var(--wine) !important;
+  color: var(--cool-white) !important;
+}
+[role='tab'][aria-selected='false']:hover,
+[role='tab'][aria-selected='false']:focus-visible {
+  background-color: var(--rose) !important;
+  color: var(--wine) !important;
+}
+.main-sound-toggle { background-color: var(--wine) !important; color: var(--cool-white) !important; }
+.main-sound-toggle:hover, .main-sound-toggle:focus-visible { background-color: var(--rose) !important; color: var(--wine) !important; }
+[role='tab'][aria-selected='true'][aria-label='Main'] { background-color: var(--status-pink) !important; color: var(--wine) !important; }
+[role='tab'][aria-selected='true']:not([aria-label='Main']) { background-color: var(--cool-white) !important; color: var(--wine) !important; }
