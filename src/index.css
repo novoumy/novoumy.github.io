@@ -391,21 +391,26 @@
     animation: die-roll 600ms steps(8) both;
   }
 
-  /* Rolled quote card: glow pulses a few times, then settles on a steady highlight. */
+  /* Rolled quote card ("spotlight"): blinks bright, pops forward with a big pixel ring + glow, holds,
+     then settles back. The 3s length must match SPOTLIGHT_MS in QuotesView.tsx. */
   @keyframes quote-pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 rgb(var(--r-accent-rgb) / 0);
-    }
-    50% {
-      box-shadow: 0 0 28px 6px rgb(var(--r-accent-rgb) / 0.6);
-    }
+    0%   { transform: scale(0.96); background-color: var(--r-accent); box-shadow: 0 0 0 4px var(--wine), 0 0 0 0 var(--r-accent); }
+    5%   { transform: scale(1.08); background-color: var(--cool-white); box-shadow: 0 0 0 4px var(--r-accent), 0 0 0 10px var(--wine), 0 0 40px 16px rgb(var(--r-accent-rgb) / 0.9); }
+    10%  { transform: scale(1.05); background-color: var(--r-accent); }
+    15%  { transform: scale(1.08); background-color: var(--cool-white); }
+    20%  { transform: scale(1.05); background-color: var(--r-accent); }
+    25%, 82% { transform: scale(1.05); background-color: var(--r-raised); box-shadow: 0 0 0 4px var(--r-accent), 0 0 0 8px var(--wine), 0 0 32px 12px rgb(var(--r-accent-rgb) / 0.7); }
+    100% { transform: scale(1); background-color: var(--r-bg); box-shadow: 0 0 0 0 transparent; }
   }
 
   .quote-pulse {
+    position: relative;
+    z-index: 5;
+    /* Static look (also what shows with reduced motion, where the animation is switched off). */
+    transform: scale(1.05);
     background: var(--r-raised);
-    box-shadow: 4px 4px 0 0 var(--rose);
-    animation: quote-pulse 700ms ease-in-out 3;
+    box-shadow: 0 0 0 4px var(--r-accent), 0 0 0 8px var(--wine), 0 0 32px 12px rgb(var(--r-accent-rgb) / 0.7);
+    animation: quote-pulse 3s ease-out both;
   }
 
   /* Large stepped frame: wine outline and pixel drop shadow. */

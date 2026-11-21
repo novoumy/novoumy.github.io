@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import RetroOverlay from '@/components/RetroOverlay';
 import { quotes } from '@/siteData';
 
@@ -23,12 +23,22 @@ function PixelDie({ className = '' }: { className?: string }) {
   );
 }
 
+// How long a rolled quote stays highlighted (keep in sync with the quote-pulse animation in the CSS).
+const SPOTLIGHT_MS = 3000;
+
 // Quote log cards in a responsive grid, plus a big centered dice button that
-// scrolls to and pulse-highlights a random card.
+// scrolls to and spotlights a random card for 3 seconds.
 export default function QuotesView({ onClose }: { onClose: () => void }) {
   const [active, setActive] = useState<number | null>(null);
   const [rolls, setRolls] = useState(0); // bumped on every roll to replay the animations
   const refs = useRef<(HTMLLIElement | null)[]>([]);
+
+  // The highlight switches itself off after 3s; rolling again restarts the clock.
+  useEffect(() => {
+    if (rolls === 0) return;
+    const timer = window.setTimeout(() => setActive(null), SPOTLIGHT_MS);
+    return () => window.clearTimeout(timer);
+  }, [rolls]);
 
   const roll = useCallback(() => {
     if (quotes.length === 0) return;
@@ -71,7 +81,7 @@ export default function QuotesView({ onClose }: { onClose: () => void }) {
                 key={isActive ? `on-${rolls}` : 'off'}
                 className={[
                   'quote-card flex w-full flex-col border-2 border-wine bg-r-bg transition-opacity duration-300',
-                  isActive ? 'quote-pulse' : active !== null ? 'opacity-60' : '',
+                  isActive ? 'quote-pulse' : active !== null ? 'opacity-40' : '',
                 ].join(' ')}
               >
                 <div className="flex items-center justify-between gap-3 bg-wine px-4 py-2 font-pixel text-[8px] uppercase text-cool-white">
