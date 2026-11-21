@@ -14,42 +14,6 @@
   --backdrop-grid: var(--cool-white);
 }
 
-/* Deliberately art-directed night palette: plum-black surfaces, soft lilac accents, warm readable text. */
-html.theme-dark {
-  color-scheme: dark;
-  --cool-white: #191622;
-  --cool-white-rgb: 25 22 34;
-  --lavender: #2B253A;
-  --lavender-rgb: 43 37 58;
-  --wine: #F1EAF5;
-  --wine-rgb: 241 234 245;
-  --rose: #8F76AD;
-  --rose-rgb: 143 118 173;
-}
-
-html.theme-dark body {
-  background-color: var(--lavender);
-  color: var(--wine);
-}
-
-/* Text and hover states stay readable where the light palette used dark text on rose/lavender fills. */
-html.theme-dark .text-lavender { color: #B7A9C9; }
-html.theme-dark [role='tab'][aria-selected='false'] {
-  color: var(--wine);
-  text-shadow: 2px 2px 0 #191622;
-}
-html.theme-dark [role='tab'][aria-selected='false']:hover,
-html.theme-dark [role='tab'][aria-selected='false']:focus-visible {
-  background-color: var(--rose);
-  color: var(--cool-white);
-  text-shadow: none;
-}
-html.theme-dark .hover\:text-wine:hover,
-html.theme-dark .focus-visible\:text-wine:focus-visible,
-html.theme-dark .group:hover .group-hover\:text-wine {
-  color: var(--cool-white);
-}
-
 @layer base {
   html,
   body,
@@ -72,42 +36,6 @@ html.theme-dark .group:hover .group-hover\:text-wine {
 }
 
 @layer components {
-  /* Pale retro theme for the full-screen media library. */
-  .media-dark {
-    color-scheme: light;
-  }
-
-  .media-dark ::selection {
-    background: var(--rose);
-    color: var(--wine);
-  }
-
-  .media-dark .pixel-scroll {
-    scrollbar-color: var(--wine) var(--rose);
-  }
-
-  .media-dark .pixel-scroll::-webkit-scrollbar-track {
-    background: var(--rose);
-  }
-
-  .media-dark .pixel-scroll::-webkit-scrollbar-thumb {
-    background: var(--wine);
-    border: 2px solid var(--rose);
-  }
-
-  .media-dark .eq-bars i {
-    background: var(--wine);
-  }
-
-  .media-dark .player-range {
-    --track: var(--rose);
-    --fillc: var(--wine);
-  }
-
-  .media-dark .player-range:hover {
-    --fillc: var(--wine);
-  }
-
   /* Seek / volume sliders. */
   .player-range {
     --fill: 0%;
@@ -175,17 +103,11 @@ html.theme-dark .group:hover .group-hover\:text-wine {
     }
   }
 
-  .media-dark .pixel-badge {
-    background: var(--wine);
-    color: var(--cool-white);
-  }
-
   /* ------------------------------------------------------------------
      Retro overlay theme: shared by /music, /games, /media and /quotes.
      Pale pink style matching the main site.
      ------------------------------------------------------------------ */
-  .retro-theme,
-  .retro-dark {
+  .retro-theme {
     --r-bg: var(--cool-white);
     --r-bg-rgb: var(--cool-white-rgb);
     --r-panel: #f6edf2;
@@ -213,34 +135,7 @@ html.theme-dark .group:hover .group-hover\:text-wine {
     font-family: 'VT323', monospace;
   }
 
-  /* Night mode overrides the folder surface tokens, including content in body portals. */
-  html.theme-dark .retro-theme,
-  html.theme-dark .retro-dark {
-    --r-bg: #191622;
-    --r-bg-rgb: 25 22 34;
-    --r-panel: #252033;
-    --r-panel-rgb: 37 32 51;
-    --r-raised: #332B43;
-    --r-raised-rgb: 51 43 67;
-    --r-line: #6C5B82;
-    --r-line-rgb: 108 91 130;
-    --r-line-hi: #F1EAF5;
-    --r-line-hi-rgb: 241 234 245;
-    --r-text: #F1EAF5;
-    --r-text-rgb: 241 234 245;
-    --r-dim: #B7A9C9;
-    --r-dim-rgb: 183 169 201;
-    --r-accent: #B69AD3;
-    --r-accent-rgb: 182 154 211;
-    --r-accent-dim: #8F76AD;
-    --r-accent-dim-rgb: 143 118 173;
-    --r-vinyl: #0C0A12;
-    --r-vinyl-groove: #292237;
-    --r-vinyl-edge: #0B0911;
-    color-scheme: dark;
-  }
-
-  /* All interest folders share the same pale pink accent palette. */
+    /* All interest folders share the same pale pink accent palette. */
   .accent-music,
   .accent-media,
   .accent-games,
@@ -250,60 +145,49 @@ html.theme-dark .group:hover .group-hover\:text-wine {
     --r-accent-rgb: 205 158 186;
   }
 
-  .retro-theme ::selection,
-  .retro-dark ::selection {
+  .retro-theme ::selection {
     background: var(--rose);
     color: var(--wine);
   }
 
-  .retro-theme .pixel-scroll,
-  .retro-dark .pixel-scroll {
+  .retro-theme .pixel-scroll {
     scrollbar-color: var(--wine) var(--rose);
   }
 
-  .retro-theme .pixel-scroll::-webkit-scrollbar-track,
-  .retro-dark .pixel-scroll::-webkit-scrollbar-track {
+  .retro-theme .pixel-scroll::-webkit-scrollbar-track {
     background: var(--rose);
   }
 
-  .retro-theme .pixel-scroll::-webkit-scrollbar-thumb,
-  .retro-dark .pixel-scroll::-webkit-scrollbar-thumb {
+  .retro-theme .pixel-scroll::-webkit-scrollbar-thumb {
     background: var(--wine);
     border: 2px solid var(--rose);
   }
 
-  .retro-theme .eq-bars i,
-  .retro-dark .eq-bars i {
+  .retro-theme .eq-bars i {
     background: var(--wine);
   }
 
-  .retro-theme .player-range,
-  .retro-dark .player-range {
+  .retro-theme .player-range {
     --track: var(--rose);
     --fillc: var(--wine);
   }
 
-  .retro-theme .player-range::-webkit-slider-thumb,
-  .retro-dark .player-range::-webkit-slider-thumb {
+  .retro-theme .player-range::-webkit-slider-thumb {
     background: var(--cool-white);
     border-radius: 0;
   }
 
-  .retro-theme .player-range::-moz-range-thumb,
-  .retro-dark .player-range::-moz-range-thumb {
+  .retro-theme .player-range::-moz-range-thumb {
     background: var(--cool-white);
     border-radius: 0;
   }
 
   .retro-theme .player-range::-webkit-slider-runnable-track,
-  .retro-theme .player-range::-moz-range-track,
-  .retro-dark .player-range::-webkit-slider-runnable-track,
-  .retro-dark .player-range::-moz-range-track {
+.retro-theme .player-range::-moz-range-track {
     border-radius: 0;
   }
 
-  .retro-theme .pixel-badge,
-  .retro-dark .pixel-badge {
+  .retro-theme .pixel-badge {
     background: var(--wine);
     color: var(--cool-white);
     border: 2px solid var(--rose);
@@ -585,7 +469,6 @@ html.theme-dark .group:hover .group-hover\:text-wine {
   .pixel-btn:active {
     transform: translateY(2px);
   }
-
 
   /* Volume slider: fixed-size pixel tile beside the speaker button.
      It never changes size or position: it only fades in/out via opacity. */
@@ -951,7 +834,6 @@ html.theme-dark .group:hover .group-hover\:text-wine {
   }
 }
 
-
 /* ---------------------------------------------------------------------------------------------
    Phones and compact windows: keep the window anchored below the single-row tab / audio bar.
    The Main window stays inside the frame instead of being pushed below a short 4:3 card.
@@ -964,7 +846,6 @@ html.theme-dark .group:hover .group-hover\:text-wine {
     container-type: inline-size;
   }
 }
-
 
   .crt-overlay {
     position: fixed;
@@ -1192,7 +1073,6 @@ html[data-folder-transition='true'] .animate-overlay-in > * {
   .tab-burst { display: none; }
 }
 
-
 @media (max-width: 859px) {
   .volume-panel {
     top: calc(100% + 8px);
@@ -1203,451 +1083,4 @@ html[data-folder-transition='true'] .animate-overlay-in > * {
   }
 }
 
-
-/* Keep the folder audio button wine-red in light mode; shift it to lilac in dark mode for contrast. */
-html.theme-dark .folder-sound-toggle,
-html.theme-dark .main-sound-toggle {
-  color: var(--wine);
-}
-html.theme-dark .folder-sound-toggle {
-  background-color: var(--rose);
-  color: var(--cool-white);
-}
-html.theme-dark .main-sound-toggle:hover,
-html.theme-dark .main-sound-toggle:focus-visible {
-  background-color: var(--rose);
-  color: var(--cool-white);
-}
-html.theme-dark .folder-sound-toggle:hover,
-html.theme-dark .folder-sound-toggle:focus-visible {
-  background-color: var(--wine);
-  color: var(--cool-white);
-}
-
-html.theme-dark .r-btn:hover,
-html.theme-dark .r-btn:focus-visible,
-html.theme-dark .r-link:hover,
-html.theme-dark .r-link:focus-visible,
-html.theme-dark .pixel-btn:hover {
-  color: var(--cool-white);
-}
-
-html.theme-dark .r-close {
-  color: var(--cool-white);
-  border-color: var(--wine);
-}
-
-html.theme-dark .quote-pulse {
-  background: var(--r-raised);
-}
-
-html.theme-dark .r-close:hover,
-html.theme-dark .r-close:focus-visible {
-  background: var(--wine);
-  color: var(--cool-white);
-  border-color: var(--wine);
-}
-
-
-/*
- * /theme — Novoumy OS night palette.
- * This palette is intentionally separate from /invert (.theme-dark) and light mode.
- * The outer canvas stays near-black; windows/panels use espresso charcoal, with
- * warm cream text, restrained mauve edges and crisp pixel feedback.
- */
-html.theme-soft {
-  color-scheme: dark;
-
-  /* Global site palette tokens */
-  --cool-white: #1a161b;
-  --cool-white-rgb: 26 22 27;
-  --lavender: #29232e;
-  --lavender-rgb: 41 35 46;
-  --wine: #e6ded1;
-  --wine-rgb: 230 222 209;
-  --rose: #c7809d;
-  --rose-rgb: 199 128 157;
-  --backdrop-grid: #3f353d;
-
-  /* Dark-mode structure and interaction tokens */
-  --soft-canvas: #0d0b0f;
-  --soft-surface: #1a161b;
-  --soft-raised: #211c23;
-  --soft-well: #120f13;
-  --soft-edge: #3f353d;
-  --soft-hover: #c7809d;
-  --soft-glow: #9d75b2;
-  --soft-icon: #f4eedb;
-
-}
-
-html.theme-soft body,
-html.theme-soft #root {
-  background-color: var(--soft-canvas);
-  color: #e6ded1;
-}
-
-/* The Vite app's outer root has its own bg-lavender utility; keep it on the canvas. */
-html.theme-soft #root > .bg-lavender {
-  background-color: var(--soft-canvas) !important;
-}
-
-/* Quiet canvas grid: visible as texture, never competing with foreground content. */
-html.theme-soft .pixel-backdrop-grid {
-  background-image:
-    linear-gradient(to right, #3f353d 1px, transparent 1px),
-    linear-gradient(to bottom, #3f353d 1px, transparent 1px) !important;
-  opacity: 0.12 !important;
-}
-html.theme-soft .pixel-backdrop-grid ~ .animate-float-particle {
-  opacity: 0.14 !important;
-}
-
-/* Palette-backed Tailwind utility overrides. */
-html.theme-soft .text-wine { color: #e6ded1; }
-html.theme-soft .text-cool-white { color: #f4eedb; }
-html.theme-soft .text-lavender { color: #9d75b2; }
-html.theme-soft .text-rose { color: #c7809d; }
-html.theme-soft .bg-cool-white { background-color: #1a161b; }
-html.theme-soft .bg-lavender { background-color: #29232e; }
-html.theme-soft .bg-wine { background-color: #3f353d; }
-html.theme-soft .bg-rose { background-color: #553746; }
-html.theme-soft .border-wine { border-color: #3f353d; }
-html.theme-soft .border-rose { border-color: #634657; }
-html.theme-soft [class~="hover:text-wine"]:hover,
-html.theme-soft [class~="focus-visible:text-wine"]:focus-visible,
-html.theme-soft .group:hover [class~="group-hover:text-wine"] {
-  color: #f4eedb;
-}
-
-/* Main window and shared tiles: espresso-charcoal fills with crisp pixel edges. */
-html.theme-soft .pixel-frame {
-  background-color: #1a161b;
-  border: 2px solid #3f353d;
-  box-shadow:
-    0 -4px 0 0 #3f353d,
-    0 4px 0 0 #3f353d,
-    -4px 0 0 0 #3f353d,
-    4px 0 0 0 #3f353d,
-    8px 8px 0 0 #211c23;
-  border-radius: 0;
-}
-html.theme-soft .pixel-tile {
-  border: 2px solid #3f353d;
-  box-shadow:
-    0 -3px 0 0 #3f353d,
-    0 3px 0 0 #3f353d,
-    -3px 0 0 0 #3f353d,
-    3px 0 0 0 #3f353d;
-  border-radius: 0;
-}
-html.theme-soft .pixel-tile-interactive:hover,
-html.theme-soft .pixel-tile-interactive:focus-visible {
-  border-color: #c7809d;
-  box-shadow:
-    0 0 0 1px #c7809d,
-    3px 3px 0 0 #3f353d,
-    0 0 12px rgb(199 128 157 / 0.12);
-  transform: translateY(-2px);
-  outline: none;
-}
-html.theme-soft .pixel-tile-interactive:active {
-  transform: translateY(0);
-}
-
-/* Recessed icon wells: integrated mauve tiles with a restrained two-tone pixel hierarchy. */
 .pixel-icon-well { display: contents; }
-html.theme-soft .pixel-icon-well {
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  background: #3b3038;
-  border: 2px solid #554650;
-  box-shadow: inset 1px 1px 0 rgb(244 238 219 / 0.035), inset -2px -2px 0 #241c22;
-  border-radius: 0;
-  transition: background-color 150ms steps(2), border-color 150ms steps(2), box-shadow 150ms steps(2);
-  /* PixelIcon paints only dark recesses and muted mauve body pixels. */
-  --pixel-icon-shadow: #241c22;
-  --pixel-icon-base: #b89fa8;
-  --pixel-icon-highlight: #b89fa8; /* top-edge pixels stay body-toned; no cream-white flash */
-  /* Keep legacy accent tokens available to any non-PixelIcon glyphs in this well. */
-  --wine: #b89fa8;
-  --rose: #c9aab6;
-  --r-accent: #c9aab6;
-}
-html.theme-soft .pixel-icon-well svg {
-  display: block;
-  color: #b89fa8;
-  filter: none;
-  overflow: visible;
-  shape-rendering: crispEdges;
-}
-html.theme-soft .pixel-icon-well-folder {
-  width: 7.5rem;
-  height: 7.5rem;
-  padding: 0.45rem;
-}
-html.theme-soft .pixel-icon-well-social {
-  width: 4rem;
-  height: 4rem;
-  padding: 0.55rem;
-}
-html.theme-soft .pixel-icon-well-email {
-  width: 3.25rem;
-  height: 3.25rem;
-  padding: 0.4rem;
-}
-html.theme-soft .pixel-tile-interactive:hover .pixel-icon-well,
-html.theme-soft .pixel-tile-interactive:focus-visible .pixel-icon-well,
-html.theme-soft .group:hover .pixel-icon-well,
-html.theme-soft .group:focus-visible .pixel-icon-well {
-  background: #443640;
-  border-color: #806276;
-  box-shadow: inset 1px 1px 0 rgb(244 238 219 / 0.055), inset -2px -2px 0 #241c22;
-}
-
-/* Main navigation: restrained surface fill and a subtle lavender active-state glow. */
-html.theme-soft [role='tab'] {
-  border: 2px solid #3f353d;
-  border-radius: 0;
-}
-html.theme-soft [role='tab'][aria-selected='false'] {
-  background-color: #29232e;
-  color: #f4eedb;
-  text-shadow: none;
-}
-html.theme-soft [role='tab'][aria-selected='false']:hover,
-html.theme-soft [role='tab'][aria-selected='false']:focus-visible {
-  background-color: #493440;
-  border-color: #c7809d;
-  color: #f4eedb;
-  text-shadow: none;
-}
-html.theme-soft [role='tab'][aria-selected='true'] {
-  background-color: #1a161b;
-  border-color: #9d75b2;
-  color: #e6ded1;
-  box-shadow: 0 0 0 1px rgb(157 117 178 / 0.42), 0 0 13px rgb(157 117 178 / 0.2);
-}
-
-/* Folder windows: same dark palette, including the portal-mounted overlay. */
-html.theme-soft .retro-theme,
-html.theme-soft .retro-dark {
-  --r-bg: #1a161b;
-  --r-bg-rgb: 26 22 27;
-  --r-panel: #1a161b;
-  --r-panel-rgb: 26 22 27;
-  --r-raised: #211c23;
-  --r-raised-rgb: 33 28 35;
-  --r-line: #3f353d;
-  --r-line-rgb: 63 53 61;
-  --r-line-hi: #9d75b2;
-  --r-line-hi-rgb: 157 117 178;
-  --r-text: #e6ded1;
-  --r-text-rgb: 230 222 209;
-  --r-dim: #b9aeb7;
-  --r-dim-rgb: 185 174 183;
-  --r-accent: #9d75b2;
-  --r-accent-rgb: 157 117 178;
-  --r-accent-dim: #765d83;
-  --r-accent-dim-rgb: 118 93 131;
-  --r-vinyl: #100d12;
-  --r-vinyl-groove: #211a23;
-  --r-vinyl-edge: #0d0b0f;
-  color-scheme: dark;
-  background-color: #1a161b;
-  color: #e6ded1;
-}
-html.theme-soft .retro-theme.r-desk,
-html.theme-soft .retro-dark.r-desk {
-  background-color: #0d0b0f;
-  background-image:
-    linear-gradient(to right, rgb(63 53 61 / 0.22) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(63 53 61 / 0.22) 1px, transparent 1px);
-}
-html.theme-soft .retro-theme .r-window,
-html.theme-soft .retro-dark .r-window {
-  background: #1a161b;
-  border: 2px solid #3f353d;
-}
-html.theme-soft .retro-theme .r-titlebar,
-html.theme-soft .retro-dark .r-titlebar {
-  background: #29232e;
-  color: #e6ded1;
-  border-bottom: 2px solid #3f353d;
-}
-html.theme-soft .retro-theme .r-box,
-html.theme-soft .retro-theme .r-btn,
-html.theme-soft .retro-theme .r-link,
-html.theme-soft .retro-dark .r-box,
-html.theme-soft .retro-dark .r-btn,
-html.theme-soft .retro-dark .r-link {
-  border-color: #3f353d;
-  border-radius: 0;
-}
-html.theme-soft .retro-theme .r-box,
-html.theme-soft .retro-dark .r-box {
-  background-color: #1a161b;
-}
-html.theme-soft .retro-theme .r-box > span.relative.block,
-html.theme-soft .retro-dark .r-box > span.relative.block {
-  background: #120f13;
-  border-color: #3f353d;
-  box-shadow: inset 2px 2px 0 rgb(255 255 255 / 0.025), inset -2px -2px 0 #0a080b;
-}
-html.theme-soft .retro-theme .r-btn,
-html.theme-soft .retro-theme .r-link,
-html.theme-soft .retro-dark .r-btn,
-html.theme-soft .retro-dark .r-link {
-  background-color: #211c23;
-  color: #e6ded1;
-}
-html.theme-soft .retro-theme .r-btn:hover,
-html.theme-soft .retro-theme .r-btn:focus-visible,
-html.theme-soft .retro-theme .r-link:hover,
-html.theme-soft .retro-theme .r-link:focus-visible,
-html.theme-soft .retro-dark .r-btn:hover,
-html.theme-soft .retro-dark .r-btn:focus-visible,
-html.theme-soft .retro-dark .r-link:hover,
-html.theme-soft .retro-dark .r-link:focus-visible {
-  background-color: #342738;
-  border-color: #c7809d;
-  color: #f4eedb;
-  box-shadow: 3px 3px 0 0 #3f353d;
-}
-html.theme-soft .retro-theme .r-box-hover:hover,
-html.theme-soft .retro-theme .r-box-hover:focus-visible,
-html.theme-soft .retro-dark .r-box-hover:hover,
-html.theme-soft .retro-dark .r-box-hover:focus-visible {
-  border-color: #c7809d;
-  box-shadow: 0 0 0 1px #c7809d, 3px 3px 0 0 #3f353d;
-  transform: translateY(-2px);
-}
-html.theme-soft .retro-theme .r-close,
-html.theme-soft .retro-dark .r-close {
-  background: #211c23;
-  color: #e6ded1;
-  border: 2px solid #3f353d;
-  border-radius: 0;
-  box-shadow: 3px 3px 0 #3f353d;
-}
-html.theme-soft .retro-theme .r-close:hover,
-html.theme-soft .retro-theme .r-close:focus-visible,
-html.theme-soft .retro-dark .r-close:hover,
-html.theme-soft .retro-dark .r-close:focus-visible {
-  background: #342738;
-  color: #f4eedb;
-  border-color: #c7809d;
-}
-html.theme-soft .retro-theme .r-tag,
-html.theme-soft .retro-dark .r-tag {
-  background: #120f13;
-  color: #e6ded1;
-  border-color: #3f353d;
-  border-radius: 0;
-}
-html.theme-soft .retro-theme .pixel-badge,
-html.theme-soft .retro-dark .pixel-badge {
-  background: #29232e;
-  color: #f4eedb;
-  border: 2px solid #3f353d;
-  border-radius: 0;
-}
-
-/* Media controls and scrollbars stay dark, legible and squared. */
-html.theme-soft .retro-theme .pixel-scroll,
-html.theme-soft .retro-dark .pixel-scroll {
-  scrollbar-color: #765d83 #1a161b;
-}
-html.theme-soft .retro-theme .pixel-scroll::-webkit-scrollbar-track,
-html.theme-soft .retro-dark .pixel-scroll::-webkit-scrollbar-track {
-  background: #1a161b;
-}
-html.theme-soft .retro-theme .pixel-scroll::-webkit-scrollbar-thumb,
-html.theme-soft .retro-dark .pixel-scroll::-webkit-scrollbar-thumb {
-  background: #765d83;
-  border: 2px solid #1a161b;
-  border-radius: 0;
-}
-html.theme-soft .retro-theme .player-range,
-html.theme-soft .retro-dark .player-range {
-  --track: #3f353d;
-  --fillc: #9d75b2;
-}
-html.theme-soft .retro-theme .eq-bars i,
-html.theme-soft .retro-dark .eq-bars i {
-  background: #9d75b2;
-}
-html.theme-soft .retro-theme .player-range::-webkit-slider-thumb,
-html.theme-soft .retro-theme .player-range::-moz-range-thumb,
-html.theme-soft .retro-dark .player-range::-webkit-slider-thumb,
-html.theme-soft .retro-dark .player-range::-moz-range-thumb {
-  background: #e6ded1;
-  border: 2px solid #9d75b2;
-  border-radius: 0;
-}
-html.theme-soft .folder-sound-toggle {
-  background-color: #29232e;
-  color: #f4eedb;
-  border-color: #3f353d;
-}
-html.theme-soft .folder-sound-toggle:hover,
-html.theme-soft .folder-sound-toggle:focus-visible,
-html.theme-soft .main-sound-toggle:hover,
-html.theme-soft .main-sound-toggle:focus-visible {
-  background-color: #493440;
-  color: #f4eedb;
-  border-color: #c7809d;
-}
-
-/* Consistent square pixel treatment across cards, controls and clickable surfaces. */
-html.theme-soft .pixel-frame,
-html.theme-soft .pixel-tile,
-html.theme-soft .pixel-btn,
-html.theme-soft .r-window,
-html.theme-soft .r-box,
-html.theme-soft .r-btn,
-html.theme-soft .r-link,
-html.theme-soft .r-tag,
-html.theme-soft .r-close,
-html.theme-soft [role='tab'] {
-  border-radius: 0 !important;
-}
-html.theme-soft .pixel-btn {
-  clip-path: none;
-  border: 2px solid #3f353d;
-}
-html.theme-soft .retro-theme :where(button, input, select, textarea, a, section, article, [role='button'], [role='tab']),
-html.theme-soft .retro-dark :where(button, input, select, textarea, a, section, article, [role='button'], [role='tab']) {
-  border-radius: 0 !important;
-}
-
-/* Hover hierarchy for game + social cards: pink-violet edge and a restrained 2px lift. */
-html.theme-soft .retro-theme .r-box-hover:hover,
-html.theme-soft .retro-theme .r-box-hover:focus-visible,
-html.theme-soft .retro-dark .r-box-hover:hover,
-html.theme-soft .retro-dark .r-box-hover:focus-visible,
-html.theme-soft .pixel-tile-interactive:hover,
-html.theme-soft .pixel-tile-interactive:focus-visible {
-  border-color: #c7809d !important;
-  transform: translateY(-2px);
-}
-
-/* Subtle lavender glow highlights the active tab. */
-html.theme-soft [role='tab'][aria-selected='true'] {
-  box-shadow: 0 0 0 1px rgb(157 117 178 / 0.38), 0 0 12px rgb(157 117 178 / 0.18);
-}
-
-/* Dark-mode card hover: gentle lift, muted edge, and a small icon highlight increase. */
-html.theme-soft .pixel-tile-interactive:hover,
-html.theme-soft .pixel-tile-interactive:focus-visible,
-html.theme-soft .retro-theme .r-box-hover:hover,
-html.theme-soft .retro-theme .r-box-hover:focus-visible,
-html.theme-soft .retro-dark .r-box-hover:hover,
-html.theme-soft .retro-dark .r-box-hover:focus-visible {
-  border-color: #8f6e83 !important;
-  box-shadow: 0 0 0 1px rgb(199 128 157 / 0.16), 0 5px 12px rgb(0 0 0 / 0.18);
-  transform: translateY(-2px);
-}
-
-

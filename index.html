@@ -10,18 +10,19 @@
     <meta property="og:image" content="https://novoumy.com/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <script>
-      // Apply the saved Novoumy palette before the React bundle paints.
+      // Dark / inverted palettes were removed. Returning visitors may still have one cached, so wipe the
+      // old keys and any theme markers before first paint; they fall back to the default light theme.
       (function () {
         try {
-          var mode = localStorage.getItem('novoumy-theme');
-          if (mode === 'dark') mode = 'invert';
-          if (mode === 'theme') document.documentElement.classList.add('theme-soft');
-          else if (mode === 'invert') document.documentElement.classList.add('theme-dark');
-          document.documentElement.style.colorScheme = mode === 'theme' || mode === 'invert' ? 'dark' : 'light';
-          var themeColor = document.querySelector('meta[name="theme-color"]');
-          if (themeColor) themeColor.content = mode === 'theme' ? '#0d0b0f' : mode === 'invert' ? '#2B253A' : '#847FA4';
+          var root = document.documentElement;
+          root.classList.remove('theme-dark', 'theme-soft', 'dark');
+          root.removeAttribute('data-theme');
+          root.style.removeProperty('color-scheme');
+          ['novoumy-theme', 'theme', 'visual-mode', 'novoumy:theme', 'novoumy-visual-mode'].forEach(function (key) {
+            localStorage.removeItem(key);
+          });
         } catch (_) {
-          // Storage may be unavailable; the app falls back to light mode.
+          // Storage may be unavailable; there is nothing cached to clear.
         }
       })();
     </script>

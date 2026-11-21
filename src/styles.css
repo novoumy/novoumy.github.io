@@ -9,8 +9,6 @@
 /* Per-library accents are built dynamically as `accent-${id}`, so list them for the scanner. */
 @source inline("accent-media accent-games accent-music accent-quotes");
 
-@custom-variant dark (&:is(.dark *));
-
 /*
  * Design tokens (ported from the original tailwind.config.js).
  * Palette: cool white, lavender, wine, rose + per-library accent set by .accent-* classes.
@@ -64,7 +62,6 @@
     color: var(--color-gray-400);
   }
 }
-
 
 :root {
   --cool-white: #ECEFF1;
@@ -528,7 +525,6 @@
     transform: translateY(2px);
   }
 
-
   /* Volume slider: fixed-size pixel tile beside the speaker button.
      It never changes size or position: it only fades in/out via opacity. */
   .volume-panel {
@@ -847,7 +843,6 @@
     transition: none;
   }
 }
-
 
 /* ---------------------------------------------------------------------------------------------
    Phones only (max-width: 768px): the main window is a compact 4:3 card on #main and grows

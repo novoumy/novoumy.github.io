@@ -32,14 +32,20 @@
 .kinetic-words span:last-child { justify-self: end; text-align: right; }
 
 /* Collapse by the Main window's own width, so the fixed 800px stage and phones follow the same rules:
-   >= 640px  3 items  |  420-639px  2 items (centre hidden)  |  < 420px  1 item (end hidden too) */
+   >= 640px  3 items  |  260-639px  2 items (centre hidden; ping + weather stay visible)  |  < 260px  1 item
+   Press Start 2P is 1em wide (+0.05em spacing), so at 7px the left text + ping fit down to ~230px and
+   the weather readout truncates with an ellipsis before it could ever hit the left-hand text. */
 @container mainwin (max-width: 639px) {
   .kinetic-words { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 8px; }
   .kinetic-words span { flex: 0 1 auto; }
+  .kinetic-words span:first-child { flex-shrink: 0; }
+  .kinetic-words .kw-end { min-width: 0; text-overflow: ellipsis; }
   .kinetic-words .kw-center { display: none; }
 }
 @container mainwin (max-width: 419px) {
   .kinetic-words { font-size: 7px; }
+}
+@container mainwin (max-width: 259px) {
   .kinetic-words .kw-end { display: none; }
 }
 
@@ -108,12 +114,6 @@
   box-shadow:
     0 -4px 0 0 var(--wine), 0 4px 0 0 var(--wine), -4px 0 0 0 var(--wine), 4px 0 0 0 var(--wine),
     0 -8px 0 0 var(--rose), 0 8px 0 0 var(--rose), -8px 0 0 0 var(--rose), 8px 0 0 0 var(--rose);
-}
-html.theme-soft .main-profile-avatar {
-  background: #1a161b;
-  box-shadow:
-    0 -4px 0 0 #3f353d, 0 4px 0 0 #3f353d, -4px 0 0 0 #3f353d, 4px 0 0 0 #3f353d,
-    0 -8px 0 0 #553746, 0 8px 0 0 #553746, -8px 0 0 0 #553746, 8px 0 0 0 #553746;
 }
 .main-profile-name {
   margin: 0;

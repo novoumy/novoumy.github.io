@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#847FA4" />
     <script>
-      // The static 404 page shares the same saved theme preference as the app.
+      // Dark / inverted palettes were removed: clear any cached theme so the 404 stays on the default light look.
       (function () {
         try {
-          var mode = localStorage.getItem('novoumy-theme');
-          if (mode === 'dark') mode = 'invert';
-          if (mode === 'theme') document.documentElement.classList.add('theme-soft');
-          else if (mode === 'invert') document.documentElement.classList.add('theme-dark');
-          document.documentElement.style.colorScheme = mode === 'theme' || mode === 'invert' ? 'dark' : 'light';
-          var themeColor = document.querySelector('meta[name="theme-color"]');
-          if (themeColor) themeColor.content = mode === 'theme' ? '#0d0b0f' : mode === 'invert' ? '#2B253A' : '#847FA4';
+          var root = document.documentElement;
+          root.classList.remove('theme-dark', 'theme-soft', 'dark');
+          root.removeAttribute('data-theme');
+          root.style.removeProperty('color-scheme');
+          ['novoumy-theme', 'theme', 'visual-mode', 'novoumy:theme', 'novoumy-visual-mode'].forEach(function (key) {
+            localStorage.removeItem(key);
+          });
         } catch (_) {
-          // Keep the default light retro 404 if storage is unavailable.
+          // Storage may be unavailable; there is nothing cached to clear.
         }
       })();
     </script>
@@ -224,11 +224,6 @@
         box-shadow: 0 -4px 0 0 var(--wine), 0 4px 0 0 var(--wine), -4px 0 0 0 var(--wine), 4px 0 0 0 var(--wine),
                     0 -8px 0 0 var(--rose), 0 8px 0 0 var(--rose), -8px 0 0 0 var(--rose), 8px 0 0 0 var(--rose);
       }
-      html.theme-soft .r-avatar {
-        background: #1a161b;
-        box-shadow: 0 -4px 0 0 #3f353d, 0 4px 0 0 #3f353d, -4px 0 0 0 #3f353d, 4px 0 0 0 #3f353d,
-                    0 -8px 0 0 #553746, 0 8px 0 0 #553746, -8px 0 0 0 #553746, 8px 0 0 0 #553746;
-      }
       .r-name { margin: 0; font: 24px/1.4 'Press Start 2P', monospace; letter-spacing: 0.05em; }
       .r-bio {
         width: min(34rem, 100%); margin: 0 auto; font: 26px/1.25 'VT323', monospace; letter-spacing: 0.03em; text-wrap: balance;
@@ -292,39 +287,6 @@
         .error-label { font-size: 8px; }
         .go-home { min-height: 38px; padding-block: 8px; }
       }
-
-      /* Saved /theme palette: same plum-charcoal surfaces as Novoumy OS. */
-      html.theme-soft {
-        color-scheme: dark;
-        --status-pink: color-mix(in oklab, #c7809d 55%, #1a161b);
-        --paper: #1a161b; --lavender: #0d0b0f; --wine: #e6ded1; --rose: #9d75b2;
-        --frame: #3f353d; --frame-shadow: #3f353d;
-        --tab-bg: #29232e; --tab-fg: #e6ded1; --tab-shadow: #0d0b0f;
-       
-        --scan: rgb(230 222 209 / 0.025); --grid: rgb(63 53 61 / 0.18);
-        --btn-bg: #29232e; --btn-fg: #e6ded1; --btn-edge: #3f353d; --btn-shadow: #3f353d;
-        --btn-hover-bg: #342738; --btn-hover-fg: #f4eedb;
-      }
-      html.theme-soft .error-screen { border-top-color: #554650; border-bottom-color: #554650; }
-      html.theme-soft .error-code { text-shadow: 4px 4px 0 #765d83, 8px 8px 0 rgb(13 11 15 / 0.45); }
-      html.theme-soft .go-home { box-shadow: 5px 5px 0 #765d83, 8px 8px 0 var(--btn-shadow); }
-      html.theme-soft .go-home:hover, html.theme-soft .go-home:focus-visible { outline-color: #c7809d; }
-
-      /* Saved /invert palette: preserve the original inverted option on the 404 too. */
-      html.theme-dark {
-        color-scheme: dark;
-        --paper: #191622; --lavender: #2B253A; --wine: #F1EAF5; --rose: #8F76AD;
-        --frame: #8F76AD; --frame-shadow: #191622;
-        --tab-bg: #2B253A; --tab-fg: #F1EAF5; --tab-shadow: #191622;
-       
-        --scan: rgb(183 169 201 / 0.035); --grid: rgb(183 169 201 / 0.10);
-        --btn-bg: #8F76AD; --btn-fg: #191622; --btn-edge: #8F76AD; --btn-shadow: #191622;
-        --btn-hover-bg: #B7A9C9; --btn-hover-fg: #191622;
-      }
-      html.theme-dark .error-screen { border-top-color: var(--rose); border-bottom-color: var(--rose); }
-      html.theme-dark .error-code { text-shadow: 5px 5px 0 var(--rose), 10px 10px 0 rgb(0 0 0 / 0.22); }
-      html.theme-dark .go-home { box-shadow: 5px 5px 0 var(--rose), 8px 8px 0 var(--btn-shadow); }
-      html.theme-dark .go-home:hover, html.theme-dark .go-home:focus-visible { outline-color: var(--rose); }
     </style>
   </head>
   <body>

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
@@ -15,20 +15,6 @@ import { folderMorph } from '@/lib/morph';
 import { animatePanelIn } from '@/lib/motion';
 
 const sameRoute = (a: Route, b: Route) => a.tab === b.tab && a.interest === b.interest;
-type VisualMode = 'light' | 'invert' | 'theme';
-
-function getInitialVisualMode(): VisualMode {
-  try {
-    const saved = typeof window !== 'undefined' ? window.localStorage.getItem('novoumy-theme') : null;
-    // Older releases stored the original inverted palette as 'dark'.
-    if (saved === 'dark' || saved === 'invert') return 'invert';
-    if (saved === 'theme') return 'theme';
-  } catch {
-    // Use the default light palette when storage is unavailable.
-  }
-  return 'light';
-}
-
 const enabledTabs = tabs.filter((tab) => tab.enabled);
 
 type Panel = {
@@ -46,34 +32,6 @@ export default function App() {
   const [route, setRoute] = useState<Route>(parseHash);
   const activeId = route.tab;
   const [crt, setCrt] = useState(false);
-  const [visualMode, setVisualMode] = useState<VisualMode>(getInitialVisualMode);
-
-  // Apply the selected palette to <html> so every tab and portal-rendered folder shares it.
-  useLayoutEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle('theme-dark', visualMode === 'invert');
-    root.classList.toggle('theme-soft', visualMode === 'theme');
-    root.style.colorScheme = visualMode === 'light' ? 'light' : 'dark';
-    try {
-      window.localStorage.setItem('novoumy-theme', visualMode);
-    } catch {
-      // Theme still works for this session when storage is unavailable.
-    }
-  }, [visualMode]);
-
-  // /theme toggles the softer palette; using it while inverted switches directly to it.
-  const toggleTheme = () => {
-    const next = visualMode === 'theme' ? 'light' : 'theme';
-    setVisualMode(next);
-    return next === 'theme';
-  };
-
-  // /invert preserves the original high-contrast inverted palette as a separate option.
-  const toggleInvert = () => {
-    const next = visualMode === 'invert' ? 'light' : 'invert';
-    setVisualMode(next);
-    return next === 'invert';
-  };
 
   // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
   useEffect(() => {
@@ -151,7 +109,7 @@ export default function App() {
   }, [crt]);
 
   const panels: Panel[] = [
-    { id: 'main', render: () => <MainView onToggleTheme={toggleTheme} onToggleInvert={toggleInvert} /> },
+    { id: 'main', render: () => <MainView /> },
     { id: 'socials', render: () => <SocialsView /> },
     {
       id: 'interests',
