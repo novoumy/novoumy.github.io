@@ -4,49 +4,30 @@ import { mountBubbleBorder } from '@/lib/bubbleBorder';
 import './main.css';
 
 // ---- Visitor counter -------------------------------------------------------------------------
-// The site is static (GitHub Pages), so the shared total lives in a free hosted counter.
-// Two providers are tried in order; whichever answered last time goes first so a browser keeps
-// seeing one consistent number. A visit is counted once per browser session (tab switches and
-// reloads only read the total). Every failure is logged as "[visitors] ..." in the console.
-const NAMESPACE = 'novoumy-github-io';
-const KEY = 'visits';
-const CACHE_KEY = 'novoumy:visitors';
-const SOURCE_KEY = 'novoumy:visitors-src';
-const COUNTED_KEY = 'novoumy:counted';
+// One source of truth: a single hosted counter (counterapi.dev). Every device reads and bumps the
+// same remote number, so PC and mobile can never disagree.
+//  - A visit is counted at most once per browser per 12 hours (localStorage); otherwise we only read.
+//  - The last number received is cached and painted instantly on load, then replaced by the live one.
+//  - One shared in-flight promise means React StrictMode / remounts can never double-count.
+const COUNTER_BASE = 'https://api.counterapi.dev/v1/novoumy-github-io/visits';
+const CACHE_KEY = 'novoumy:visitors'; // also read by public/404.html
+const COUNTED_AT_KEY = 'novoumy:counted-at';
+const COUNT_WINDOW_MS = 12 * 60 * 60 * 1000;
+const TIMEOUT_MS = 4000;
 
-type Provider = { id: string; hit: string; get: string; read: (json: unknown) => unknown };
-const PROVIDERS: Provider[] = [
-  {
-    id: 'counterapi',
-    hit: `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/up`,
-    get: `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}`,
-    read: (json) => (json as { count?: unknown })?.count,
-  },
-  {
-    id: 'abacus',
-    hit: `https://abacus.jasoncameron.dev/hit/${NAMESPACE}/${KEY}`,
-    get: `https://abacus.jasoncameron.dev/get/${NAMESPACE}/${KEY}`,
-    read: (json) => (json as { value?: unknown })?.value,
-  },
-];
-
-const store = {
-  get: (area: 'local' | 'session', key: string) => {
-    try { return (area === 'local' ? localStorage : sessionStorage).getItem(key); } catch { return null; }
-  },
-  set: (area: 'local' | 'session', key: string, value: string) => {
-    try { (area === 'local' ? localStorage : sessionStorage).setItem(key, value); } catch { /* storage blocked */ }
-  },
+const storage = {
+  get: (key: string) => { try { return localStorage.getItem(key); } catch { return null; } },
+  set: (key: string, value: string) => { try { localStorage.setItem(key, value); } catch { /* storage blocked */ } },
 };
 
-async function requestCount(provider: Provider, url: string): Promise<number> {
+async function fetchCount(url: string): Promise<number> {
   const controller = new AbortController();
-  const timer = window.setTimeout(() => controller.abort(), 6000);
+  const timer = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
-    const res = await fetch(url, { signal: controller.signal });
+    const res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const count = Number(provider.read(await res.json()));
-    if (!Number.isFinite(count) || count < 0) throw new Error('unexpected response shape');
+    const count = Number(((await res.json()) as { count?: unknown })?.count);
+    if (!Number.isFinite(count) || count < 0) throw new Error('bad response');
     return count;
   } finally {
     window.clearTimeout(timer);
@@ -55,28 +36,31 @@ async function requestCount(provider: Provider, url: string): Promise<number> {
 
 let visitsPromise: Promise<number | null> | null = null;
 
-function loadVisitors(retry = false): Promise<number | null> {
-  if (retry) visitsPromise = null;
+function loadVisitors(): Promise<number | null> {
   visitsPromise ??= (async () => {
-    const counted = store.get('session', COUNTED_KEY) === '1';
-    const preferred = store.get('local', SOURCE_KEY);
-    const ordered = [...PROVIDERS].sort((a, b) => Number(b.id === preferred) - Number(a.id === preferred));
-    for (const provider of ordered) {
+    const lastCounted = Number(storage.get(COUNTED_AT_KEY)) || 0;
+    const shouldCount = Date.now() - lastCounted > COUNT_WINDOW_MS;
+    // Mark first so a second tab / remount racing this one does not bump the counter again.
+    if (shouldCount) storage.set(COUNTED_AT_KEY, String(Date.now()));
+    for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        const count = await requestCount(provider, counted ? provider.get : provider.hit);
-        store.set('session', COUNTED_KEY, '1');
-        store.set('local', CACHE_KEY, String(count));
-        store.set('local', SOURCE_KEY, provider.id);
+        const count = await fetchCount(shouldCount && attempt === 0 ? `${COUNTER_BASE}/up` : COUNTER_BASE);
+        storage.set(CACHE_KEY, String(count));
         return count;
       } catch (error) {
-        console.warn(`[visitors] ${provider.id} failed:`, error);
+        console.warn('[visitors] request failed:', error);
       }
     }
-    const cached = Number(store.get('local', CACHE_KEY));
-    return cached > 0 ? cached : null;
+    if (shouldCount) storage.set(COUNTED_AT_KEY, '0'); // the hit never landed, so allow a retry next load
+    return null;
   })();
   return visitsPromise;
 }
+
+const cachedVisitors = () => {
+  const n = Number(storage.get(CACHE_KEY));
+  return Number.isFinite(n) && n > 0 ? n : null;
+};
 
 const randomPing = () => 18 + Math.floor(Math.random() * 18); // 18..35
 
@@ -108,7 +92,7 @@ function PixelDivider({ position }: { position: 'top' | 'bottom' }) {
 export default function MainView() {
   const [clock, setClock] = useState('');
   const [weather, setWeather] = useState<Weather>(null);
-  const [visitors, setVisitors] = useState<number | null>(null);
+  const [visitors, setVisitors] = useState<number | null>(cachedVisitors);
   const [ping, setPing] = useState(randomPing);
   const pingTarget = useRef(ping);
   const weatherWord = weather
@@ -134,15 +118,16 @@ export default function MainView() {
     return () => { window.clearInterval(retarget); window.clearInterval(glide); };
   }, []);
 
-  // Load the total; if nothing answered, try again a few times instead of leaving "----" forever.
+  // Load the live total (the cached value is already on screen); retry later if the network failed.
   useEffect(() => {
     let alive = true;
     let timer = 0;
     const attempt = (n: number) => {
-      void loadVisitors(n > 0).then((count) => {
+      if (n > 0) visitsPromise = null;
+      void loadVisitors().then((count) => {
         if (!alive) return;
         if (count !== null) setVisitors(count);
-        if (count === null && n < 4) timer = window.setTimeout(() => attempt(n + 1), 15000);
+        else if (n < 3) timer = window.setTimeout(() => attempt(n + 1), 10000);
       });
     };
     attempt(0);

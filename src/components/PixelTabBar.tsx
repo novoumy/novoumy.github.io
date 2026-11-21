@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { TabConfig, TabId } from '@/siteData';
-import { TAB_ICONS } from '@/lib/icons';
+import PixelTabIcon from '@/components/PixelTabIcon';
 
 interface PixelTabBarProps {
   tabs: TabConfig[];
@@ -19,7 +19,6 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
       className="relative z-10 flex w-full min-w-0 flex-1 items-stretch gap-1 overflow-visible min-[860px]:w-auto min-[860px]:flex-none min-[860px]:items-end min-[860px]:gap-1 min-[860px]:pl-1 min-[860px]:pr-0"
     >
       {tabs.map((tab) => {
-        const Icon = TAB_ICONS[tab.icon];
         const active = tab.id === activeId;
         return (
           <button
@@ -48,7 +47,7 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
             ].join(' ')}
           >
             {burst?.id === tab.id && <span key={burst.n} className="tab-burst" aria-hidden="true" />}
-            <Icon size={18} strokeWidth={2.5} aria-hidden="true" className={['shrink-0', burst?.id === tab.id ? 'tab-icon-spin' : ''].join(' ')} key={burst?.id === tab.id ? `i${burst.n}` : 'i'} />
+            <PixelTabIcon name={tab.icon} size={20} className={['shrink-0', burst?.id === tab.id ? 'tab-icon-spin' : ''].join(' ')} key={burst?.id === tab.id ? `i${burst.n}` : 'i'} />
             <span className={active ? 'inline min-w-0 overflow-hidden text-ellipsis' : 'hidden min-[860px]:inline'}>{tab.label}</span>
           </button>
         );
