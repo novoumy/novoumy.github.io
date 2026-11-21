@@ -177,42 +177,12 @@
       .replica[data-items='2'] .r-bar { font-size: 8px; }
       .replica[data-items='1'] .r-bar { font-size: 7px; }
       .replica[data-items='2'] .kw-center, .replica[data-items='1'] .kw-center, .replica[data-items='1'] .kw-end { display: none; }
-      /* ---------- Organic bubble-cluster divider (same sprite + sizes as src/views/main.css) ----------
-         Dense overlapping pixel circles / ovals bury the bar's edge; 8 frames grow, shrink and pop bubbles in place. */
-      .pixel-divider {
-        --pd-h: 56px;
-        --pd-w: 256px;
-        --pd-sprite: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 112%27 width=%27256%27 height=%27448%27 shape-rendering=%27crispEdges%27%3E%3Cpath d=%27M0 0h64v1h-64zM0 1h64v1h-64zM0 2h64v1h-64zM0 3h1v1h-1zM6 3h46v1h-46zM54 3h5v1h-5zM62 3h2v1h-2zM10 4h16v1h-16zM28 4h12v1h-12zM46 4h5v1h-5zM55 4h1v1h-1zM11 5h3v1h-3zM18 5h7v1h-7zM30 5h9v1h-9zM46 5h5v1h-5zM12 6h2v1h-2zM18 6h6v1h-6zM31 6h2v1h-2zM37 6h2v1h-2zM46 6h1v1h-1zM56 6h3v1h-3zM61 6h1v1h-1zM12 7h3v1h-3zM18 7h5v1h-5zM44 7h2v1h-2zM56 7h6v1h-6zM12 8h12v1h-12zM44 8h2v1h-2zM58 8h6v1h-6zM0 9h5v1h-5zM12 9h18v1h-18zM38 9h7v1h-7zM61 9h3v1h-3zM0 10h4v1h-4zM14 10h15v1h-15zM40 10h4v1h-4zM61 10h3v1h-3zM17 11h10v1h-10zM62 11h2v1h-2zM0 14h64v1h-64zM0 15h64v1h-64zM0 16h64v1h-64zM0 17h52v1h-52zM54 17h5v1h-5zM61 17h3v1h-3zM0 18h1v1h-1zM6 18h6v1h-6zM15 18h6v1h-6zM22 18h18v1h-18zM45 18h7v1h-7zM55 18h1v1h-1zM62 18h2v1h-2zM19 19h6v1h-6zM29 19h11v1h-11zM46 19h4v1h-4zM62 19h1v1h-1zM11 20h2v1h-2zM19 20h4v1h-4zM30 20h1v1h-1zM32 20h1v1h-1zM38 20h2v1h-2zM45 20h2v1h-2zM56 20h7v1h-7zM12 21h2v1h-2zM19 21h4v1h-4zM30 21h1v1h-1zM44 21h2v1h-2zM56 21h1v1h-1zM59 21h5v1h-5zM0 22h2v1h-2zM12 22h12v1h-12zM29 22h1v1h-1zM43 22h3v1h-3zM60 22h4v1h-4zM0 23h6v1h-6zM13 23h17v1h-17zM39 23h7v1h-7zM61 23h3v1h-3zM0 24h5v1h-5zM14 24h16v1h-16zM40 24h5v1h-5zM61 24h3v1h-3zM1 25h2v1h-2zM17 25h11v1h-11zM61 25h3v1h-3zM0 28h64v1h-64zM0 29h64v1h-64zM0 30h64v1h-64zM0 31h50v1h-50zM55 31h2v1h-2zM58 31h6v1h-6zM0 32h12v1h-12zM18 32h23v1h-23zM44 32h4v1h-4zM62 32h2v1h-2zM0 33h4v1h-4zM9 33h2v1h-2zM19 33h7v1h-7zM29 33h11v1h-11zM45 33h3v1h-3zM62 33h2v1h-2zM0 34h4v1h-4zM11 34h2v1h-2zM20 34h5v1h-5zM29 34h3v1h-3zM45 34h3v1h-3zM57 34h7v1h-7zM0 35h6v1h-6zM11 35h2v1h-2zM19 35h6v1h-6zM29 35h3v1h-3zM44 35h2v1h-2zM57 35h7v1h-7zM0 36h6v1h-6zM11 36h3v1h-3zM18 36h8v1h-8zM28 36h3v1h-3zM44 36h2v1h-2zM55 36h2v1h-2zM61 36h3v1h-3zM0 37h5v1h-5zM13 37h17v1h-17zM39 37h7v1h-7zM61 37h3v1h-3zM0 38h4v1h-4zM14 38h16v1h-16zM39 38h7v1h-7zM61 38h3v1h-3zM1 39h1v1h-1zM18 39h10v1h-10zM41 39h2v1h-2zM62 39h2v1h-2zM0 42h64v1h-64zM0 43h64v1h-64zM0 44h64v1h-64zM0 45h49v1h-49zM58 45h6v1h-6zM0 46h12v1h-12zM19 46h22v1h-22zM44 46h4v1h-4zM62 46h2v1h-2zM0 47h4v1h-4zM8 47h3v1h-3zM20 47h6v1h-6zM29 47h4v1h-4zM36 47h4v1h-4zM45 47h3v1h-3zM62 47h2v1h-2zM0 48h4v1h-4zM10 48h2v1h-2zM20 48h4v1h-4zM29 48h3v1h-3zM44 48h4v1h-4zM58 48h6v1h-6zM0 49h6v1h-6zM10 49h3v1h-3zM20 49h3v1h-3zM29 49h3v1h-3zM45 49h1v1h-1zM57 49h7v1h-7zM0 50h5v1h-5zM11 50h3v1h-3zM18 50h6v1h-6zM25 50h1v1h-1zM28 50h4v1h-4zM44 50h2v1h-2zM55 50h9v1h-9zM0 51h5v1h-5zM13 51h17v1h-17zM43 51h4v1h-4zM58 51h6v1h-6zM0 52h4v1h-4zM14 52h15v1h-15zM38 52h9v1h-9zM61 52h3v1h-3zM15 53h3v1h-3zM19 53h2v1h-2zM26 53h2v1h-2zM39 53h6v1h-6zM0 56h64v1h-64zM0 57h64v1h-64zM0 58h64v1h-64zM0 59h50v1h-50zM55 59h1v1h-1zM59 59h5v1h-5zM0 60h3v1h-3zM4 60h7v1h-7zM18 60h23v1h-23zM45 60h3v1h-3zM62 60h2v1h-2zM8 61h3v1h-3zM19 61h4v1h-4zM26 61h7v1h-7zM38 61h2v1h-2zM45 61h3v1h-3zM62 61h2v1h-2zM10 62h2v1h-2zM20 62h2v1h-2zM27 62h5v1h-5zM45 62h3v1h-3zM58 62h6v1h-6zM0 63h1v1h-1zM10 63h3v1h-3zM19 63h3v1h-3zM27 63h5v1h-5zM45 63h1v1h-1zM56 63h8v1h-8zM0 64h6v1h-6zM11 64h3v1h-3zM18 64h5v1h-5zM27 64h4v1h-4zM45 64h1v1h-1zM55 64h9v1h-9zM1 65h5v1h-5zM12 65h12v1h-12zM25 65h5v1h-5zM44 65h2v1h-2zM52 65h12v1h-12zM2 66h3v1h-3zM13 66h9v1h-9zM25 66h4v1h-4zM40 66h3v1h-3zM61 66h3v1h-3zM14 67h5v1h-5zM0 70h64v1h-64zM0 71h64v1h-64zM0 72h64v1h-64zM0 73h51v1h-51zM53 73h3v1h-3zM58 73h1v1h-1zM61 73h3v1h-3zM6 74h5v1h-5zM16 74h24v1h-24zM45 74h4v1h-4zM62 74h2v1h-2zM9 75h1v1h-1zM16 75h8v1h-8zM25 75h8v1h-8zM37 75h3v1h-3zM46 75h3v1h-3zM62 75h1v1h-1zM10 76h1v1h-1zM15 76h8v1h-8zM29 76h2v1h-2zM45 76h2v1h-2zM56 76h7v1h-7zM11 77h12v1h-12zM29 77h2v1h-2zM40 77h6v1h-6zM56 77h8v1h-8zM0 78h1v1h-1zM11 78h12v1h-12zM26 78h4v1h-4zM40 78h6v1h-6zM51 78h1v1h-1zM54 78h10v1h-10zM1 79h4v1h-4zM11 79h18v1h-18zM40 79h5v1h-5zM51 79h9v1h-9zM61 79h3v1h-3zM3 80h1v1h-1zM13 80h9v1h-9zM25 80h3v1h-3zM40 80h4v1h-4zM53 80h3v1h-3zM61 80h3v1h-3zM14 81h6v1h-6zM16 82h1v1h-1zM0 84h64v1h-64zM0 85h64v1h-64zM0 86h64v1h-64zM0 87h1v1h-1zM6 87h36v1h-36zM43 87h16v1h-16zM61 87h3v1h-3zM8 88h2v1h-2zM16 88h9v1h-9zM29 88h10v1h-10zM46 88h4v1h-4zM17 89h7v1h-7zM30 89h9v1h-9zM47 89h2v1h-2zM16 90h7v1h-7zM56 90h6v1h-6zM11 91h12v1h-12zM44 91h2v1h-2zM56 91h6v1h-6zM11 92h12v1h-12zM43 92h3v1h-3zM51 92h1v1h-1zM55 92h9v1h-9zM0 93h5v1h-5zM11 93h10v1h-10zM22 93h3v1h-3zM39 93h8v1h-8zM50 93h8v1h-8zM61 93h3v1h-3zM0 94h1v1h-1zM12 94h8v1h-8zM25 94h3v1h-3zM38 94h8v1h-8zM52 94h4v1h-4zM61 94h3v1h-3zM40 95h5v1h-5zM0 98h64v1h-64zM0 99h64v1h-64zM0 100h64v1h-64zM7 101h34v1h-34zM44 101h8v1h-8zM54 101h4v1h-4zM62 101h2v1h-2zM9 102h16v1h-16zM29 102h10v1h-10zM46 102h5v1h-5zM55 102h1v1h-1zM11 103h4v1h-4zM18 103h6v1h-6zM30 103h9v1h-9zM47 103h3v1h-3zM12 104h2v1h-2zM18 104h6v1h-6zM32 104h1v1h-1zM36 104h2v1h-2zM56 104h3v1h-3zM61 104h1v1h-1zM12 105h3v1h-3zM17 105h6v1h-6zM36 105h1v1h-1zM45 105h1v1h-1zM56 105h6v1h-6zM12 106h12v1h-12zM36 106h2v1h-2zM44 106h2v1h-2zM56 106h1v1h-1zM58 106h5v1h-5zM0 107h2v1h-2zM12 107h14v1h-14zM37 107h2v1h-2zM43 107h3v1h-3zM61 107h3v1h-3zM0 108h3v1h-3zM12 108h6v1h-6zM19 108h2v1h-2zM22 108h6v1h-6zM39 108h6v1h-6zM61 108h3v1h-3zM62 109h2v1h-2z%27/%3E%3C/svg%3E");
-        position: relative;
-        flex: none;
-        height: var(--pd-h);
-        pointer-events: none;
-        overflow: hidden;
-      }
-      .pixel-divider > i {
-        position: absolute;
-        inset: 0;
-        display: block;
-        background: var(--status-pink);
-        -webkit-mask-image: var(--pd-sprite);
-        mask-image: var(--pd-sprite);
-        -webkit-mask-size: var(--pd-w) calc(var(--pd-h) * 8);
-        mask-size: var(--pd-w) calc(var(--pd-h) * 8);
-        -webkit-mask-repeat: repeat-x;
-        mask-repeat: repeat-x;
-        animation: pd-shimmer 4.8s steps(8) infinite;
-      }
-      @keyframes pd-shimmer {
-        from { -webkit-mask-position: 0 0; mask-position: 0 0; }
-        to { -webkit-mask-position: 0 calc(var(--pd-h) * -8); mask-position: 0 calc(var(--pd-h) * -8); }
-      }
-      /* The bottom strip is the same dither mirrored, so it thickens toward the bottom bar. */
+      /* ---------- Organic bubble-cluster divider (same drawing code + sizes as src/views/main.css) ---------- */
+      .pixel-divider { --pd-h: 64px; position: relative; flex: none; height: var(--pd-h); pointer-events: none; overflow: hidden; }
+      .pixel-divider > canvas { position: absolute; left: 0; top: 0; display: block; color: var(--status-pink); image-rendering: pixelated; }
       .pixel-divider-top { margin-top: -2px; }
       .pixel-divider-bottom { margin-bottom: -2px; transform: scaleY(-1); }
-      .replica[data-items='2'] .pixel-divider, .replica[data-items='1'] .pixel-divider { --pd-h: 40px; --pd-sprite: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 80%27 width=%27256%27 height=%27320%27 shape-rendering=%27crispEdges%27%3E%3Cpath d=%27M0 0h64v1h-64zM0 1h64v1h-64zM0 2h64v1h-64zM0 3h1v1h-1zM2 3h18v1h-18zM21 3h6v1h-6zM28 3h18v1h-18zM58 3h6v1h-6zM4 4h13v1h-13zM38 4h6v1h-6zM60 4h4v1h-4zM4 5h1v1h-1zM8 5h9v1h-9zM39 5h5v1h-5zM60 5h3v1h-3zM9 6h9v1h-9zM19 6h5v1h-5zM39 6h6v1h-6zM59 6h5v1h-5zM0 7h3v1h-3zM13 7h4v1h-4zM20 7h5v1h-5zM30 7h5v1h-5zM37 7h5v1h-5zM55 7h9v1h-9zM38 8h2v1h-2zM57 8h3v1h-3zM0 10h64v1h-64zM0 11h64v1h-64zM0 12h64v1h-64zM3 13h23v1h-23zM28 13h6v1h-6zM36 13h11v1h-11zM56 13h8v1h-8zM4 14h14v1h-14zM23 14h1v1h-1zM39 14h6v1h-6zM59 14h4v1h-4zM8 15h10v1h-10zM40 15h5v1h-5zM59 15h4v1h-4zM9 16h14v1h-14zM40 16h5v1h-5zM57 16h6v1h-6zM0 17h1v1h-1zM12 17h6v1h-6zM19 17h5v1h-5zM29 17h5v1h-5zM39 17h2v1h-2zM55 17h7v1h-7zM63 17h1v1h-1zM21 18h3v1h-3zM57 18h3v1h-3zM0 20h64v1h-64zM0 21h64v1h-64zM0 22h64v1h-64zM0 23h1v1h-1zM3 23h23v1h-23zM29 23h2v1h-2zM37 23h15v1h-15zM55 23h9v1h-9zM4 24h14v1h-14zM28 24h1v1h-1zM40 24h6v1h-6zM58 24h5v1h-5zM8 25h10v1h-10zM41 25h5v1h-5zM58 25h5v1h-5zM9 26h14v1h-14zM41 26h2v1h-2zM45 26h3v1h-3zM56 26h6v1h-6zM11 27h13v1h-13zM30 27h1v1h-1zM39 27h2v1h-2zM55 27h7v1h-7zM13 28h3v1h-3zM20 28h5v1h-5zM32 28h2v1h-2zM38 28h1v1h-1zM57 28h3v1h-3zM0 30h64v1h-64zM0 31h64v1h-64zM0 32h64v1h-64zM0 33h25v1h-25zM29 33h1v1h-1zM37 33h27v1h-27zM4 34h13v1h-13zM40 34h7v1h-7zM57 34h7v1h-7zM8 35h10v1h-10zM41 35h6v1h-6zM58 35h4v1h-4zM63 35h1v1h-1zM9 36h14v1h-14zM41 36h8v1h-8zM55 36h7v1h-7zM10 37h14v1h-14zM39 37h3v1h-3zM54 37h7v1h-7zM13 38h4v1h-4zM20 38h5v1h-5zM31 38h4v1h-4zM37 38h3v1h-3zM57 38h3v1h-3zM0 40h64v1h-64zM0 41h64v1h-64zM0 42h64v1h-64zM0 43h19v1h-19zM22 43h3v1h-3zM29 43h1v1h-1zM37 43h27v1h-27zM3 44h14v1h-14zM39 44h7v1h-7zM58 44h6v1h-6zM3 45h1v1h-1zM7 45h10v1h-10zM40 45h7v1h-7zM58 45h6v1h-6zM0 46h1v1h-1zM8 46h15v1h-15zM40 46h9v1h-9zM52 46h1v1h-1zM54 46h8v1h-8zM63 46h1v1h-1zM10 47h7v1h-7zM18 47h6v1h-6zM38 47h3v1h-3zM46 47h1v1h-1zM53 47h8v1h-8zM20 48h5v1h-5zM32 48h2v1h-2zM38 48h1v1h-1zM56 48h4v1h-4zM0 50h64v1h-64zM0 51h64v1h-64zM0 52h64v1h-64zM0 53h18v1h-18zM23 53h1v1h-1zM28 53h3v1h-3zM36 53h16v1h-16zM57 53h7v1h-7zM0 54h1v1h-1zM3 54h13v1h-13zM38 54h8v1h-8zM60 54h4v1h-4zM3 55h1v1h-1zM6 55h10v1h-10zM39 55h7v1h-7zM60 55h4v1h-4zM0 56h3v1h-3zM8 56h9v1h-9zM18 56h1v1h-1zM22 56h1v1h-1zM39 56h10v1h-10zM50 56h2v1h-2zM58 56h6v1h-6zM9 57h8v1h-8zM18 57h6v1h-6zM36 57h5v1h-5zM53 57h8v1h-8zM12 58h1v1h-1zM20 58h5v1h-5zM55 58h5v1h-5zM0 60h64v1h-64zM0 61h64v1h-64zM0 62h64v1h-64zM0 63h18v1h-18zM23 63h2v1h-2zM28 63h18v1h-18zM59 63h5v1h-5zM0 64h1v1h-1zM3 64h13v1h-13zM37 64h8v1h-8zM61 64h3v1h-3zM3 65h1v1h-1zM6 65h10v1h-10zM39 65h6v1h-6zM61 65h3v1h-3zM0 66h1v1h-1zM2 66h2v1h-2zM8 66h10v1h-10zM23 66h1v1h-1zM39 66h8v1h-8zM59 66h5v1h-5zM0 67h3v1h-3zM10 67h6v1h-6zM19 67h5v1h-5zM31 67h4v1h-4zM37 67h3v1h-3zM54 67h7v1h-7zM62 67h2v1h-2zM57 68h3v1h-3zM0 70h64v1h-64zM0 71h64v1h-64zM0 72h64v1h-64zM0 73h18v1h-18zM23 73h4v1h-4zM29 73h16v1h-16zM59 73h5v1h-5zM3 74h13v1h-13zM36 74h8v1h-8zM61 74h3v1h-3zM4 75h1v1h-1zM7 75h10v1h-10zM39 75h5v1h-5zM61 75h3v1h-3zM3 76h1v1h-1zM9 76h8v1h-8zM22 76h2v1h-2zM38 76h8v1h-8zM60 76h4v1h-4zM0 77h4v1h-4zM14 77h2v1h-2zM19 77h6v1h-6zM31 77h4v1h-4zM37 77h5v1h-5zM51 77h1v1h-1zM55 77h9v1h-9zM38 78h3v1h-3zM57 78h3v1h-3z%27/%3E%3C/svg%3E"); }
-      @media (prefers-reduced-motion: reduce) {
-        .pixel-divider > i { animation: none !important; }
-      }
+      .replica[data-items='2'] .pixel-divider, .replica[data-items='1'] .pixel-divider { --pd-h: 44px; }
       .r-center {
         display: flex; flex: 1; min-height: 0; flex-direction: column; align-items: center; justify-content: center;
         gap: 1.25rem; padding: 1.5rem; text-align: center;
@@ -505,12 +475,136 @@
           return '----';
         }
 
-        // Dither phase comes from the wall clock (same maths as src/lib/dividerSync.ts), so the real
-        // page shows the same frame at the same moment instead of restarting the shimmer.
-        function syncDividers(root) {
-          var delay = '-' + (Date.now() % 4800) + 'ms';
-          root.querySelectorAll('.pixel-divider > i').forEach(function (i) { i.style.animationDelay = delay; });
+        // Bubble border: identical code to src/lib/bubbleBorder.ts. Every bubble's size is a function of Date.now(),
+        // so the real page picks up the exact same frame and the morph never snaps or restarts.
+        var PX = 4, WRAP = 256, TAU = Math.PI * 2;
+        function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+        var bubbleSets = {};
+        function makeBubbles(H, seed) {
+          var key = H + ':' + seed;
+          if (bubbleSets[key]) return bubbleSets[key];
+          var rnd = mulberry32(seed * 7919 + H), R = function (a, b) { return a + rnd() * (b - a); };
+          var a1 = R(0, TAU), a2 = R(0, TAU), a3 = R(0, TAU);
+          var reach = function (x) { // tileable "how deep the cloud hangs here" in rows
+            var d = 0.64 + 0.2 * Math.sin(TAU * 7 * x / WRAP + a1) + 0.17 * Math.sin(TAU * 13 * x / WRAP + a2) + 0.1 * Math.sin(TAU * 29 * x / WRAP + a3);
+            return 5 + Math.max(0.15, Math.min(1, d)) * (H - 6);
+          };
+          var list = [];
+          function make(kind, cx, cy, rx, ry, popChance) {
+            var pop = rnd() < popChance;
+            list.push({
+              kind: kind, cx: cx, cy: cy, rx: rx, ry: ry,
+              tick: R(160, 950), off: R(0, 20000),           // each bubble steps on its own clock
+              period: R(2200, 9000), phase: R(0, TAU), amp: R(0.12, 0.34),
+              pop: pop, span: R(5000, 15000), dead: R(0.12, 0.3)
+            });
+          }
+          var shape = function (r) { return [r * (rnd() < 0.5 ? 1 : R(1.25, 1.9)), r * (rnd() < 0.3 ? R(0.65, 0.85) : 1)]; };
+          var i, n, r, s, cx, cy, maxB, bottom;
+          // body: fat overlapping bubbles through the whole depth of the cloud
+          n = Math.round(WRAP * H / 22);
+          for (i = 0; i < n; i++) {
+            cx = R(0, WRAP); r = R(2.0, 3.8); s = shape(r); maxB = reach(cx);
+            cy = R(2.5, Math.max(3, maxB - s[1]));
+            make(0, cx, cy, s[0], s[1], 0.15);
+          }
+          // rim: bubbles whose bottoms sit right on the profile, so the lower edge is a scalloped cloud
+          n = Math.round(WRAP / 2.4);
+          for (i = 0; i < n; i++) {
+            cx = R(0, WRAP); r = R(1.3, 3.4); s = shape(r); maxB = reach(cx);
+            bottom = maxB + 1 - Math.pow(rnd(), 1.6) * 3.2; cy = bottom - s[1];
+            if (cy < 2.5) continue;
+            make(0, cx, cy, s[0], s[1], 0.5);
+          }
+          // cream bubbles carved out of the pink body
+          n = Math.round(WRAP * H / 30);
+          for (i = 0; i < n; i++) {
+            cx = R(0, WRAP); r = R(1.1, 2.7); s = shape(r); maxB = reach(cx);
+            cy = R(5, Math.max(5.5, maxB * 0.75));
+            if (cy - s[1] < 3.2) continue;
+            make(1, cx, cy, s[0], s[1], 0.5);
+          }
+          bubbleSets[key] = list;
+          return list;
         }
+        function scaleAt(b, now) {
+          var t = Math.floor((now + b.off) / b.tick) * b.tick;
+          var s = 1 + b.amp * Math.sin(TAU * t / b.period + b.phase);
+          if (b.pop) {
+            var u = (t % b.span) / b.span, e;
+            if (u < 0.14) e = u / 0.14; else if (u < 1 - b.dead - 0.1) e = 1; else if (u < 1 - b.dead) e = (1 - b.dead - u) / 0.1; else e = 0;
+            s *= Math.round(e * 4) / 4;
+          }
+          return s;
+        }
+        function fillGrid(grid, cols, H, seed, now) {
+          var list = makeBubbles(H, seed), tiles = Math.ceil(cols / WRAP), L, k, b, s, rx, ry, sh, y, x, x0, x1, y0, y1, px, py, idx, e;
+          grid.fill(0);
+          for (L = 0; L < 2; L++) {
+            for (k = 0; k < list.length; k++) {
+              b = list[k]; if (b.kind !== L) continue;
+              s = scaleAt(b, now); if (s < 0.3) continue;
+              rx = b.rx * s; ry = b.ry * s; if (b.kind === 0) ry = Math.min(ry, H - 1.2 - b.cy);
+              if (rx < 0.8 || ry < 0.8) continue;
+              y0 = Math.max(0, Math.floor(b.cy - ry)); y1 = Math.min(H - 1, Math.ceil(b.cy + ry));
+              for (sh = -1; sh <= tiles; sh++) {
+                var cx = b.cx + sh * WRAP;
+                x0 = Math.max(0, Math.floor(cx - rx)); x1 = Math.min(cols - 1, Math.ceil(cx + rx));
+                for (y = y0; y <= y1; y++) {
+                  py = (y + 0.5 - b.cy) / ry;
+                  for (x = x0; x <= x1; x++) {
+                    px = (x + 0.5 - cx) / rx;
+                    if (px * px + py * py <= 1) grid[y * cols + x] = b.kind === 0 ? 1 : 0;
+                  }
+                }
+              }
+            }
+          }
+          var top = Math.max(3, Math.round(H * 0.19));
+          for (y = 0; y < top; y++) for (x = 0; x < cols; x++) grid[y * cols + x] = 1;   // buries the bar's straight edge
+          for (x = 0; x < cols; x++) grid[(H - 1) * cols + x] = 0;                        // never a flat cutoff on the cream side
+        }
+
+        var registry = [], running = false, lastDraw = 0, tickCount = 0;
+        function drawOne(item, now) {
+          var c = item.canvas, parent = c.parentElement; if (!parent) return;
+          var cols = Math.max(1, Math.ceil(parent.clientWidth / PX)), H = Math.max(6, Math.round(parent.clientHeight / PX));
+          if (!cols || !parent.clientHeight) return;
+          if (c.width !== cols || c.height !== H) { c.width = cols; c.height = H; c.style.width = cols * PX + 'px'; c.style.height = H * PX + 'px'; item.grid = new Uint8Array(cols * H); }
+          if (!item.ctx) item.ctx = c.getContext('2d');
+          var ctx = item.ctx;
+          if (!item.color || tickCount % 40 === 0) { try { item.color = getComputedStyle(c).color; } catch (e) { item.color = '#dfb5b5'; } }
+          fillGrid(item.grid, cols, H, item.seed, now);
+          ctx.clearRect(0, 0, cols, H);
+          ctx.fillStyle = item.color;
+          for (var y = 0; y < H; y++) {
+            var x = 0;
+            while (x < cols) {
+              if (item.grid[y * cols + x]) { var x0 = x; while (x < cols && item.grid[y * cols + x]) x++; ctx.fillRect(x0, y, x - x0, 1); } else x++;
+            }
+          }
+        }
+        function loop(ts) {
+          registry = registry.filter(function (it) { return it.canvas.isConnected; });
+          if (!registry.length) { running = false; return; }
+          if (ts - lastDraw >= 33) {
+            lastDraw = ts; tickCount++;
+            var now = Date.now();
+            for (var i = 0; i < registry.length; i++) drawOne(registry[i], now);
+          }
+          requestAnimationFrame(loop);
+        }
+        // Every bubble's size is a pure function of the wall clock (Date.now), so the real page and the 404 morph page
+        // show exactly the same bubbles at the same moment: no restart, snap or jump when one hands over to the other.
+        function mountBubbleBorder(canvas, position) {
+          var item = { canvas: canvas, seed: position === 'bottom' ? 2 : 1, ctx: null, grid: null, color: '' };
+          registry.push(item);
+          drawOne(item, Date.now());
+          var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (!still && !running) { running = true; requestAnimationFrame(loop); }
+          return function () { registry = registry.filter(function (it) { return it !== item; }); };
+        }
+
 
         function buildReplica(t) {
           var el = document.createElement('div');
@@ -529,7 +623,7 @@
             if (!narrow) { el.classList.remove('compact'); el.classList.add('wide'); }
           }
           var divider = function (pos) {
-            return '<div class="pixel-divider pixel-divider-' + pos + '"><i></i></div>';
+            return '<div class="pixel-divider pixel-divider-' + pos + '"><canvas></canvas></div>';
           };
           el.innerHTML =
             '<div class="r-bar"><span class="r-clock">GMT+3 \u2022 ' + clockText() + '</span><span class="kw-center">OBSESSED WITH MINECRAFT</span><span class="kw-end">PING: ' + (18 + Math.floor(Math.random() * 18)) + 'MS</span></div>' +
@@ -541,7 +635,6 @@
             '</div>' +
             divider('bottom') +
             '<div class="r-bar"><span>VISITORS: ' + visitorsText() + '</span><span class="kw-center">TINTED_LILAC</span><span class="kw-end">FRANKFURT \u2022 CHECKING WEATHER</span></div>';
-          syncDividers(el);
           return el;
         }
 
@@ -630,6 +723,9 @@
 
           var replica = buildReplica(t);
           win.appendChild(replica);
+          replica.querySelectorAll('.pixel-divider').forEach(function (d) {
+            mountBubbleBorder(d.querySelector('canvas'), d.classList.contains('pixel-divider-bottom') ? 'bottom' : 'top');
+          });
           var tabs = buildTabs(t);
           document.body.appendChild(tabs);
 

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { hero } from '@/siteData';
-import { syncDividerPhase } from '@/lib/dividerSync';
+import { mountBubbleBorder } from '@/lib/bubbleBorder';
 import './main.css';
 
 // ---- Visitor counter -------------------------------------------------------------------------
@@ -93,11 +93,14 @@ const weatherLabel = (code: number) => {
   return 'weather';
 };
 
-// Animated pixel-dither fade between the pink status bars and the cream window (styles in main.css).
+// Organic bubble-cluster border between the pink status bars and the cream window. Drawn on a canvas where every
+// bubble animates on its own clock (see lib/bubbleBorder.ts); styles live in main.css.
 function PixelDivider({ position }: { position: 'top' | 'bottom' }) {
+  const canvas = useRef<HTMLCanvasElement>(null);
+  useLayoutEffect(() => (canvas.current ? mountBubbleBorder(canvas.current, position) : undefined), [position]);
   return (
-    <div ref={syncDividerPhase} className={`pixel-divider pixel-divider-${position}`} aria-hidden="true">
-      <i />
+    <div className={`pixel-divider pixel-divider-${position}`} aria-hidden="true">
+      <canvas ref={canvas} />
     </div>
   );
 }
