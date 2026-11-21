@@ -454,13 +454,6 @@ export const media: MediaItem[] = [
     link: 'https://www.imdb.com/title/tt9848626/',
   },
   {
-    title: "Howl's Moving Castle",
-    category: 'Anime',
-    year: 2004,
-    poster: '/images/howls-moving-castle.png',
-    link: 'https://www.imdb.com/title/tt0347149/',
-  },
-  {
     title: 'House',
     category: 'Show',
     year: 2004,
@@ -686,13 +679,6 @@ export const media: MediaItem[] = [
     year: 2013,
     poster: 'https://m.media-amazon.com/images/M/MV5BMjE5MjMzOTc1Ml5BMl5BanBnXkFtZTcwNDQxMDY5OQ@@._V1_QL75_UX380_CR0,4,380,562_.jpg',
     link: 'https://www.imdb.com/title/tt2771780/',
-  },
-  {
-    title: 'The Cat Returns',
-    category: 'Anime',
-    year: 2002,
-    poster: 'https://m.media-amazon.com/images/M/MV5BNDEwZDkyNWItYzM3OC00N2Q1LTk0YmEtYjIxZWJlNGFjNTE3XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg',
-    link: 'https://www.imdb.com/title/tt0347618/',
   },
   {
     title: 'The Amazing World of Gumball',
@@ -1654,7 +1640,7 @@ export const socials: SocialItem[] = [
   },
   {
     platform: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/novoumy/',
+    url: 'https://www.linkedin.com/in/novoumy-rah-01085544b/',
     icon: 'linkedin',
   },
   {
@@ -1811,36 +1797,6 @@ export const specGroups: SpecGroup[] = [
         detail: 'USB/XLR Dual-Channel Gaming & Streaming Mic',
         link: amazon('Fifine AM8 Dynamic Microphone'),
         linkLabel: 'AMAZON',
-      },
-      {
-        label: 'Phone',
-        name: 'Samsung Galaxy A56 256GB',
-        link: `https://www.google.com/search?q=${encodeURIComponent('Samsung Galaxy A56 256GB')}`,
-        linkLabel: 'SEARCH',
-      },
-      {
-        label: 'Tablet',
-        name: 'Samsung Galaxy Tab S7',
-        link: `https://www.google.com/search?q=${encodeURIComponent('Samsung Galaxy Tab S7')}`,
-        linkLabel: 'SEARCH',
-      },
-      {
-        label: 'Earbuds',
-        name: 'Redmi Buds 6 Pro',
-        link: `https://www.google.com/search?q=${encodeURIComponent('Redmi Buds 6 Pro')}`,
-        linkLabel: 'SEARCH',
-      },
-      {
-        label: 'Controller',
-        name: 'Lenovo S07 Controller',
-        link: `https://www.google.com/search?q=${encodeURIComponent('Lenovo S07 controller')}`,
-        linkLabel: 'SEARCH',
-      },
-      {
-        label: 'Controller 2',
-        name: 'EasySMX D10 Controller',
-        link: `https://www.google.com/search?q=${encodeURIComponent('EasySMX D10 controller')}`,
-        linkLabel: 'SEARCH',
       },
     ],
   },
