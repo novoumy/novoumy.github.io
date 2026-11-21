@@ -54,7 +54,7 @@
    window. It is drawn on a <canvas> by src/lib/bubbleBorder.ts: every bubble has its own tick rate, breathing
    period and pop cycle, so parts of the border grow, shrink, pop and reappear independently (no global loop,
    no sliding). The top rows are always solid pink (burying the bar's straight edge) and the bottom row is always
-   empty, so there is never a flat seam or cutoff. Height: 22 pixel rows (88px) wide, 14 rows (56px) narrow. */
+   empty, so there is never a flat seam or cutoff. Rooted semi-circle hills (no floating bubbles) with a one-pixel deeper rim. Height: 22 rows (88px) wide, 14 rows (56px) narrow. */
 .pixel-divider {
   --pd-h: 88px;
   position: relative;
@@ -69,6 +69,7 @@
   top: 0;
   display: block;
   color: var(--status-pink);
+  border: 0 solid color-mix(in oklab, var(--status-pink) 80%, var(--wine)); /* read by the script as the rim colour */
   image-rendering: pixelated;
 }
 /* The bottom strip is the same cloud mirrored (its own bubbles), so it thickens toward the bottom bar. */
