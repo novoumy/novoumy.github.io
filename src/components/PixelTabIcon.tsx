@@ -1,108 +1,72 @@
 import type { TabIconName } from '@/siteData';
 
-// 10x10 pixel-art tab icons. '#' = filled pixel, '.' = empty. They draw in currentColor so they
-// follow the tab's active / inactive / hover colours exactly like the old vector icons did.
-const GRID = 10;
-const TAB_PIXELS: Record<TabIconName, string[]> = {
-  // person: head + shoulders
+// 12x12 pixel-art tab icons, drawn on an exact 2x grid (24px) so every pixel is a crisp 2x2 block.
+//   '#' = solid pixel (currentColor), 'o' = shade pixel (currentColor at reduced opacity),
+//   '.' = empty (shows the tab background, which is how details like windows and doors are cut out).
+// Colours come from currentColor, so each icon follows the tab's active / idle / hover palette.
+const GRID = 12;
+const SHADE_OPACITY = 0.5;
+
+const TAB_PIXELS: Partial<Record<TabIconName, string[]>> = {
+  // MAIN: little house with chimney, windows and a door
   user: [
-    '..........',
-    '...####...',
-    '..######..',
-    '..######..',
-    '...####...',
-    '..........',
-    '.########.',
-    '##########',
-    '##########',
-    '..........',
+    '............',
+    '.....##..##.',
+    '....####.##.',
+    '...######.#.',
+    '..########..',
+    '.##########.',
+    '############',
+    '.##o####o##.',
+    '.##o####o##.',
+    '.####..####.',
+    '.####..####.',
+    '.####..####.',
   ],
-  // share: three nodes joined by lines
+  // SOCIALS: chat bubble with a typing ellipsis
   share: [
-    '.......##.',
-    '.......##.',
-    '....###...',
-    '..###.....',
-    '.##.......',
-    '.##.......',
-    '..###.....',
-    '....###...',
-    '.......##.',
-    '.......##.',
+    '............',
+    '.##########.',
+    '############',
+    '##.##.##.###',
+    '##.##.##.###',
+    '############',
+    '############',
+    '.##########.',
+    '..####oo....',
+    '..###.......',
+    '..##........',
+    '..#.........',
   ],
-  // grid: 2x2 tiles
+  // INTERESTS: favourite star
   grid: [
-    '..........',
-    '.####.####',
-    '.####.####',
-    '.####.####',
-    '.####.####',
-    '..........',
-    '.####.####',
-    '.####.####',
-    '.####.####',
-    '.####.####',
+    '.....##.....',
+    '.....##.....',
+    '....####....',
+    '############',
+    '.##########.',
+    '..########..',
+    '...######...',
+    '..########..',
+    '..###oo###..',
+    '.###....###.',
+    '.##......##.',
+    '............',
   ],
-  // cpu chip with pins
+  // SPECS: CPU chip with pins and a die
   cpu: [
-    '..#.#.#...',
-    '.########.',
-    '.########.',
-    '##########',
-    '.##....##.',
-    '##.....###',
-    '.##....##.',
-    '.########.',
-    '.########.',
-    '..#.#.#...',
-  ],
-  film: [
-    '..........',
-    '##########',
-    '#.#....#.#',
-    '##########',
-    '#.#....#.#',
-    '#.#....#.#',
-    '##########',
-    '#.#....#.#',
-    '##########',
-    '..........',
-  ],
-  gamepad: [
-    '..........',
-    '..........',
-    '.########.',
-    '##########',
-    '#.#####.##',
-    '###.###.##',
-    '#.#####.##',
-    '##########',
-    '.##....##.',
-    '..........',
-  ],
-  music: [
-    '..........',
-    '...######.',
-    '...######.',
-    '...#....#.',
-    '...#....#.',
-    '...#....#.',
-    '.###..###.',
-    '.###..###.',
-    '..........',
-    '..........',
-  ],
-  quote: [
-    '..........',
-    '.###.###..',
-    '#####.####',
-    '#####.####',
-    '#####.####',
-    '.###..###.',
-    '..#....#..',
-    '.#....#...',
-    '..........',
-    '..........',
+    '...#.##.#...',
+    '...#.##.#...',
+    '..########..',
+    '#.########.#',
+    '..##....##..',
+    '#.##.oo.##.#',
+    '#.##.oo.##.#',
+    '..##....##..',
+    '#.########.#',
+    '..########..',
+    '...#.##.#...',
+    '...#.##.#...',
   ],
 };
 
@@ -112,12 +76,13 @@ interface PixelTabIconProps {
   className?: string;
 }
 
-export default function PixelTabIcon({ name, size = 20, className }: PixelTabIconProps) {
-  const rows = TAB_PIXELS[name] ?? [];
-  // One merged path keeps hundreds of <rect>s out of the DOM and avoids hairline seams between pixels.
-  const d = rows
-    .flatMap((row, y) => [...row].map((cell, x) => (cell === '#' ? `M${x} ${y}h1v1h-1z` : '')))
+const pathFor = (rows: string[], mark: string) =>
+  rows
+    .flatMap((row, y) => [...row].map((cell, x) => (cell === mark ? `M${x} ${y}h1v1h-1z` : '')))
     .join('');
+
+export default function PixelTabIcon({ name, size = 24, className }: PixelTabIconProps) {
+  const rows = TAB_PIXELS[name] ?? [];
   return (
     <svg
       viewBox={`0 0 ${GRID} ${GRID}`}
@@ -129,7 +94,8 @@ export default function PixelTabIcon({ name, size = 20, className }: PixelTabIco
       className={className}
       style={{ imageRendering: 'pixelated' }}
     >
-      <path d={d} />
+      <path d={pathFor(rows, '#')} />
+      <path d={pathFor(rows, 'o')} opacity={SHADE_OPACITY} />
     </svg>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, Search, SlidersHorizontal, X } from 'lucide-react';
+import RetroSelect from '@/components/RetroSelect';
 import RetroOverlay from '@/components/RetroOverlay';
 import { media, mediaFilters, type MediaItem } from '@/siteData';
 
@@ -157,21 +158,7 @@ export default function MediaView({ onClose }: MediaViewerProps) {
           )}
         </label>
 
-        <label className="relative flex shrink-0 items-center border-2 border-wine bg-r-bg hover:bg-r-raised focus-within:shadow-[4px_4px_0_0_var(--rose)] lg:w-[300px]">
-          <span className="sr-only">Sort by</span>
-          <select
-            value={sort}
-            onChange={(event) => setSort(event.target.value as SortKey)}
-            className="h-12 w-full cursor-pointer appearance-none bg-transparent pl-3 pr-10 font-body text-[22px] leading-none text-r-text outline-none"
-          >
-            {SORT_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value} className="bg-r-bg text-r-text">
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <ChevronDown size={18} strokeWidth={3} aria-hidden="true" className="pointer-events-none absolute right-3 text-r-dim" />
-        </label>
+        <RetroSelect label="Sort by" value={sort} options={SORT_OPTIONS} onChange={setSort} className="lg:w-[300px]" />
       </div>
 
       <div className="flex items-center justify-between gap-3">

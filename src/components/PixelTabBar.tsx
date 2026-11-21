@@ -47,7 +47,7 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
             ].join(' ')}
           >
             {burst?.id === tab.id && <span key={burst.n} className="tab-burst" aria-hidden="true" />}
-            <PixelTabIcon name={tab.icon} size={20} className={['shrink-0', burst?.id === tab.id ? 'tab-icon-spin' : ''].join(' ')} key={burst?.id === tab.id ? `i${burst.n}` : 'i'} />
+            <PixelTabIcon name={tab.icon} size={24} className={['shrink-0', burst?.id === tab.id ? 'tab-icon-spin' : ''].join(' ')} key={burst?.id === tab.id ? `i${burst.n}` : 'i'} />
             <span className={active ? 'inline min-w-0 overflow-hidden text-ellipsis' : 'hidden min-[860px]:inline'}>{tab.label}</span>
           </button>
         );
