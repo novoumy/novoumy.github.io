@@ -54,9 +54,9 @@
    window. It is drawn on a <canvas> by src/lib/bubbleBorder.ts: every bubble has its own tick rate, breathing
    period and pop cycle, so parts of the border grow, shrink, pop and reappear independently (no global loop,
    no sliding). The top rows are always solid pink (burying the bar's straight edge) and the bottom row is always
-   empty, so there is never a flat seam or cutoff. Height: 16 pixel rows (64px) wide, 11 rows (44px) narrow. */
+   empty, so there is never a flat seam or cutoff. Height: 22 pixel rows (88px) wide, 14 rows (56px) narrow. */
 .pixel-divider {
-  --pd-h: 64px;
+  --pd-h: 88px;
   position: relative;
   flex: none;
   height: var(--pd-h);
@@ -75,7 +75,7 @@
 .pixel-divider-top { margin-top: -2px; }
 .pixel-divider-bottom { margin-bottom: -2px; transform: scaleY(-1); }
 @container mainwin (max-width: 639px) {
-  .pixel-divider { --pd-h: 44px; }
+  .pixel-divider { --pd-h: 56px; }
 }
 
 /* ---------- Profile ---------- */
