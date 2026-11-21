@@ -124,7 +124,7 @@ export default function SoundToggle({ className = '', variant = 'default' }: Sou
           'pixel-tile pixel-tile-interactive flex shrink-0 items-center justify-center gap-2 px-2.5 py-2 text-cool-white min-[860px]:px-3',
           variant === 'folder'
             ? 'folder-sound-toggle bg-[#6B2B32] hover:bg-[#6B2B32] focus-visible:bg-[#6B2B32] hover:text-cool-white focus-visible:text-cool-white'
-            : 'main-sound-toggle bg-[#6B2D39] hover:bg-rose hover:text-wine',
+            : 'main-sound-toggle bg-lavender hover:bg-rose hover:text-wine',
         ].join(' ')}
       >
         {showHint && <span className="blink-arrow hidden font-pixel text-[8px] uppercase leading-none min-[860px]:inline">Tap anywhere for sound</span>}

@@ -43,8 +43,8 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
               'pixel-tile relative flex min-h-10 min-w-0 items-center justify-center gap-1 px-1.5 py-2 font-pixel text-[7px] uppercase leading-tight whitespace-nowrap min-[380px]:text-[8px]',
               'min-[860px]:min-h-0 min-[860px]:w-auto min-[860px]:flex-none min-[860px]:gap-2 min-[860px]:px-3 min-[860px]:py-2 min-[860px]:text-[11px]',
               active
-                ? 'flex-[2.2] tab-pop translate-y-1 bg-cool-white text-wine'
-                : 'flex-1 bg-[#6B2D39] text-cool-white hover:bg-rose hover:text-wine',
+                ? 'flex-[2.2] tab-pop translate-y-1 bg-white text-wine'
+                : 'flex-1 bg-lavender text-cool-white hover:bg-rose hover:text-wine [text-shadow:2px_2px_0_var(--wine)] hover:[text-shadow:none]',
             ].join(' ')}
           >
             {burst?.id === tab.id && <span key={burst.n} className="tab-burst" aria-hidden="true" />}
