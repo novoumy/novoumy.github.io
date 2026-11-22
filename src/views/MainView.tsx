@@ -145,7 +145,7 @@ export default function MainView() {
 
 
   return (
-    <div className="main-playground -mx-8 -my-8 flex min-h-0 h-[calc(100%+2rem)] flex-1 flex-col justify-between overflow-hidden p-0 max-sm:-mx-4 max-sm:-my-4 max-sm:h-[calc(100%+1rem)]">
+    <div className="main-playground -mx-8 -my-8 flex min-h-[calc(100%+2rem)] flex-1 flex-col justify-between overflow-hidden p-0 max-sm:-mx-4 max-sm:-my-4 max-sm:min-h-[calc(100%+1rem)]">
       <div className="kinetic-words kinetic-top" aria-label="Live time and personal metadata">
         <span>{'GMT+3 • ' + (clock || '--:--:--')}</span>
         <span className="kw-center">OBSESSED WITH MINECRAFT</span>

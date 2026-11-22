@@ -1,5 +1,5 @@
 /* Main tab: status bars, animated pixel divider, centred profile. */
-:root { --status-pink: color-mix(in oklab, var(--rose) 55%, var(--cool-white)); }
+:root { --status-pink: #DCC2D2; }
 
 .main-playground {
   container-type: inline-size;
@@ -69,7 +69,7 @@
   top: 0;
   display: block;
   color: var(--status-pink);
-  border: 0 solid color-mix(in oklab, var(--status-pink) 80%, var(--wine)); /* read by the script as the rim colour */
+  border: 0 solid #C6A3B1; /* read by the script as the rim colour */
   image-rendering: pixelated;
 }
 /* The bottom strip is the same cloud mirrored (its own bubbles), so it thickens toward the bottom bar. */
@@ -82,8 +82,10 @@
 /* ---------- Profile ---------- */
 .main-profile-center {
   display: flex;
-  flex: 1;
-  min-height: 0;
+  /* Never shrink below the content: if the window is too short, the playground grows and the tab panel scrolls,
+     instead of the picture / bio sliding underneath the dividers. */
+  flex: 1 0 auto;
+  min-height: min-content;
   width: 100%;
   box-sizing: border-box;
   flex-direction: column;
@@ -124,13 +126,12 @@
   letter-spacing: 0.03em;
   text-align: center;
   text-wrap: balance;
-  color: color-mix(in oklab, var(--wine) 90%, var(--lavender));
-  text-shadow: 2px 2px 0 color-mix(in oklab, var(--rose) 38%, transparent);
+  color: #6E3643;
+  text-shadow: 2px 2px 0 rgba(205, 158, 186, 0.38);
 }
 .main-profile-bio p { margin: 0; }
 
 @media (max-width: 768px) {
-  .main-playground { overflow-y: auto; }
   .main-profile-center { gap: 0.9rem; padding: 1rem 0.75rem; }
   .main-profile-avatar { width: 96px; height: 96px; }
   .main-profile-name { font-size: clamp(16px, 5vw, 20px); }

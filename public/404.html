@@ -37,7 +37,7 @@
         --tab-bg: #847FA4;
         --tab-fg: #ECEFF1;
         --tab-shadow: #6B2D39;
-        --status-pink: color-mix(in oklab, var(--rose) 55%, var(--paper));
+        --status-pink: #DCC2D2;
         --scan: rgba(107,45,57,.035);
         --grid: rgba(236,239,241,.12);
         --btn-bg: #6B2D39;
@@ -179,7 +179,7 @@
       .replica[data-items='2'] .kw-center, .replica[data-items='1'] .kw-center, .replica[data-items='1'] .kw-end { display: none; }
       /* ---------- Organic bubble-cluster divider (same drawing code + sizes as src/views/main.css) ---------- */
       .pixel-divider { --pd-h: 88px; position: relative; flex: none; height: var(--pd-h); pointer-events: none; overflow: hidden; }
-      .pixel-divider > canvas { position: absolute; left: 0; top: 0; display: block; color: var(--status-pink); border: 0 solid color-mix(in oklab, var(--status-pink) 80%, var(--wine)); image-rendering: pixelated; }
+      .pixel-divider > canvas { position: absolute; left: 0; top: 0; display: block; color: var(--status-pink); border: 0 solid #C6A3B1; image-rendering: pixelated; }
       .pixel-divider-top { margin-top: -2px; }
       .pixel-divider-bottom { margin-bottom: -2px; transform: scaleY(-1); }
       .replica[data-items='2'] .pixel-divider, .replica[data-items='1'] .pixel-divider { --pd-h: 56px; }
@@ -196,8 +196,8 @@
       .r-name { margin: 0; font: 24px/1.4 'Press Start 2P', monospace; letter-spacing: 0.05em; }
       .r-bio {
         width: min(34rem, 100%); margin: 0 auto; font: 26px/1.25 'VT323', monospace; letter-spacing: 0.03em; text-wrap: balance;
-        color: color-mix(in oklab, var(--wine) 90%, var(--lavender));
-        text-shadow: 2px 2px 0 color-mix(in oklab, var(--rose) 38%, transparent);
+        color: #6E3643;
+        text-shadow: 2px 2px 0 rgba(205, 158, 186, 0.38);
       }
       .replica.compact .r-center { gap: 0.9rem; padding: 1rem 0.75rem; }
       .replica.compact .r-avatar { width: 96px; height: 96px; }

@@ -18,7 +18,7 @@
 .camp-fire .cf-c { fill: var(--cool-white); }
 .camp-fire .cf-w { fill: var(--wine); }
 .camp-fire .cf-l { fill: var(--lavender); }
-.camp-fire .cf-ground { fill: color-mix(in oklab, var(--wine) 70%, var(--lavender)); }
+.camp-fire .cf-ground { fill: #754658; }
 .camp-fire .flame-b { animation: camp-flame 0.7s steps(1) infinite; }
 .camp-fire .flame-a { animation: camp-flame 0.7s steps(1) infinite reverse; }
 @keyframes camp-flame { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
@@ -50,7 +50,7 @@
   animation: camp-fill 4s steps(1) infinite;
   animation-delay: calc(var(--n) * 90ms);
 }
-.camp-meter span.off { background: color-mix(in oklab, var(--wine) 18%, transparent); animation: none; }
+.camp-meter span.off { background: rgba(107, 45, 57, 0.18); animation: none; }
 @keyframes camp-fill { 0%, 6% { opacity: 0.25; } 7%, 100% { opacity: 1; } }
 
 
