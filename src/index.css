@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* iOS Safari < 15.4 has no dvh units: without a fallback the root loses its height and the whole window
+   becomes content-sized, which pushes the bottom status bar off screen. */
+.h-dvh { height: 100vh; height: 100dvh; }
+
 :root {
   --cool-white: #ECEFF1;
   --cool-white-rgb: 236 239 241;

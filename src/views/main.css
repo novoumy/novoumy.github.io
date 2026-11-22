@@ -2,8 +2,6 @@
 :root { --status-pink: #DCC2D2; }
 
 .main-playground {
-  container-type: inline-size;
-  container-name: mainwin;
   background: var(--cool-white);
   color: var(--wine);
 }
@@ -31,21 +29,24 @@
 .kinetic-words .kw-center { justify-self: center; text-align: center; }
 .kinetic-words span:last-child { justify-self: end; text-align: right; }
 
-/* Collapse by the Main window's own width, so the fixed 800px stage and phones follow the same rules:
-   >= 640px  3 items  |  260-639px  2 items (centre hidden; ping + weather stay visible)  |  < 260px  1 item
-   Press Start 2P is 1em wide (+0.05em spacing), so at 7px the left text + ping fit down to ~230px and
-   the weather readout truncates with an ellipsis before it could ever hit the left-hand text. */
-@container mainwin (max-width: 639px) {
+/* Collapse by VIEWPORT width (media queries), not container queries: older iOS Safari ignores @container, and
+   then the 3-column grid was left in place on phones and the centre text ran over its neighbours.
+   The window is ~40px narrower than the viewport, and the 3-column layout needs a ~230px column for the longest
+   readout ("FRANKFURT • 3°C • CLOUDY"), so:
+   >= 800px  3 items  |  300-799px  2 items (centre hidden; ping + weather stay visible)  |  < 300px  1 item
+   The fixed 800px desktop stage is always >= 800px wide, so it always gets all three. */
+.kinetic-words { flex: none; }
+.kinetic-words span { text-overflow: ellipsis; }
+@media (max-width: 799px) {
   .kinetic-words { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 8px; }
-  .kinetic-words span { flex: 0 1 auto; }
+  .kinetic-words span { flex: 0 1 auto; min-width: 0; }
   .kinetic-words span:first-child { flex-shrink: 0; }
-  .kinetic-words .kw-end { min-width: 0; text-overflow: ellipsis; }
   .kinetic-words .kw-center { display: none; }
 }
-@container mainwin (max-width: 419px) {
+@media (max-width: 459px) {
   .kinetic-words { font-size: 7px; }
 }
-@container mainwin (max-width: 259px) {
+@media (max-width: 299px) {
   .kinetic-words .kw-end { display: none; }
 }
 
@@ -75,32 +76,44 @@
 /* The bottom strip is the same cloud mirrored (its own bubbles), so it thickens toward the bottom bar. */
 .pixel-divider-top { margin-top: -2px; }
 .pixel-divider-bottom { margin-bottom: -2px; transform: scaleY(-1); }
-@container mainwin (max-width: 639px) {
+/* "Stage" mode (the fixed 800x600 window, scaled up) is only used at >= 900x620 (see lib/useStageScale.ts);
+   everywhere else the window has to fit the screen, so the dividers get slimmer to leave room for the profile. */
+@media (max-width: 899px), (max-height: 619px) {
   .pixel-divider { --pd-h: 56px; }
+}
+@media (max-width: 899px) and (max-height: 700px), (max-height: 619px) {
+  .pixel-divider { --pd-h: 40px; }
 }
 
 /* ---------- Profile ---------- */
 .main-profile-center {
   display: flex;
-  /* Never shrink below the content: if the window is too short, the playground grows and the tab panel scrolls,
-     instead of the picture / bio sliding underneath the dividers. */
-  flex: 1 0 auto;
-  min-height: min-content;
+  flex: 1;
+  min-height: 0;
   width: 100%;
   box-sizing: border-box;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 1.25rem;
   padding: 1.5rem;
   text-align: center;
+  /* The two status bars and dividers are pinned top and bottom. If the window is too short for the profile,
+     only this middle section scrolls: it can never slide under a divider or push a bar off screen. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
+/* auto margins on the first / last child centre the profile when there is room, and (unlike
+   justify-content: center) still let it scroll from the very top when there is not. */
+.main-profile-center > :first-child { margin-top: auto; }
+.main-profile-center > :last-child { margin-bottom: auto; }
 /* Symmetric stepped frame (wine, then rose) so the picture sits dead centre over the name. */
 .main-profile-avatar {
   display: block;
   width: 144px;
   height: 144px;
   margin: 8px 0 4px;
+  flex: none;
   object-fit: cover;
   background: var(--cool-white);
   box-shadow:
@@ -108,6 +121,7 @@
     0 -8px 0 0 var(--rose), 0 8px 0 0 var(--rose), -8px 0 0 0 var(--rose), 8px 0 0 0 var(--rose);
 }
 .main-profile-name {
+  flex: none;
   margin: 0;
   font-family: 'Press Start 2P', monospace;
   font-size: 24px;
@@ -118,6 +132,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  flex: none;
   width: min(34rem, 100%);
   margin: 0 auto;
   font-family: 'VT323', monospace;

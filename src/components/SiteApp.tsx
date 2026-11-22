@@ -142,7 +142,7 @@ export default function App() {
           className={
             staged
               ? 'w-[800px] shrink-0 pb-2 pr-2'
-              : 'mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col pb-2 pr-2 max-[859px]:max-h-[46rem] max-[768px]:h-auto'
+              : 'mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col pb-2 pr-2 max-[859px]:max-h-[46rem]'
           }
           style={staged ? { zoom: scale } : undefined}
           data-crt-stage
