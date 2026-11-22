@@ -1,5 +1,6 @@
 import { manualGames, type ManualGame } from '@/siteData';
 import { minecraftIconSources } from '@/data/minecraftIcons';
+import steamFilter from '@/data/steamFilter.json';
 
 // ---- shape of public/data/steam-games.json (written by scripts/sync-steam.mjs) ----------
 export interface SteamAchievementRaw {
@@ -29,6 +30,7 @@ interface SteamFile {
   games: SteamGameRaw[];
   extras?: {
     minecraftBonusHours?: number;
+    appTypes?: Record<string, 'game' | 'software'>; // sync-side cache of Steam store lookups
   };
 }
 
@@ -191,6 +193,31 @@ function fromManual(game: ManualGame): LibraryGame {
   };
 }
 
+// ---- what the Steam import ignores (list lives in src/data/steamFilter.json) ---------------
+// Same name matching as scripts/sync-steam.mjs: ignore case, symbols like (TM)/(R), punctuation, spacing.
+const normalizeName = (name: string) =>
+  name
+    .replace(/[\u2122\u00ae\u00a9]/g, '') // before NFKD, which would turn the trademark sign into "TM"
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim();
+
+const blacklist: Array<string | number> = steamFilter.blacklist; // titles and/or appids
+const blacklistIds = new Set(blacklist.filter((entry): entry is number => typeof entry === 'number'));
+const blacklistNames = new Set(blacklist.filter((entry): entry is string => typeof entry === 'string').map(normalizeName));
+const nonGameIds = new Set<number>(steamFilter.nonGameAppIds);
+
+// True for blacklisted games and for software/utilities (Wallpaper Engine, Lossless Scaling, ...).
+export function isExcludedSteamApp(game: Pick<SteamGameRaw, 'appid' | 'name'>, appTypes?: Record<string, string>): boolean {
+  return (
+    blacklistIds.has(game.appid) ||
+    blacklistNames.has(normalizeName(game.name)) ||
+    nonGameIds.has(game.appid) ||
+    appTypes?.[game.appid] === 'software'
+  );
+}
+
 export function buildLibrary(file: SteamFile | null): Library {
   const bonusHours = Math.max(0, Number(file?.extras?.minecraftBonusHours ?? 0));
   const manual = manualGames.map((game) => {
@@ -204,7 +231,11 @@ export function buildLibrary(file: SteamFile | null): Library {
   });
   const manualTitles = new Set(manual.map((game) => game.title.toLowerCase()));
   // A manual entry wins over a Steam game with the same name.
-  const steam = (file?.games ?? []).filter((game) => !manualTitles.has(game.name.toLowerCase())).map(fromSteam);
+  // Software/utilities and blacklisted games are dropped here too, so they vanish even if the synced file still has them.
+  const steam = (file?.games ?? [])
+    .filter((game) => !isExcludedSteamApp(game, file?.extras?.appTypes))
+    .filter((game) => !manualTitles.has(game.name.toLowerCase()))
+    .map(fromSteam);
   return { games: [...manual, ...steam], syncedAt: file?.generatedAt ?? null, steamCount: steam.length };
 }
 

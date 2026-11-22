@@ -10,7 +10,13 @@
 // Requirements on the Steam side: your profile AND "Game details" must be set to Public,
 // otherwise Steam returns an empty library / no achievements.
 //
-// Optional env: STEAM_OUT (output path), STEAM_API_BASE (for testing against a mock server).
+// Only real games are kept. Software / utilities (Wallpaper Engine, Lossless Scaling, ...) are dropped,
+// as is anything listed in src/data/steamFilter.json -> "blacklist" (titles or appids you never want).
+// Steam's own store data (app type + genres) is used to spot software; results are cached in the output
+// file (extras.appTypes) so each app is only looked up once.
+//
+// Optional env: STEAM_OUT (output path), STEAM_API_BASE / STEAM_STORE_BASE (for testing against a mock
+// server), STEAM_FILTER (path to the filter file).
 
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -18,7 +24,14 @@ import path from 'node:path';
 const KEY = process.env.STEAM_API_KEY;
 const STEAM_ID = process.env.STEAM_ID;
 const API = (process.env.STEAM_API_BASE || 'https://api.steampowered.com').replace(/\/$/, '');
+const STORE_API = (process.env.STEAM_STORE_BASE || 'https://store.steampowered.com').replace(/\/$/, '');
 const OUT = process.env.STEAM_OUT || 'public/data/steam-games.json';
+const FILTER_FILE = process.env.STEAM_FILTER || 'src/data/steamFilter.json';
+const STORE_DELAY_MS = Number(process.env.STEAM_STORE_DELAY_MS ?? 1600); // store API allows ~200 requests / 5 min
+// Store genre ids that mean "this is a program, not a game".
+// 50 Accounting, 51 Animation & Modeling, 52 Audio Production, 53 Design & Illustration, 55 Photo Editing,
+// 56 Video Production, 57 Utilities, 58 Web Publishing, 59 Game Development, 60 Software Training
+const SOFTWARE_GENRE_IDS = new Set(['50', '51', '52', '53', '55', '56', '57', '58', '59', '60']);
 const CDN = 'https://cdn.cloudflare.steamstatic.com/steam/apps';
 const CONCURRENCY = 6;
 const IMAGE_OVERRIDES = {
@@ -105,6 +118,54 @@ async function fetchAchievements(appid) {
   return { total, unlocked, percent: unlocked === total ? 100 : Math.floor((unlocked / total) * 100), list };
 }
 
+// ---- filtering: blacklist + "is this actually a game?" ---------------------------------------
+// Same name matching as src/lib/steam.ts: ignore case, symbols like (TM)/(R), punctuation and spacing.
+const normalizeName = (name) =>
+  String(name ?? '')
+    .replace(/[\u2122\u00ae\u00a9]/g, '') // before NFKD, which would turn the trademark sign into "TM"
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim();
+
+async function readFilter() {
+  try {
+    const raw = JSON.parse(await readFile(FILTER_FILE, 'utf8'));
+    const list = Array.isArray(raw.blacklist) ? raw.blacklist : [];
+    return {
+      blacklistIds: new Set(list.filter((entry) => typeof entry === 'number')),
+      blacklistNames: new Set(list.filter((entry) => typeof entry === 'string').map(normalizeName)),
+      nonGameIds: new Set((Array.isArray(raw.nonGameAppIds) ? raw.nonGameAppIds : []).map(Number)),
+    };
+  } catch (error) {
+    console.warn(`Could not read ${FILTER_FILE} (${error.message}) - continuing without a blacklist.`);
+    return { blacklistIds: new Set(), blacklistNames: new Set(), nonGameIds: new Set() };
+  }
+}
+
+// Returns 'game' | 'software' | null (null = couldn't find out right now; the app is kept and retried next sync).
+async function classifyApp(appid) {
+  const url = `${STORE_API}/api/appdetails?${new URLSearchParams({ appids: String(appid), filters: 'basic,genres', l: 'english' })}`;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      const response = await fetch(url, { headers: { accept: 'application/json' } });
+      if (response.status === 429 || response.status >= 500) throw new Error(`HTTP ${response.status}`);
+      if (!response.ok) return null;
+      const entry = (await response.json())?.[appid];
+      if (!entry) return null;
+      // Delisted / region-locked apps have no store page. Nothing says they're software, so keep them.
+      if (!entry.success || !entry.data) return 'game';
+      const { type, genres } = entry.data;
+      if (type && type !== 'game') return 'software'; // software, tool, dlc, demo, music, video, mod, ...
+      if (Array.isArray(genres) && genres.some((genre) => SOFTWARE_GENRE_IDS.has(String(genre.id)))) return 'software';
+      return 'game';
+    } catch {
+      await sleep(5000 * 2 ** attempt); // the store API rate-limits hard, back off
+    }
+  }
+  return null;
+}
+
 async function readPrevious() {
   try {
     return JSON.parse(await readFile(OUT, 'utf8'));
@@ -130,9 +191,39 @@ async function main() {
     );
     process.exit(1);
   }
-  console.log(`Owned games: ${ownedGames.length}`);
+  console.log(`Owned apps: ${ownedGames.length}`);
 
-  const games = ownedGames.map((game) => ({
+  // 1) blacklist, 2) known software, 3) ask the Steam store what each remaining app really is.
+  const filter = await readFilter();
+  const appTypes = { ...(previous.extras?.appTypes ?? {}) }; // appid -> 'game' | 'software' (cache)
+  const dropped = [];
+  const candidates = [];
+  for (const game of ownedGames) {
+    const name = game.name || `App ${game.appid}`;
+    if (filter.blacklistIds.has(game.appid) || filter.blacklistNames.has(normalizeName(name))) {
+      dropped.push(`${name} (blacklisted)`);
+    } else if (filter.nonGameIds.has(game.appid)) {
+      dropped.push(`${name} (software)`);
+    } else {
+      candidates.push(game);
+    }
+  }
+  const unknown = candidates.filter((game) => !appTypes[game.appid]);
+  if (unknown.length > 0) console.log(`Checking ${unknown.length} new apps against the Steam store...`);
+  for (const game of unknown) {
+    const kind = await classifyApp(game.appid);
+    if (kind) appTypes[game.appid] = kind;
+    else console.warn(`  ? ${game.name} (${game.appid}): store lookup failed - keeping it, will retry next sync`);
+    await sleep(STORE_DELAY_MS);
+  }
+  const keptApps = candidates.filter((game) => {
+    if (appTypes[game.appid] !== 'software') return true;
+    dropped.push(`${game.name || `App ${game.appid}`} (software)`);
+    return false;
+  });
+  if (dropped.length > 0) console.log(`Ignored ${dropped.length}: ${dropped.join(', ')}`);
+
+  const games = keptApps.map((game) => ({
     appid: game.appid,
     name: game.name || `App ${game.appid}`,
     playtimeMinutes: game.playtime_forever || 0,
@@ -168,7 +259,9 @@ async function main() {
   await Promise.all(Array.from({ length: CONCURRENCY }, worker));
 
     const previousBonus = Math.max(0, Number(previous.extras?.minecraftBonusHours ?? 0));
-  const extras = { ...(previous.extras ?? {}), minecraftBonusHours: previousBonus + 1 };
+  const ownedIds = new Set(ownedGames.map((game) => String(game.appid)));
+  const cleanTypes = Object.fromEntries(Object.entries(appTypes).filter(([id]) => ownedIds.has(id)));
+  const extras = { ...(previous.extras ?? {}), minecraftBonusHours: previousBonus + 1, appTypes: cleanTypes };
 
   // Only touch the file when something real changed, so commits stay meaningful.
   const sameAsBefore =
@@ -188,7 +281,7 @@ async function main() {
   await rename(tmp, OUT);
 
   const withAch = games.filter((game) => game.achievements).length;
-  console.log(`Wrote ${OUT}: ${games.length} games, ${withAch} with achievements, ${failures} fetch failures, +1 Minecraft hour (${extras.minecraftBonusHours} total bonus).`);
+  console.log(`Wrote ${OUT}: ${games.length} games (${dropped.length} ignored), ${withAch} with achievements, ${failures} fetch failures, +1 Minecraft hour (${extras.minecraftBonusHours} total bonus).`);
 }
 
 main().catch((error) => {

@@ -1,0 +1,15 @@
+{
+  "_readme": "Controls what the Steam auto-import keeps. Used by scripts/sync-steam.mjs (the 12-hourly sync) and by src/lib/steam.ts (the site). Edit, commit, done.",
+
+  "blacklist": [
+    "Graveyard Keeper"
+  ],
+  "_blacklistHelp": "Games to never show. Add a game title (case/punctuation/trademark symbols are ignored, e.g. \"Battlefield 2042\") or a numeric Steam appid (e.g. 599140). Matches are exact, not partial.",
+
+  "nonGameAppIds": [
+    431960,
+    993090,
+    1281930
+  ],
+  "_nonGameHelp": "Known software/utilities that Steam files as games: 431960 Wallpaper Engine, 993090 Lossless Scaling, 1281930 tModLoader. The sync also detects software automatically through the Steam store (app type + genres like Utilities / Animation & Modeling / Design & Illustration); this list is the safety net for anything it misses."
+}
