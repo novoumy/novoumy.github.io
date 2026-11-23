@@ -1,6 +1,7 @@
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
+import fixedViewport from './postcss-fixed-viewport.js';
+
 export default {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
+  plugins: [tailwindcss(), fixedViewport(), autoprefixer()],
 };
