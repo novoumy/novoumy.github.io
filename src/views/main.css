@@ -76,8 +76,9 @@
 /* The bottom strip is the same cloud mirrored (its own bubbles), so it thickens toward the bottom bar. */
 .pixel-divider-top { margin-top: -2px; }
 .pixel-divider-bottom { margin-bottom: -2px; transform: scaleY(-1); }
-/* "Stage" mode (the fixed 800x600 window, scaled up) is only used at >= 900x620 (see lib/useStageScale.ts);
-   everywhere else the window has to fit the screen, so the dividers get slimmer to leave room for the profile. */
+/* The site has two fixed stages (see lib/useStageScale.ts): landscape 800x600 and portrait 420x560. Media queries
+   are resolved per stage at build time (postcss-fixed-viewport.js), so these slimmer dividers only apply in the
+   portrait stage, where there is less room for the profile. */
 @media (max-width: 899px), (max-height: 619px) {
   .pixel-divider { --pd-h: 56px; }
 }

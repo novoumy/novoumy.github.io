@@ -8,7 +8,7 @@ import InterestsView from '@/views/InterestsView';
 import SocialsView from '@/views/SocialsView';
 import SpecsView from '@/views/SpecsView';
 import { site, tabs, type InterestId, type TabId } from '@/siteData';
-import { useStageScale } from '@/lib/useStageScale';
+import { useStage } from '@/lib/useStageScale';
 import { hashFor, parseHash, type Route } from '@/lib/route';
 import { loadInterestView, preloadInterestViews } from '@/lib/preload';
 import { folderMorph } from '@/lib/morph';
@@ -119,31 +119,22 @@ export default function App() {
   ];
   const visiblePanels = panels.filter((panel) => enabledTabs.some((tab) => tab.id === panel.id));
 
-  const scale = useStageScale();
-  const staged = scale !== null;
+  // Two fixed layouts only: 4:3 landscape (wide screens) and 3:4 portrait (narrow screens). Each is scaled to fit.
+  const { mode, scale } = useStage();
+  const portrait = mode === 'portrait';
   // While a folder is open it *is* the window: the main window is hidden, not left behind it.
   const folderOpen = route.tab === 'interests' && route.interest !== null;
 
   return (
     <div className="relative h-dvh overflow-hidden bg-lavender">
       <PixelBackdrop />
-      <main
-        className={[
-          'relative z-10 flex h-full',
-          staged
-            ? 'items-center justify-center'
-            : 'px-3 py-8 max-[859px]:flex-col max-[859px]:items-center max-[859px]:justify-start max-[859px]:px-3 max-[859px]:py-8',
-        ].join(' ')}
-      >
-        {/* Big screens: fixed 800px window scaled up. Phones/small windows: window fills the screen. */}
+      <main className="relative z-10 flex h-full items-center justify-center">
+        {/* Fixed-size window (800px wide 4:3, or 420px wide 3:4) scaled uniformly to fit the screen. */}
         <div
-          className={
-            staged
-              ? 'w-[800px] shrink-0 pb-2 pr-2'
-              : 'mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col pb-2 pr-2 max-[859px]:max-h-none max-[859px]:pb-0 max-[859px]:pr-0'
-          }
-          style={staged ? { zoom: scale } : undefined}
+          className={['shrink-0 pb-2 pr-2', portrait ? 'w-[420px]' : 'w-[800px]'].join(' ')}
+          style={{ zoom: scale }}
           data-folder-open={folderOpen}
+          data-stage-mode={mode}
           data-crt-stage
         >
           <div className="relative z-30 flex w-full min-w-0 items-end justify-between gap-2 overflow-visible">
@@ -154,7 +145,7 @@ export default function App() {
             data-compact={activeId === 'main'}
             className={[
               'pixel-frame relative mt-1 flex min-h-0 flex-col bg-cool-white text-wine',
-              staged ? 'aspect-[4/3]' : 'win-section min-h-0 flex-1',
+              portrait ? 'aspect-[3/4]' : 'aspect-[4/3]',
             ].join(' ')}
           >
             {/* Every tab stays mounted and is only shown/hidden, so switching is instant:
