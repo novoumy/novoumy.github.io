@@ -1829,7 +1829,7 @@ export const specHighlights = [
 
 export const specGroups: SpecGroup[] = [
   {
-    title: 'Core',
+    title: 'Core Hardware',
     parts: [
       {
         label: 'CPU',
@@ -1868,7 +1868,7 @@ export const specGroups: SpecGroup[] = [
     ],
   },
   {
-    title: 'Storage, Power & Case',
+    title: 'Storage & Chassis',
     parts: [
       {
         label: 'SSD 1',
@@ -1938,6 +1938,11 @@ export const specGroups: SpecGroup[] = [
         link: amazon('Fifine AM8 Dynamic Microphone'),
         linkLabel: 'AMAZON',
       },
+    ],
+  },
+  {
+    title: 'Gadgets & Gear',
+    parts: [
       {
         label: 'Phone',
         name: 'Samsung Galaxy A56 256GB',

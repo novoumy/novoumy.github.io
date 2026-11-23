@@ -1045,28 +1045,11 @@ html[data-folder-transition='true'] .animate-overlay-in > * {
   animation-delay: calc(var(--i, 0) * 45ms + 160ms);
 }
 .spec-card .spec-icon {
-  transition: background-color 150ms steps(2), color 150ms steps(2), transform 150ms steps(2);
+  transition: transform 150ms steps(2);
 }
 .spec-card:hover .spec-icon,
 .spec-card:focus-visible .spec-icon {
-  background: var(--wine);
-  color: var(--cool-white);
-  transform: rotate(-6deg) scale(1.08);
-}
-.spec-card .spec-go {
-  transition: background-color 150ms steps(2), color 150ms steps(2);
-}
-.spec-card:hover .spec-go,
-.spec-card:focus-visible .spec-go {
-  background: var(--wine);
-  color: var(--cool-white);
-}
-.spec-card .spec-go svg {
-  transition: transform 150ms steps(2);
-}
-.spec-card:hover .spec-go svg,
-.spec-card:focus-visible .spec-go svg {
-  transform: translate(2px, -2px);
+  transform: translateY(-4px);
 }
 @media (prefers-reduced-motion: reduce) {
   .spec-card,

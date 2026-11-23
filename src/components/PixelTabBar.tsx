@@ -45,7 +45,7 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
               'min-[860px]:gap-2 min-[860px]:px-3 min-[860px]:text-[11px]',
               active
                 ? 'tab-pop translate-y-1 bg-white text-wine'
-                : 'bg-lavender text-cool-white hover:bg-rose hover:text-wine [text-shadow:2px_2px_0_var(--wine)] hover:[text-shadow:none]',
+                : 'bg-lavender text-cool-white hover:bg-rose hover:text-wine',
             ].join(' ')}
           >
             {burst?.id === tab.id && <span key={burst.n} className="tab-burst" aria-hidden="true" />}
