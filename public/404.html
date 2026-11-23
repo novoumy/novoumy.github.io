@@ -184,25 +184,35 @@
       .pixel-divider-bottom { margin-bottom: -2px; transform: scaleY(-1); }
       .replica[data-items='2'] .pixel-divider, .replica[data-items='1'] .pixel-divider { --pd-h: 56px; }
       .r-center {
-        display: flex; flex: 1; min-height: 0; flex-direction: column; align-items: center; justify-content: center;
-        gap: 1.25rem; padding: 1.5rem; text-align: center;
+        display: flex; flex: 1; min-height: 0; flex-direction: row; align-items: center; justify-content: center;
+        gap: 2.25rem; padding: 0 2.5rem; text-align: left; overflow: hidden;
       }
       .r-center > * { opacity: 0; }
       .r-avatar {
-        display: block; width: 144px; height: 144px; margin: 8px 0 4px; object-fit: cover; background: var(--paper);
+        display: block; flex: none; width: 144px; height: 144px; margin: 8px; object-fit: cover; background: var(--paper);
         box-shadow: 0 -4px 0 0 var(--wine), 0 4px 0 0 var(--wine), -4px 0 0 0 var(--wine), 4px 0 0 0 var(--wine),
                     0 -8px 0 0 var(--rose), 0 8px 0 0 var(--rose), -8px 0 0 0 var(--rose), 8px 0 0 0 var(--rose);
       }
-      .r-name { margin: 0; font: 24px/1.4 'Press Start 2P', monospace; letter-spacing: 0.05em; }
+      .r-text { display: flex; flex: 1 1 0; min-width: 0; max-width: 28rem; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .r-hello { font: 10px/1.6 'Press Start 2P', monospace; letter-spacing: 0.08em; color: #847FA4; }
+      .r-name { margin: 0; font: 24px/1.3 'Press Start 2P', monospace; letter-spacing: 0.05em; overflow-wrap: anywhere; }
       .r-bio {
-        width: min(34rem, 100%); margin: 0 auto; font: 26px/1.25 'VT323', monospace; letter-spacing: 0.03em; text-wrap: balance;
-        color: #6E3643;
+        margin: 0; font: 24px/1.2 'VT323', monospace; letter-spacing: 0.03em; color: #6E3643;
         text-shadow: 2px 2px 0 rgba(205, 158, 186, 0.38);
       }
-      .replica.compact .r-center { gap: 0.9rem; padding: 1rem 0.75rem; }
-      .replica.compact .r-avatar { width: 96px; height: 96px; }
-      .replica.compact .r-name { font-size: var(--r-name, 20px); }
-      .replica.compact .r-bio { font-size: var(--r-bio, 25px); }
+      @media (max-width: 640px) {
+        .r-center { gap: 1.1rem; padding: 0 1rem; }
+        .r-avatar { width: 84px; height: 84px; margin: 6px; }
+        .r-text { gap: 0.35rem; }
+        .r-hello { font-size: 8px; }
+        .r-name { font-size: clamp(13px, 4.6vw, 18px); }
+        .r-bio { font-size: clamp(17px, 4.6vw, 21px); line-height: 1.1; }
+      }
+      @media (max-width: 400px) {
+        .r-center { gap: 0.8rem; padding: 0 0.6rem; }
+        .r-avatar { width: 64px; height: 64px; }
+        .r-bio { font-size: 16px; }
+      }
 
       .stage-tabs { position: fixed; z-index: 6; display: flex; align-items: flex-end; pointer-events: none; opacity: 0; }
       .tabs { display: flex; align-items: flex-end; gap: 4px; width: 800px; padding-left: 4px; }
@@ -472,10 +482,7 @@
             return new Intl.DateTimeFormat('en-GB', { timeZone: 'Etc/GMT-3', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(new Date());
           } catch (_) { return '--:--:--'; }
         }
-        function visitorsText() {
-          try { var n = Number(localStorage.getItem('novoumy:visitors')); if (n > 0) return pad(n, 4); } catch (_) {}
-          return '----';
-        }
+        function fpsText() { return String(170 + Math.floor(Math.random() * 51)); }
 
         // Bubble border: identical code to src/lib/bubbleBorder.ts. Every bubble's size is a function of Date.now(),
         // so the real page picks up the exact same frame and the morph never snaps or restarts.
@@ -636,8 +643,6 @@
           if (!t.staged) {
             var vw = window.innerWidth;
             var narrow = vw <= 768;
-            el.style.setProperty('--r-name', narrow ? Math.min(20, Math.max(16, vw * 0.05)) + 'px' : '24px');
-            el.style.setProperty('--r-bio', narrow ? Math.min(25, Math.max(21, vw * 0.056)) + 'px' : '26px');
             if (!narrow) { el.classList.remove('compact'); el.classList.add('wide'); }
           }
           var divider = function (pos) {
@@ -648,11 +653,10 @@
             divider('top') +
             '<div class="r-center">' +
               '<img class="r-avatar" src="/icon.png" alt="" />' +
-              '<h2 class="r-name">novoumy</h2>' +
-              '<p class="r-bio">' + BIO + '</p>' +
+              '<div class="r-text"><div class="r-hello">&gt; HELLO, I\'M</div><h2 class="r-name">novoumy</h2><p class="r-bio">' + BIO + '</p></div>' +
             '</div>' +
             divider('bottom') +
-            '<div class="r-bar"><span>VISITORS: ' + visitorsText() + '</span><span class="kw-center">TINTED_LILAC</span><span class="kw-end">FRANKFURT \u2022 CHECKING WEATHER</span></div>';
+            '<div class="r-bar"><span>FPS: ' + fpsText() + '</span><span class="kw-center">TINTED_LILAC</span><span class="kw-end">CHECKING WEATHER</span></div>';
           return el;
         }
 

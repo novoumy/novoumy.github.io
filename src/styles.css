@@ -859,8 +859,8 @@
 
   /* compact: 4:3 of the window's width (viewport - page padding 1.5rem - shadow gutter 0.5rem) */
   section.win-section[data-compact='true'] {
-    /* never shorter than the Main content (bars + dividers + avatar + bio ~ 33rem), or it would be squashed */
-    height: min(max(calc((100vw - 2rem) * 0.75), 33rem), calc(100dvh - 6.2rem), 42.8rem);
+    /* never shorter than the Main content (bars + dividers + avatar/text row ~ 24rem), or it would be squashed */
+    height: min(max(calc((100vw - 2rem) * 0.75), 24rem), calc(100dvh - 6.2rem), 42.8rem);
   }
 }
 

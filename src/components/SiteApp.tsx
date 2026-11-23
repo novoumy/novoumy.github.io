@@ -170,7 +170,10 @@ export default function App() {
                 }}
                 role="tabpanel"
                 hidden={id !== activeId}
-                className="pixel-scroll m-1 min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 max-sm:p-3 sm:p-7"
+                className={[
+                  'pixel-scroll m-1 min-h-0 flex-1 overscroll-contain',
+                  id === 'main' ? 'overflow-hidden p-0' : 'overflow-y-auto p-4 max-sm:p-3 sm:p-7',
+                ].join(' ')}
               >
                 {render(route, openInterest)}
               </div>

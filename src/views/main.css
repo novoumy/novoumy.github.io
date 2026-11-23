@@ -32,7 +32,7 @@
 /* Collapse by VIEWPORT width (media queries), not container queries: older iOS Safari ignores @container, and
    then the 3-column grid was left in place on phones and the centre text ran over its neighbours.
    The window is ~40px narrower than the viewport, and the 3-column layout needs a ~230px column for the longest
-   readout ("FRANKFURT • 3°C • CLOUDY"), so:
+   readout ("3°C • CLOUDY"), so:
    >= 800px  3 items  |  300-799px  2 items (centre hidden; ping + weather stay visible)  |  < 300px  1 item
    The fixed 800px desktop stage is always >= 800px wide, so it always gets all three. */
 .kinetic-words { flex: none; }
@@ -86,33 +86,28 @@
 }
 
 /* ---------- Profile ---------- */
+/* Avatar on the left, text on the right. Never scrolls: everything is sized to fit, and the text block shrinks
+   (smaller type, tighter gaps) on short or narrow windows instead. */
 .main-profile-center {
   display: flex;
   flex: 1;
   min-height: 0;
   width: 100%;
   box-sizing: border-box;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 1.25rem;
-  padding: 1.5rem;
-  text-align: center;
-  /* The two status bars and dividers are pinned top and bottom. If the window is too short for the profile,
-     only this middle section scrolls: it can never slide under a divider or push a bar off screen. */
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  justify-content: center;
+  gap: 2.25rem;
+  padding: 0 2.5rem;
+  text-align: left;
+  overflow: hidden;
 }
-/* auto margins on the first / last child centre the profile when there is room, and (unlike
-   justify-content: center) still let it scroll from the very top when there is not. */
-.main-profile-center > :first-child { margin-top: auto; }
-.main-profile-center > :last-child { margin-bottom: auto; }
-/* Symmetric stepped frame (wine, then rose) so the picture sits dead centre over the name. */
+/* Symmetric stepped frame (wine, then rose). */
 .main-profile-avatar {
   display: block;
   width: 144px;
   height: 144px;
-  margin: 8px 0 4px;
+  margin: 8px;
   flex: none;
   object-fit: cover;
   background: var(--cool-white);
@@ -120,37 +115,66 @@
     0 -4px 0 0 var(--wine), 0 4px 0 0 var(--wine), -4px 0 0 0 var(--wine), 4px 0 0 0 var(--wine),
     0 -8px 0 0 var(--rose), 0 8px 0 0 var(--rose), -8px 0 0 0 var(--rose), 8px 0 0 0 var(--rose);
 }
+.main-profile-text {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 28rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.main-profile-hello {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  color: var(--lavender);
+}
 .main-profile-name {
-  flex: none;
   margin: 0;
+  max-width: 100%;
   font-family: 'Press Start 2P', monospace;
   font-size: 24px;
-  line-height: 1.4;
+  line-height: 1.3;
   letter-spacing: 0.05em;
+  overflow-wrap: anywhere;
 }
 .main-profile-bio {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  flex: none;
-  width: min(34rem, 100%);
-  margin: 0 auto;
+  margin: 0;
   font-family: 'VT323', monospace;
-  font-size: 26px;
-  line-height: 1.25;
+  font-size: 24px;
+  line-height: 1.2;
   letter-spacing: 0.03em;
-  text-align: center;
-  text-wrap: balance;
+  text-align: left;
   color: #6E3643;
   text-shadow: 2px 2px 0 rgba(205, 158, 186, 0.38);
 }
 .main-profile-bio p { margin: 0; }
 
-@media (max-width: 768px) {
-  .main-profile-center { gap: 0.9rem; padding: 1rem 0.75rem; }
-  .main-profile-avatar { width: 96px; height: 96px; }
-  .main-profile-name { font-size: clamp(16px, 5vw, 20px); }
-  .main-profile-bio { font-size: clamp(21px, 5.6vw, 25px); }
+/* Narrow phones: keep avatar on the left, just smaller. */
+@media (max-width: 640px) {
+  .main-profile-center { gap: 1.1rem; padding: 0 1rem; }
+  .main-profile-avatar { width: 84px; height: 84px; margin: 6px; }
+  .main-profile-text { gap: 0.35rem; }
+  .main-profile-hello { font-size: 8px; }
+  .main-profile-name { font-size: clamp(13px, 4.6vw, 18px); }
+  .main-profile-bio { font-size: clamp(17px, 4.6vw, 21px); line-height: 1.1; }
+}
+@media (max-width: 400px) {
+  .main-profile-center { gap: 0.8rem; padding: 0 0.6rem; }
+  .main-profile-avatar { width: 64px; height: 64px; }
+  .main-profile-bio { font-size: 16px; }
+}
+/* Short windows (landscape phones etc.): shrink everything a notch so nothing is clipped. */
+@media (max-height: 560px) {
+  .main-profile-avatar { width: 72px; height: 72px; }
+  .main-profile-name { font-size: 16px; }
+  .main-profile-bio { font-size: 17px; line-height: 1.05; }
+  .main-profile-hello { font-size: 8px; }
 }
 
 /* Selected MAIN tab: exactly the soft pink of the top / bottom status bars. */

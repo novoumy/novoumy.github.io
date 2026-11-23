@@ -16,7 +16,7 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
     <div
       role="tablist"
       aria-label="Main navigation"
-      className="relative z-10 flex w-full min-w-0 flex-1 items-stretch gap-1 overflow-visible min-[860px]:w-auto min-[860px]:flex-none min-[860px]:items-end min-[860px]:gap-1 min-[860px]:pl-1 min-[860px]:pr-0"
+      className="relative z-10 flex w-full min-w-0 flex-1 items-stretch gap-2 overflow-visible min-[860px]:w-auto min-[860px]:flex-none min-[860px]:items-end min-[860px]:gap-1 min-[860px]:pl-1 min-[860px]:pr-0"
     >
       {tabs.map((tab) => {
         const active = tab.id === activeId;
@@ -39,16 +39,16 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
               onSelect(tab.id);
             }}
             className={[
-              'pixel-tile relative flex min-h-10 min-w-0 items-center justify-center gap-1 px-1.5 py-2 font-pixel text-[7px] uppercase leading-tight whitespace-nowrap min-[380px]:text-[8px]',
+              'pixel-tile relative flex min-h-11 min-w-0 items-center justify-center gap-1 px-1.5 py-2 font-pixel text-[8px] uppercase leading-tight whitespace-nowrap min-[420px]:gap-2 min-[420px]:px-2 min-[420px]:text-[9px]',
               'min-[860px]:min-h-0 min-[860px]:w-auto min-[860px]:flex-none min-[860px]:gap-2 min-[860px]:px-3 min-[860px]:py-2 min-[860px]:text-[11px]',
               active
-                ? 'flex-[2.2] tab-pop translate-y-1 bg-white text-wine'
-                : 'flex-1 bg-lavender text-cool-white hover:bg-rose hover:text-wine [text-shadow:2px_2px_0_var(--wine)] hover:[text-shadow:none]',
+                ? 'flex-1 tab-pop translate-y-1 bg-white text-wine'
+                : 'w-11 flex-none bg-lavender text-cool-white min-[860px]:w-auto hover:bg-rose hover:text-wine [text-shadow:2px_2px_0_var(--wine)] hover:[text-shadow:none]',
             ].join(' ')}
           >
             {burst?.id === tab.id && <span key={burst.n} className="tab-burst" aria-hidden="true" />}
-            <PixelTabIcon name={tab.icon} size={24} className={['shrink-0', burst?.id === tab.id ? 'tab-icon-spin' : ''].join(' ')} key={burst?.id === tab.id ? `i${burst.n}` : 'i'} />
-            <span className={active ? 'inline min-w-0 overflow-hidden text-ellipsis' : 'hidden min-[860px]:inline'}>{tab.label}</span>
+            <PixelTabIcon name={tab.icon} size={24} className={['shrink-0', active ? 'max-[359px]:hidden' : '', burst?.id === tab.id ? 'tab-icon-spin' : ''].join(' ')} key={burst?.id === tab.id ? `i${burst.n}` : 'i'} />
+            <span className={active ? 'inline min-w-0' : 'hidden min-[860px]:inline'}>{tab.label}</span>
           </button>
         );
       })}
