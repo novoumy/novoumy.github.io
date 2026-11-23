@@ -8,7 +8,7 @@ interface PixelTabBarProps {
   onSelect: (id: TabId) => void;
 }
 
-// Phones keep all four tabs in one row: the active tab shows its title, the others stay icon-only.
+// All four tabs always show their icon and title, on every screen size.
 export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarProps) {
   // A pixel shockwave is triggered only when navigating to a different tab.
   const [burst, setBurst] = useState<{ id: TabId; n: number } | null>(null);
@@ -16,8 +16,8 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
     <div
       role="tablist"
       aria-label="Main navigation"
-      className="relative z-10 flex w-full min-w-0 flex-1 items-stretch gap-2 overflow-visible max-[859px]:w-auto max-[859px]:flex-none min-[860px]:w-auto min-[860px]:flex-none min-[860px]:items-end min-[860px]:gap-1 min-[860px]:pl-1 min-[860px]:pr-0"
-    >
+      className="relative z-10 flex w-full min-w-0 flex-1 items-stretch gap-2 overflow-visible max-[859px]:w-auto max-[859px]:flex-none max-[859px]:gap-1 min-[860px]:w-auto min-[860px]:flex-none min-[860px]:items-end min-[860px]:gap-1 min-[860px]:pl-1 min-[860px]:pr-0"
+>
       {tabs.map((tab) => {
         const active = tab.id === activeId;
         return (
@@ -39,16 +39,18 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
               onSelect(tab.id);
             }}
             className={[
-              'pixel-tile relative flex min-h-11 min-w-0 items-center justify-center gap-1 px-1.5 py-2 font-pixel text-[8px] uppercase leading-tight whitespace-nowrap min-[420px]:gap-2 min-[420px]:px-2 min-[420px]:text-[9px]',
-              'min-[860px]:min-h-0 min-[860px]:w-auto min-[860px]:flex-none min-[860px]:gap-2 min-[860px]:px-3 min-[860px]:py-2 min-[860px]:text-[11px]',
+              // Every tab always shows icon + label. Vertical stage: 8px type and tight padding so all four fit in 412px
+              // next to the sound button; landscape: the roomier 11px version.
+              'pixel-tile relative flex min-w-0 flex-none items-center justify-center gap-1 whitespace-nowrap px-[5px] py-2 font-pixel text-[8px] uppercase leading-tight',
+              'min-[860px]:gap-2 min-[860px]:px-3 min-[860px]:text-[11px]',
               active
-                ? 'flex-1 max-[859px]:flex-none tab-pop translate-y-1 bg-white text-wine'
-                : 'w-11 flex-none bg-lavender text-cool-white min-[860px]:w-auto hover:bg-rose hover:text-wine [text-shadow:2px_2px_0_var(--wine)] hover:[text-shadow:none]',
+                ? 'tab-pop translate-y-1 bg-white text-wine'
+                : 'bg-lavender text-cool-white hover:bg-rose hover:text-wine [text-shadow:2px_2px_0_var(--wine)] hover:[text-shadow:none]',
             ].join(' ')}
           >
             {burst?.id === tab.id && <span key={burst.n} className="tab-burst" aria-hidden="true" />}
-            <PixelTabIcon name={tab.icon} size={24} className={['shrink-0', active ? 'max-[359px]:hidden' : '', burst?.id === tab.id ? 'tab-icon-spin' : ''].join(' ')} key={burst?.id === tab.id ? `i${burst.n}` : 'i'} />
-            <span className={active ? 'inline min-w-0' : 'hidden min-[860px]:inline'}>{tab.label}</span>
+            <PixelTabIcon name={tab.icon} size={24} className={['shrink-0', burst?.id === tab.id ? 'tab-icon-spin' : ''].join(' ')} key={burst?.id === tab.id ? `i${burst.n}` : 'i'} />
+            <span className="inline min-w-0">{tab.label}</span>
           </button>
         );
       })}

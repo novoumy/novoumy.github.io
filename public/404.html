@@ -216,10 +216,26 @@
       .tab.active { background: var(--status-pink); color: var(--wine); text-shadow: none; transform: translateY(4px); }
       .tabs .spacer { flex: 1; }
       .tabs .sound { padding: 8px 10px; }
-      .stage-tabs.compact .tabs { width: 100%; padding-left: 0; }
-      .stage-tabs.compact .tab { flex: 1; padding: 10px 6px; font-size: 8px; }
-      .stage-tabs.compact .tab.active { flex: 2.2; }
-      .stage-tabs.compact .tab:not(.active) span, .stage-tabs.compact .spacer, .stage-tabs.compact .sound { display: none; }
+      /* ---------- Vertical (3:4) stage: mirrors the portrait rules at the end of src/views/main.css ---------- */
+      .replica[data-mode='portrait'] .r-bar {
+        display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; min-height: 0;
+        padding: 0.55rem 14px; font: 11px/1.8 'Press Start 2P', monospace; letter-spacing: 0.04em;
+      }
+      .replica[data-mode='portrait'] .r-bar span { flex: 0 1 auto; min-width: 0; text-overflow: ellipsis; }
+      .replica[data-mode='portrait'] .r-bar span:first-child { flex-shrink: 0; }
+      .replica[data-mode='portrait'] .kw-center { display: none; }
+      .replica[data-mode='portrait'] .pixel-divider { --pd-h: 56px; }
+      .replica[data-mode='portrait'] .r-center { flex-direction: column; align-items: center; gap: 1rem; padding: 0 1.5rem; text-align: center; }
+      .replica[data-mode='portrait'] .r-avatar { width: 104px; height: 104px; margin: 8px; }
+      .replica[data-mode='portrait'] .r-text { flex: 0 1 auto; width: 100%; max-width: 22rem; align-items: center; gap: 0.5rem; text-align: center; }
+      .replica[data-mode='portrait'] .r-hello { font-size: 12px; }
+      .replica[data-mode='portrait'] .r-name { font-size: 28px; text-align: center; }
+      .replica[data-mode='portrait'] .r-bio { font-size: 22px; line-height: 1.15; text-align: center; }
+      /* Tab row: all four labels always visible; 412px wide (the 420px stage minus its 8px shadow room). */
+      .stage-tabs.portrait .tabs { width: 412px; padding-left: 0; gap: 4px; }
+      .stage-tabs.portrait .tab { padding: 8px 5px; gap: 4px; font-size: 8px; line-height: 1.375; }
+      .stage-tabs.portrait .tab.sound { padding: 8px 10px; }
+      .stage-tabs.portrait .tab.sound svg { width: 16px; height: 16px; }
       .surge { position: fixed; inset: 0; z-index: 9; pointer-events: none; opacity: 0; background: var(--rose); mix-blend-mode: screen; }
       .scan-wipe {
         position: fixed; left: 0; right: 0; z-index: 8; height: 14vh; pointer-events: none; opacity: 0;
@@ -447,16 +463,26 @@
         };
         function svg(name) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS[name] + '</svg>'; }
 
-        // Mirrors the app's own layout maths (useStageScale + window position):
-        // the stage is 800 wide; tab row 34 + 4 gap + a 792x594 window + 8 shadow room = 640 tall.
+        // Mirrors the app's own layout maths (src/lib/useStageScale.ts + App.tsx), including the SAME screen-type switch:
+        //   narrow (< 860px wide) or taller-than-wide screens -> vertical 3:4 stage (420px wide, 412x549 window)
+        //   everything else                                   -> horizontal 4:3 stage (800px wide, 792x594 window)
+        // Tab row 34 + 4 gap + window + 8 shadow room = full stage height (640 landscape, ~595 vertical).
         function target() {
           var vw = window.innerWidth, vh = window.innerHeight;
-          {
-            var s = Math.max(0.1, Math.min(1.75, (vw - 24) / 808, (vh - 64) / 656));
-            var left = (vw - 800 * s) / 2, stageTop = (vh - 640 * s) / 2;
-            return { staged: true, zoom: s, dw: 792, dh: 594, left: left, top: stageTop + 38 * s, w: 792 * s, h: 594 * s,
-                     tabsLeft: left, tabsTop: stageTop, tabsW: 800 * s, tabsH: 34 * s };
+          var portrait = vw < 860 || vw < vh;
+          if (portrait) {
+            var big = vw >= 700 ? 0.05 : 0;                              // big vertical screens get proportional margins
+            var mx = Math.max(12, vw * big), my = Math.max(32, vh * big);
+            var sp = Math.max(0.1, Math.min(3, (vw - 2 * mx) / 428, (vh - 2 * my) / 616));
+            var dwp = 412, dhp = 412 * 4 / 3, stageH = 34 + 4 + dhp + 8;
+            var leftp = (vw - 420 * sp) / 2, stageTopP = (vh - stageH * sp) / 2;
+            return { mode: 'portrait', zoom: sp, dw: dwp, dh: dhp, left: leftp, top: stageTopP + 38 * sp, w: dwp * sp, h: dhp * sp,
+                     tabsLeft: leftp, tabsTop: stageTopP, tabsW: 412 * sp, tabsH: 34 * sp };
           }
+          var s = Math.max(0.1, Math.min(1.75, (vw - 24) / 808, (vh - 64) / 656));
+          var left = (vw - 800 * s) / 2, stageTop = (vh - 640 * s) / 2;
+          return { mode: 'landscape', zoom: s, dw: 792, dh: 594, left: left, top: stageTop + 38 * s, w: 792 * s, h: 594 * s,
+                   tabsLeft: left, tabsTop: stageTop, tabsW: 800 * s, tabsH: 34 * s };
         }
 
         var BIO = 'I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^';
@@ -617,18 +643,13 @@
 
         function buildReplica(t) {
           var el = document.createElement('div');
-          el.className = 'replica' + (t.staged ? '' : ' compact');
+          el.className = 'replica';
           el.setAttribute('aria-hidden', 'true');
+          el.setAttribute('data-mode', t.mode);
           el.style.width = t.dw + 'px';
           el.style.height = t.dh + 'px';
           el.style.zoom = t.zoom;
-          // same collapse points as the site's status bars (3 / 2 / 1 items)
-          el.setAttribute('data-items', t.dw >= 640 ? '3' : t.dw >= 420 ? '2' : '1');
-          if (!t.staged) {
-            var vw = window.innerWidth;
-            var narrow = vw <= 768;
-            if (!narrow) { el.classList.remove('compact'); el.classList.add('wide'); }
-          }
+          el.setAttribute('data-items', '3'); // landscape status bars show all three readouts; the vertical rules above override this
           var divider = function (pos) {
             return '<div class="pixel-divider pixel-divider-' + pos + '"><canvas></canvas></div>';
           };
@@ -646,7 +667,7 @@
 
         function buildTabs(t) {
           var el = document.createElement('div');
-          el.className = 'stage-tabs' + (t.staged ? '' : ' compact');
+          el.className = 'stage-tabs' + (t.mode === 'portrait' ? ' portrait' : '');
           el.setAttribute('aria-hidden', 'true');
           el.style.left = t.tabsLeft + 'px';
           el.style.top = t.tabsTop + 'px';
