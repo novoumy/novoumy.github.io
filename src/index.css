@@ -25,6 +25,12 @@
     min-height: 100%;
   }
 
+  /* Never white: the page behind the stage is always the lavender desk, even during overscroll / bar resizes. */
+  html {
+    background-color: var(--lavender);
+    color-scheme: light;
+  }
+
   body {
     @apply bg-lavender font-body text-wine antialiased;
     font-size: 22px;
