@@ -26,9 +26,13 @@ export const STAGES: Record<StageMode, StageSpec> = {
 const PORTRAIT_BELOW_WIDTH = 860;
 
 const MIN_SCALE = 0.1;
-const MAX_SCALE = 1.75;
-const HORIZONTAL_MARGIN = 24; // 12px on each side
-const VERTICAL_MARGIN = 64; // 32px above and below
+const MAX_SCALE: Record<StageMode, number> = { landscape: 1.75, portrait: 3 };
+// Phones keep a tight, fixed margin. On larger screens (e.g. a vertical PC monitor) the margin grows with the
+// screen so the window fills most of it but always leaves a comfortable border of background on every side.
+const MARGIN_X = 12; // px per side (minimum)
+const MARGIN_Y = 32; // px per side (minimum)
+const LARGE_SCREEN_WIDTH = 700;
+const LARGE_SCREEN_MARGIN = 0.05; // 5% of the width / height per side
 
 function computeMode(): StageMode {
   if (typeof window === 'undefined') return 'landscape';
@@ -39,9 +43,13 @@ function computeMode(): StageMode {
 function computeScale(mode: StageMode): number {
   if (typeof window === 'undefined') return 1;
   const stage = STAGES[mode];
+  const { innerWidth, innerHeight } = window;
+  const proportional = mode === 'portrait' && innerWidth >= LARGE_SCREEN_WIDTH ? LARGE_SCREEN_MARGIN : 0; // landscape margins are unchanged
+  const marginX = Math.max(MARGIN_X, innerWidth * proportional);
+  const marginY = Math.max(MARGIN_Y, innerHeight * proportional);
   return Math.max(
     MIN_SCALE,
-    Math.min(MAX_SCALE, (window.innerWidth - HORIZONTAL_MARGIN) / stage.width, (window.innerHeight - VERTICAL_MARGIN) / stage.height),
+    Math.min(MAX_SCALE[mode], (innerWidth - 2 * marginX) / stage.width, (innerHeight - 2 * marginY) / stage.height),
   );
 }
 

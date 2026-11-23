@@ -189,35 +189,22 @@
    scaled as a whole.
    ====================================================================================================== */
 @media (max-width: 859px) {
-  /* Status bars: two rows of larger text instead of one row of tiny text.
-     top:    [ time          ping ]      bottom: [ OBSESSED... centre ]
-             [ centre text      ]               [ fps         weather ]  */
+  /* Status bars: one row of larger text. The centre readouts (OBSESSED WITH MINECRAFT / TINTED_LILAC) are
+     hidden here to save space:  [ time ........ ping ]   and   [ fps ........ weather ]  */
   .kinetic-words {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    column-gap: 0.75rem;
-    row-gap: 0.15rem;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    gap: 0.75rem;
     min-height: 0;
-    padding: 0.5rem 14px;
+    padding: 0.55rem 14px;
     font-size: 11px;
-    line-height: 1.6;
+    line-height: 1.8;
     letter-spacing: 0.04em;
   }
-  .kinetic-words span { min-width: 0; }
-  .kinetic-words span:first-child { grid-column: 1; justify-self: start; }
-  .kinetic-words span:last-child { grid-column: 2; justify-self: end; flex-shrink: 1; }
-  .kinetic-words .kw-center {
-    display: block;
-    grid-column: 1 / -1;
-    justify-self: center;
-    text-align: center;
-    max-width: 100%;
-  }
-  .kinetic-top span:first-child, .kinetic-top .kw-end { grid-row: 1; }
-  .kinetic-top .kw-center { grid-row: 2; }
-  .kinetic-bottom .kw-center { grid-row: 1; }
-  .kinetic-bottom span:first-child, .kinetic-bottom .kw-end { grid-row: 2; }
+  .kinetic-words span { flex: 0 1 auto; min-width: 0; }
+  .kinetic-words span:first-child { flex-shrink: 0; }
+  .kinetic-words .kw-center { display: none; }
   .kinetic-words .kw-end { display: block; }
 
   /* Profile: one centred column - avatar, then greeting, name and bio - sized to fill the window. */
