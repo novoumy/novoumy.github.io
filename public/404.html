@@ -3,6 +3,28 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // Phones / tablets: always lay the page out at the desktop size (>= 900px wide, >= ~720px tall) and let the
+      // browser shrink that whole page to fit the screen. The window then keeps the exact PC layout and 4:3 shape
+      // on every device instead of re-flowing into a stretched mobile layout.
+      (function () {
+        try {
+          var meta = document.querySelector('meta[name="viewport"]');
+          if (!meta || !window.matchMedia('(pointer: coarse)').matches) return;
+          var apply = function () {
+            var s = Math.min(screen.width, screen.height), l = Math.max(screen.width, screen.height);
+            if (s >= 900) { meta.setAttribute('content', 'width=device-width, initial-scale=1'); return; }
+            var landscape = window.matchMedia('(orientation: landscape)').matches;
+            var ratio = landscape ? l / s : s / l; // screen width / screen height
+            meta.setAttribute('content', 'width=' + Math.max(900, Math.ceil(720 * ratio)));
+          };
+          apply();
+          window.addEventListener('orientationchange', apply);
+          var mq = window.matchMedia('(orientation: landscape)');
+          if (mq.addEventListener) mq.addEventListener('change', apply);
+        } catch (e) { /* keep the default viewport */ }
+      })();
+    </script>
     <meta name="theme-color" content="#847FA4" />
     <script>
       // Dark / inverted palettes were removed: clear any cached theme so the 404 stays on the default light look.
