@@ -16,7 +16,7 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
     <div
       role="tablist"
       aria-label="Main navigation"
-      className="relative z-10 flex w-full min-w-0 flex-1 items-stretch gap-2 overflow-visible min-[860px]:w-auto min-[860px]:flex-none min-[860px]:items-end min-[860px]:gap-1 min-[860px]:pl-1 min-[860px]:pr-0"
+      className="relative z-10 flex w-full min-w-0 flex-1 items-stretch gap-2 overflow-visible max-[859px]:w-auto max-[859px]:flex-none min-[860px]:w-auto min-[860px]:flex-none min-[860px]:items-end min-[860px]:gap-1 min-[860px]:pl-1 min-[860px]:pr-0"
     >
       {tabs.map((tab) => {
         const active = tab.id === activeId;
@@ -42,7 +42,7 @@ export default function PixelTabBar({ tabs, activeId, onSelect }: PixelTabBarPro
               'pixel-tile relative flex min-h-11 min-w-0 items-center justify-center gap-1 px-1.5 py-2 font-pixel text-[8px] uppercase leading-tight whitespace-nowrap min-[420px]:gap-2 min-[420px]:px-2 min-[420px]:text-[9px]',
               'min-[860px]:min-h-0 min-[860px]:w-auto min-[860px]:flex-none min-[860px]:gap-2 min-[860px]:px-3 min-[860px]:py-2 min-[860px]:text-[11px]',
               active
-                ? 'flex-1 tab-pop translate-y-1 bg-white text-wine'
+                ? 'flex-1 max-[859px]:flex-none tab-pop translate-y-1 bg-white text-wine'
                 : 'w-11 flex-none bg-lavender text-cool-white min-[860px]:w-auto hover:bg-rose hover:text-wine [text-shadow:2px_2px_0_var(--wine)] hover:[text-shadow:none]',
             ].join(' ')}
           >
