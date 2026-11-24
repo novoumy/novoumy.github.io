@@ -1,5 +1,6 @@
 import { ArrowUpRight, Check, Copy } from '@/components/PixelUiIcons';
 import PixelIcon from '@/components/PixelIcon';
+import SmoothIcon from '@/components/SmoothIcon';
 import { useCopy } from '@/lib/useCopy';
 import { socials, type SocialItem } from '@/siteData';
 import './socials.css';
@@ -8,7 +9,9 @@ const HANDLE = 'novoumy';
 
 function SocialGlyph({ social, className }: { social: SocialItem; className: string }) {
   if (social.image) return <img src={social.image} alt="" loading="lazy" className={`${className} object-cover`} />;
-  return <PixelIcon name={social.icon ?? 'github'} size={48} className={className} />;
+  return social.icon === 'mail'
+    ? <PixelIcon name="mail" size={48} className={className} />
+    : <SmoothIcon name={social.icon ?? 'github'} size={48} className={className} />;
 }
 
 

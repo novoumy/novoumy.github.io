@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import SpecPixelIcon from '@/components/SpecPixelIcon';
+import SmoothIcon from '@/components/SmoothIcon';
 import { ArrowUpRight } from '@/components/PixelUiIcons';
 import { specGroups } from '@/siteData';
 import './socials.css';
@@ -107,7 +107,7 @@ export default function SpecsView() {
                     className="spec-card pixel-tile pixel-tile-interactive group relative box-border flex h-full min-w-0 items-center gap-4 bg-pink-soft p-4 pr-9 outline-none [--card-accent:var(--rose)] hover:bg-rose focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-wine"
                     style={{ ['--i' as string]: i } as CSSProperties}
                   >
-                    <SpecPixelIcon name={iconFor(part.label)} size={48} className="spec-icon shrink-0" />
+                    <SmoothIcon name={iconFor(part.label)} size={48} className="spec-icon shrink-0" />
 
                     <span className="flex min-w-0 flex-1 flex-col gap-1.5">
                       <span className="truncate font-pixel text-[8px] uppercase leading-none text-wine/70">{part.label}</span>
