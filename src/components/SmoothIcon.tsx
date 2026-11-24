@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import {
   siDiscord, siSteam, siRoblox, siGithub, siInstagram, siX, siYoutube,
-  siPinterest, siFacebook, siSnapchat, siLinkedin, siMinecraft,
+  siPinterest, siFacebook, siSnapchat, siLinkedin,
 } from 'simple-icons';
 
 const PURPLE = '#3A2272';
@@ -17,7 +17,6 @@ const SOCIAL: Record<string, { path: string; title: string }> = {
   instagram: { path: siInstagram.path, title: siInstagram.title },
   x: { path: siX.path, title: siX.title },
   youtube: { path: siYoutube.path, title: siYoutube.title },
-  namemc: { path: siMinecraft.path, title: 'Minecraft / NameMC' },
   pinterest: { path: siPinterest.path, title: siPinterest.title },
   facebook: { path: siFacebook.path, title: siFacebook.title },
   snapchat: { path: siSnapchat.path, title: siSnapchat.title },
@@ -42,6 +41,7 @@ const PART: Record<string, React.ComponentType<{ size?: number; strokeWidth?: nu
   earbuds: Headphones,
   headphone: Headphones,
   controller: Gamepad2,
+  namemc: Gamepad2,
 };
 
 type Props = { name: string; size?: number; className?: string };
