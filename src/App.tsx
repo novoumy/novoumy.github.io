@@ -158,6 +158,7 @@ export default function App() {
                 }}
                 role="tabpanel"
                 hidden={id !== activeId}
+                data-no-fade={id === 'main' ? '' : undefined}
                 className="pixel-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-5 max-sm:p-4 sm:p-8"
               >
                 {/* Main needs a full-height flex box; other panels stay in normal flow so their

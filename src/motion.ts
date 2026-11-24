@@ -22,6 +22,10 @@ function staggerTargets(panel: HTMLElement): HTMLElement[] {
 export function animatePanelIn(panel: HTMLElement, direction: number) {
   if (reducedMotion()) return;
   panel.getAnimations().forEach((animation) => animation.cancel());
+  // Main is a frosted-glass window (backdrop-filter). Any opacity / filter / transform on the panel or on its
+  // top-level block makes Chrome drop the blur (gray flash) and re-parents its absolute layout (shifted + scrollbar)
+  // until the animation ends, so Main is never animated: it appears fully drawn on the first frame.
+  if (panel.hasAttribute('data-no-fade')) return;
   // Panels with an opaque full-window background (Main) must not fade/slide as a whole: the dark window
   // behind would show through and flash gray until the fade finishes.
   if (!panel.hasAttribute('data-no-fade')) {

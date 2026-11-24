@@ -26,7 +26,7 @@ export default function MainView() {
         <div className="main-profile-avatar-wrap">
           <img src={hero.avatar} alt={hero.avatarAlt} className="main-profile-avatar" />
           {hero.avatarDecoration && (
-            <img src={hero.avatarDecoration} alt="" aria-hidden="true" className="main-profile-avatar-deco" draggable={false} />
+            <img src={hero.avatarDecoration} alt="" aria-hidden="true" className="main-profile-avatar-deco" draggable={false} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
           )}
         </div>
         <div className="main-profile-text">
