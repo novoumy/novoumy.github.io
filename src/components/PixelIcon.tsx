@@ -4,7 +4,6 @@ import {
   QuoteTextInline,
   Cpu,
   Discord,
-  Facebook,
   Gamepad,
   Globe,
   Gpu,
@@ -86,6 +85,14 @@ const PIXELARTICONS: Record<string, SvgIcon> = {
 const GRID_SIZE = 24;
 const CUSTOM_PATHS = new Map<string, string>();
 
+// Trace-derived SVG paths are prepared once, not rebuilt on each Socials render.
+const USER_REFERENCE_ICONS: Record<string, { viewBox: string; color: string; path: string }> = {
+  pinterest: { viewBox: '0 0 13 14', color: '#3A2272', path: pathData(CUSTOM_PIXEL_ICONS.pinterest, '#') },
+  namemc: { viewBox: '0 0 6 6', color: '#3A2272', path: pathData(CUSTOM_PIXEL_ICONS.namemc, '#') },
+  snapchat: { viewBox: '0 0 10 10', color: '#0D0F15', path: pathData(CUSTOM_PIXEL_ICONS.snapchat, '#') },
+  steam: { viewBox: '0 0 12 12', color: '#000000', path: pathData(CUSTOM_PIXEL_ICONS.steam, '#') },
+};
+
 function normalizeTo24(rows: string[]): string[] {
   const height = rows.length;
   const width = rows[0]?.length ?? 0;
@@ -97,33 +104,14 @@ function normalizeTo24(rows: string[]): string[] {
   );
 }
 
-const CUSTOM_ALIASES: Record<string, string> = { namemc: 'minecraft-filled' };
-
 function customPath(name: string): string {
-  const sourceName = CUSTOM_ALIASES[name] ?? name;
-  let path = CUSTOM_PATHS.get(sourceName);
+  let path = CUSTOM_PATHS.get(name);
   if (path === undefined) {
-    const rows = CUSTOM_PIXEL_ICONS[sourceName];
+    const rows = CUSTOM_PIXEL_ICONS[name];
     path = rows ? pathData(normalizeTo24(rows), '#') : '';
-    CUSTOM_PATHS.set(sourceName, path);
+    CUSTOM_PATHS.set(name, path);
   }
   return path;
-}
-
-function FacebookCircle({ className }: { className?: string }) {
-  return (
-    <span className={`relative inline-block shrink-0 ${className ?? ''}`} aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" shapeRendering="crispEdges" className="absolute inset-0">
-        <path
-          d="M12 1h3v1h3v2h2v3h2v10h-2v3h-2v2h-3v1H9v-1H6v-2H4v-3H2V7h2V4h2V2h3V1h3z"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinejoin="miter"
-        />
-      </svg>
-      <Facebook width="64%" height="64%" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
-    </span>
-  );
 }
 
 interface PixelIconProps {
@@ -133,7 +121,24 @@ interface PixelIconProps {
 }
 
 function PixelIcon({ name, size = 24, className }: PixelIconProps) {
-  if (name === 'facebook') return <FacebookCircle className={className} />;
+  // Exact Facebook mark supplied by the site owner.
+  if (name === 'facebook') {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width={size}
+        height={size}
+        fill="currentColor"
+        shapeRendering="crispEdges"
+        aria-hidden="true"
+        focusable="false"
+        className={className}
+      >
+        <path d="M11 12H8v2h3v6h2v-6h4v-2h-4V6h4V4h-4V2h6v6h-4v2h4v6h-4v6H9v-6H6v-6h3V6h2v6Zm2-6h-2V4h2v2Z" />
+      </svg>
+    );
+  }
 
   // Exact Roblox mark supplied for the Roblox social tile.
   if (name === 'roblox' || name === 'atom') {
@@ -173,41 +178,21 @@ function PixelIcon({ name, size = 24, className }: PixelIconProps) {
     );
   }
 
-  // Keep Snapchat on its native 16×16 grid: scaling to 24px with nearest-neighbour
-  // sampling can duplicate edge columns unevenly and make a symmetric sprite look lopsided.
-  if (name === 'snapchat') {
-    const path = pathData(CUSTOM_PIXEL_ICONS.snapchat, '#');
+  // User-supplied Socials artwork, traced to crisp SVG paths with no background.
+  const referenceIcon = USER_REFERENCE_ICONS[name];
+  if (referenceIcon) {
     return (
       <svg
-        viewBox="0 0 16 16"
+        viewBox={referenceIcon.viewBox}
         width={size}
         height={size}
-        fill="currentColor"
+        fill={referenceIcon.color}
         shapeRendering="crispEdges"
         aria-hidden="true"
         className={className}
         focusable="false"
       >
-        <path d={path} />
-      </svg>
-    );
-  }
-
-  // NameMC's creeper is a purple silhouette with transparent face cut-outs.
-  if (name === 'namemc') {
-    const path = customPath(name);
-    return (
-      <svg
-        viewBox="0 0 24 24"
-        width={size}
-        height={size}
-        fill="#8B5CF6"
-        shapeRendering="crispEdges"
-        aria-hidden="true"
-        className={className}
-        focusable="false"
-      >
-        <path d={path} />
+        <path d={referenceIcon.path} />
       </svg>
     );
   }

@@ -109,3 +109,15 @@ The handoff includes source syntax checks, local-import checks, lockfile/JSON ch
 - Replaced the Socials navigation glyph with the exact SVG path supplied by the site owner.
 - Changed NameMC to a purple (`#8B5CF6`) creeper-face silhouette. The background remains transparent and the facial cut-outs remain unfilled.
 - Kept the symmetric 16×16 Snapchat sprite on its native SVG viewBox. This avoids the uneven column duplication that a 16-to-24px nearest-neighbour conversion can introduce.
+
+## Latest Socials reference-image update (2026-11-24)
+
+The latest four user-uploaded images were used as direct artwork references for the Socials tiles. Their visible guide grids and solid white canvases were treated as backgrounds, not as part of the icons, so the resulting SVGs render with transparent backgrounds:
+
+- **Facebook:** replaced the prior Facebook-in-circle treatment with the exact 24×24 SVG path supplied in the message (`currentColor`).
+- **Pinterest:** replaced the previous fallback with a 13×14 pixel-grid trace of the supplied P-in-circle image, retaining its dark purple foreground (`#3A2272`) and removing the lavender backing.
+- **NameMC:** replaced the previous creeper drawing with the exact 6×6 pixel pattern from the supplied reference, using the same dark purple (`#3A2272`) and transparent negative space.
+- **Snapchat:** replaced the earlier hand-drawn fallback with a 10×10 pixel trace of the supplied gridded ghost reference. The mask is symmetric and the grid/background is omitted.
+- **Steam:** replaced the previous improvised mark with a 12×12 pixel trace of the supplied black-and-white Steam emblem, retaining the square frame and inner symbol while removing the white page background.
+
+All five replacements are rendered as inline SVG paths with crisp pixel edges. No extra image request or third-party icon dependency is introduced. The unused old `minecraft-filled` sprite and its alias were removed after NameMC switched to the supplied 6×6 source.

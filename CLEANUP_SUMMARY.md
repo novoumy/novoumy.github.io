@@ -32,3 +32,15 @@ A full Vite production build and runtime browser test could not be completed in 
 - Restored the `useState` import and kept the retired CRT toggle removed. This fixes the confirmed `useState is not defined` startup crash.
 - Revalidated the corrected app source: all 38 TypeScript/TSX/config source files passed a syntax parse, the active route state hook and import are present, and the active CSS parses cleanly.
 - A full Vite build/browser smoke test remains unavailable because `npm ci` cannot complete in this environment (registry access timed out); the corrected ZIP is therefore syntax-checked but not runtime-build-verified here.
+
+## Latest Socials icon update (2026-11-24)
+
+Applied the five updated Socials references from the latest user message:
+
+- Facebook now uses the exact SVG path supplied by the site owner, in `currentColor`.
+- Pinterest now uses the supplied P-in-a-circle artwork, traced on its original 13×14 pixel grid. Its purple foreground is retained and the pale background is transparent.
+- NameMC now uses the supplied 6×6 creeper-face pixel pattern in dark purple (`#3A2272`), with no background.
+- Snapchat now uses the supplied 10×10 gridded ghost artwork. The grid is excluded and the pixel mask is symmetrical.
+- Steam now uses the supplied 12×12 black pixel emblem, including the square frame and internal symbol; the white image background is transparent.
+
+The new art is rendered as inline SVG paths, so it remains crisp when resized and adds no image-fetching overhead. The obsolete earlier NameMC creeper sprite and alias were removed. The original page content, links, tile layout, spacing and interactions remain unchanged.
