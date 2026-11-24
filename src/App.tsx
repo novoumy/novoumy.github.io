@@ -126,7 +126,7 @@ export default function App() {
   const folderOpen = route.tab === 'interests' && route.interest !== null;
 
   return (
-    <div className="relative h-dvh overflow-hidden bg-lavender">
+    <div className="relative h-dvh overflow-hidden">
       <PixelBackdrop />
       <main className="relative z-10 flex h-full items-center justify-center">
         {/* Fixed-size window (800px wide 4:3, or 420px wide 3:4) scaled uniformly to fit the screen. */}
