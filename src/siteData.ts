@@ -67,8 +67,6 @@ export interface MediaItem {
   link: string; // external page (IMDb, MyAnimeList...), opened in a new tab when the card is clicked
 }
 
-export type GamePlatform = 'PC' | 'MOBILE';
-
 // Games come from Steam automatically (public/data/steam-games.json, synced by
 // .github/workflows/sync-steam.yml). Anything that is NOT on Steam goes here as a manual entry.
 export interface ManualAchievement {
@@ -1813,21 +1811,6 @@ export interface SpecGroup {
 
 const newegg = (query: string) => `https://www.newegg.com/p/pl?d=${encodeURIComponent(query)}`;
 const amazon = (query: string) => `https://www.amazon.com/s?k=${encodeURIComponent(query)}`;
-
-export const specsSummary = [
-  { label: 'BUILT', value: 'Nov 2025' },
-  { label: 'PURPOSE', value: '1440p gaming / coding' },
-  { label: 'CASE', value: 'Cougar FV150 RGB' },
-  { label: 'OS', value: 'Windows 11 Pro' },
-];
-
-// Headline numbers shown as big tiles at the top of the Specs tab.
-export const specHighlights = [
-  { value: '32', unit: 'GB', label: 'RAM', sub: 'DDR5-6000' },
-  { value: '12', unit: 'GB', label: 'VRAM', sub: 'RTX 5070' },
-  { value: '3', unit: 'TB', label: 'Storage', sub: '2x NVMe SSD' },
-  { value: '180', unit: 'Hz', label: 'Refresh', sub: '1440p QHD' },
-];
 
 export const specGroups: SpecGroup[] = [
   {

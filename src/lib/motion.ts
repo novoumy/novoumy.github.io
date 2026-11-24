@@ -50,25 +50,3 @@ export function animatePanelIn(panel: HTMLElement, direction: number) {
     );
   });
 }
-
-// Smooth power-off on the open folder overlay, then resolves so it can unmount.
-export function closeOverlayAnimated(): Promise<void> {
-  const overlay = document.querySelector<HTMLElement>('.animate-overlay-in');
-  if (!overlay || reducedMotion()) return Promise.resolve();
-  overlay.closest<HTMLElement>('.r-desk')?.animate([{ opacity: 1 }, { opacity: 0 }], {
-    duration: 420,
-    easing: 'cubic-bezier(0.4, 0, 1, 1)',
-    fill: 'forwards',
-  });
-  const animation = overlay.animate(
-    [
-      { opacity: 1, transform: 'translateY(0) scale(1)', filter: 'blur(0px)' },
-      { opacity: 0, transform: 'translateY(14px) scale(0.985)', filter: 'blur(1px)' },
-    ],
-    { duration: 420, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' },
-  );
-  return animation.finished.then(
-    () => undefined,
-    () => undefined,
-  );
-}

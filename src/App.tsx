@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
@@ -31,7 +31,6 @@ function setHash(route: Route) {
 export default function App() {
   const [route, setRoute] = useState<Route>(parseHash);
   const activeId = route.tab;
-  const [crt, setCrt] = useState(false);
 
   // Keep the view in sync with the URL hash (direct links, reloads, back/forward).
   useEffect(() => {
@@ -104,10 +103,6 @@ export default function App() {
     document.title = site.title;
   }, []);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle('crt-on', crt);
-  }, [crt]);
-
   const panels: Panel[] = [
     { id: 'main', render: () => <MainView /> },
     { id: 'socials', render: () => <SocialsView /> },
@@ -176,7 +171,6 @@ export default function App() {
             ))}
           </section>
         </div>
-        {crt && <div className="crt-overlay" aria-hidden="true" />}
       </main>
     </div>
   );
