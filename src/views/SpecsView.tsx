@@ -104,7 +104,7 @@ export default function SpecsView() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${part.name} on ${part.linkLabel}, opens in a new tab`}
-                    className="spec-card pixel-tile pixel-tile-interactive group relative box-border flex h-full min-w-0 items-center gap-4 bg-pink-soft p-4 pr-9 outline-none [--card-accent:var(--cool-white)] hover:bg-rose focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-wine"
+                    className="spec-card pixel-tile pixel-tile-interactive group relative box-border flex h-full min-w-0 items-center gap-4 bg-pink-soft p-4 pr-9 outline-none [--card-accent:var(--rose)] hover:bg-rose focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-wine"
                     style={{ ['--i' as string]: i } as CSSProperties}
                   >
                     <SpecPixelIcon name={iconFor(part.label)} size={48} className="spec-icon shrink-0" />

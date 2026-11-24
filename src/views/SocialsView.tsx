@@ -111,7 +111,7 @@ export default function SocialsView() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${social.platform}${social.handle ? ` (${social.handle})` : ''}, opens in a new tab`}
-              className="pixel-tile pixel-tile-interactive group relative flex w-full min-w-0 flex-col items-center gap-3 bg-pink-soft px-2 pb-4 pt-5 text-center [--r-accent:var(--cool-white)] hover:bg-rose max-sm:gap-2 max-sm:pb-3 max-sm:pt-4"
+              className="pixel-tile pixel-tile-interactive group relative flex w-full min-w-0 flex-col items-center gap-3 bg-pink-soft px-2 pb-4 pt-5 text-center [--r-accent:var(--rose)] hover:bg-rose max-sm:gap-2 max-sm:pb-3 max-sm:pt-4"
             >
               <span className="pixel-icon-well pixel-icon-well-social">
                 <SocialGlyph social={social} className="h-11 w-11 shrink-0 sm:h-12 sm:w-12" />

@@ -8,12 +8,16 @@ interface PixelTabIconProps {
   className?: string;
 }
 
-const CACHE = new Map<string, { x: number; y: number; w: number }[]>();
+const CACHE = new Map<string, { wine: { x: number; y: number; w: number }[]; accent: { x: number; y: number; w: number }[] }>();
 
 export default function PixelTabIcon({ name, size = 24, className }: PixelTabIconProps) {
   let cells = CACHE.get(name);
   if (!cells) {
-    cells = runs(centreRows(TAB_ICONS[name] ?? [], TAB_ICON_GRID));
+    const rows = centreRows(TAB_ICONS[name] ?? [], TAB_ICON_GRID);
+    cells = {
+      wine: runs(rows.map((row) => row.replace(/o/g, '.'))),
+      accent: runs(rows.map((row) => row.replace(/#/g, '.').replace(/o/g, '#'))),
+    };
     CACHE.set(name, cells);
   }
   return (
@@ -22,13 +26,15 @@ export default function PixelTabIcon({ name, size = 24, className }: PixelTabIco
       width={size}
       height={size}
       shapeRendering="crispEdges"
-      fill="currentColor"
       aria-hidden="true"
       className={className}
       style={{ imageRendering: 'pixelated' }}
     >
-      {cells.map((r) => (
-        <rect key={`${r.x}-${r.y}`} x={r.x} y={r.y} width={r.w} height="1" />
+      {cells.accent.map((r) => (
+        <rect key={`a-${r.x}-${r.y}`} x={r.x} y={r.y} width={r.w} height="1" fill="var(--rose)" />
+      ))}
+      {cells.wine.map((r) => (
+        <rect key={`w-${r.x}-${r.y}`} x={r.x} y={r.y} width={r.w} height="1" fill="var(--wine)" />
       ))}
     </svg>
   );

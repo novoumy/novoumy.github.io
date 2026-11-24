@@ -1070,4 +1070,8 @@ html[data-folder-transition='true'] .animate-overlay-in > * {
   }
 }
 
-.pixel-icon-well { display: contents; }
+.pixel-icon-well { display: contents; background: transparent !important; }
+.pixel-icon-well > svg,
+.pixel-icon-well > img { background: transparent !important; }
+.pixel-icon-well-social,
+.pixel-icon-well-email { background: transparent !important; }
