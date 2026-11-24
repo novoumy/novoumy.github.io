@@ -8,7 +8,7 @@ const particles = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
   color: i % 2 === 0 ? '#F5F1FF' : '#C9B4FF',
 }));
 
-const STAR_COUNT = 70;
+const STAR_COUNT = 120;
 const stars = Array.from({ length: STAR_COUNT }, (_, i) => ({
   left: `${(i * 53) % 100}%`,
   top: `${(i * 29 + (i % 7) * 11) % 100}%`,
