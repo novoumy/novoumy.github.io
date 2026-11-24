@@ -16,7 +16,6 @@ import {
   Mic,
   Mouse,
   Music,
-  PcCase,
   Save,
   Smartphone,
   Tablet,
@@ -70,7 +69,6 @@ const PIXELARTICONS: Record<string, SvgIcon> = {
   // PC specifications and peripherals
   gpu: Gpu,
   mobo: CircuitBoard,
-  case: PcCase,
   monitor: Tv,
   keyboard: Keyboard,
   mouse: Mouse,
@@ -88,9 +86,9 @@ const CUSTOM_PATHS = new Map<string, string>();
 // Trace-derived SVG paths are prepared once, not rebuilt on each Socials render.
 const USER_REFERENCE_ICONS: Record<string, { viewBox: string; color: string; path: string }> = {
   pinterest: { viewBox: '0 0 13 14', color: '#3A2272', path: pathData(CUSTOM_PIXEL_ICONS.pinterest, '#') },
-  namemc: { viewBox: '0 0 6 6', color: '#3A2272', path: pathData(CUSTOM_PIXEL_ICONS.namemc, '#') },
-  snapchat: { viewBox: '0 0 10 10', color: '#0D0F15', path: pathData(CUSTOM_PIXEL_ICONS.snapchat, '#') },
-  steam: { viewBox: '0 0 12 12', color: '#000000', path: pathData(CUSTOM_PIXEL_ICONS.steam, '#') },
+  namemc: { viewBox: '-0.5 -0.5 7 7', color: '#3A2272', path: pathData(CUSTOM_PIXEL_ICONS.namemc, '#') },
+  snapchat: { viewBox: '0 0 10 10', color: '#3A2272', path: pathData(CUSTOM_PIXEL_ICONS.snapchat, '#') },
+  steam: { viewBox: '0 0 12 12', color: '#3A2272', path: pathData(CUSTOM_PIXEL_ICONS.steam, '#') },
 };
 
 function normalizeTo24(rows: string[]): string[] {

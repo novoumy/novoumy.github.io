@@ -121,3 +121,10 @@ The latest four user-uploaded images were used as direct artwork references for 
 - **Steam:** replaced the previous improvised mark with a 12×12 pixel trace of the supplied black-and-white Steam emblem, retaining the square frame and inner symbol while removing the white page background.
 
 All five replacements are rendered as inline SVG paths with crisp pixel edges. No extra image request or third-party icon dependency is introduced. The unused old `minecraft-filled` sprite and its alias were removed after NameMC switched to the supplied 6×6 source.
+
+
+## Follow-up visual refinements
+
+- Pinterest: swapped the earlier filled treatment for the supplied open circular Pinterest mark; only the purple pixels are drawn and the negative space is transparent.
+- NameMC: reduced the creeper artwork by adding balanced internal SVG viewBox padding, without changing the Socials tile or its layout.
+- Snapchat and Steam: recolored both custom pixel marks to the site purple (`#3A2272`) to match the rest of the icon set.

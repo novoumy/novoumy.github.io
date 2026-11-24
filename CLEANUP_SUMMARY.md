@@ -44,3 +44,9 @@ Applied the five updated Socials references from the latest user message:
 - Steam now uses the supplied 12×12 black pixel emblem, including the square frame and internal symbol; the white image background is transparent.
 
 The new art is rendered as inline SVG paths, so it remains crisp when resized and adds no image-fetching overhead. The obsolete earlier NameMC creeper sprite and alias were removed. The original page content, links, tile layout, spacing and interactions remain unchanged.
+
+## Social icon color and sizing follow-up
+
+- Updated Pinterest to the owner's outlined circular P reference, using the site's purple (`#3A2272`) with transparent negative space.
+- Reduced the NameMC creeper mark slightly with a padded SVG viewBox; the Socials tile dimensions are unchanged.
+- Recolored the custom Steam and Snapchat marks to `#3A2272` for consistency with the rest of the icon set.
