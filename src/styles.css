@@ -64,10 +64,10 @@
 }
 
 :root {
-  --cool-white: #ECEFF1;
-  --lavender: #847FA4;
-  --wine: #6B2D39;
-  --rose: #CD9EBA;
+  --cool-white: #F5F1FF;
+  --lavender: #241645;
+  --wine: #3A2272;
+  --rose: #B8A2F2;
 }
 
 @layer base {
@@ -104,18 +104,18 @@
      ------------------------------------------------------------------ */
   .retro-theme {
     --r-bg: var(--cool-white);
-    --r-panel: #E8E2E8;
-    --r-raised: #E3D5DF;
-    --r-line: #BE8CA5;
+    --r-panel: #EFE8FF;
+    --r-raised: #E2D6FF;
+    --r-line: #A891E6;
     --r-line-hi: var(--wine);
     --r-text: var(--wine);
-    --r-dim: #774D60;
+    --r-dim: #5A4596;
     --r-gold: var(--wine);
-    --r-vinyl: #241015;
-    --r-vinyl-groove: #3a1c24;
+    --r-vinyl: #140B2E;
+    --r-vinyl-groove: #24164A;
     --r-accent: var(--wine);
     --r-accent-soft: var(--rose);
-    --r-accent-dim: #B49499;
+    --r-accent-dim: #9A88D0;
     color-scheme: light;
     color: var(--r-text);
     font-family: 'VT323', monospace;
@@ -143,7 +143,7 @@
   .retro-theme.accent-quotes {
     --r-accent: var(--wine);
     --r-accent-soft: var(--rose);
-    --r-accent-dim: #AF7B91;
+    --r-accent-dim: #8F76D6;
   }
 
   .retro-theme ::selection {
@@ -174,7 +174,7 @@
     font-size: 9px;
     line-height: 1;
     text-transform: uppercase;
-    box-shadow: 3px 3px 0 0 #2B0E14;
+    box-shadow: 3px 3px 0 0 #1A0E3A;
     transition:
       background-color 150ms steps(2),
       transform 100ms steps(2),

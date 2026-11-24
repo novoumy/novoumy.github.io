@@ -107,7 +107,7 @@ function drawOne(item: Item, now: number) {
   if (!item.grid) return;
   if (!item.ctx) item.ctx = c.getContext('2d');
   var ctx = item.ctx; if (!ctx) return;
-  if (!item.color || tickCount % 40 === 0) { try { var cs = getComputedStyle(c); item.color = cs.color; item.rim = cs.borderTopColor || item.color; } catch (e) { item.color = '#dfb5b5'; item.rim = '#c89698'; } }
+  if (!item.color || tickCount % 40 === 0) { try { var cs = getComputedStyle(c); item.color = cs.color; item.rim = cs.borderTopColor || item.color; } catch (e) { item.color = '#D6C9F8'; item.rim = '#A891E6'; } }
   fillGrid(item.grid, cols, H, item.seed, now);
   ctx.clearRect(0, 0, cols, H);
   ctx.fillStyle = item.color;

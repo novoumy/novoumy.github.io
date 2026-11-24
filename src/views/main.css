@@ -1,5 +1,5 @@
 /* Main tab: status bars, animated pixel divider, centred profile. */
-:root { --status-pink: #DCC2D2; }
+:root { --status-pink: #D6C9F8; }
 
 .main-playground {
   background: var(--cool-white);
@@ -38,7 +38,7 @@
   top: 0;
   display: block;
   color: var(--status-pink);
-  border: 0 solid #C6A3B1; /* read by the script as the rim colour */
+  border: 0 solid #A891E6; /* read by the script as the rim colour */
   image-rendering: pixelated;
 }
 /* The bottom strip is the same cloud mirrored (its own bubbles), so it thickens toward the bottom bar. */
@@ -119,7 +119,7 @@
   line-height: 1.2;
   letter-spacing: 0.03em;
   text-align: left;
-  color: #6E3643;
+  color: #4A3288;
 }
 .main-profile-bio p { margin: 0; }
 

@@ -7,14 +7,14 @@
 .h-dvh { height: 100vh; height: 100dvh; }
 
 :root {
-  --cool-white: #ECEFF1;
-  --cool-white-rgb: 236 239 241;
-  --lavender: #847FA4;
-  --lavender-rgb: 132 127 164;
-  --wine: #6B2D39;
-  --wine-rgb: 107 45 57;
-  --rose: #CD9EBA;
-  --rose-rgb: 205 158 186;
+  --cool-white: #F5F1FF;
+  --cool-white-rgb: 245 241 255;
+  --lavender: #241645;
+  --lavender-rgb: 36 22 69;
+  --wine: #3A2272;
+  --wine-rgb: 58 34 114;
+  --rose: #B8A2F2;
+  --rose-rgb: 184 162 242;
   --backdrop-grid: var(--cool-white);
 }
 
@@ -120,10 +120,10 @@
   .retro-theme {
     --r-bg: var(--cool-white);
     --r-bg-rgb: var(--cool-white-rgb);
-    --r-panel: #f6edf2;
-    --r-panel-rgb: 246 237 242;
-    --r-raised: #efdde8;
-    --r-raised-rgb: 239 221 232;
+    --r-panel: #EFE8FF;
+    --r-panel-rgb: 239 232 255;
+    --r-raised: #E2D6FF;
+    --r-raised-rgb: 226 214 255;
     --r-line: var(--rose);
     --r-line-rgb: var(--rose-rgb);
     --r-line-hi: var(--wine);
@@ -133,12 +133,12 @@
     --r-dim: var(--lavender);
     --r-dim-rgb: var(--lavender-rgb);
     --r-accent: var(--rose);
-    --r-accent-dim: #9b6b84;
-    --r-accent-dim-rgb: 155 107 132;
+    --r-accent-dim: #7D66C9;
+    --r-accent-dim-rgb: 125 102 201;
     --r-accent-rgb: var(--rose-rgb);
-    --r-vinyl: #241015;
-    --r-vinyl-groove: #3a1c24;
-    --r-vinyl-edge: #3a1720;
+    --r-vinyl: #140B2E;
+    --r-vinyl-groove: #24164A;
+    --r-vinyl-edge: #2A1A55;
     color-scheme: light;
     background: var(--r-bg);
     color: var(--r-text);
@@ -151,7 +151,7 @@
   .accent-games,
   .accent-quotes {
     --r-accent: var(--rose);
-    --r-accent-dim: #9b6b84;
+    --r-accent-dim: #7D66C9;
     --r-accent-rgb: 205 158 186;
   }
 
@@ -1075,3 +1075,98 @@ html[data-folder-transition='true'] .animate-overlay-in > * {
 .pixel-icon-well > img { background: transparent !important; }
 .pixel-icon-well-social,
 .pixel-icon-well-email { background: transparent !important; }
+
+/* ==================================================================
+   CELESTIAL THEME — ethereal amethyst & starlight.
+   Unlayered so it refines the base styles without touching any
+   sizes, aspect ratios or grid structure.
+   ================================================================== */
+:root {
+  --glow: 196 170 255;           /* luminous lavender */
+  --amethyst: 124 84 220;        /* glass tint */
+  --glass: rgb(245 241 255 / 0.62);
+  --glass-strong: rgb(245 241 255 / 0.78);
+  --glass-blur: blur(14px) saturate(140%);
+  --glow-line: 0 0 0 1.5px rgb(var(--glow) / 0.85), 0 0 14px 2px rgb(var(--glow) / 0.45), inset 0 0 18px rgb(255 255 255 / 0.35);
+  --glow-pulse: 0 0 0 1.5px rgb(var(--glow) / 1), 0 0 22px 6px rgb(var(--amethyst) / 0.55), 0 0 44px 10px rgb(var(--glow) / 0.3), inset 0 0 20px rgb(255 255 255 / 0.5);
+  --backdrop-grid: #CBB8FF;
+}
+
+html, body {
+  background:
+    radial-gradient(ellipse 60% 45% at 18% 22%, rgb(150 90 255 / 0.38), transparent 70%),
+    radial-gradient(ellipse 55% 50% at 85% 78%, rgb(214 140 255 / 0.28), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgb(70 40 150 / 0.55), transparent 80%),
+    linear-gradient(160deg, #1A0F38 0%, #2B1858 50%, #160C30 100%) fixed;
+}
+
+h1, h2, h3, .font-pixel {
+  text-shadow: 0 0 6px rgb(var(--glow) / 0.55), 0 0 18px rgb(var(--glow) / 0.35);
+}
+
+/* ---- Frosted glass containers ---- */
+.main-playground,
+.r-window,
+.retro-theme .r-window {
+  background: var(--glass) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+.retro-theme { background: transparent; }
+.r-desk { background: rgb(20 10 46 / 0.55); }
+.bg-cool-white { background-color: var(--glass-strong); }
+.bg-r-bg { background-color: rgb(245 241 255 / 0.55); }
+.bg-r-panel, .r-box { background-color: rgb(239 232 255 / 0.55); }
+.bg-r-raised, .r-box-active { background-color: rgb(226 214 255 / 0.7); }
+.r-box, .r-tag, .pixel-tile { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.kinetic-words { background: linear-gradient(90deg, rgb(214 201 248 / 0.75), rgb(190 165 255 / 0.85), rgb(214 201 248 / 0.75)); }
+.r-titlebar { background: linear-gradient(90deg, #3A2272, #5B3AA8 50%, #3A2272); text-shadow: 0 0 8px rgb(var(--glow) / 0.8); }
+
+/* ---- Luminous outlines instead of heavy borders ---- */
+.pixel-frame { box-shadow: var(--glow-line), 0 0 60px 8px rgb(var(--amethyst) / 0.35) !important; }
+.pixel-tile { box-shadow: var(--glow-line); }
+.r-box, .r-link, .r-btn, .vinyl-cover, .retro-theme .pixel-badge, .r-tag {
+  border-color: rgb(var(--glow) / 0.9) !important;
+  box-shadow: 0 0 10px 1px rgb(var(--glow) / 0.35), inset 0 0 12px rgb(255 255 255 / 0.3);
+}
+.pixel-btn {
+  background: linear-gradient(135deg, #4A2C8F, #6F4BC9);
+  box-shadow: var(--glow-line);
+  text-shadow: 0 0 6px rgb(var(--glow) / 0.9);
+}
+
+/* ---- Radiant interactive states: soft amethyst pulse, no harsh offsets ---- */
+@keyframes amethyst-pulse {
+  0%, 100% { box-shadow: var(--glow-line); }
+  50% { box-shadow: var(--glow-pulse); }
+}
+.r-link, .r-btn, .r-box, .pixel-tile, .pixel-btn, .r-close, button, [role="tab"] {
+  transition: box-shadow 400ms ease, background-color 400ms ease, transform 400ms ease, filter 400ms ease, color 300ms ease !important;
+}
+.r-link:hover, .r-link:focus-visible,
+.r-btn:hover, .r-btn:focus-visible,
+.r-box-hover:hover, .r-box-hover:focus-visible,
+.pixel-tile-interactive:hover,
+.pixel-btn:hover {
+  transform: translateY(-2px) !important;
+  background-color: rgb(250 246 255 / 0.85);
+  animation: amethyst-pulse 2.2s ease-in-out infinite;
+}
+.pixel-btn:hover { background: linear-gradient(135deg, #6F4BC9, #9B7BEA); color: #F5F1FF; }
+.r-close:hover, .r-close:focus-visible { box-shadow: 0 0 14px 3px rgb(var(--glow) / 0.7); }
+[role="tab"]:hover, [role="tab"]:focus-visible { filter: drop-shadow(0 0 8px rgb(var(--glow) / 0.85)); }
+[role="tab"][aria-selected="true"] { filter: drop-shadow(0 0 10px rgb(var(--glow) / 0.9)); }
+
+/* ---- Stardust ---- */
+.stardust { position: absolute; border-radius: 9999px; background: #FFFFFF;
+  box-shadow: 0 0 6px 1px rgb(var(--glow) / 0.9);
+  animation: star-twinkle var(--tw, 4s) ease-in-out infinite, star-drift var(--dr, 60s) linear infinite; }
+@keyframes star-twinkle { 0%, 100% { opacity: 0.15; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.2); } }
+@keyframes star-drift { from { translate: 0 0; } to { translate: 40px -120px; } }
+.nebula { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: 0.5;
+  animation: nebula-breathe 18s ease-in-out infinite alternate; }
+@keyframes nebula-breathe { from { transform: scale(1) translate(0,0); opacity: 0.35; } to { transform: scale(1.2) translate(30px,-20px); opacity: 0.6; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .stardust, .nebula, .r-link:hover, .r-btn:hover, .r-box-hover:hover, .pixel-tile-interactive:hover, .pixel-btn:hover { animation: none !important; }
+}

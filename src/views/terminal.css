@@ -80,7 +80,7 @@
 /* ---------- Main tab: kinetic profile / floating pixel phrases ---------- */
 .main-playground {
   --main-ink: var(--wine);
-  --main-soft: #E5DAE2;
+  --main-soft: #E6DDFB;
   background: var(--cool-white);
   color: var(--main-ink);
 }
@@ -96,7 +96,7 @@
   font-size: clamp(7px, 1vw, 9px);
   line-height: 1.8;
   letter-spacing: 0.05em;
-  color: #744556;
+  color: #55408F;
 }
 .kinetic-words span {
   display: inline-block;
@@ -105,7 +105,7 @@
   cursor: default;
   user-select: none;
 }
-.kinetic-words span:hover { color: #3F181F; }
+.kinetic-words span:hover { color: #2A1660; }
 /* Full-bleed status/footer bands with strict left/center/right placement. */
 .kinetic-words {
   display: grid;
@@ -117,7 +117,7 @@
   margin: 0;
   padding: 0.55rem 0;
   color: var(--wine);
-  background: #DCC2D2;
+  background: #D6C9F8;
   border: 0;
   box-shadow: none;
   text-align: center;
@@ -170,7 +170,7 @@
   font-size: 8px;
   line-height: 1.8;
   letter-spacing: 0.04em;
-  color: #774D60;
+  color: #5A4596;
 }
 .main-caption-pixel { width: 5px; height: 5px; flex: 0 0 5px; background: var(--rose); }
 @media (max-width: 768px) {
@@ -202,14 +202,14 @@
   gap: 0.75rem;
   padding: clamp(0.75rem, 2vw, 1.25rem);
   text-align: center;
-  background: #E7E0E7;
+  background: #EDE7FB;
 }
 .main-profile-avatar { width: clamp(110px, 13vw, 150px); }
 .main-profile-level {
   font-family: 'Press Start 2P', monospace;
   font-size: 7px;
   line-height: 1.8;
-  color: #764A5D;
+  color: #5A4596;
 }
 .main-current-box {
   display: flex;
@@ -247,7 +247,7 @@
 }
 .main-info-tile strong { font-family: 'Press Start 2P', monospace; font-size: clamp(9px, 1.2vw, 12px); line-height: 1.7; overflow-wrap: anywhere; }
 .main-info-tile small { font-size: 16px; line-height: 1.2; opacity: 0.7; }
-.main-minecraft-tile:hover { background: #E5DBE4; }
+.main-minecraft-tile:hover { background: #E4DAFB; }
 .main-minecraft-tile strong span { font-size: 10px; opacity: 0.65; }
 @media (max-width: 768px) {
   .main-profile-bento { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; padding: 0.6rem 0.25rem; }
@@ -260,7 +260,7 @@
 }
 
 /* Final main-card refinements: 12px inset text and an animated pixel-art divider. */
-:root { --status-pink: #DCC2D2; }
+:root { --status-pink: #D6C9F8; }
 .main-playground > .kinetic-words {
   padding-inline: 12px !important;
   position: relative;

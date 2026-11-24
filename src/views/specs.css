@@ -6,7 +6,7 @@
   image-rendering: pixelated;
 }
 .pc-sprite .pc-w { fill: var(--wine); }
-.pc-sprite .pc-p { fill: #DCC2D2; }
+.pc-sprite .pc-p { fill: #D6C9F8; }
 .pc-sprite .pc-c { fill: var(--cool-white); }
 .pc-sprite .pc-r { fill: var(--rose); }
 .pc-sprite .pc-led { fill: var(--rose); animation: pc-blink 1.4s steps(1) infinite; }

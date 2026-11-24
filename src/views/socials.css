@@ -18,7 +18,7 @@
 .camp-fire .cf-c { fill: var(--cool-white); }
 .camp-fire .cf-w { fill: var(--wine); }
 .camp-fire .cf-l { fill: var(--lavender); }
-.camp-fire .cf-ground { fill: #754658; }
+.camp-fire .cf-ground { fill: #4E3A86; }
 .camp-fire .flame-b { animation: camp-flame 0.7s steps(1) infinite; }
 .camp-fire .flame-a { animation: camp-flame 0.7s steps(1) infinite reverse; }
 @keyframes camp-flame { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
