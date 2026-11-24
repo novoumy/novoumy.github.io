@@ -17,7 +17,7 @@ The site was audited across its eagerly loaded and lazy-loaded views, not only t
 | Tab | Icon |
 | --- | --- |
 | Main | User |
-| Socials | Comment Text |
+| Socials | Owner-supplied custom pixel SVG |
 | Interests | Save |
 | Specs | CPU |
 
@@ -25,10 +25,10 @@ The site was audited across its eagerly loaded and lazy-loaded views, not only t
 
 | Folder | Icon |
 | --- | --- |
-| Media | Image |
-| Games | Gamepad |
-| Music | Music |
-| Quotes | Quote Text Inline |
+| Media | Original two-tone pixel sprite (restored) |
+| Games | Original two-tone pixel sprite (restored) |
+| Music | Original two-tone pixel sprite (restored) |
+| Quotes | Original two-tone pixel sprite (restored) |
 
 ### Socials
 
@@ -36,15 +36,15 @@ The site was audited across its eagerly loaded and lazy-loaded views, not only t
 | --- | --- |
 | Discord | Pixelarticons Discord |
 | Steam | Original custom pixel fallback |
-| Roblox | Original Atom-style pixel fallback |
+| Roblox | Owner-supplied Roblox square SVG |
 | GitHub | Pixelarticons GitHub |
 | Instagram | Pixelarticons Instagram |
 | X | Pixelarticons X |
 | YouTube | Pixelarticons YouTube |
-| NameMC | Original filled creeper-face pixel fallback |
+| NameMC | Purple creeper-face silhouette with transparent cut-outs |
 | Pinterest | Original custom pixel fallback |
 | Facebook | Free Facebook mark inside an original pixel circle |
-| Snapchat | Original custom ghost pixel fallback |
+| Snapchat | Symmetric custom ghost pixel fallback |
 | LinkedIn | Pixelarticons' free standard LinkedIn mark |
 | Email | Pixelarticons Mail |
 
@@ -80,7 +80,7 @@ The project uses `pixelarticons@2.4.2`, the public npm package. Pixelarticons do
 - Facebook Circle → free Facebook mark plus an original pixel circle
 - Steam, Atom/Roblox, Minecraft Filled/NameMC, Snapchat and Pinterest → original pixel-grid fallbacks
 
-The cooler, RAM, SSD and PSU symbols are adapted from the site's pre-existing custom pixel sprites and normalized to the same 24×24 drawing grid. All custom fallback artwork uses the same `currentColor` treatment as the library icons.
+The cooler, RAM, SSD and PSU symbols are adapted from the site's pre-existing custom pixel sprites and normalized to the same 24×24 drawing grid. Most custom fallback artwork uses the same `currentColor` treatment as the library icons; the NameMC creeper intentionally uses a fixed purple fill, with no backing shape.
 
 ## Small controls and illustrations retained
 
@@ -100,3 +100,12 @@ The campfire, PC tower, quote/dice and speaker graphics are purpose-made illustr
 ## Validation
 
 The handoff includes source syntax checks, local-import checks, lockfile/JSON checks, and ZIP integrity verification. A full dependency-backed Vite build and browser regression test could not be run in this environment if the npm registry remains unreachable; the GitHub Pages workflow can still perform the normal dependency install/build during deployment.
+
+
+## Follow-up icon adjustments
+
+- Restored the exact original two-tone 16×16 Media, Games, Music and Quotes sprites from the first site archive. Their original wine body fill, folder accent fill, crisp pixel rendering and 80px/96px sizing are preserved in the Interests folder grid.
+- Replaced the Roblox social mark with the exact SVG path supplied by the site owner.
+- Replaced the Socials navigation glyph with the exact SVG path supplied by the site owner.
+- Changed NameMC to a purple (`#8B5CF6`) creeper-face silhouette. The background remains transparent and the facial cut-outs remain unfilled.
+- Kept the symmetric 16×16 Snapchat sprite on its native SVG viewBox. This avoids the uneven column duplication that a 16-to-24px nearest-neighbour conversion can introduce.

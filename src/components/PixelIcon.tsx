@@ -135,26 +135,79 @@ interface PixelIconProps {
 function PixelIcon({ name, size = 24, className }: PixelIconProps) {
   if (name === 'facebook') return <FacebookCircle className={className} />;
 
-  // Original atom-orbit mark for Roblox: simple geometry on the same 24px grid.
+  // Exact Roblox mark supplied for the Roblox social tile.
   if (name === 'roblox' || name === 'atom') {
     return (
       <svg
+        xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         width={size}
         height={size}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.25"
-        strokeLinecap="square"
+        fill="currentColor"
         shapeRendering="crispEdges"
         aria-hidden="true"
         focusable="false"
         className={className}
       >
-        <ellipse cx="12" cy="12" rx="9.5" ry="3.9" />
-        <ellipse cx="12" cy="12" rx="9.5" ry="3.9" transform="rotate(60 12 12)" />
-        <ellipse cx="12" cy="12" rx="9.5" ry="3.9" transform="rotate(120 12 12)" />
-        <rect x="10.5" y="10.5" width="3" height="3" fill="currentColor" stroke="none" />
+        <path d="M20 20H4V4H20V20ZM10 14H14V10H10V14Z" />
+      </svg>
+    );
+  }
+
+  // Exact pixel-art Socials navigation mark supplied by the site owner.
+  if (name === 'comment-text' || name === 'socials') {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width={size}
+        height={size}
+        fill="currentColor"
+        shapeRendering="crispEdges"
+        aria-hidden="true"
+        focusable="false"
+        className={className}
+      >
+        <path d="M21 22h-9v-2h9v2Zm-9-2h-2v-2h2v2Zm11 0h-2v-5h2v5Zm-13-2H8v-2h2v2Zm7-1h-4v-2h4v2Zm-9-1H6v-2h2v2Zm5-1h-2v-2h2v2Zm8 0h-4v-2h4v2ZM6 14H4v-2h2v2Zm5-1H9v-2h2v2Zm-7-1H2V3h2v9Zm5-1H7V7h2v4Zm9 0h-2V8h2v3Zm4 0h-2V6h2v5Zm-6-3h-3V6h3v2Zm-5-1H9V3h2v4Zm9-1h-2V4h2v2Zm-2-2h-5V2h5v2ZM9 3H4V1h5v2Z" />
+      </svg>
+    );
+  }
+
+  // Keep Snapchat on its native 16×16 grid: scaling to 24px with nearest-neighbour
+  // sampling can duplicate edge columns unevenly and make a symmetric sprite look lopsided.
+  if (name === 'snapchat') {
+    const path = pathData(CUSTOM_PIXEL_ICONS.snapchat, '#');
+    return (
+      <svg
+        viewBox="0 0 16 16"
+        width={size}
+        height={size}
+        fill="currentColor"
+        shapeRendering="crispEdges"
+        aria-hidden="true"
+        className={className}
+        focusable="false"
+      >
+        <path d={path} />
+      </svg>
+    );
+  }
+
+  // NameMC's creeper is a purple silhouette with transparent face cut-outs.
+  if (name === 'namemc') {
+    const path = customPath(name);
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        width={size}
+        height={size}
+        fill="#8B5CF6"
+        shapeRendering="crispEdges"
+        aria-hidden="true"
+        className={className}
+        focusable="false"
+      >
+        <path d={path} />
       </svg>
     );
   }
