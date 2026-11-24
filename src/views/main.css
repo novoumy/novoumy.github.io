@@ -181,3 +181,29 @@
   .main-profile-name { font-size: 28px; text-align: center; }
   .main-profile-bio { font-size: 22px; line-height: 1.15; text-align: center; gap: 0.35rem; }
 }
+
+
+/* ---------- Discord avatar decoration ----------
+   The wrapper takes over the photo's margin so the decoration (120% of the photo, like Discord) can be centred
+   on it at any size, in every stage / media query above. */
+.main-profile-avatar-wrap {
+  position: relative;
+  display: block;
+  flex: none;
+  margin: 8px;
+}
+.main-profile-avatar-wrap > .main-profile-avatar { margin: 0 !important; }
+.main-profile-avatar-deco {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120%;
+  height: 120%;
+  max-width: none;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  image-rendering: auto;
+}
+@media (max-width: 640px) { .main-profile-avatar-wrap { margin: 6px; } }
+@media (max-width: 859px) { .main-profile-avatar-wrap { margin: 8px; } }

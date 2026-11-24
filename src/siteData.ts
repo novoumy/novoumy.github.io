@@ -171,9 +171,8 @@ export const interests: { id: InterestId; label: string; subtitle: string; icon:
 export const hero = {
   avatar: '/icon.png',
   avatarAlt: 'Profile photo',
-  // Discord avatar decoration drawn around the photo (same 120% size Discord uses). Use '/animated' instead of
-  // '/static' at the end of the URL for the animated version, or point this at a file in /public. null = none.
-  avatarDecoration: 'https://cdn.discordapp.com/media/v1/collectibles-shop/1343751617328975954/static' as string | null,
+  // Discord avatar decoration (public/decoration.png), drawn around the photo at 120% size like Discord. null = none.
+  avatarDecoration: '/decoration.png' as string | null,
   name: 'novoumy',
   bio: [
     'I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^',
