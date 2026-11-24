@@ -25,3 +25,10 @@ The live React views, interactions, layout/responsive styles, data, audio, Steam
 - Confirmed `package.json` dependency declarations match the root dependency declarations in both lockfiles.
 
 A full Vite production build and runtime browser test could not be completed in this environment. Dependency installation timed out because the npm registry could not be resolved (`EAI_AGAIN`), leaving the Vite executable unavailable; this is an environment/network limitation, not a confirmed application build failure.
+
+## Follow-up startup fix
+
+- After the cleaned archive was deployed, a blank-screen regression was identified: `src/App.tsx` still calls React's `useState` for the active route, but its import had been removed while deleting the retired CRT toggle state.
+- Restored the `useState` import and kept the retired CRT toggle removed. This fixes the confirmed `useState is not defined` startup crash.
+- Revalidated the corrected app source: all 38 TypeScript/TSX/config source files passed a syntax parse, the active route state hook and import are present, and the active CSS parses cleanly.
+- A full Vite build/browser smoke test remains unavailable because `npm ci` cannot complete in this environment (registry access timed out); the corrected ZIP is therefore syntax-checked but not runtime-build-verified here.
