@@ -97,40 +97,59 @@ function fillGrid(grid: Uint8Array, cols: number, H: number, seed: number, now: 
   for (x = 0; x < cols; x++) grid[(H - 1) * cols + x] = 0;                        // never a flat cutoff on the cream side
 }
 
-type Item = { canvas: HTMLCanvasElement; seed: number; ctx: CanvasRenderingContext2D | null; grid: Uint8Array | null; color: string; rim: string };
-let registry: Item[] = [], running = false, lastDraw = 0, tickCount = 0;
+// Band tint. The status bar and the waves are painted by the SAME canvas in ONE pass, from one horizontal gradient
+// at one alpha (every pixel is written exactly once, nothing stacks), so there is no seam or colour step where the
+// bar turns into waves. The bars in main.css are transparent; the glass behind shows through identically.
+// KEEP IN SYNC with the inline copy in public/404.html.
+var BAND_EDGE = [225, 212, 255, 0.45], BAND_MID = [205, 185, 255, 0.6], BAND_RIM = [168, 145, 230, 0.7];
+
+type Item = { canvas: HTMLCanvasElement; seed: number; position: 'top' | 'bottom'; ctx: CanvasRenderingContext2D | null; grid: Uint8Array | null; img: ImageData | null; cols: number; rows: number; band: Uint8ClampedArray | null; rim: Uint8ClampedArray };
+let registry: Item[] = [], running = false, lastDraw = 0;
+function rgba(c: number[]) { return [c[0], c[1], c[2], Math.round(c[3] * 255)]; }
 function drawOne(item: Item, now: number) {
   var c = item.canvas, parent = c.parentElement; if (!parent) return;
+  var bar = item.position === 'top' ? parent.previousElementSibling : parent.nextElementSibling;
+  var barH = bar ? bar.clientHeight : 0, barRows = Math.round(barH / PX);
   var cols = Math.max(1, Math.ceil(parent.clientWidth / PX)), H = Math.max(6, Math.round(parent.clientHeight / PX));
-  if (!cols || !parent.clientHeight) return;
-  if (c.width !== cols || c.height !== H) { c.width = cols; c.height = H; c.style.width = cols * PX + 'px'; c.style.height = H * PX + 'px'; item.grid = new Uint8Array(cols * H); }
-  if (!item.grid) return;
-  if (!item.ctx) item.ctx = c.getContext('2d');
-  var ctx = item.ctx; if (!ctx) return;
-  if (!item.color || tickCount % 40 === 0) { try { var cs = getComputedStyle(c); item.color = cs.color; item.rim = cs.borderTopColor || item.color; } catch (e) { item.color = '#D6C9F8'; item.rim = '#A891E6'; } }
+  if (!parent.clientWidth || !parent.clientHeight) return;
+  var rows = barRows + H;
+  if (!item.img || item.cols !== cols || item.rows !== rows) {
+    item.cols = cols; item.rows = rows;
+    c.width = cols; c.height = rows;
+    c.style.width = cols * PX + 'px'; c.style.height = barH + H * PX + 'px'; c.style.top = -barH + 'px';
+    item.grid = new Uint8Array(cols * H);
+    item.ctx = c.getContext('2d'); if (!item.ctx) return;
+    item.img = item.ctx.createImageData(cols, rows);
+    var band = new Uint8ClampedArray(cols * 4);
+    for (var x = 0; x < cols; x++) {
+      var t = (x + 0.5) / cols, u = (t < 0.5 ? t : 1 - t) * 2;
+      for (var k = 0; k < 4; k++) band[x * 4 + k] = BAND_EDGE[k] + (BAND_MID[k] - BAND_EDGE[k]) * u;
+      band[x * 4 + 3] = Math.round((BAND_EDGE[3] + (BAND_MID[3] - BAND_EDGE[3]) * u) * 255);
+    }
+    item.band = band;
+  }
+  if (!item.grid || !item.ctx || !item.img || !item.band) return;
   fillGrid(item.grid, cols, H, item.seed, now);
-  ctx.clearRect(0, 0, cols, H);
-  ctx.fillStyle = item.color;
-  for (var y = 0; y < H; y++) {
-    var x = 0;
-    while (x < cols) {
-      if (item.grid![y * cols + x]) { var x0 = x; while (x < cols && item.grid![y * cols + x]) x++; ctx.fillRect(x0, y, x - x0, 1); } else x++;
+  var d = item.img.data, g = item.grid, band2 = item.band, rim = item.rim;
+  for (var y = 0; y < rows; y++) {
+    var gy = y - barRows;
+    for (var x2 = 0; x2 < cols; x2++) {
+      var o = (y * cols + x2) * 4, src: ArrayLike<number> | null = null, so = 0;
+      if (gy < 0 || g[gy * cols + x2]) {
+        // lower edge of every wave gets the one-pixel deeper rim; the bar itself never does
+        if (gy >= 0 && (gy === H - 1 || !g[(gy + 1) * cols + x2])) src = rim; else { src = band2; so = x2 * 4; }
+      }
+      if (src) { d[o] = src[so]; d[o + 1] = src[so + 1]; d[o + 2] = src[so + 2]; d[o + 3] = src[so + 3]; }
+      else { d[o] = d[o + 1] = d[o + 2] = d[o + 3] = 0; }
     }
   }
-  // a one-pixel deeper-pink rim along every lower edge gives the puffs depth
-  ctx.fillStyle = item.rim;
-  for (var ry = 0; ry < H; ry++) {
-    var rx = 0;
-    while (rx < cols) {
-      if (item.grid![ry * cols + rx] && (ry === H - 1 || !item.grid![(ry + 1) * cols + rx])) { var r0 = rx; while (rx < cols && item.grid![ry * cols + rx] && (ry === H - 1 || !item.grid![(ry + 1) * cols + rx])) rx++; ctx.fillRect(r0, ry, rx - r0, 1); } else rx++;
-    }
-  }
+  item.ctx.putImageData(item.img, 0, 0);
 }
 function loop(ts: number) {
   registry = registry.filter(function (it) { return it.canvas.isConnected; });
   if (!registry.length) { running = false; return; }
   if (ts - lastDraw >= 33) {
-    lastDraw = ts; tickCount++;
+    lastDraw = ts;
     var now = Date.now();
     for (var i = 0; i < registry.length; i++) drawOne(registry[i], now);
   }
@@ -139,7 +158,7 @@ function loop(ts: number) {
 // Every bubble's size is a pure function of the wall clock (Date.now), so the real page and the 404 morph page
 // show exactly the same bubbles at the same moment: no restart, snap or jump when one hands over to the other.
 export function mountBubbleBorder(canvas: HTMLCanvasElement, position: 'top' | 'bottom') {
-  var item: Item = { canvas: canvas, seed: position === 'bottom' ? 2 : 1, ctx: null, grid: null, color: '', rim: '' };
+  var item: Item = { canvas: canvas, seed: position === 'bottom' ? 2 : 1, position: position, ctx: null, grid: null, img: null, cols: 0, rows: 0, band: null, rim: new Uint8ClampedArray(rgba(BAND_RIM)) };
   registry.push(item);
   drawOne(item, Date.now());
   var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -15,8 +15,11 @@
   height: 2.9rem;
   margin: 0;
   box-sizing: border-box;
-  background: var(--status-pink);
+  background: none;
 }
+/* The bars stay transparent: each divider canvas reaches over its bar and paints bar + waves in one pass
+   (lib/bubbleBorder.ts), which is what makes the join seamless. Beats the gradient set in index.css. */
+.main-playground > .kinetic-words { background: none !important; }
 
 /* ---------- Organic bubble-cluster divider ----------
    A dense, puffy cluster of overlapping pixel circles, ovals and pills melts the pink status bar into the cream
@@ -30,20 +33,17 @@
   flex: none;
   height: var(--pd-h);
   pointer-events: none;
-  overflow: hidden;
+  /* no overflow clip: the canvas extends over the neighbouring status bar (the window clips the sides) */
 }
 .pixel-divider > canvas {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 0; /* set by the script: pulled up over the status bar */
   display: block;
-  color: var(--status-pink);
-  border: 0 solid #A891E6; /* read by the script as the rim colour */
   image-rendering: pixelated;
 }
 /* The bottom strip is the same cloud mirrored (its own bubbles), so it thickens toward the bottom bar. */
-.pixel-divider-top { margin-top: -2px; }
-.pixel-divider-bottom { margin-bottom: -2px; transform: scaleY(-1); }
+.pixel-divider-bottom { transform: scaleY(-1); }
 /* The site has two fixed stages (see lib/useStageScale.ts): landscape 800x600 and portrait 420x560. Media queries
    are resolved per stage at build time (postcss-fixed-viewport.js), so these slimmer dividers only apply in the
    portrait stage, where there is less room for the profile. */

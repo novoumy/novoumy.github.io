@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#847FA4" />
+    <meta name="theme-color" content="#1C1040" />
     <script>
       // Dark / inverted palettes were removed: clear any cached theme so the 404 stays on the default light look.
       (function () {
@@ -27,28 +27,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
     <style>
       :root {
-        color-scheme: light;
-        --paper: #ECEFF1;
-        --lavender: #847FA4;
-        --wine: #6B2D39;
-        --rose: #CD9EBA;
-        --frame: #6B2D39;          /* window / tab outline */
-        --frame-shadow: #6B2D39;   /* hard drop shadow */
-        --tab-bg: #847FA4;
-        --tab-fg: #ECEFF1;
-        --tab-shadow: #6B2D39;
-        --status-pink: #DCC2D2;
-        --scan: rgba(107,45,57,.035);
-        --grid: rgba(236,239,241,.12);
-        --btn-bg: #6B2D39;
-        --btn-fg: #ECEFF1;
-        --btn-edge: #6B2D39;
-        --btn-shadow: #6B2D39;
-        --btn-hover-bg: #CD9EBA;
-        --btn-hover-fg: #6B2D39;
+        color-scheme: dark;
+        /* Ethereal amethyst & starlight palette: same tokens as src/index.css */
+        --glow: 196 170 255;
+        --amethyst: 124 84 220;
+        --cool-white: #F5F1FF;
+        --lavender: #241645;
+        --wine: #3A2272;
+        --rose: #B8A2F2;
+        --status-pink: #D6C9F8;
+        --glass: rgb(240 234 255 / 0.40);
+        --glass-blur: blur(22px) saturate(160%) brightness(1.08);
+        --glow-line: 0 0 0 1.5px rgb(var(--glow) / 0.85), 0 0 14px 2px rgb(var(--glow) / 0.45), inset 0 0 18px rgb(255 255 255 / 0.35);
+        --glow-pulse: 0 0 0 1.5px rgb(var(--glow) / 1), 0 0 22px 6px rgb(var(--amethyst) / 0.55), 0 0 44px 10px rgb(var(--glow) / 0.3), inset 0 0 20px rgb(255 255 255 / 0.5);
+        --window-glow: 0 0 0 1px rgb(255 255 255 / 0.7), 0 0 24px 4px rgb(var(--glow) / 0.55), 0 0 90px 20px rgb(var(--amethyst) / 0.35), inset 0 0 30px rgb(255 255 255 / 0.4);
+        --text-glow: 0 0 4px rgb(255 255 255 / 0.6), 0 0 14px rgb(var(--glow) / 0.6), 0 0 32px rgb(var(--glow) / 0.35);
+        --tab-bg: #241645;
+        --tab-fg: #F5F1FF;
+        --scan: rgb(255 255 255 / 0.035);
       }
       * { box-sizing: border-box; }
       html, body { min-height: 100%; }
+      html, body {
+        background:
+          radial-gradient(ellipse 50% 40% at 15% 18%, rgb(186 140 255 / 0.45), transparent 70%),
+          radial-gradient(ellipse 45% 45% at 88% 82%, rgb(230 170 255 / 0.35), transparent 70%),
+          radial-gradient(ellipse 40% 30% at 70% 15%, rgb(150 200 255 / 0.18), transparent 70%),
+          radial-gradient(ellipse 90% 70% at 50% 55%, rgb(90 55 180 / 0.55), transparent 85%),
+          linear-gradient(165deg, #1C1040 0%, #33206A 50%, #1A0F3A 100%) fixed;
+        background-color: #241645;
+      }
       body {
         min-height: 100vh;
         margin: 0;
@@ -56,20 +64,44 @@
         place-items: center;
         padding: 24px 16px;
         color: var(--wine);
-        background-color: var(--lavender);
-        background-image:
-          linear-gradient(to right, var(--grid) 1px, transparent 1px),
-          linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-        background-size: 32px 32px;
         font-family: 'VT323', monospace;
       }
+      /* Backdrop: grid, nebulae, stardust and rising particles (same formulas as src/components/PixelBackdrop.tsx) */
+      .backdrop { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+      .backdrop-grid {
+        position: absolute; inset: 0; opacity: 0.07;
+        background-image: linear-gradient(to right, #CBB8FF 1px, transparent 1px), linear-gradient(to bottom, #CBB8FF 1px, transparent 1px);
+        background-size: 32px 32px;
+      }
+      .nebula { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: 0.5; animation: nebula-breathe 18s ease-in-out infinite alternate; }
+      @keyframes nebula-breathe { from { transform: scale(1) translate(0,0); opacity: 0.35; } to { transform: scale(1.2) translate(30px,-20px); opacity: 0.6; } }
+      .stardust { position: absolute; border-radius: 9999px; background: #FFFFFF;
+        box-shadow: 0 0 8px 2px rgb(var(--glow) / 0.9), 0 0 2px rgb(255 255 255);
+        animation: star-twinkle var(--tw, 4s) ease-in-out infinite, star-drift var(--dr, 60s) linear infinite; }
+      @keyframes star-twinkle { 0%, 100% { opacity: 0.15; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.2); } }
+      @keyframes star-drift { from { translate: 0 0; } to { translate: 40px -120px; } }
+      .particle { position: absolute; bottom: -12px; opacity: 0.6; animation: float-particle linear infinite; }
+      @keyframes float-particle { from { transform: translateY(0); } to { transform: translateY(-110vh); } }
+      @media (prefers-reduced-motion: reduce) { .stardust, .nebula, .particle, .replica::before, .r-avatar { animation: none !important; } }
+
+      /* Frosted-glass card with a luminous border */
       .error-window {
         position: relative;
+        z-index: 1;
         width: min(100%, 680px);
-        padding: 8px;
-        background: var(--paper);
-        border: 4px solid var(--frame);
-        box-shadow: 7px 7px 0 var(--frame-shadow);
+        padding: 0;
+        background: var(--glass);
+        -webkit-backdrop-filter: var(--glass-blur);
+        backdrop-filter: var(--glass-blur);
+        box-shadow: var(--window-glow);
+        isolation: isolate;
+      }
+      .error-window::before {
+        content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+        background:
+          radial-gradient(120% 60% at 50% -10%, rgb(255 255 255 / 0.45), transparent 60%),
+          radial-gradient(80% 50% at 50% 110%, rgb(200 170 255 / 0.35), transparent 70%);
+        mix-blend-mode: screen;
       }
       .error-screen {
         position: relative;
@@ -80,9 +112,7 @@
         justify-content: center;
         gap: 36px;
         overflow: hidden;
-        padding: 48px 18px;
-        border-top: 3px solid var(--rose);
-        border-bottom: 3px solid var(--rose);
+        padding: 56px 18px;
         text-align: center;
         isolation: isolate;
       }
@@ -91,6 +121,14 @@
         z-index: -1;
         inset: 0;
         background: repeating-linear-gradient(to bottom, var(--scan) 0 1px, transparent 1px 4px);
+        content: '';
+      }
+      /* glowing hairlines top and bottom (replaces the old rose rules) */
+      .error-screen::after {
+        position: absolute; z-index: -1; inset: 12px 12px;
+        border-top: 2px solid rgb(var(--glow) / 0.75);
+        border-bottom: 2px solid rgb(var(--glow) / 0.75);
+        box-shadow: 0 -6px 14px -8px rgb(var(--glow) / 0.8), 0 6px 14px -8px rgb(var(--glow) / 0.8);
         content: '';
       }
       h1 {
@@ -106,14 +144,14 @@
         font: clamp(58px, 15vw, 112px)/1 'Press Start 2P', monospace;
         letter-spacing: -0.08em;
         padding-right: .08em;
-        text-shadow: 5px 5px 0 var(--rose), 10px 10px 0 rgba(107,45,57,.16);
+        text-shadow: var(--text-glow);
       }
       .error-code.glitch { animation: glitch .24s steps(2) 1; }
       @keyframes glitch {
-        0%   { transform: translate(0, 0); text-shadow: 5px 5px 0 var(--rose), 10px 10px 0 rgba(107,45,57,.16); }
-        25%  { transform: translate(-6px, 2px); text-shadow: 10px 0 0 var(--rose), -8px 0 0 var(--lavender); }
-        50%  { transform: translate(5px, -2px); text-shadow: -9px 3px 0 var(--rose), 8px -3px 0 var(--lavender); }
-        75%  { transform: translate(-3px, 0); text-shadow: 6px 5px 0 var(--rose), 10px 10px 0 rgba(107,45,57,.16); }
+        0%   { transform: translate(0, 0); text-shadow: var(--text-glow); }
+        25%  { transform: translate(-6px, 2px); text-shadow: 10px 0 0 rgb(var(--glow) / 0.85), -8px 0 0 rgb(150 200 255 / 0.7); }
+        50%  { transform: translate(5px, -2px); text-shadow: -9px 3px 0 rgb(var(--glow) / 0.85), 8px -3px 0 rgb(150 200 255 / 0.7); }
+        75%  { transform: translate(-3px, 0); text-shadow: 6px 5px 0 rgb(var(--glow) / 0.7), var(--text-glow); }
         100% { transform: translate(0, 0); }
       }
       .error-label {
@@ -121,28 +159,33 @@
         min-height: 1.5em;
         font: clamp(11px, 2.5vw, 16px)/1.5 'Press Start 2P', monospace;
         letter-spacing: .08em;
+        text-shadow: var(--text-glow);
       }
+      /* same look as the site's .pixel-btn */
+      @keyframes amethyst-pulse { 0%, 100% { box-shadow: var(--glow-line); } 50% { box-shadow: var(--glow-pulse); } }
       .go-home {
         display: inline-flex;
         min-height: 50px;
         align-items: center;
         justify-content: center;
         padding: 14px 24px;
-        border: 3px solid var(--btn-edge);
-        background: var(--btn-bg);
-        box-shadow: 5px 5px 0 var(--rose), 8px 8px 0 var(--btn-shadow);
-        color: var(--btn-fg);
+        border: 0;
+        background: linear-gradient(135deg, #4A2C8F, #6F4BC9);
+        box-shadow: var(--glow-line);
+        text-shadow: 0 0 6px rgb(var(--glow) / 0.9);
+        color: var(--cool-white);
         font: 9px/1.5 'Press Start 2P', monospace;
         text-decoration: none;
-        transition: transform 100ms steps(2), box-shadow 100ms steps(2), background 100ms steps(2), color 100ms steps(2);
+        transition: box-shadow 400ms ease, background 400ms ease, transform 400ms ease, color 300ms ease;
       }
       .go-home:hover, .go-home:focus-visible {
-        outline: 2px dashed var(--frame);
-        outline-offset: 5px;
-        background: var(--btn-hover-bg);
-        color: var(--btn-hover-fg);
+        outline: none;
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #6F4BC9, #9B7BEA);
+        color: #F5F1FF;
+        animation: amethyst-pulse 2.2s ease-in-out infinite;
       }
-      .go-home:active { transform: translate(5px, 5px); box-shadow: none; }
+      .go-home:active { transform: translateY(0); }
       .go-home[aria-disabled='true'] { pointer-events: none; }
 
       /* ---------- morph layers (hidden until GO BACK is pressed) ---------- */
@@ -153,7 +196,7 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        background: var(--paper);
+        isolation: isolate;
         color: var(--wine);
         font-family: 'VT323', monospace;
         font-size: 22px;
@@ -164,10 +207,19 @@
       }
       /* Mirror of the Main tab (see src/views/main.css) so the morph lands on exactly what the site draws. */
       .replica { justify-content: space-between; }
-      .r-bar { position: relative; z-index: 1; flex: none; height: 2.9rem; box-sizing: border-box; background: var(--status-pink); }
-      .r-name { margin: 0; font: 24px/1.3 'Press Start 2P', monospace; letter-spacing: 0.05em; overflow-wrap: anywhere; }
+      /* soft halo of light, as on the real window (index.css .main-playground::before) */
+      .replica::before {
+        content: ""; position: absolute; inset: 0; pointer-events: none; z-index: -1;
+        background:
+          radial-gradient(120% 60% at 50% -10%, rgb(255 255 255 / 0.45), transparent 60%),
+          radial-gradient(80% 50% at 50% 110%, rgb(200 170 255 / 0.35), transparent 70%);
+        mix-blend-mode: screen;
+      }
+      /* The bars are transparent: each divider canvas paints bar + waves in one pass (see mountBubbleBorder). */
+      .r-bar { position: relative; z-index: 1; flex: none; height: 2.9rem; box-sizing: border-box; background: none; }
+      .r-name { margin: 0; font: 24px/1.3 'Press Start 2P', monospace; letter-spacing: 0.05em; overflow-wrap: anywhere; text-shadow: var(--text-glow); }
       .r-bio {
-        margin: 0; font: 24px/1.2 'VT323', monospace; letter-spacing: 0.03em; color: #6E3643;
+        margin: 0; font: 24px/1.2 'VT323', monospace; letter-spacing: 0.03em; color: #4A3288;
       }
 
       /* The 404 is standalone and must include the Main tab layout styles. */
@@ -177,19 +229,15 @@
         flex: none;
         height: var(--pd-h);
         pointer-events: none;
-        overflow: hidden;
       }
       .pixel-divider > canvas {
         position: absolute;
         left: 0;
         top: 0;
         display: block;
-        color: var(--status-pink);
-        border: 0 solid #C6A3B1;
         image-rendering: pixelated;
       }
-      .pixel-divider-top { margin-top: -2px; }
-      .pixel-divider-bottom { margin-bottom: -2px; transform: scaleY(-1); }
+      .pixel-divider-bottom { transform: scaleY(-1); }
 
       .r-center {
         display: flex;
@@ -211,11 +259,16 @@
         height: 144px;
         margin: 8px;
         flex: none;
-        object-fit: cover; border-radius: 50%; box-shadow: 0 0 0 2px #fff, 0 0 18px 4px rgba(196,170,255,.8) !important;
-        background: var(--paper);
-        box-shadow:
-          0 -4px 0 0 var(--wine), 0 4px 0 0 var(--wine), -4px 0 0 0 var(--wine), 4px 0 0 0 var(--wine),
-          0 -8px 0 0 var(--rose), 0 8px 0 0 var(--rose), -8px 0 0 0 var(--rose), 8px 0 0 0 var(--rose);
+        object-fit: cover;
+        border-radius: 50%;
+        image-rendering: auto;
+        background: transparent;
+        box-shadow: 0 0 0 2px rgb(255 255 255 / 0.85), 0 0 18px 4px rgb(var(--glow) / 0.8), 0 0 48px 12px rgb(var(--amethyst) / 0.45);
+        animation: halo-breathe 6s ease-in-out infinite;
+      }
+      @keyframes halo-breathe {
+        0%, 100% { box-shadow: 0 0 0 2px rgb(255 255 255 / 0.85), 0 0 18px 4px rgb(var(--glow) / 0.7), 0 0 44px 10px rgb(var(--amethyst) / 0.4); }
+        50% { box-shadow: 0 0 0 2px rgb(255 255 255 / 1), 0 0 26px 8px rgb(var(--glow) / 0.95), 0 0 70px 20px rgb(var(--amethyst) / 0.55); }
       }
       .r-text {
         display: flex;
@@ -233,17 +286,17 @@
       }
 
       .stage-tabs { position: fixed; z-index: 6; display: flex; align-items: flex-end; pointer-events: none; opacity: 0; }
-      .tabs { display: flex; align-items: flex-end; gap: 4px; width: 800px; padding-left: 4px; }
+      .tabs { display: flex; align-items: flex-end; gap: 4px; width: 792px; padding-left: 4px; }
       .tab {
+        height: 40px;
         display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 0;
-        padding: 8px 12px; background: var(--tab-bg); color: var(--tab-fg);
+        padding: 8px 12px; background: var(--tab-bg); color: var(--tab-fg); box-shadow: var(--glow-line);
         font: 11px/1.4 'Press Start 2P', monospace; text-transform: uppercase; white-space: nowrap;
-        box-shadow: 0 -4px 0 0 var(--frame), 0 4px 0 0 var(--frame), -4px 0 0 0 var(--frame), 4px 0 0 0 var(--frame);
       }
       .tab svg { width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
       .tab svg .px { fill: currentColor; stroke: none; }
       .tab svg { shape-rendering: crispEdges; }
-      .tab.active { background: var(--status-pink); color: var(--wine); text-shadow: none; transform: translateY(4px); }
+      .tab.active { background: var(--status-pink); color: var(--wine); text-shadow: none; transform: translateY(4px); filter: drop-shadow(0 0 10px rgb(var(--glow) / 0.9)); }
       .tabs .spacer { flex: 1; }
       .tabs .sound { padding: 8px 12px; }
       /* ---------- Vertical (3:4) stage: mirrors the portrait rules at the end of src/views/main.css ---------- */
@@ -259,7 +312,7 @@
       .stage-tabs.portrait .tabs { width: 412px; padding-left: 0; gap: 4px; }
       .stage-tabs.portrait .tab { padding: 8px 5px; gap: 4px; font-size: 8px; line-height: 1.375; }
       .stage-tabs.portrait .tab.sound { padding: 8px; }
-      .surge { position: fixed; inset: 0; z-index: 9; pointer-events: none; opacity: 0; background: var(--rose); mix-blend-mode: screen; }
+      .surge { position: fixed; inset: 0; z-index: 9; pointer-events: none; opacity: 0; background: rgb(var(--glow)); mix-blend-mode: screen; }
       .scan-wipe {
         position: fixed; left: 0; right: 0; z-index: 8; height: 14vh; pointer-events: none; opacity: 0;
         background: linear-gradient(to bottom, transparent, rgba(255,255,255,.28), transparent);
@@ -297,6 +350,7 @@
     </style>
   </head>
   <body>
+    <div class="backdrop" id="backdrop" aria-hidden="true"></div>
     <main class="error-window" id="win">
       <section class="error-screen" id="screen" aria-labelledby="error-title">
         <h1 id="error-title" aria-label="404 Not Found">
@@ -420,6 +474,20 @@
         /* ====================================================================
            Helpers
            ==================================================================== */
+        (function backdrop() {
+          var h = '<div class="nebula" style="left:-10%;top:-10%;width:55%;height:55%;background:radial-gradient(circle,#8B5CF6,transparent 70%)"></div>' +
+                  '<div class="nebula" style="right:-10%;bottom:-15%;width:60%;height:60%;background:radial-gradient(circle,#C084FC,transparent 70%);animation-delay:-9s"></div>';
+          var i, sz, dl;
+          for (i = 0; i < 120; i++) {
+            sz = i % 9 === 0 ? 3 : i % 3 === 0 ? 2 : 1.5; dl = -((i * 7) % 30) + 's';
+            h += '<span class="stardust" style="left:' + ((i * 53) % 100) + '%;top:' + ((i * 29 + (i % 7) * 11) % 100) + '%;width:' + sz + 'px;height:' + sz + 'px;--tw:' + (3 + ((i * 13) % 50) / 10) + 's;--dr:' + (50 + ((i * 17) % 60)) + 's;animation-delay:' + dl + ',' + dl + '"></span>';
+          }
+          for (i = 0; i < 18; i++) {
+            h += '<span class="particle" style="left:' + ((i * 37) % 100) + '%;width:' + (i % 3 === 0 ? 8 : 6) + 'px;height:' + (i % 3 === 0 ? 8 : 6) + 'px;background:' + (i % 2 === 0 ? '#F5F1FF' : '#C9B4FF') + ';animation-duration:' + (18 + ((i * 7) % 14)) + 's;animation-delay:' + (-((i * 5) % 20)) + 's"></span>';
+          }
+          document.getElementById('backdrop').innerHTML = '<div class="backdrop-grid"></div>' + h;
+        })();
+
         var win = document.getElementById('win');
         var screen = document.getElementById('screen');
         var codeEl = document.getElementById('code');
@@ -487,25 +555,25 @@
         function svg(name) { return '<svg viewBox="0 0 12 12" aria-hidden="true">' + ICONS[name] + '</svg>'; }
 
         // Mirrors the app's own layout maths (src/lib/useStageScale.ts + App.tsx), including the SAME screen-type switch:
-        //   narrow (< 860px wide) or taller-than-wide screens -> vertical 3:4 stage (420px wide, 412x549 window)
-        //   everything else                                   -> horizontal 4:3 stage (800px wide, 792x594 window)
-        // Tab row 34 + 4 gap + window + 8 shadow room = full stage height (640 landscape, ~595 vertical).
+        //   narrow (< 860px wide) or taller-than-wide screens -> vertical 3:4 stage (428x616, 412x549 window)
+        //   everything else                                   -> horizontal 4:3 stage (808x656, 792x594 window)
+        // Inside a stage: tab row 40px tall at +4, window at +48, 4px side inset (measured from the live page).
         function target() {
           var vw = window.innerWidth, vh = window.innerHeight;
           var portrait = vw < 860 || vw < vh;
+          var SW = portrait ? 428 : 808, SH = portrait ? 616 : 656, WW = portrait ? 412 : 792, WH = portrait ? 412 * 4 / 3 : 594;
+          var sc;
           if (portrait) {
             var big = vw >= 700 ? 0.05 : 0;                              // big vertical screens get proportional margins
             var mx = Math.max(12, vw * big), my = Math.max(32, vh * big);
-            var sp = Math.max(0.1, Math.min(3, (vw - 2 * mx) / 428, (vh - 2 * my) / 616));
-            var dwp = 412, dhp = 412 * 4 / 3, stageH = 34 + 4 + dhp + 8;
-            var leftp = (vw - 420 * sp) / 2, stageTopP = (vh - stageH * sp) / 2;
-            return { mode: 'portrait', zoom: sp, dw: dwp, dh: dhp, left: leftp, top: stageTopP + 38 * sp, w: dwp * sp, h: dhp * sp,
-                     tabsLeft: leftp, tabsTop: stageTopP, tabsW: 412 * sp, tabsH: 34 * sp };
+            sc = Math.max(0.1, Math.min(3, (vw - 2 * mx) / SW, (vh - 2 * my) / SH));
+          } else {
+            sc = Math.max(0.1, Math.min(1.75, (vw - 24) / SW, (vh - 64) / SH));
           }
-          var s = Math.max(0.1, Math.min(1.75, (vw - 24) / 808, (vh - 64) / 656));
-          var left = (vw - 800 * s) / 2, stageTop = (vh - 640 * s) / 2;
-          return { mode: 'landscape', zoom: s, dw: 792, dh: 594, left: left, top: stageTop + 38 * s, w: 792 * s, h: 594 * s,
-                   tabsLeft: left, tabsTop: stageTop, tabsW: 800 * s, tabsH: 34 * s };
+          var stageLeft = (vw - SW * sc) / 2, stageTop = (vh - SH * sc) / 2;
+          return { mode: portrait ? 'portrait' : 'landscape', zoom: sc, dw: WW, dh: WH,
+                   left: stageLeft + 4 * sc, top: stageTop + 48 * sc, w: WW * sc, h: WH * sc,
+                   tabsLeft: stageLeft + (portrait ? 4 * sc : 0), tabsTop: stageTop + 4 * sc, tabsW: (portrait ? 412 : 792) * sc, tabsH: 40 * sc };
         }
 
         var BIO = 'I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^';
@@ -609,38 +677,55 @@
           for (x = 0; x < cols; x++) grid[(H - 1) * cols + x] = 0;                        // never a flat cutoff on the cream side
         }
 
-        var registry = [], running = false, lastDraw = 0, tickCount = 0;
+        // Band tint: the status bar and the waves are painted by ONE canvas in ONE pass from one gradient at one alpha,
+        // so there is no seam where the bar turns into waves. Same numbers as src/lib/bubbleBorder.ts.
+        var BAND_EDGE = [225, 212, 255, 0.45], BAND_MID = [205, 185, 255, 0.6], BAND_RIM = [168, 145, 230, 0.7];
+        // (named `looping`, not `running`: `running` is the audio helper above and a var of that name would shadow it)
+        var registry = [], looping = false, lastDraw = 0;
+        function rgba(c) { return [c[0], c[1], c[2], Math.round(c[3] * 255)]; }
         function drawOne(item, now) {
           var c = item.canvas, parent = c.parentElement; if (!parent) return;
+          var bar = item.position === 'top' ? parent.previousElementSibling : parent.nextElementSibling;
+          var barH = bar ? bar.clientHeight : 0, barRows = Math.round(barH / PX);
           var cols = Math.max(1, Math.ceil(parent.clientWidth / PX)), H = Math.max(6, Math.round(parent.clientHeight / PX));
-          if (!cols || !parent.clientHeight) return;
-          if (c.width !== cols || c.height !== H) { c.width = cols; c.height = H; c.style.width = cols * PX + 'px'; c.style.height = H * PX + 'px'; item.grid = new Uint8Array(cols * H); }
-          if (!item.ctx) item.ctx = c.getContext('2d');
-          var ctx = item.ctx;
-          if (!item.color || tickCount % 40 === 0) { try { var cs = getComputedStyle(c); item.color = cs.color; item.rim = cs.borderTopColor || item.color; } catch (e) { item.color = '#dfb5b5'; item.rim = '#c89698'; } }
+          if (!parent.clientWidth || !parent.clientHeight) return;
+          var rows = barRows + H;
+          if (!item.img || item.cols !== cols || item.rows !== rows) {
+            item.cols = cols; item.rows = rows;
+            c.width = cols; c.height = rows;
+            c.style.width = cols * PX + 'px'; c.style.height = barH + H * PX + 'px'; c.style.top = -barH + 'px';
+            item.grid = new Uint8Array(cols * H);
+            item.ctx = c.getContext('2d'); if (!item.ctx) return;
+            item.img = item.ctx.createImageData(cols, rows);
+            var band = new Uint8ClampedArray(cols * 4);
+            for (var x = 0; x < cols; x++) {
+              var t = (x + 0.5) / cols, u = (t < 0.5 ? t : 1 - t) * 2;
+              for (var k = 0; k < 3; k++) band[x * 4 + k] = BAND_EDGE[k] + (BAND_MID[k] - BAND_EDGE[k]) * u;
+              band[x * 4 + 3] = Math.round((BAND_EDGE[3] + (BAND_MID[3] - BAND_EDGE[3]) * u) * 255);
+            }
+            item.band = band;
+          }
+          if (!item.grid || !item.ctx || !item.img || !item.band) return;
           fillGrid(item.grid, cols, H, item.seed, now);
-          ctx.clearRect(0, 0, cols, H);
-          ctx.fillStyle = item.color;
-          for (var y = 0; y < H; y++) {
-            var x = 0;
-            while (x < cols) {
-              if (item.grid[y * cols + x]) { var x0 = x; while (x < cols && item.grid[y * cols + x]) x++; ctx.fillRect(x0, y, x - x0, 1); } else x++;
+          var d = item.img.data, g = item.grid, band2 = item.band, rim = item.rim;
+          for (var y = 0; y < rows; y++) {
+            var gy = y - barRows;
+            for (var x2 = 0; x2 < cols; x2++) {
+              var o = (y * cols + x2) * 4, src = null, so = 0;
+              if (gy < 0 || g[gy * cols + x2]) {
+                if (gy >= 0 && (gy === H - 1 || !g[(gy + 1) * cols + x2])) src = rim; else { src = band2; so = x2 * 4; }
+              }
+              if (src) { d[o] = src[so]; d[o + 1] = src[so + 1]; d[o + 2] = src[so + 2]; d[o + 3] = src[so + 3]; }
+              else { d[o] = d[o + 1] = d[o + 2] = d[o + 3] = 0; }
             }
           }
-          // a one-pixel deeper-pink rim along every lower edge gives the puffs depth
-          ctx.fillStyle = item.rim;
-          for (var ry = 0; ry < H; ry++) {
-            var rx = 0;
-            while (rx < cols) {
-              if (item.grid[ry * cols + rx] && (ry === H - 1 || !item.grid[(ry + 1) * cols + rx])) { var r0 = rx; while (rx < cols && item.grid[ry * cols + rx] && (ry === H - 1 || !item.grid[(ry + 1) * cols + rx])) rx++; ctx.fillRect(r0, ry, rx - r0, 1); } else rx++;
-            }
-          }
+          item.ctx.putImageData(item.img, 0, 0);
         }
         function loop(ts) {
           registry = registry.filter(function (it) { return it.canvas.isConnected; });
-          if (!registry.length) { running = false; return; }
+          if (!registry.length) { looping = false; return; }
           if (ts - lastDraw >= 33) {
-            lastDraw = ts; tickCount++;
+            lastDraw = ts;
             var now = Date.now();
             for (var i = 0; i < registry.length; i++) drawOne(registry[i], now);
           }
@@ -649,11 +734,11 @@
         // Every bubble's size is a pure function of the wall clock (Date.now), so the real page and the 404 morph page
         // show exactly the same bubbles at the same moment: no restart, snap or jump when one hands over to the other.
         function mountBubbleBorder(canvas, position) {
-          var item = { canvas: canvas, seed: position === 'bottom' ? 2 : 1, ctx: null, grid: null, color: '', rim: '' };
+          var item = { canvas: canvas, seed: position === 'bottom' ? 2 : 1, position: position, ctx: null, grid: null, img: null, cols: 0, rows: 0, band: null, rim: new Uint8ClampedArray(rgba(BAND_RIM)) };
           registry.push(item);
           drawOne(item, Date.now());
           var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          if (!still && !running) { running = true; requestAnimationFrame(loop); }
+          if (!still && !looping) { looping = true; requestAnimationFrame(loop); }
           return function () { registry = registry.filter(function (it) { return it !== item; }); };
         }
 
@@ -762,6 +847,7 @@
           win.style.left = r.left + 'px'; win.style.top = r.top + 'px';
           win.style.width = r.width + 'px'; win.style.height = r.height + 'px';
           win.style.margin = '0'; win.style.maxHeight = 'none'; win.style.zIndex = '5';
+          win.style.maxWidth = 'none';
           win.style.overflow = 'hidden';
 
           var replica = buildReplica(t);
@@ -773,27 +859,29 @@
           document.body.appendChild(tabs);
 
           var s = t.zoom;
-          var startW = r.width - 8; // content box of the window (inside its 4px border)
-          var k0 = Math.max(0.35, Math.min(1, startW / t.w));
-          var frame = cssVar('--frame-shadow') || '#6B2D39';
+          var k0 = Math.max(0.35, Math.min(1, r.width / t.w));
+          // luminous window glow, scaled with the stage (same layers as --window-glow)
+          var glow = function (m) {
+            return '0 0 0 ' + m + 'px rgb(255 255 255 / 0.7), 0 0 ' + (24 * m) + 'px ' + (4 * m) + 'px rgb(196 170 255 / 0.55), 0 0 ' + (90 * m) + 'px ' + (20 * m) + 'px rgb(124 84 220 / 0.35), inset 0 0 ' + (30 * m) + 'px rgb(255 255 255 / 0.4)';
+          };
           var EASE = 'cubic-bezier(.76,0,.24,1)', DUR = 820;
           sfx.morph();
 
           var winAnim = win.animate([
-            { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', padding: '8px', borderWidth: '4px', boxShadow: '7px 7px 0 ' + frame },
-            { left: (t.left - 4 * s) + 'px', top: (t.top - 4 * s) + 'px', width: (t.w + 8 * s) + 'px', height: (t.h + 8 * s) + 'px', padding: '0px', borderWidth: (4 * s) + 'px', boxShadow: (4 * s) + 'px ' + (4 * s) + 'px 0 ' + frame }
+            { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', boxShadow: glow(1) },
+            { left: t.left + 'px', top: t.top + 'px', width: t.w + 'px', height: t.h + 'px', boxShadow: glow(s) }
           ], { duration: DUR, easing: EASE, fill: 'forwards' });
           var screenAnim = screen.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, easing: 'ease-in', fill: 'forwards' });
           var repShow = replica.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 380, delay: DUR * 0.35, easing: 'ease-out', fill: 'forwards' });
           var repScale = replica.animate([{ transform: 'scale(' + k0 + ')' }, { transform: 'scale(1)' }], { duration: DUR, easing: EASE, fill: 'forwards' });
-          screen.style.position = 'absolute'; screen.style.inset = '8px'; // leave flow so it can't push the window's size
+          screen.style.position = 'absolute'; screen.style.inset = '0'; // leave flow so it can't push the window's size
           screen.style.minHeight = '0';
           await Promise.all([done(winAnim), done(screenAnim), done(repShow), done(repScale), done(wipeAnim)]);
 
           // commit the final state, drop the animation fills
-          win.style.left = (t.left - 4 * s) + 'px'; win.style.top = (t.top - 4 * s) + 'px';
-          win.style.width = (t.w + 8 * s) + 'px'; win.style.height = (t.h + 8 * s) + 'px';
-          win.style.padding = '0'; win.style.borderWidth = (4 * s) + 'px'; win.style.boxShadow = (4 * s) + 'px ' + (4 * s) + 'px 0 ' + frame;
+          win.style.left = t.left + 'px'; win.style.top = t.top + 'px';
+          win.style.width = t.w + 'px'; win.style.height = t.h + 'px';
+          win.style.boxShadow = glow(s);
           replica.style.opacity = '1'; replica.style.transform = 'none';
           screen.style.display = 'none';
           [winAnim, repShow, repScale, screenAnim, wipeAnim].forEach(function (a) { a.cancel(); });

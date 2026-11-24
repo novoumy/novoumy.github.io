@@ -9,13 +9,10 @@ interface PixelIconProps {
   className?: string;
 }
 
-// Icons that must stay exactly as drawn (hard square pixels, no Scale2x corner rounding).
-const NO_SMOOTHING = new Set<string>(['namemc']);
-
 const CACHE = new Map<string, { grid: number; wine: string; accent: string }>();
 
 function spriteFor(name: string, hd: boolean) {
-  const smooth = hd && !NO_SMOOTHING.has(name);
+  const smooth = hd;
   const key = `${name}:${smooth}`;
   let sprite = CACHE.get(key);
   if (!sprite) {
