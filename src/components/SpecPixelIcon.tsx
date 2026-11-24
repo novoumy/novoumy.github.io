@@ -1,31 +1,31 @@
-import { SPEC_ICONS, SPEC_ICON_GRID } from '@/lib/specIcons';
+import { SPEC_ICONS } from '@/lib/specIcons';
+import { centreRows, runs, scale2x } from '@/lib/scale2x';
 
 interface SpecPixelIconProps {
   name: string;
-  size?: number; // multiples of 12 keep every art pixel a whole number of px (48 = 4px per pixel)
+  size?: number; // 48 = 1.5px per art pixel of the 32x32 sprite
   className?: string;
 }
 
-// Unboxed 12x12 pixel icon: # = wine, o = rose. Rows are centred vertically in the grid.
+const GRID = 32;
+const CACHE = new Map<string, { x: number; y: number; w: number; ch: string }[]>();
+
+function spriteFor(name: string) {
+  let sprite = CACHE.get(name);
+  if (!sprite) {
+    sprite = runs(centreRows(scale2x(SPEC_ICONS[name] ?? SPEC_ICONS.cpu), GRID));
+    CACHE.set(name, sprite);
+  }
+  return sprite;
+}
+
+// Unboxed 32x32 pixel sprite (a 16x16 drawing run through Scale2x): # = wine, o = rose.
 export default function SpecPixelIcon({ name, size = 48, className }: SpecPixelIconProps) {
-  const rows = SPEC_ICONS[name] ?? SPEC_ICONS.cpu;
-  const offset = Math.floor((SPEC_ICON_GRID - rows.length) / 2);
   return (
-    <svg
-      viewBox={`0 0 ${SPEC_ICON_GRID} ${SPEC_ICON_GRID}`}
-      width={size}
-      height={size}
-      shapeRendering="crispEdges"
-      aria-hidden="true"
-      className={className}
-    >
-      {rows.flatMap((row, y) =>
-        [...row].map((cell, x) =>
-          cell === '.' ? null : (
-            <rect key={`${x}-${y}`} x={x} y={y + offset} width="1" height="1" fill={cell === 'o' ? 'var(--rose)' : 'var(--wine)'} />
-          ),
-        ),
-      )}
+    <svg viewBox={`0 0 ${GRID} ${GRID}`} width={size} height={size} shapeRendering="crispEdges" aria-hidden="true" className={className}>
+      {spriteFor(name).map((r) => (
+        <rect key={`${r.x}-${r.y}`} x={r.x} y={r.y} width={r.w} height="1" fill={r.ch === 'o' ? 'var(--card-accent, var(--rose))' : 'var(--wine)'} />
+      ))}
     </svg>
   );
 }

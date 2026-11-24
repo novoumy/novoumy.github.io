@@ -42,23 +42,11 @@
   100% { transform: translate(6px, -54px); opacity: 0; }
 }
 
-/* segmented "coziness" bar that fills in, then loops */
-.camp-meter { display: flex; gap: 3px; }
-.camp-meter span {
-  width: 9px; height: 11px;
-  background: var(--rose);
-  animation: camp-fill 4s steps(1) infinite;
-  animation-delay: calc(var(--n) * 90ms);
-}
-.camp-meter span.off { background: rgba(107, 45, 57, 0.18); animation: none; }
-@keyframes camp-fill { 0%, 6% { opacity: 0.25; } 7%, 100% { opacity: 1; } }
-
-
 @media (max-width: 480px) {
   .camp-scene { --px: 4px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .camp-star, .camp-spark, .camp-meter span, .camp-fire .flame-a, .camp-fire .flame-b { animation: none; }
+  .camp-star, .camp-spark, .camp-fire .flame-a, .camp-fire .flame-b { animation: none; }
   .camp-fire .flame-b { opacity: 0; }
   .camp-spark { opacity: 0; }
 }

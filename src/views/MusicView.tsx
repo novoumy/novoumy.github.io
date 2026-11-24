@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { FileText, Headphones, Search, X, Youtube } from 'lucide-react';
+import { FileText, Headphones, Search, X, Youtube } from '@/components/PixelUiIcons';
 import RetroOverlay from '@/components/RetroOverlay';
 import { tracks, type TrackItem } from '@/siteData';
 

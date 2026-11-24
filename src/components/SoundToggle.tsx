@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { Volume1, Volume2, VolumeX } from 'lucide-react';
+import PixelSpeaker, { type SpeakerLevel } from '@/components/PixelSpeaker';
 import { useAudio, VOLUME_MAX } from '@/audio/AudioProvider';
 import { playSfx } from '@/audio/sfx';
 
@@ -18,7 +18,7 @@ export default function SoundToggle({ className = '', variant = 'default' }: Sou
   const lastVolumeSfxAt = useRef(0);
 
   const silent = muted || volume === 0;
-  const Icon = silent ? VolumeX : volume < VOLUME_MAX / 2 ? Volume1 : Volume2;
+  const level: SpeakerLevel = silent ? 'muted' : volume < VOLUME_MAX / 2 ? 'low' : 'high';
   // Browsers refuse to autoplay sound until the visitor interacts, so nudge them.
   const showHint = blocked && !silent && !open;
 
@@ -121,14 +121,14 @@ export default function SoundToggle({ className = '', variant = 'default' }: Sou
         title={silent ? 'Sound off' : `Volume ${shown}%`}
         onClick={onButtonClick}
         className={[
-          'pixel-tile pixel-tile-interactive flex shrink-0 items-center justify-center gap-2 px-2.5 py-2 text-cool-white min-[860px]:px-3',
+          'pixel-tile pixel-tile-interactive flex shrink-0 items-center justify-center gap-2 px-2 py-2 text-cool-white min-[860px]:px-3',
           variant === 'folder'
             ? 'folder-sound-toggle bg-[#6B2B32] hover:bg-[#6B2B32] focus-visible:bg-[#6B2B32] hover:text-cool-white focus-visible:text-cool-white'
             : 'main-sound-toggle bg-lavender hover:bg-rose hover:text-wine',
         ].join(' ')}
       >
         {showHint && <span className="blink-arrow hidden font-pixel text-[8px] uppercase leading-none min-[860px]:inline">Tap anywhere for sound</span>}
-        <Icon size={16} strokeWidth={2.5} aria-hidden="true" />
+        <PixelSpeaker level={level} size={24} />
       </button>
     </div>
   );

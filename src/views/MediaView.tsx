@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, Search, SlidersHorizontal, X } from 'lucide-react';
+import { ChevronDown, Search, SlidersHorizontal, X } from '@/components/PixelUiIcons';
 import RetroSelect from '@/components/RetroSelect';
 import RetroOverlay from '@/components/RetroOverlay';
 import { media, mediaFilters, type MediaItem } from '@/siteData';

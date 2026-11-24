@@ -60,9 +60,9 @@ export default function PlayniteGameCard({
                 <span>Achievements</span>
                 <span>{getAchievementDisplay()}</span>
               </div>
-              <div className="h-1.5 w-full rounded-full bg-[#333333]">
+              <div className="h-1.5 w-full rounded-none bg-[#333333]">
                 <div 
-                  className="h-full rounded-full bg-[color:var(--r-accent)] transition-all duration-300"
+                  className="h-full rounded-none bg-[color:var(--r-accent)] transition-all duration-300"
                   style={{ width: `${game.achievement_percentage || 0}%` }}
                 />
               </div>

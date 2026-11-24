@@ -10,6 +10,7 @@ export default {
         lavender: 'rgb(var(--lavender-rgb) / <alpha-value>)',
         wine: 'rgb(var(--wine-rgb) / <alpha-value>)',
         rose: 'rgb(var(--rose-rgb) / <alpha-value>)',
+        'pink-soft': '#DCC2D2',
         // Retro-folder tokens are runtime variables so /theme recolors every component.
         'r-bg': 'rgb(var(--r-bg-rgb) / <alpha-value>)',
         'r-panel': 'rgb(var(--r-panel-rgb) / <alpha-value>)',

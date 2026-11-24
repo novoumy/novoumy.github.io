@@ -1,4 +1,4 @@
-import { ArrowUpRight, Check, Copy } from 'lucide-react';
+import { ArrowUpRight, Check, Copy } from '@/components/PixelUiIcons';
 import PixelIcon from '@/components/PixelIcon';
 import { PIXEL_ICONS } from '@/lib/pixelIcons';
 import { useCopy } from '@/lib/useCopy';
@@ -9,8 +9,8 @@ const HANDLE = 'novoumy';
 
 function SocialGlyph({ social, className }: { social: SocialItem; className: string }) {
   if (social.image) return <img src={social.image} alt="" loading="lazy" className={`${className} object-cover`} />;
-  if (social.icon && social.icon in PIXEL_ICONS) return <PixelIcon name={social.icon} className={className} />;
-  return <PixelIcon name="github" className={className} />;
+  if (social.icon && social.icon in PIXEL_ICONS) return <PixelIcon name={social.icon} hd tint className={className} />;
+  return <PixelIcon name="github" hd tint className={className} />;
 }
 
 
@@ -57,7 +57,7 @@ function Sprite({ rows, offsetY = 0, className }: { rows: string[]; offsetY?: nu
   );
 }
 
-function CampfireHero({ total }: { total: number }) {
+function CampfireHero() {
   return (
     <section className="pixel-tile flex items-center gap-4 overflow-hidden bg-rose/30 p-4 sm:gap-6 sm:p-5">
       <div className="camp-scene" aria-hidden="true">
@@ -75,21 +75,10 @@ function CampfireHero({ total }: { total: number }) {
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-3">
-        <span className="font-pixel text-[8px] uppercase leading-none opacity-60">Campfire lobby</span>
-        <h1 className="font-pixel text-[13px] uppercase leading-[1.5] tracking-wide sm:text-[18px]">Pull up a log</h1>
+        <h1 className="font-pixel text-[13px] uppercase leading-[1.5] tracking-wide sm:text-[18px]">Want to contact me?</h1>
         <p className="text-[19px] leading-[1.1] opacity-80 sm:text-[22px]">
-          {String(total).padStart(2, '0')} ways to find me. Pick a link below and say hi.
+          These are all my public socials, but I prefer contact by Discord.
         </p>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <span className="flex items-center gap-2 font-pixel text-[7px] uppercase leading-none sm:text-[8px]">
-            Cozy
-            <span className="camp-meter" aria-hidden="true">
-              {Array.from({ length: 8 }, (_, n) => (
-                <span key={n} className={n < 7 ? '' : 'off'} style={{ ['--n' as string]: n }} />
-              ))}
-            </span>
-          </span>
-        </div>
       </div>
     </section>
   );
@@ -104,7 +93,7 @@ export default function SocialsView() {
 
   return (
     <div className="flex min-h-full flex-col gap-5 max-sm:gap-4 sm:gap-6">
-      <CampfireHero total={socials.length} />
+      <CampfireHero />
 
       {/* Divider */}
       <div className="flex items-center gap-3" aria-hidden="true">
@@ -122,22 +111,16 @@ export default function SocialsView() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${social.platform}${social.handle ? ` (${social.handle})` : ''}, opens in a new tab`}
-              className="pixel-tile pixel-tile-interactive group relative flex w-full min-w-0 flex-col items-center gap-3 bg-cool-white px-2 pb-3.5 pt-4 text-center hover:bg-rose/30 max-sm:gap-2 max-sm:pb-2.5 max-sm:pt-3"
+              className="pixel-tile pixel-tile-interactive group relative flex w-full min-w-0 flex-col items-center gap-3 bg-pink-soft px-2 pb-4 pt-5 text-center [--r-accent:var(--cool-white)] hover:bg-rose max-sm:gap-2 max-sm:pb-3 max-sm:pt-4"
             >
               <span className="pixel-icon-well pixel-icon-well-social">
-                <SocialGlyph social={social} className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
+                <SocialGlyph social={social} className="h-11 w-11 shrink-0 sm:h-12 sm:w-12" />
               </span>
-              <span className="flex w-full min-w-0 flex-col items-center gap-2">
-                <span className="font-pixel text-[8px] uppercase leading-none sm:text-[9px]">{social.platform}</span>
-                <span className="w-full truncate text-[19px] leading-none sm:text-[20px]">
-                  {social.handle ?? 'Profile'}
-                </span>
-              </span>
+              <span className="w-full truncate font-pixel text-[8px] uppercase leading-none sm:text-[9px]">{social.platform}</span>
               <ArrowUpRight
-                size={12}
-                strokeWidth={3}
+                size={18}
                 aria-hidden="true"
-                className="absolute right-1.5 top-1.5 opacity-40 transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
+                className="absolute right-2 top-2 opacity-60 transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
               />
             </a>
           </li>
@@ -149,7 +132,7 @@ export default function SocialsView() {
         <section className="pixel-tile flex flex-col gap-3 bg-rose/30 p-3 sm:flex-row sm:items-center sm:gap-4 sm:p-4">
           <div className="flex min-w-0 flex-1 items-center gap-3">
             <span className="pixel-icon-well pixel-icon-well-email">
-              <SocialGlyph social={email} className="h-8 w-8 shrink-0" />
+              <SocialGlyph social={email} className="h-10 w-10 shrink-0" />
             </span>
             <span className="flex min-w-0 flex-col gap-1.5">
               <span className="font-pixel text-[8px] uppercase leading-none">Email</span>
@@ -162,7 +145,7 @@ export default function SocialsView() {
               aria-label={`Send an email to ${email.handle}`}
               className="pixel-btn !py-3 flex-1 !text-[9px] sm:flex-none"
             >
-              Write <ArrowUpRight size={12} strokeWidth={3} aria-hidden="true" />
+              Write <ArrowUpRight size={14} aria-hidden="true" />
             </a>
             <button
               type="button"
@@ -174,11 +157,11 @@ export default function SocialsView() {
             >
               {address.copied ? (
                 <>
-                  <Check size={12} strokeWidth={3} aria-hidden="true" /> Copied!
+                  <Check size={14} aria-hidden="true" /> Copied!
                 </>
               ) : (
                 <>
-                  <Copy size={12} strokeWidth={3} aria-hidden="true" /> Copy
+                  <Copy size={14} aria-hidden="true" /> Copy
                 </>
               )}
             </button>

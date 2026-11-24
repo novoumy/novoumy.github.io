@@ -6,48 +6,16 @@
   color: var(--wine);
 }
 
-/* ---------- Status bars ---------- */
+/* ---------- Status bars ----------
+   Plain pink bands that frame the window (no text). Fixed height, so the layout never depends on content. */
 .kinetic-words {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: center;
-  min-height: 2.9rem;
+  flex: none;
+  height: 2.9rem;
   margin: 0;
-  padding: 0.55rem 12px;
   box-sizing: border-box;
   background: var(--status-pink);
-  color: var(--wine);
-  font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
-  line-height: 1.8;
-  letter-spacing: 0.05em;
-}
-.kinetic-words span { overflow: hidden; white-space: nowrap; cursor: default; user-select: none; }
-.kinetic-words span:first-child { justify-self: start; text-align: left; }
-.kinetic-words .kw-center { justify-self: center; text-align: center; }
-.kinetic-words span:last-child { justify-self: end; text-align: right; }
-
-/* Collapse by VIEWPORT width (media queries), not container queries: older iOS Safari ignores @container, and
-   then the 3-column grid was left in place on phones and the centre text ran over its neighbours.
-   The window is ~40px narrower than the viewport, and the 3-column layout needs a ~230px column for the longest
-   readout ("3°C • CLOUDY"), so:
-   >= 800px  3 items  |  300-799px  2 items (centre hidden; ping + weather stay visible)  |  < 300px  1 item
-   The fixed 800px desktop stage is always >= 800px wide, so it always gets all three. */
-.kinetic-words { flex: none; }
-.kinetic-words span { text-overflow: ellipsis; }
-@media (max-width: 799px) {
-  .kinetic-words { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 8px; }
-  .kinetic-words span { flex: 0 1 auto; min-width: 0; }
-  .kinetic-words span:first-child { flex-shrink: 0; }
-  .kinetic-words .kw-center { display: none; }
-}
-@media (max-width: 459px) {
-  .kinetic-words { font-size: 7px; }
-}
-@media (max-width: 299px) {
-  .kinetic-words .kw-end { display: none; }
 }
 
 /* ---------- Organic bubble-cluster divider ----------
@@ -152,7 +120,6 @@
   letter-spacing: 0.03em;
   text-align: left;
   color: #6E3643;
-  text-shadow: 2px 2px 0 rgba(205, 158, 186, 0.38);
 }
 .main-profile-bio p { margin: 0; }
 
@@ -189,23 +156,8 @@
    scaled as a whole.
    ====================================================================================================== */
 @media (max-width: 859px) {
-  /* Status bars: one row of larger text. The centre readouts (OBSESSED WITH MINECRAFT / TINTED_LILAC) are
-     hidden here to save space:  [ time ........ ping ]   and   [ fps ........ weather ]  */
-  .kinetic-words {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.75rem;
-    min-height: 0;
-    padding: 0.55rem 14px;
-    font-size: 11px;
-    line-height: 1.8;
-    letter-spacing: 0.04em;
-  }
-  .kinetic-words span { flex: 0 1 auto; min-width: 0; }
-  .kinetic-words span:first-child { flex-shrink: 0; }
-  .kinetic-words .kw-center { display: none; }
-  .kinetic-words .kw-end { display: block; }
+  /* Status bands: slimmer in the vertical window. */
+  .kinetic-words { height: 28px; }
 
   /* Profile: one centred column - avatar, then greeting, name and bio - sized to fill the window. */
   .main-profile-center {

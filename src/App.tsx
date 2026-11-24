@@ -137,7 +137,7 @@ export default function App() {
           data-stage-mode={mode}
           data-crt-stage
         >
-          <div className="relative z-30 flex w-full min-w-0 items-end justify-between gap-2 overflow-visible">
+          <div className="relative z-30 flex w-full min-w-0 items-end justify-between gap-2 overflow-visible max-[859px]:gap-1">
             <PixelTabBar tabs={enabledTabs} activeId={activeId} onSelect={selectTab} />
             <SoundToggle className="flex shrink-0" />
           </div>

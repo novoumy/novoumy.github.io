@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
+import { X } from '@/components/PixelUiIcons';
 import PixelIcon from '@/components/PixelIcon';
 import SoundToggle from '@/components/SoundToggle';
 import type { InterestId } from '@/siteData';

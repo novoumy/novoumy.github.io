@@ -68,9 +68,9 @@ export default function PlayniteGameDetails({ game, onDismiss }: PlayniteGameDet
               <span className="font-pixel text-[8px] uppercase text-[#8a8a8a]">// completion</span>
               <span className="text-[10px] text-[#d4d4d4]">{game.achievement_percentage?.toFixed(1)}% Complete</span>
             </div>
-            <div className="h-2.5 w-full rounded-full bg-[#333333]">
+            <div className="h-2.5 w-full rounded-none bg-[#333333]">
               <div 
-                className="h-full rounded-full bg-[color:var(--r-accent)] transition-all duration-500"
+                className="h-full rounded-none bg-[color:var(--r-accent)] transition-all duration-500"
                 style={{ width: `${game.achievement_percentage || 0}%` }}
               />
             </div>
@@ -141,7 +141,7 @@ export default function PlayniteGameDetails({ game, onDismiss }: PlayniteGameDet
                     className="h-12 w-12 object-contain"
                   />
                   {achievement.unlocked && (
-                    <div className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-[color:var(--r-accent)]">
+                    <div className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-none bg-[color:var(--r-accent)]">
                       <span className="text-[6px] text-[#1e1e1e]">✓</span>
                     </div>
                   )}

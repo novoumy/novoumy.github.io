@@ -460,20 +460,17 @@
     transform: translate(0, 0);
   }
 
-  /* Wine button with notched corners. */
+  /* Wine button with stepped (pixel) corners: a 4px outline built from four axis-aligned box-shadows, so every
+     edge and corner is crisp (no diagonal clip-path). */
   .pixel-btn {
     @apply inline-flex items-center justify-center gap-2 bg-wine font-pixel text-[10px] uppercase text-cool-white;
-    clip-path: polygon(
-      4px 0,
-      calc(100% - 4px) 0,
-      100% 4px,
-      100% calc(100% - 4px),
-      calc(100% - 4px) 100%,
-      4px 100%,
-      0 calc(100% - 4px),
-      0 4px
-    );
+    margin: 4px;
     padding: 10px 14px;
+    box-shadow:
+      0 -4px 0 0 var(--wine),
+      0 4px 0 0 var(--wine),
+      -4px 0 0 0 var(--wine),
+      4px 0 0 0 var(--wine);
     transition: background-color 150ms, color 150ms, transform 100ms steps(2);
   }
 

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { ArrowLeft, ChevronDown, ExternalLink, Search, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ExternalLink, Search, SlidersHorizontal, X } from '@/components/PixelUiIcons';
 import RetroSelect from '@/components/RetroSelect';
 import RetroOverlay from '@/components/RetroOverlay';
 import {
