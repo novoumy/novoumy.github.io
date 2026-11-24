@@ -23,7 +23,12 @@ export default function MainView() {
       <PixelDivider position="top" />
 
       <section className="main-profile-center">
-        <img src={hero.avatar} alt={hero.avatarAlt} className="main-profile-avatar" />
+        <div className="main-profile-avatar-wrap">
+          <img src={hero.avatar} alt={hero.avatarAlt} className="main-profile-avatar" />
+          {hero.avatarDecoration && (
+            <img src={hero.avatarDecoration} alt="" aria-hidden="true" className="main-profile-avatar-deco" draggable={false} />
+          )}
+        </div>
         <div className="main-profile-text">
           <div className="main-profile-hello">&gt; HELLO, I'M</div>
           <h1 className="main-profile-name">{hero.name}</h1>
