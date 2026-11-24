@@ -118,9 +118,9 @@ export default function SocialsView() {
               </span>
               <span className="w-full truncate font-pixel text-[8px] uppercase leading-none sm:text-[9px]">{social.platform}</span>
               <ArrowUpRight
-                size={18}
+                size={14}
                 aria-hidden="true"
-                className="absolute right-2 top-2 opacity-60 transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
+                className="absolute right-2.5 top-2.5 opacity-60 transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
               />
             </a>
           </li>

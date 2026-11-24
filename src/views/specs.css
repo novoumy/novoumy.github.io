@@ -1,0 +1,14 @@
+/* ---------- Specs banner: pixel PC tower (scene frame comes from socials.css .camp-scene) ---------- */
+.pc-sprite {
+  width: calc(var(--px) * 16);
+  height: calc(var(--px) * 16);
+  shape-rendering: crispEdges;
+  image-rendering: pixelated;
+}
+.pc-sprite .pc-w { fill: var(--wine); }
+.pc-sprite .pc-p { fill: #DCC2D2; }
+.pc-sprite .pc-c { fill: var(--cool-white); }
+.pc-sprite .pc-r { fill: var(--rose); }
+.pc-sprite .pc-led { fill: var(--rose); animation: pc-blink 1.4s steps(1) infinite; }
+@keyframes pc-blink { 0%, 55% { fill: var(--rose); } 56%, 100% { fill: var(--cool-white); } }
+@media (prefers-reduced-motion: reduce) { .pc-sprite .pc-led { animation: none; } }

@@ -47,15 +47,15 @@ function makeIcon(rows: string[]) {
   };
 }
 
+// Symmetrical about the arrow's own diagonal: a solid corner head, a single-pixel shaft.
 export const ArrowUpRight = makeIcon([
-  '...######',
-  '...######',
-  '......###',
-  '.....####',
-  '....##.##',
-  '...##..##',
-  '..##.....',
-  '.##......',
+  '..#####',
+  '...####',
+  '....###',
+  '...#.##',
+  '..#...#',
+  '.#.....',
+  '#......',
 ]);
 
 export const ArrowLeft = makeIcon([
