@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { pathData } from '@/lib/pixelPaths';
 
 // Pixel-art replacements for the lucide icons the site used to import: every icon is drawn on a small grid of
 // square cells with shape-rendering: crispEdges, so there are no smooth curves or anti-aliased diagonals anywhere.
@@ -12,36 +13,23 @@ interface PixelUiIconProps {
 }
 
 function makeIcon(rows: string[]) {
-  const w = rows[0].length;
-  const h = rows.length;
-  const cells = rows.flatMap((row, y) => {
-    const out: { x: number; y: number; w: number }[] = [];
-    let x = 0;
-    while (x < row.length) {
-      if (row[x] === '#') {
-        let end = x + 1;
-        while (end < row.length && row[end] === '#') end++;
-        out.push({ x, y, w: end - x });
-        x = end;
-      } else x++;
-    }
-    return out;
-  });
+  const width = rows[0].length;
+  const height = rows.length;
+  const path = pathData(rows, '#');
   return function PixelUiIcon({ size = 16, className, style, 'aria-hidden': ariaHidden = true }: PixelUiIconProps) {
     return (
       <svg
-        viewBox={`0 0 ${w} ${h}`}
-        width={(size * w) / Math.max(w, h)}
-        height={(size * h) / Math.max(w, h)}
+        viewBox={`0 0 ${width} ${height}`}
+        width={(size * width) / Math.max(width, height)}
+        height={(size * height) / Math.max(width, height)}
         shapeRendering="crispEdges"
         fill="currentColor"
         aria-hidden={ariaHidden}
+        focusable="false"
         className={className}
         style={{ flex: 'none', ...style }}
       >
-        {cells.map((c) => (
-          <rect key={`${c.x}-${c.y}`} x={c.x} y={c.y} width={c.w} height="1" />
-        ))}
+        <path d={path} />
       </svg>
     );
   };
@@ -147,6 +135,8 @@ export const FileText = makeIcon([
   '#######.',
 ]);
 
+// Tiny toolbar marks stay on compact hand-drawn grids: these controls render at 12–16px,
+// below the 24px base grid that the shared library is designed to scale from.
 export const Headphones = makeIcon([
   '..######..',
   '.##....##.',

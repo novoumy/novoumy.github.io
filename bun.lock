@@ -6,7 +6,8 @@
       "name": "vite-react-typescript-starter",
       "dependencies": {
         "react": "^18.3.1",
-        "react-dom": "^18.3.1"
+        "react-dom": "^18.3.1",
+        "pixelarticons": "2.4.2"
       },
       "devDependencies": {
         "@eslint/js": "^9.9.1",
@@ -3054,6 +3055,12 @@
       "",
       {},
       "sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ=="
+    ],
+    "pixelarticons": [
+      "pixelarticons@2.4.2",
+      "",
+      {},
+      ""
     ]
   }
 }

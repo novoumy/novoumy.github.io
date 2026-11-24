@@ -1,4 +1,4 @@
-import { runs } from '@/lib/scale2x';
+import { pathData } from '@/lib/pixelPaths';
 
 // 12x12 pixel-art speaker for the sound button: muted (x), quiet (one wave) or loud (two waves).
 const BODY = [
@@ -28,18 +28,16 @@ function draw(level: SpeakerLevel): string[] {
   return grid.map((r) => r.join(''));
 }
 
-const CELLS: Record<SpeakerLevel, ReturnType<typeof runs>> = {
-  muted: runs(draw('muted')),
-  low: runs(draw('low')),
-  high: runs(draw('high')),
+const PATHS: Record<SpeakerLevel, string> = {
+  muted: pathData(draw('muted'), '#'),
+  low: pathData(draw('low'), '#'),
+  high: pathData(draw('high'), '#'),
 };
 
 export default function PixelSpeaker({ level, size = 24, className }: { level: SpeakerLevel; size?: number; className?: string }) {
   return (
     <svg viewBox="0 0 12 12" width={size} height={size} shapeRendering="crispEdges" fill="currentColor" aria-hidden="true" className={className}>
-      {CELLS[level].map((r) => (
-        <rect key={`${r.x}-${r.y}`} x={r.x} y={r.y} width={r.w} height="1" />
-      ))}
+      <path d={PATHS[level]} />
     </svg>
   );
 }

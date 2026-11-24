@@ -50,8 +50,8 @@ export default function InterestsView({ openId, onOpen }: InterestsViewProps) {
                 aria-label={`Open ${item.label}`}
                 className="folder-btn group flex w-full max-w-[150px] flex-col items-center gap-3 outline-none outline-offset-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-wine"
               >
-                <span className="pixel-icon-well pixel-icon-well-folder">
-                  <PixelIcon name={item.id} tint className="folder-icon h-20 w-20 sm:h-24 sm:w-24" />
+                <span className="flex h-20 w-20 items-center justify-center sm:h-24 sm:w-24">
+                  <PixelIcon name={item.icon} size={72} className="folder-icon h-[72px] w-[72px] sm:h-24 sm:w-24" />
                 </span>
                 <span className="folder-label px-2 py-1 font-pixel text-[10px] uppercase leading-none transition-colors duration-150 group-hover:bg-rose group-hover:text-wine sm:text-[11px]">
                   {item.label}

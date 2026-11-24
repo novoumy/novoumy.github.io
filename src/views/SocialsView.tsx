@@ -1,6 +1,5 @@
 import { ArrowUpRight, Check, Copy } from '@/components/PixelUiIcons';
 import PixelIcon from '@/components/PixelIcon';
-import { PIXEL_ICONS } from '@/lib/pixelIcons';
 import { useCopy } from '@/lib/useCopy';
 import { socials, type SocialItem } from '@/siteData';
 import './socials.css';
@@ -9,8 +8,7 @@ const HANDLE = 'novoumy';
 
 function SocialGlyph({ social, className }: { social: SocialItem; className: string }) {
   if (social.image) return <img src={social.image} alt="" loading="lazy" className={`${className} object-cover`} />;
-  if (social.icon && social.icon in PIXEL_ICONS) return <PixelIcon name={social.icon} hd tint className={className} />;
-  return <PixelIcon name="github" hd tint className={className} />;
+  return <PixelIcon name={social.icon ?? 'github'} size={48} className={className} />;
 }
 
 

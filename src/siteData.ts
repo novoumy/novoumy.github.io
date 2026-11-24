@@ -24,11 +24,14 @@ export type TabId = 'main' | 'socials' | 'interests' | 'specs';
 // Sections inside the Interests hub (opened from its 2x2 grid).
 export type InterestId = 'media' | 'games' | 'music' | 'quotes';
 
-// Built-in icons available for tabs. Options: 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid' | 'cpu'
-export type TabIconName = 'user' | 'film' | 'gamepad' | 'music' | 'quote' | 'share' | 'grid' | 'cpu';
+// Pixelarticons registry keys available for the top-level tabs.
+export type TabIconName = 'user' | 'comment-text' | 'save' | 'cpu';
+
+// Folder artwork uses the same centralized Pixelarticons registry.
+export type InterestIconName = 'image' | 'gamepad' | 'music' | 'quote';
 
 // Built-in icons available for social tiles (used when no "image" is given).
-// Options include 'github' | 'youtube' | 'x' | 'discord' | 'steam' | 'instagram' | 'linkedin' | 'globe' | 'mail' | 'roblox'
+// Includes free Pixelarticons plus original pixel-grid fallbacks for Pro-only marks.
 export type SocialIconName =
   | 'github'
   | 'youtube'
@@ -149,14 +152,14 @@ export const audio = {
 
 export const tabs: TabConfig[] = [
   { id: 'main', label: 'Main', icon: 'user', enabled: true },
-  { id: 'socials', label: 'Socials', icon: 'share', enabled: true },
-  { id: 'interests', label: 'Interests', icon: 'grid', enabled: true },
+  { id: 'socials', label: 'Socials', icon: 'comment-text', enabled: true },
+  { id: 'interests', label: 'Interests', icon: 'save', enabled: true },
   { id: 'specs', label: 'Specs', icon: 'cpu', enabled: true },
 ];
 
 // The four cards in the Interests hub. Change the subtitles to whatever you like.
-export const interests: { id: InterestId; label: string; subtitle: string; icon: TabIconName }[] = [
-  { id: 'media', label: 'Media', subtitle: 'favorite anime & shows', icon: 'film' },
+export const interests: { id: InterestId; label: string; subtitle: string; icon: InterestIconName }[] = [
+  { id: 'media', label: 'Media', subtitle: 'favorite anime & shows', icon: 'image' },
   { id: 'games', label: 'Games', subtitle: "what I'm playing / played", icon: 'gamepad' },
   { id: 'music', label: 'Music', subtitle: 'rotation & tracks', icon: 'music' },
   { id: 'quotes', label: 'Quotes', subtitle: 'saved text snippets', icon: 'quote' },

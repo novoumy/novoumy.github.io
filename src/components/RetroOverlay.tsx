@@ -87,7 +87,7 @@ export default function RetroOverlay({ label, meta, onClose, children, toolbar, 
           <div onClick={onClose} className="flex min-w-0 cursor-pointer items-center gap-3 sm:gap-4">
             {accent && (
               <span className="shrink-0 bg-cool-white p-1 max-sm:hidden" aria-hidden="true">
-                <PixelIcon name={accent} tint className="block h-6 w-6" />
+                <PixelIcon name={accent} size={24} className="block h-6 w-6 text-wine" />
               </span>
             )}
             <h2 className="min-w-0 truncate text-[10px] uppercase sm:text-[13px]">
