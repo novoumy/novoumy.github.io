@@ -1,11 +1,11 @@
 import type { CSSProperties } from 'react';
-import SmoothIcon from '@/components/SmoothIcon';
+import SpecPixelIcon from '@/components/SpecPixelIcon';
 import { ArrowUpRight } from '@/components/PixelUiIcons';
 import { specGroups } from '@/siteData';
 import './socials.css';
 import './specs.css';
 
-// Match each component label to a familiar, smooth vector icon.
+// Pixel icon per part, matched on the start of the part's label (so "SSD 1" / "SSD 2" both work).
 const PART_ICONS: [prefix: string, icon: string][] = [
   ['cpu', 'cpu'],
   ['cooler', 'cooler'],
@@ -30,7 +30,53 @@ const iconFor = (label: string): string => {
   return PART_ICONS.find(([prefix]) => key.startsWith(prefix))?.[1] ?? 'cpu';
 };
 
-// Keep the original inventory layout while using crisp vector artwork for each item.
+// Pixel PC tower, 16 x 16 cells: w = wine outline, p = pink case, c = glass / fan, r = rose button, l = blinking LED.
+const PC_TOWER = [
+  '...##########...',
+  '...#pppppppp#...',
+  '...#p######p#...',
+  '...#p#cccc#p#...',
+  '...#p#c##c#p#...',
+  '...#p#c##c#p#...',
+  '...#p#cccc#p#...',
+  '...#p######p#...',
+  '...#pppppppp#...',
+  '...#p####ppp#...',
+  '...#pppppppl#...',
+  '...#p####ppp#...',
+  '...#pppppppp#...',
+  '...#pppwwppp#...',
+  '...##########...',
+  '...##......##...',
+];
+const PC_CLASS: Record<string, string> = { '#': 'pc-w', w: 'pc-w', p: 'pc-p', c: 'pc-c', r: 'pc-r', l: 'pc-led' };
+
+function SpecsHero() {
+  return (
+    <section className="pixel-tile flex items-center gap-4 overflow-hidden bg-rose/30 p-4 sm:gap-6 sm:p-5">
+      <div className="camp-scene" aria-hidden="true">
+        <span className="camp-star" style={{ left: '14%', top: '16%' }} />
+        <span className="camp-star" style={{ left: '78%', top: '10%' }} />
+        <span className="camp-star" style={{ left: '60%', top: '30%' }} />
+        <svg className="pc-sprite" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          {PC_TOWER.flatMap((row, y) =>
+            [...row].map((ch, x) =>
+              PC_CLASS[ch] ? <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} className={PC_CLASS[ch]} /> : null,
+            ),
+          )}
+        </svg>
+      </div>
+
+      <div className="flex min-w-0 flex-1 flex-col gap-3">
+        <h1 className="font-pixel text-[13px] uppercase leading-[1.5] tracking-wide sm:text-[18px]">My PC specifications!</h1>
+        <p className="text-[19px] leading-[1.1] opacity-80 sm:text-[22px]">Here's all my PC hardware and all my peripherals.</p>
+      </div>
+    </section>
+  );
+}
+
+// Retro RPG inventory: one grid of equipment slots per category.
+// Every slot is a clean pixel-bordered box with an unboxed pixel icon; no filled icon tiles.
 export default function SpecsView() {
   let slotIndex = 0;
 
@@ -61,7 +107,7 @@ export default function SpecsView() {
                     className="spec-card pixel-tile pixel-tile-interactive group relative box-border flex h-full min-w-0 items-center gap-4 bg-pink-soft p-4 pr-9 outline-none [--card-accent:var(--rose)] hover:bg-rose focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-wine"
                     style={{ ['--i' as string]: i } as CSSProperties}
                   >
-                    <SmoothIcon name={iconFor(part.label)} size={48} className="spec-icon shrink-0" />
+                    <SpecPixelIcon name={iconFor(part.label)} size={48} className="spec-icon shrink-0" />
 
                     <span className="flex min-w-0 flex-1 flex-col gap-1.5">
                       <span className="truncate font-pixel text-[8px] uppercase leading-none text-wine/70">{part.label}</span>

@@ -1,6 +1,7 @@
 import { ArrowUpRight, Check, Copy } from '@/components/PixelUiIcons';
 import PixelIcon from '@/components/PixelIcon';
 import SmoothIcon from '@/components/SmoothIcon';
+import { hasSmoothIcon } from '@/lib/smoothIcons';
 import { useCopy } from '@/lib/useCopy';
 import { socials, type SocialItem } from '@/siteData';
 import './socials.css';
@@ -9,9 +10,9 @@ const HANDLE = 'novoumy';
 
 function SocialGlyph({ social, className }: { social: SocialItem; className: string }) {
   if (social.image) return <img src={social.image} alt="" loading="lazy" className={`${className} object-cover`} />;
-  return social.icon === 'mail'
-    ? <PixelIcon name="mail" size={48} className={className} />
-    : <SmoothIcon name={social.icon ?? 'github'} size={48} className={className} />;
+  // Social brand marks are smooth vectors. The email glyph (and anything without a smooth version) keeps the pixel icon.
+  if (social.icon !== 'mail' && hasSmoothIcon(social.icon)) return <SmoothIcon name={social.icon} size={48} className={className} />;
+  return <PixelIcon name={social.icon ?? 'github'} size={48} className={className} />;
 }
 
 

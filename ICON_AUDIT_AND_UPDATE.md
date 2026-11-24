@@ -128,3 +128,20 @@ All five replacements are rendered as inline SVG paths with crisp pixel edges. N
 - Pinterest: swapped the earlier filled treatment for the supplied open circular Pinterest mark; only the purple pixels are drawn and the negative space is transparent.
 - NameMC: reduced the creeper artwork by adding balanced internal SVG viewBox padding, without changing the Socials tile or its layout.
 - Snapchat and Steam: recolored both custom pixel marks to the site purple (`#3A2272`) to match the rest of the icon set.
+
+
+## Smooth icon update (Socials grid + Specs cards)
+
+The 12 social link tiles and all 19 PC part / peripheral cards now use smooth, resolution-independent vector icons instead of pixel art. Untouched: the 4 tab icons (Main / Socials / Interests / Specs), the email icon in the Socials email row, the Interests folder sprites, the small UI glyphs, and the campfire / PC tower hero illustrations.
+
+- Data: `src/lib/smoothIcons.ts` (generated; one entry per icon with a centred square `viewBox`, a hairline round-joined `strokeWidth`, and the path `d`).
+- Component: `src/components/SmoothIcon.tsx` (`currentColor`, so icons keep the tile's wine colour).
+- Wiring: `SocialGlyph` in `SocialsView.tsx` and `SpecPixelIcon.tsx`. Pixel icons remain the fallback for anything without a smooth version (e.g. email).
+- To swap an icon, replace its entry in `smoothIcons.ts` (keys match `siteData.ts` social `icon` names and the `PART_ICONS` keys in `SpecsView.tsx`).
+
+Sources / licenses:
+- Simple Icons (CC0): Discord, Steam, Roblox, GitHub, Instagram, X, YouTube, NameMC, Pinterest, Facebook, Snapchat
+- Font Awesome Free (icons: CC BY 4.0, https://fontawesome.com/license/free): LinkedIn, CPU, RAM, SSD, PSU, Monitor, Keyboard, Mouse, Mic, Phone, Tablet, Controller
+- Material Design Icons / Pictogrammers (Apache 2.0): Cooler (fan), GPU (expansion card), Mobo (developer board), Case (desktop tower), Earbuds
+
+Brand logos remain trademarks of their respective owners.
