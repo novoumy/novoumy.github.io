@@ -10,6 +10,8 @@ function staggerTargets(panel: HTMLElement): HTMLElement[] {
   if (!root) return [];
   const out: HTMLElement[] = [];
   for (const child of Array.from(root.children)) {
+    // Backgrounds / frame pieces (bars, dividers) stay put so the window is fully drawn from the first frame.
+    if (child.hasAttribute('data-static')) continue;
     if (child.hasAttribute('data-stagger')) out.push(...(Array.from(child.children) as HTMLElement[]));
     else out.push(child as HTMLElement);
   }
@@ -20,14 +22,22 @@ function staggerTargets(panel: HTMLElement): HTMLElement[] {
 export function animatePanelIn(panel: HTMLElement, direction: number) {
   if (reducedMotion()) return;
   panel.getAnimations().forEach((animation) => animation.cancel());
-  const offset = direction * 28;
-  panel.animate(
-    [
-      { opacity: 0, transform: `translateX(${offset}px)`, filter: 'blur(2px)' },
-      { opacity: 1, transform: 'translateX(0)', filter: 'blur(0)' },
-    ],
-    { duration: 380, easing: EASE_OUT },
-  );
+  // Main is a frosted-glass window (backdrop-filter). Any opacity / filter / transform on the panel or on its
+  // top-level block makes Chrome drop the blur (gray flash) and re-parents its absolute layout (shifted + scrollbar)
+  // until the animation ends, so Main is never animated: it appears fully drawn on the first frame.
+  if (panel.hasAttribute('data-no-fade') || panel.querySelector('.main-playground')) return;
+  // Panels with an opaque full-window background (Main) must not fade/slide as a whole: the dark window
+  // behind would show through and flash gray until the fade finishes.
+  if (!panel.hasAttribute('data-no-fade')) {
+    const offset = direction * 28;
+    panel.animate(
+      [
+        { opacity: 0, transform: `translateX(${offset}px)`, filter: 'blur(2px)' },
+        { opacity: 1, transform: 'translateX(0)', filter: 'blur(0)' },
+      ],
+      { duration: 380, easing: EASE_OUT },
+    );
+  }
 
   staggerTargets(panel).forEach((el, index) => {
     el.getAnimations().forEach((animation) => animation.cancel());
