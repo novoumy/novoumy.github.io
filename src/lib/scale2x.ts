@@ -51,3 +51,11 @@ export function centreRows(rows: string[], size: number): string[] {
   const top = Math.floor((size - trimmed.length) / 2);
   return [...Array(top).fill(blank), ...trimmed, ...Array(size - top - trimmed.length).fill(blank)];
 }
+
+// One SVG path per colour: all runs of `ch` merged into a single `d` string. Thousands of <rect> nodes become two
+// <path> nodes per icon, which is far cheaper to mount, lay out and paint.
+export function pathData(rows: string[], ch: string): string {
+  let d = '';
+  for (const r of runs(rows)) if (r.ch === ch) d += `M${r.x} ${r.y}h${r.w}v1h-${r.w}z`;
+  return d;
+}

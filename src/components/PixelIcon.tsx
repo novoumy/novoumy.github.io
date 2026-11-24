@@ -1,5 +1,6 @@
+import { memo } from 'react';
 import { PIXEL_ICONS } from '@/lib/pixelIcons';
-import { runs, scale2x } from '@/lib/scale2x';
+import { pathData, scale2x } from '@/lib/scale2x';
 
 interface PixelIconProps {
   tint?: boolean; // use the folder accent colour for the shaded ('o') pixels
@@ -8,19 +9,37 @@ interface PixelIconProps {
   className?: string;
 }
 
+// Icons that must stay exactly as drawn (hard square pixels, no Scale2x corner rounding).
+const NO_SMOOTHING = new Set<string>(['namemc']);
+
+const CACHE = new Map<string, { grid: number; wine: string; accent: string }>();
+
+function spriteFor(name: string, hd: boolean) {
+  const smooth = hd && !NO_SMOOTHING.has(name);
+  const key = `${name}:${smooth}`;
+  let sprite = CACHE.get(key);
+  if (!sprite) {
+    const base = PIXEL_ICONS[name as keyof typeof PIXEL_ICONS] ?? [];
+    const rows = smooth ? scale2x(base) : base;
+    sprite = { grid: smooth ? 32 : 16, wine: pathData(rows, '#'), accent: pathData(rows, 'o') };
+    CACHE.set(key, sprite);
+  }
+  return sprite;
+}
+
 // Pixel treatment:
 //   # = body (wine), o = shaded pixel (rose / folder accent).
-export default function PixelIcon({ name, className, tint = false, hd = false }: PixelIconProps) {
-  const base = PIXEL_ICONS[name] ?? [];
-  const rows = hd ? scale2x(base) : base;
-  const grid = hd ? 32 : 16;
+// Each colour is one merged <path>, so an icon is two DOM nodes instead of hundreds of <rect>s.
+function PixelIcon({ name, className, tint = false, hd = false }: PixelIconProps) {
+  const sprite = spriteFor(String(name), hd);
   const accentColor = tint ? 'var(--r-accent, var(--rose))' : 'var(--rose)';
 
   return (
-    <svg viewBox={`0 0 ${grid} ${grid}`} shapeRendering="crispEdges" aria-hidden="true" className={className}>
-      {runs(rows).map((r) => (
-        <rect key={`pixel-${r.x}-${r.y}`} x={r.x} y={r.y} width={r.w} height="1" fill={r.ch === 'o' ? accentColor : 'var(--wine)'} />
-      ))}
+    <svg viewBox={`0 0 ${sprite.grid} ${sprite.grid}`} shapeRendering="crispEdges" aria-hidden="true" className={className}>
+      <path d={sprite.accent} fill={accentColor} />
+      <path d={sprite.wine} fill="var(--wine)" />
     </svg>
   );
 }
+
+export default memo(PixelIcon);
