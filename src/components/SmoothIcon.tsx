@@ -1,11 +1,11 @@
 import { memo } from 'react';
 import {
   Cpu, Fan, CircuitBoard, MemoryStick, HardDrive, Zap, Server,
-  Monitor, Keyboard, Mouse, Mic, Smartphone, Tablet, Headphones, Gamepad2,
+  Monitor, Keyboard, Mouse, Mic, Smartphone, Tablet, Headphones, Gamepad2, Linkedin,
 } from 'lucide-react';
 import {
   siDiscord, siSteam, siRoblox, siGithub, siInstagram, siX, siYoutube,
-  siPinterest, siFacebook, siSnapchat, siLinkedin,
+  siPinterest, siFacebook, siSnapchat,
 } from 'simple-icons';
 
 const PURPLE = '#3A2272';
@@ -20,7 +20,6 @@ const SOCIAL: Record<string, { path: string; title: string }> = {
   pinterest: { path: siPinterest.path, title: siPinterest.title },
   facebook: { path: siFacebook.path, title: siFacebook.title },
   snapchat: { path: siSnapchat.path, title: siSnapchat.title },
-  linkedin: { path: siLinkedin.path, title: siLinkedin.title },
 };
 
 const PART: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; color?: string; className?: string }>> = {
@@ -49,6 +48,9 @@ type Props = { name: string; size?: number; className?: string };
 function SmoothIcon({ name, size = 48, className = '' }: Props) {
   const key = name.toLowerCase();
   const social = SOCIAL[key];
+  if (key === 'linkedin') {
+    return <Linkedin size={size} strokeWidth={1.8} color={PURPLE} className={className} aria-label="LinkedIn" />;
+  }
   if (social) {
     return (
       <svg viewBox="0 0 24 24" width={size} height={size} className={className} aria-label={social.title} role="img" style={{ color: PURPLE }}>
