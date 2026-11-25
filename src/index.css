@@ -879,7 +879,7 @@ h1, h2, h3, .font-pixel {
   animation: star-twinkle var(--tw, 4s) ease-in-out infinite, star-drift var(--dr, 60s) linear infinite; }
 @keyframes star-twinkle { 0%, 100% { opacity: 0.15; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.2); } }
 @keyframes star-drift { from { translate: 0 0; } to { translate: 40px -120px; } }
-.nebula { position: absolute; border-radius: 9999px; will-change: transform, opacity; opacity: 0.5;
+.nebula { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: 0.5;
   animation: nebula-breathe 18s ease-in-out infinite alternate; }
 @keyframes nebula-breathe { from { transform: scale(1) translate(0,0); opacity: 0.35; } to { transform: scale(1.2) translate(30px,-20px); opacity: 0.6; } }
 
@@ -987,6 +987,7 @@ html[data-perf='lite'] .pixel-tile-interactive:hover, html[data-perf='lite'] .pi
 html[data-perf='lite'] [role="tab"]:hover,
 html[data-perf='lite'] [role="tab"]:focus-visible,
 html[data-perf='lite'] [role="tab"][aria-selected="true"] { filter: none; }
-html[data-perf='lite'] .nebula { animation: none; opacity: 0.45; will-change: auto; }
+/* static in lite mode: the blur is rasterized once instead of every frame */
+html[data-perf='lite'] .nebula { animation: none; opacity: 0.45; }
 html[data-perf='lite'] .stardust { box-shadow: none; animation: star-twinkle var(--tw, 4s) ease-in-out infinite; }
 html[data-perf='lite'] .animate-float-particle { opacity: 0.5; }
