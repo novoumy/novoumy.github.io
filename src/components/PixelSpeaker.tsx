@@ -1,43 +1,14 @@
-import { pathData } from '@/lib/pixelPaths';
-
-// 12x12 pixel-art speaker for the sound button: muted (x), quiet (one wave) or loud (two waves).
-const BODY = [
-  '............',
-  '............',
-  '.....#......',
-  '....##......',
-  '.#####......',
-  '.#####......',
-  '.#####......',
-  '.#####......',
-  '....##......',
-  '.....#......',
-  '............',
-  '............',
-];
-const WAVE_1: [number, number][] = [[7, 4], [8, 5], [8, 6], [7, 7]];
-const WAVE_2: [number, number][] = [[9, 2], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7], [10, 8], [9, 9]];
-const MUTE: [number, number][] = [[7, 4], [8, 5], [9, 6], [10, 7], [10, 4], [9, 5], [8, 6], [7, 7]];
+import SmoothIcon from '@/components/SmoothIcon';
 
 export type SpeakerLevel = 'muted' | 'low' | 'high';
 
-function draw(level: SpeakerLevel): string[] {
-  const grid = BODY.map((r) => r.split(''));
-  const extra = level === 'muted' ? MUTE : level === 'low' ? WAVE_1 : [...WAVE_1, ...WAVE_2];
-  for (const [x, y] of extra) grid[y][x] = '#';
-  return grid.map((r) => r.join(''));
-}
-
-const PATHS: Record<SpeakerLevel, string> = {
-  muted: pathData(draw('muted'), '#'),
-  low: pathData(draw('low'), '#'),
-  high: pathData(draw('high'), '#'),
+// Smooth vector speaker for the sound button: muted (x), quiet (one wave) or loud (three waves).
+const NAME: Record<SpeakerLevel, string> = {
+  muted: 'speaker-muted',
+  low: 'speaker-low',
+  high: 'speaker-high',
 };
 
 export default function PixelSpeaker({ level, size = 24, className }: { level: SpeakerLevel; size?: number; className?: string }) {
-  return (
-    <svg viewBox="0 0 12 12" width={size} height={size} shapeRendering="crispEdges" fill="currentColor" aria-hidden="true" className={className}>
-      <path d={PATHS[level]} />
-    </svg>
-  );
+  return <SmoothIcon name={NAME[level]} size={size} className={className} />;
 }

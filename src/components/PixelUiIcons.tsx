@@ -35,16 +35,27 @@ function makeIcon(rows: string[]) {
   };
 }
 
-// Symmetrical about the arrow's own diagonal: a solid corner head, a single-pixel shaft.
-export const ArrowUpRight = makeIcon([
-  '..#####',
-  '...####',
-  '....###',
-  '...#.##',
-  '..#...#',
-  '.#.....',
-  '#......',
-]);
+// Smooth rounded up-right arrow (stroked, round caps/joins) used on link tiles and the Write button.
+export function ArrowUpRight({ size = 16, className, style, 'aria-hidden': ariaHidden = true }: PixelUiIconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={3}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden={ariaHidden}
+      focusable="false"
+      className={className}
+      style={{ flex: 'none', ...style }}
+    >
+      <path d="M6 18 18 6M8.5 6H18v9.5" />
+    </svg>
+  );
+}
 
 export const ArrowLeft = makeIcon([
   '....#....',
