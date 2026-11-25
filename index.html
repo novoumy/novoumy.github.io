@@ -21,6 +21,13 @@
       (function () {
         try {
           var root = document.documentElement;
+          // Lite mode: phones / tablets / low-core devices get a cheaper look (no backdrop blur, fewer animated
+          // layers). Force either way for testing with ?perf=lite or ?perf=full.
+          var forced = /[?&]perf=(lite|full)/.exec(location.search);
+          var lite = forced
+            ? forced[1] === 'lite'
+            : matchMedia('(pointer: coarse)').matches || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+          if (lite) root.dataset.perf = 'lite';
           root.classList.remove('theme-dark', 'theme-soft', 'dark');
           root.removeAttribute('data-theme');
           root.style.removeProperty('color-scheme');

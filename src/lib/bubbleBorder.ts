@@ -103,15 +103,22 @@ function fillGrid(grid: Uint8Array, cols: number, H: number, seed: number, now: 
 // KEEP IN SYNC with the inline copy in public/404.html.
 var BAND_EDGE = [225, 212, 255, 0.45], BAND_MID = [205, 185, 255, 0.6], BAND_RIM = [168, 145, 230, 0.7];
 
-type Item = { canvas: HTMLCanvasElement; seed: number; position: 'top' | 'bottom'; ctx: CanvasRenderingContext2D | null; grid: Uint8Array | null; img: ImageData | null; cols: number; rows: number; band: Uint8ClampedArray | null; rim: Uint8ClampedArray };
+type Item = { canvas: HTMLCanvasElement; seed: number; position: 'top' | 'bottom'; ctx: CanvasRenderingContext2D | null; grid: Uint8Array | null; img: ImageData | null; cols: number; rows: number; band: Uint8ClampedArray | null; rim: Uint8ClampedArray; w: number; h: number; barH: number; dirty: boolean; ro: ResizeObserver | null };
 let registry: Item[] = [], running = false, lastDraw = 0;
 function rgba(c: number[]) { return [c[0], c[1], c[2], Math.round(c[3] * 255)]; }
+// Sizes are measured only when a ResizeObserver says they changed (reading clientWidth/clientHeight every frame
+// forces a synchronous layout, which is very expensive on phones).
+function measure(item: Item) {
+  var parent = item.canvas.parentElement; if (!parent) return;
+  var bar = item.position === 'top' ? parent.previousElementSibling : parent.nextElementSibling;
+  item.w = parent.clientWidth; item.h = parent.clientHeight; item.barH = bar ? bar.clientHeight : 0; item.dirty = false;
+}
 function drawOne(item: Item, now: number) {
   var c = item.canvas, parent = c.parentElement; if (!parent) return;
-  var bar = item.position === 'top' ? parent.previousElementSibling : parent.nextElementSibling;
-  var barH = bar ? bar.clientHeight : 0, barRows = Math.round(barH / PX);
-  var cols = Math.max(1, Math.ceil(parent.clientWidth / PX)), H = Math.max(6, Math.round(parent.clientHeight / PX));
-  if (!parent.clientWidth || !parent.clientHeight) return;
+  if (item.dirty) measure(item);
+  var barH = item.barH, barRows = Math.round(barH / PX);
+  if (!item.w || !item.h) return;   // hidden tab: nothing to draw
+  var cols = Math.max(1, Math.ceil(item.w / PX)), H = Math.max(6, Math.round(item.h / PX));
   var rows = barRows + H;
   if (!item.img || item.cols !== cols || item.rows !== rows) {
     item.cols = cols; item.rows = rows;
@@ -146,10 +153,10 @@ function drawOne(item: Item, now: number) {
   item.ctx.putImageData(item.img, 0, 0);
 }
 function loop(ts: number) {
-  registry = registry.filter(function (it) { return it.canvas.isConnected; });
-  if (!registry.length) { running = false; return; }
-  if (ts - lastDraw >= 33) {
+  if (ts - lastDraw >= 66) {   // ~15fps: the bubbles tick every 160-950ms, so more redraws change nothing
     lastDraw = ts;
+    registry = registry.filter(function (it) { return it.canvas.isConnected; });
+    if (!registry.length) { running = false; return; }
     var now = Date.now();
     for (var i = 0; i < registry.length; i++) drawOne(registry[i], now);
   }
@@ -158,10 +165,17 @@ function loop(ts: number) {
 // Every bubble's size is a pure function of the wall clock (Date.now), so the real page and the 404 morph page
 // show exactly the same bubbles at the same moment: no restart, snap or jump when one hands over to the other.
 export function mountBubbleBorder(canvas: HTMLCanvasElement, position: 'top' | 'bottom') {
-  var item: Item = { canvas: canvas, seed: position === 'bottom' ? 2 : 1, position: position, ctx: null, grid: null, img: null, cols: 0, rows: 0, band: null, rim: new Uint8ClampedArray(rgba(BAND_RIM)) };
+  var item: Item = { canvas: canvas, seed: position === 'bottom' ? 2 : 1, position: position, ctx: null, grid: null, img: null, cols: 0, rows: 0, band: null, rim: new Uint8ClampedArray(rgba(BAND_RIM)), w: 0, h: 0, barH: 0, dirty: true, ro: null };
   registry.push(item);
+  var parentEl = canvas.parentElement;
+  if (parentEl && typeof ResizeObserver !== 'undefined') {
+    item.ro = new ResizeObserver(function () { item.dirty = true; });
+    item.ro.observe(parentEl);
+    var barEl = position === 'top' ? parentEl.previousElementSibling : parentEl.nextElementSibling;
+    if (barEl) item.ro.observe(barEl);
+  }
   drawOne(item, Date.now());
   var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!still && !running) { running = true; requestAnimationFrame(loop); }
-  return function () { registry = registry.filter(function (it) { return it !== item; }); };
+  return function () { if (item.ro) item.ro.disconnect(); registry = registry.filter(function (it) { return it !== item; }); };
 }

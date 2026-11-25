@@ -879,7 +879,7 @@ h1, h2, h3, .font-pixel {
   animation: star-twinkle var(--tw, 4s) ease-in-out infinite, star-drift var(--dr, 60s) linear infinite; }
 @keyframes star-twinkle { 0%, 100% { opacity: 0.15; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.2); } }
 @keyframes star-drift { from { translate: 0 0; } to { translate: 40px -120px; } }
-.nebula { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: 0.5;
+.nebula { position: absolute; border-radius: 9999px; will-change: transform, opacity; opacity: 0.5;
   animation: nebula-breathe 18s ease-in-out infinite alternate; }
 @keyframes nebula-breathe { from { transform: scale(1) translate(0,0); opacity: 0.35; } to { transform: scale(1.2) translate(30px,-20px); opacity: 0.6; } }
 
@@ -909,7 +909,6 @@ html, body {
   background:
     radial-gradient(120% 60% at 50% -10%, rgb(255 255 255 / 0.45), transparent 60%),
     radial-gradient(80% 50% at 50% 110%, rgb(200 170 255 / 0.35), transparent 70%);
-  mix-blend-mode: screen;
 }
 /* slow drifting shimmer across the glass */
 .main-playground::after {
@@ -942,3 +941,52 @@ h1, h2, h3, .font-pixel { text-shadow: 0 0 4px rgb(255 255 255 / 0.6), 0 0 14px 
 /* Main tab: one glass layer only, so the window matches the end of the 404 morph.
    The frame's own bg-cool-white (glass-strong) used to sit under .main-playground's glass and whiten/grey it. */
 .pixel-frame[data-compact='true'] { background-color: transparent; }
+
+/* ==================================================================
+   LITE MODE (html[data-perf='lite'], set in index.html for phones / tablets / low-core devices).
+   The big costs on mobile were: backdrop-filter blur over an ever-animating background, hundreds of animated
+   glowing layers, and box-shadow animations (repainted every frame). Same look, no per-frame blur / repaint.
+   Add ?perf=full to the URL to compare against the full version.
+   ================================================================== */
+html[data-perf='lite'] {
+  /* No blur behind the glass, so the glass itself is made more opaque to keep text readable. */
+  --glass: rgb(238 231 255 / 0.93);
+  --glass-strong: rgb(242 236 255 / 0.96);
+  --glass-blur: none;
+}
+html[data-perf='lite'] .main-playground,
+html[data-perf='lite'] .r-window,
+html[data-perf='lite'] .retro-theme .r-window,
+html[data-perf='lite'] .r-box,
+html[data-perf='lite'] .r-tag,
+html[data-perf='lite'] .pixel-tile {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+/* Cheaper outlines: no inset glows, smaller blur radii. */
+html[data-perf='lite'] .pixel-frame { box-shadow: 0 0 0 1px rgb(255 255 255 / 0.7), 0 0 20px 2px rgb(var(--glow) / 0.5) !important; }
+html[data-perf='lite'] .pixel-tile,
+html[data-perf='lite'] .pixel-btn { box-shadow: 0 0 0 1.5px rgb(var(--glow) / 0.85); }
+html[data-perf='lite'] .r-box,
+html[data-perf='lite'] .r-link,
+html[data-perf='lite'] .r-btn,
+html[data-perf='lite'] .vinyl-cover,
+html[data-perf='lite'] .r-tag { box-shadow: 0 0 6px 0 rgb(var(--glow) / 0.4); }
+html[data-perf='lite'] h1,
+html[data-perf='lite'] h2,
+html[data-perf='lite'] h3,
+html[data-perf='lite'] .font-pixel { text-shadow: 0 0 8px rgb(var(--glow) / 0.5); }
+/* Nothing that animates box-shadow / blurs / blends on phones. */
+html[data-perf='lite'] .main-playground::after { display: none; }
+html[data-perf='lite'] .main-profile-avatar {
+  animation: none;
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.9), 0 0 16px 3px rgb(var(--glow) / 0.8) !important;
+}
+html[data-perf='lite'] .r-link:hover, html[data-perf='lite'] .r-btn:hover, html[data-perf='lite'] .r-box-hover:hover,
+html[data-perf='lite'] .pixel-tile-interactive:hover, html[data-perf='lite'] .pixel-btn:hover { animation: none; }
+html[data-perf='lite'] [role="tab"]:hover,
+html[data-perf='lite'] [role="tab"]:focus-visible,
+html[data-perf='lite'] [role="tab"][aria-selected="true"] { filter: none; }
+html[data-perf='lite'] .nebula { animation: none; opacity: 0.45; will-change: auto; }
+html[data-perf='lite'] .stardust { box-shadow: none; animation: star-twinkle var(--tw, 4s) ease-in-out infinite; }
+html[data-perf='lite'] .animate-float-particle { opacity: 0.5; }

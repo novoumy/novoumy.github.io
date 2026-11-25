@@ -1,4 +1,6 @@
-const PARTICLE_COUNT = 18;
+// Every star / particle is its own animated compositor layer, so phones get far fewer of them.
+const LITE = typeof document !== 'undefined' && document.documentElement.dataset.perf === 'lite';
+const PARTICLE_COUNT = LITE ? 6 : 14;
 
 const particles = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
   left: `${(i * 37) % 100}%`,
@@ -8,7 +10,7 @@ const particles = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
   color: i % 2 === 0 ? '#F5F1FF' : '#C9B4FF',
 }));
 
-const STAR_COUNT = 120;
+const STAR_COUNT = LITE ? 26 : 70;
 const stars = Array.from({ length: STAR_COUNT }, (_, i) => ({
   left: `${(i * 53) % 100}%`,
   top: `${(i * 29 + (i % 7) * 11) % 100}%`,
