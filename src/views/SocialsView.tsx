@@ -61,7 +61,7 @@ function Sprite({ rows, offsetY = 0, className }: { rows: string[]; offsetY?: nu
 
 function CampfireHero() {
   return (
-    <section className="pixel-tile flex items-center gap-4 overflow-hidden bg-[#ECE6FF] p-4 sm:gap-6 sm:p-5">
+    <section className="pixel-tile flex items-center gap-4 overflow-hidden ethereal-card p-4 sm:gap-6 sm:p-5">
       <div className="camp-scene" aria-hidden="true">
         <span className="camp-star" style={{ left: '14%', top: '16%' }} />
         <span className="camp-star" style={{ left: '78%', top: '10%' }} />
@@ -131,7 +131,7 @@ export default function SocialsView() {
 
       {/* Email: one row with open + copy */}
       {email && email.handle && (
-        <section className="pixel-tile flex flex-col gap-3 bg-[#ECE6FF] p-3 sm:flex-row sm:items-center sm:gap-4 sm:p-4">
+        <section className="pixel-tile flex flex-col gap-3 ethereal-card overflow-hidden p-3 sm:flex-row sm:items-center sm:gap-4 sm:p-4">
           <div className="flex min-w-0 flex-1 items-center gap-3">
             <span className="pixel-icon-well pixel-icon-well-email">
               <SocialGlyph social={email} className="h-10 w-10 shrink-0" />

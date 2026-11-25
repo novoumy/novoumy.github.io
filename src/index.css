@@ -942,3 +942,88 @@ h1, h2, h3, .font-pixel { text-shadow: 0 0 4px rgb(255 255 255 / 0.6), 0 0 14px 
 /* Main tab: one glass layer only, so the window matches the end of the 404 morph.
    The frame's own bg-cool-white (glass-strong) used to sit under .main-playground's glass and whiten/grey it. */
 .pixel-frame[data-compact='true'] { background-color: transparent; }
+
+/* ==================================================================
+   DREAM PASS — pearly, aurora-lit, softly breathing.
+   ================================================================== */
+
+/* Slow aurora that drifts and hue-shifts behind everything. */
+body::before {
+  content: "";
+  position: fixed; inset: -20%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(40% 35% at 20% 25%, rgb(170 130 255 / 0.40), transparent 70%),
+    radial-gradient(35% 40% at 80% 30%, rgb(120 200 255 / 0.22), transparent 70%),
+    radial-gradient(45% 40% at 65% 85%, rgb(255 170 230 / 0.26), transparent 70%),
+    radial-gradient(30% 30% at 30% 80%, rgb(160 255 235 / 0.12), transparent 70%);
+  filter: blur(30px);
+  animation: aurora-drift 40s ease-in-out infinite alternate, aurora-hue 60s linear infinite;
+}
+@keyframes aurora-drift {
+  from { transform: translate3d(-3%, -2%, 0) scale(1); }
+  to   { transform: translate3d(4%, 3%, 0) scale(1.12); }
+}
+@keyframes aurora-hue {
+  0%, 100% { filter: blur(30px) hue-rotate(0deg); }
+  50%      { filter: blur(30px) hue-rotate(35deg); }
+}
+
+/* Stars: softer, dreamier twinkle with a wider halo. */
+.stardust { box-shadow: 0 0 10px 3px rgb(var(--glow) / 0.75), 0 0 2px rgb(255 255 255); }
+.nebula { filter: blur(80px); }
+
+/* Window frame: a luminous haze that gently breathes. */
+@keyframes frame-breathe {
+  0%, 100% { box-shadow: 0 0 0 1px rgb(255 255 255 / 0.7), 0 0 26px 5px rgb(var(--glow) / 0.55), 0 0 100px 24px rgb(var(--amethyst) / 0.36), inset 0 0 36px rgb(255 255 255 / 0.42); }
+  50%      { box-shadow: 0 0 0 1px rgb(255 255 255 / 0.85), 0 0 38px 9px rgb(var(--glow) / 0.72), 0 0 130px 34px rgb(var(--amethyst) / 0.5), inset 0 0 46px rgb(255 255 255 / 0.55); }
+}
+.pixel-frame { animation: frame-breathe 9s ease-in-out infinite; }
+
+/* Link / spec tiles: soft corners and a pearly sheen. */
+.pixel-tile { border-radius: 6px; }
+.pixel-tile.bg-pink-soft {
+  background-image: linear-gradient(155deg, rgb(255 255 255 / 0.55) 0%, rgb(255 255 255 / 0) 55%, rgb(190 165 255 / 0.25) 100%);
+}
+.pixel-tile-interactive:hover { box-shadow: var(--glow-pulse); }
+.pixel-icon-well svg, .spec-icon { filter: drop-shadow(0 0 6px rgb(var(--glow) / 0.65)); }
+
+/* Info panels (the two headers + the email box): pearly opaque glass with a
+   slow light sweep and halo. Deliberately flat/non-hover so they never read as buttons. */
+.ethereal-card {
+  position: relative;
+  border-radius: 10px;
+  background:
+    linear-gradient(115deg, transparent 38%, rgb(255 255 255 / 0.75) 50%, transparent 62%) 0 0 / 260% 100% no-repeat,
+    radial-gradient(70% 90% at 12% 0%, rgb(255 255 255 / 0.9), transparent 65%),
+    radial-gradient(60% 80% at 100% 100%, rgb(214 190 255 / 0.75), transparent 70%),
+    radial-gradient(40% 60% at 85% 10%, rgb(190 225 255 / 0.55), transparent 70%),
+    linear-gradient(160deg, #F6F2FF 0%, #E9DFFF 55%, #E0D2FF 100%);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.9),
+    0 0 22px 3px rgb(var(--glow) / 0.65),
+    0 0 70px 14px rgb(var(--amethyst) / 0.28),
+    inset 0 0 26px rgb(255 255 255 / 0.85) !important;
+  animation: pearl-sweep 11s ease-in-out infinite;
+}
+@keyframes pearl-sweep {
+  0%   { background-position: 130% 0, 0 0, 0 0, 0 0, 0 0; }
+  60%, 100% { background-position: -130% 0, 0 0, 0 0, 0 0, 0 0; }
+}
+.ethereal-card h1, .ethereal-card h2, .ethereal-card h3, .ethereal-card .font-pixel {
+  text-shadow: 0 0 8px rgb(255 255 255 / 0.9), 0 0 20px rgb(var(--glow) / 0.7);
+}
+/* the little pixel-art picture floats and glows */
+.ethereal-card svg.camp-fire, .ethereal-card svg.pc-sprite {
+  filter: drop-shadow(0 0 10px rgb(var(--glow) / 0.9));
+  animation: dream-float 6s ease-in-out infinite;
+}
+@keyframes dream-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+/* Tabs and the sound button glow like lit glass. */
+[role="tab"], .main-sound-toggle, .folder-sound-toggle { border-radius: 6px 6px 0 0; }
+.main-sound-toggle, .folder-sound-toggle { border-radius: 6px; }
+[role="tab"] svg, .main-sound-toggle svg { filter: drop-shadow(0 0 5px rgb(var(--glow) / 0.8)); }
+
+@media (prefers-reduced-motion: reduce) {
+  body::before, .pixel-frame, .ethereal-card, .ethereal-card svg { animation: none !important; }
+}
