@@ -71,7 +71,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const bgm = new Audio(audio.bgmSrc);
     bgm.loop = true;
-    bgm.preload = 'metadata'; // the file streams on the first play instead of competing with the page load
+    bgm.preload = 'none'; // nothing is downloaded until the visitor interacts and the music actually starts
     bgm.volume = audio.bgmVolume * toGain(volumeRef.current);
     bgm.muted = mutedRef.current;
     bgmRef.current = bgm;

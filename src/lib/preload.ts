@@ -1,8 +1,8 @@
 import type { ComponentType } from 'react';
 import type { InterestId } from '@/siteData';
 
-// Lazy loaders for the heavy "Interests" folder views. Calling a loader more than
-// once is free (the module is cached), so hover/idle preloading never double-fetches.
+// Lazy loaders for the heavy "Interests" folder views. Nothing is loaded at startup: a folder's code is fetched
+// when its icon is hovered / focused or when it is opened. Calling a loader more than once is free (cached).
 // Once a module has arrived its component is also kept here, so opening the folder can
 // render it synchronously (needed for the window morph to land on real content).
 export type FolderView = ComponentType<{ onClose: () => void }>;
@@ -28,19 +28,3 @@ const LOADERS: Record<InterestId, () => Promise<unknown>> = {
 
 export const loadInterestView = (id: InterestId) => LOADERS[id]().catch(() => undefined);
 export const loadedInterestView = (id: InterestId): FolderView | undefined => ready[id];
-
-export function preloadInterestViews(): () => void {
-  const run = () => {
-    void loadGames();
-    void loadMedia();
-    void loadMusic();
-    void loadQuotes();
-  };
-  const idle = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback;
-  if (idle) {
-    const id = idle(run);
-    return () => (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(id);
-  }
-  const id = window.setTimeout(run, 800);
-  return () => window.clearTimeout(id);
-}

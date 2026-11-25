@@ -1,23 +1,29 @@
-import { memo, useEffect, useRef, useState, type ReactNode } from 'react';
+import { lazy, memo, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
 import SoundToggle from '@/components/SoundToggle';
 import MainView from '@/views/MainView';
-import InterestsView from '@/views/InterestsView';
-import SocialsView from '@/views/SocialsView';
-import SpecsView from '@/views/SpecsView';
 import { site, tabs, type InterestId, type TabId } from '@/siteData';
 import { useStage } from '@/lib/useStageScale';
 import { hashFor, parseHash, type Route } from '@/lib/route';
-import { loadInterestView, preloadInterestViews } from '@/lib/preload';
+import { loadInterestView } from '@/lib/preload';
 import { folderMorph } from '@/lib/morph';
 import { animatePanelIn } from '@/lib/motion';
 
 // These views take no props, so memoizing them means resizing the window or opening a folder never re-renders them.
 const Main = memo(MainView);
-const Socials = memo(SocialsView);
-const Specs = memo(SpecsView);
+// Only the Main tab ships with the first load. Every other tab is its own chunk, fetched and mounted the first time
+// it is opened (and then kept, so switching back is instant).
+const LazySocials = lazy(() => import('@/views/SocialsView'));
+const LazySpecs = lazy(() => import('@/views/SpecsView'));
+const Socials = memo(function Socials() {
+  return <LazySocials />;
+});
+const Specs = memo(function Specs() {
+  return <LazySpecs />;
+});
+const Interests = lazy(() => import('@/views/InterestsView'));
 
 const sameRoute = (a: Route, b: Route) => a.tab === b.tab && a.interest === b.interest;
 const enabledTabs = tabs.filter((tab) => tab.enabled);
@@ -101,8 +107,11 @@ export default function App() {
     if (panel) animatePanelIn(panel, direction);
   }, [activeId]);
 
-  // Warm the heavy folder views once the first paint is done, so opening them is instant.
-  useEffect(() => preloadInterestViews(), []);
+  // Tabs that have been opened at least once stay mounted; the rest are not rendered (or even downloaded) yet.
+  const [visited, setVisited] = useState<ReadonlySet<TabId>>(() => new Set([parseHash().tab]));
+  useEffect(() => {
+    setVisited((prev) => (prev.has(activeId) ? prev : new Set(prev).add(activeId)));
+  }, [activeId]);
 
   useEffect(() => {
     document.title = site.title;
@@ -113,7 +122,7 @@ export default function App() {
     { id: 'socials', render: () => <Socials /> },
     {
       id: 'interests',
-      render: (r, open) => <InterestsView openId={r.tab === 'interests' ? r.interest : null} onOpen={open} />,
+      render: (r, open) => <Interests openId={r.tab === 'interests' ? r.interest : null} onOpen={open} />,
     },
     { id: 'specs', render: () => <Specs /> },
   ];
@@ -176,7 +185,7 @@ export default function App() {
                       : 'min-w-0 w-full max-w-full'
                   }
                 >
-                  {render(route, openInterest)}
+                  {(visited.has(id) || id === activeId) && <Suspense fallback={null}>{render(route, openInterest)}</Suspense>}
                 </div>
               </div>
             ))}
