@@ -172,7 +172,7 @@ export const hero = {
   avatar: '/icon.webp',
   avatarAlt: 'Profile photo',
   // Discord avatar decoration (public/decoration.png), drawn around the photo at 120% size like Discord. null = none.
-  avatarDecoration: '/decoration.png' as string | null,
+  avatarDecoration: null,
   name: 'novoumy',
   bio: [
     'I like spending way too much time on my pc.. soo I made this website to share my favorite media, games, songs and quotes. ^.^',
