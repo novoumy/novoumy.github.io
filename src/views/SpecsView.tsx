@@ -53,7 +53,7 @@ const PC_CLASS: Record<string, string> = { '#': 'pc-w', w: 'pc-w', p: 'pc-p', c:
 
 function SpecsHero() {
   return (
-    <section className="pixel-tile flex items-center gap-4 overflow-hidden ethereal-card p-4 sm:gap-6 sm:p-5">
+    <section className="pixel-tile flex items-center gap-4 overflow-hidden bg-[#ECE6FF] p-4 sm:gap-6 sm:p-5">
       <div className="camp-scene" aria-hidden="true">
         <span className="camp-star" style={{ left: '14%', top: '16%' }} />
         <span className="camp-star" style={{ left: '78%', top: '10%' }} />
