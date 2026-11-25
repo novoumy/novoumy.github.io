@@ -12,7 +12,11 @@
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+    <!-- Non-blocking: the page paints straight away with the fallback monospace and swaps the pixel fonts in. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" /></noscript>
+    <link rel="preload" as="image" href="/icon.webp" type="image/webp" />
     <meta property="og:image" content="https://novoumy.com/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <script>

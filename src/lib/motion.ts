@@ -32,8 +32,8 @@ export function animatePanelIn(panel: HTMLElement, direction: number) {
     const offset = direction * 28;
     panel.animate(
       [
-        { opacity: 0, transform: `translateX(${offset}px)`, filter: 'blur(2px)' },
-        { opacity: 1, transform: 'translateX(0)', filter: 'blur(0)' },
+        { opacity: 0, transform: `translateX(${offset}px)` },
+        { opacity: 1, transform: 'translateX(0)' },
       ],
       { duration: 380, easing: EASE_OUT },
     );

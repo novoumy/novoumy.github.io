@@ -153,6 +153,7 @@ function drawOne(item: Item, now: number) {
   item.ctx.putImageData(item.img, 0, 0);
 }
 function loop(ts: number) {
+  if (document.hidden) { requestAnimationFrame(loop); return; }   // background tab: nothing to draw
   if (ts - lastDraw >= 66) {   // ~15fps: the bubbles tick every 160-950ms, so more redraws change nothing
     lastDraw = ts;
     registry = registry.filter(function (it) { return it.canvas.isConnected; });

@@ -1,4 +1,5 @@
-import { manualGames, type ManualGame } from '@/siteData';
+import type { ManualGame } from '@/siteData';
+import { manualGames } from '@/data/games';
 import { minecraftIconSources } from '@/data/minecraftIcons';
 import steamFilter from '@/data/steamFilter.json';
 

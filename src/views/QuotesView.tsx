@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import RetroOverlay from '@/components/RetroOverlay';
-import { quotes } from '@/siteData';
+import { quotes } from '@/data/quotes';
 
 // Pixel-art die (face showing five), drawn on a grid so it stays crisp at any size.
 const PIPS: [number, number][] = [

@@ -34,13 +34,13 @@ const MARGIN_Y = 32; // px per side (minimum)
 const LARGE_SCREEN_WIDTH = 700;
 const LARGE_SCREEN_MARGIN = 0.05; // 5% of the width / height per side
 
-function computeMode(): StageMode {
+export function computeMode(): StageMode {
   if (typeof window === 'undefined') return 'landscape';
   const { innerWidth, innerHeight } = window;
   return innerWidth < PORTRAIT_BELOW_WIDTH || innerWidth < innerHeight ? 'portrait' : 'landscape';
 }
 
-function computeScale(mode: StageMode): number {
+export function computeScale(mode: StageMode): number {
   if (typeof window === 'undefined') return 1;
   const stage = STAGES[mode];
   const { innerWidth, innerHeight } = window;
@@ -67,16 +67,24 @@ export function useStage(): { mode: StageMode; scale: number } {
   }, [state.mode]);
 
   useEffect(() => {
-    const onResize = () => {
+    // Resize fires many times per frame while dragging; the stage uses CSS zoom (a full relayout), so coalesce to one
+    // update per frame.
+    let frame = 0;
+    const apply = () => {
+      frame = 0;
       const mode = computeMode();
       const scale = computeScale(mode);
       setState((prev) => (prev.mode === mode && prev.scale === scale ? prev : { mode, scale }));
+    };
+    const onResize = () => {
+      if (!frame) frame = requestAnimationFrame(apply);
     };
     window.addEventListener('resize', onResize);
     window.addEventListener('orientationchange', onResize);
     return () => {
       window.removeEventListener('resize', onResize);
       window.removeEventListener('orientationchange', onResize);
+      if (frame) cancelAnimationFrame(frame);
     };
   }, []);
 

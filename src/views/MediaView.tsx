@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, Search, SlidersHorizontal, X } from '@/components/PixelUiIcons';
 import RetroSelect from '@/components/RetroSelect';
 import RetroOverlay from '@/components/RetroOverlay';
-import { media, mediaFilters, type MediaItem } from '@/siteData';
+import type { MediaItem } from '@/siteData';
+import { media, mediaFilters } from '@/data/media';
 
 type Filter = (typeof mediaFilters)[number]['value'];
 type SortKey = 'title-asc' | 'title-desc' | 'year-desc' | 'year-asc';

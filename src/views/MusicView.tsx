@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FileText, Headphones, Search, X, Youtube } from '@/components/PixelUiIcons';
 import RetroOverlay from '@/components/RetroOverlay';
-import { tracks, type TrackItem } from '@/siteData';
+import type { TrackItem } from '@/siteData';
+import { tracks } from '@/data/music';
 
 const normalize = (text: string) =>
   text

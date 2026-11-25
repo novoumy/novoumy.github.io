@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { memo, useEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import PixelBackdrop from '@/components/PixelBackdrop';
 import PixelTabBar from '@/components/PixelTabBar';
@@ -13,6 +13,11 @@ import { hashFor, parseHash, type Route } from '@/lib/route';
 import { loadInterestView, preloadInterestViews } from '@/lib/preload';
 import { folderMorph } from '@/lib/morph';
 import { animatePanelIn } from '@/lib/motion';
+
+// These views take no props, so memoizing them means resizing the window or opening a folder never re-renders them.
+const Main = memo(MainView);
+const Socials = memo(SocialsView);
+const Specs = memo(SpecsView);
 
 const sameRoute = (a: Route, b: Route) => a.tab === b.tab && a.interest === b.interest;
 const enabledTabs = tabs.filter((tab) => tab.enabled);
@@ -104,13 +109,13 @@ export default function App() {
   }, []);
 
   const panels: Panel[] = [
-    { id: 'main', render: () => <MainView /> },
-    { id: 'socials', render: () => <SocialsView /> },
+    { id: 'main', render: () => <Main /> },
+    { id: 'socials', render: () => <Socials /> },
     {
       id: 'interests',
       render: (r, open) => <InterestsView openId={r.tab === 'interests' ? r.interest : null} onOpen={open} />,
     },
-    { id: 'specs', render: () => <SpecsView /> },
+    { id: 'specs', render: () => <Specs /> },
   ];
   const visiblePanels = panels.filter((panel) => enabledTabs.some((tab) => tab.id === panel.id));
 
@@ -119,6 +124,12 @@ export default function App() {
   const portrait = mode === 'portrait';
   // While a folder is open it *is* the window: the main window is hidden, not left behind it.
   const folderOpen = route.tab === 'interests' && route.interest !== null;
+
+  // While a folder is open its big frosted window sits over the whole backdrop; freezing the stars / particles then
+  // keeps the glass from being re-blurred every frame (see html[data-folder-view] in index.css).
+  useEffect(() => {
+    document.documentElement.dataset.folderView = folderOpen ? 'open' : 'closed';
+  }, [folderOpen]);
 
   return (
     <div className="relative h-dvh overflow-hidden">

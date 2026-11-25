@@ -834,7 +834,9 @@ h1, h2, h3, .font-pixel {
 .bg-r-bg { background-color: rgb(245 241 255 / 0.55); }
 .bg-r-panel, .r-box { background-color: rgb(239 232 255 / 0.55); }
 .bg-r-raised { background-color: rgb(226 214 255 / 0.7); }
-.r-box, .r-tag, .pixel-tile { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+/* (no per-card backdrop-filter: the window behind them is already blurred, and ~200 stacked blurs were the main cost
+   of the Media / Music / Games folders) */
+.r-box, .r-tag, .pixel-tile { -webkit-backdrop-filter: none; backdrop-filter: none; }
 .kinetic-words { background: linear-gradient(90deg, rgb(214 201 248 / 0.75), rgb(190 165 255 / 0.85), rgb(214 201 248 / 0.75)); }
 .r-titlebar { background: linear-gradient(90deg, #3A2272, #5B3AA8 50%, #3A2272); text-shadow: 0 0 8px rgb(var(--glow) / 0.8); }
 
@@ -879,9 +881,7 @@ h1, h2, h3, .font-pixel {
   animation: star-twinkle var(--tw, 4s) ease-in-out infinite, star-drift var(--dr, 60s) linear infinite; }
 @keyframes star-twinkle { 0%, 100% { opacity: 0.15; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.2); } }
 @keyframes star-drift { from { translate: 0 0; } to { translate: 40px -120px; } }
-.nebula { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: 0.5;
-  animation: nebula-breathe 18s ease-in-out infinite alternate; }
-@keyframes nebula-breathe { from { transform: scale(1) translate(0,0); opacity: 0.35; } to { transform: scale(1.2) translate(30px,-20px); opacity: 0.6; } }
+.nebula { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: 0.48; transform: scale(1.08); }
 
 @media (prefers-reduced-motion: reduce) {
   .stardust, .nebula, .r-link:hover, .r-btn:hover, .r-box-hover:hover, .pixel-tile-interactive:hover, .pixel-btn:hover { animation: none !important; }
@@ -912,8 +912,9 @@ html, body {
 }
 /* slow drifting shimmer across the glass */
 .main-playground::after {
-  content: ""; position: absolute; inset: -50%; pointer-events: none; z-index: -1;
+  content: ""; position: absolute; inset: 0 -50%; pointer-events: none; z-index: -1;
   background: linear-gradient(115deg, transparent 40%, rgb(255 255 255 / 0.16) 50%, transparent 60%);
+  will-change: transform;
   animation: glass-shimmer 14s ease-in-out infinite;
 }
 @keyframes glass-shimmer { 0%, 100% { transform: translateX(-30%); } 50% { transform: translateX(30%); } }
@@ -922,21 +923,26 @@ html, body {
 .pixel-frame { box-shadow: 0 0 0 1px rgb(255 255 255 / 0.7), 0 0 24px 4px rgb(var(--glow) / 0.55), 0 0 90px 20px rgb(var(--amethyst) / 0.35), inset 0 0 30px rgb(255 255 255 / 0.4) !important; }
 .kinetic-words { background: linear-gradient(90deg, rgb(225 212 255 / 0.45), rgb(205 185 255 / 0.6), rgb(225 212 255 / 0.45)); }
 .bg-r-panel, .r-box { background-color: rgb(244 238 255 / 0.38); }
-h1, h2, h3, .font-pixel { text-shadow: 0 0 4px rgb(255 255 255 / 0.6), 0 0 14px rgb(var(--glow) / 0.6), 0 0 32px rgb(var(--glow) / 0.35); }
+h1, h2, h3, .font-pixel { text-shadow: 0 0 4px rgb(255 255 255 / 0.6), 0 0 16px rgb(var(--glow) / 0.7); }
 
 /* new profile photo: soft glowing halo instead of a hard pixel frame */
 .main-profile-avatar {
   border-radius: 50%;
   image-rendering: auto;
-  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.85), 0 0 18px 4px rgb(var(--glow) / 0.8), 0 0 48px 12px rgb(var(--amethyst) / 0.45) !important;
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.85), 0 0 18px 4px rgb(var(--glow) / 0.7), 0 0 44px 10px rgb(var(--amethyst) / 0.4) !important;
+}
+/* The breathing halo lives on the wrapper's ::before and only fades (opacity), so it never repaints. */
+.main-profile-avatar-wrap::before {
+  content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; z-index: 0;
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 1), 0 0 26px 8px rgb(var(--glow) / 0.95), 0 0 70px 20px rgb(var(--amethyst) / 0.55);
   animation: halo-breathe 6s ease-in-out infinite;
 }
 @keyframes halo-breathe {
-  0%, 100% { box-shadow: 0 0 0 2px rgb(255 255 255 / 0.85), 0 0 18px 4px rgb(var(--glow) / 0.7), 0 0 44px 10px rgb(var(--amethyst) / 0.4); }
-  50% { box-shadow: 0 0 0 2px rgb(255 255 255 / 1), 0 0 26px 8px rgb(var(--glow) / 0.95), 0 0 70px 20px rgb(var(--amethyst) / 0.55); }
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 .stardust { box-shadow: 0 0 8px 2px rgb(var(--glow) / 0.9), 0 0 2px rgb(255 255 255); }
-@media (prefers-reduced-motion: reduce) { .main-playground::after, .main-profile-avatar { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .main-playground::after, .main-profile-avatar-wrap::before { animation: none !important; } }
 
 /* Main tab: one glass layer only, so the window matches the end of the 404 morph.
    The frame's own bg-cool-white (glass-strong) used to sit under .main-playground's glass and whiten/grey it. */
@@ -978,6 +984,7 @@ html[data-perf='lite'] h3,
 html[data-perf='lite'] .font-pixel { text-shadow: 0 0 8px rgb(var(--glow) / 0.5); }
 /* Nothing that animates box-shadow / blurs / blends on phones. */
 html[data-perf='lite'] .main-playground::after { display: none; }
+html[data-perf='lite'] .main-profile-avatar-wrap::before { display: none; }
 html[data-perf='lite'] .main-profile-avatar {
   animation: none;
   box-shadow: 0 0 0 2px rgb(255 255 255 / 0.9), 0 0 16px 3px rgb(var(--glow) / 0.8) !important;
@@ -991,3 +998,17 @@ html[data-perf='lite'] [role="tab"][aria-selected="true"] { filter: none; }
 html[data-perf='lite'] .nebula { animation: none; opacity: 0.45; }
 html[data-perf='lite'] .stardust { box-shadow: none; animation: star-twinkle var(--tw, 4s) ease-in-out infinite; }
 html[data-perf='lite'] .animate-float-particle { opacity: 0.5; }
+
+
+/* ==================================================================
+   PERFORMANCE PASS
+   ================================================================== */
+/* A folder (Media / Games / Music / Quotes) is open: its big frosted window covers the backdrop, so the stars and
+   particles are frozen. Anything moving behind a backdrop-filter makes the browser re-blur the whole window every
+   frame; frozen, the blur is computed once. Not visible through the 22px blur. */
+html[data-folder-view='open'] .stardust,
+html[data-folder-view='open'] .animate-float-particle { animation-play-state: paused; }
+
+/* The profile photo stack: photo above the breathing halo, decoration above the photo. */
+.main-profile-avatar-wrap > .main-profile-avatar { position: relative; z-index: 1; }
+.main-profile-avatar-wrap > .main-profile-avatar-deco { z-index: 2; }
